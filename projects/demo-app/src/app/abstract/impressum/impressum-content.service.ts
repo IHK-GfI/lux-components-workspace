@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { catchError, firstValueFrom, of } from 'rxjs';
 
 @Injectable({
@@ -8,13 +8,13 @@ import { catchError, firstValueFrom, of } from 'rxjs';
 export class ImpressumContentService {
   private http = inject(HttpClient);
 
-  public content = '';
+  readonly content = signal('');
   private loading?: Promise<string>;
   private loaded = false;
 
   async load(): Promise<string> {
     if (this.loaded) {
-      return this.content;
+      return this.content();
     }
 
     if (!this.loading) {
@@ -25,7 +25,7 @@ export class ImpressumContentService {
           })
         )
       ).then((text) => {
-        this.content = text;
+        this.content.set(text);
         this.loaded = true;
         return text;
       });

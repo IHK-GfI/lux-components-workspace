@@ -1,0 +1,384 @@
+// noinspection DuplicatedCode
+
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { By } from '@angular/platform-browser';
+import { provideNoopAnimations } from '@angular/platform-browser/animations';
+import { LuxA11yTestHelper } from '@ihk-gfi/lux-components/test-utils';
+import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
+import { LuxConsoleService } from '../../lux-util/lux-console.service';
+import { LuxDisplayWithFnType, LuxSliderColor, LuxSliderComponent } from './lux-slider.component';
+
+describe('LuxSliderComponent', () => {
+  beforeEach(async () => {
+    TestBed.configureTestingModule({
+      providers: [
+        LuxConsoleService,
+        provideNoopAnimations(),
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+        provideLuxTranslocoTesting()
+      ]
+    }).compileComponents();
+  });
+
+  describe('In ReactiveForm', () => {
+    let component: MockSliderFormComponent;
+    let fixture: ComponentFixture<MockSliderFormComponent>;
+    let sliderComponent: LuxSliderComponent;
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(MockSliderFormComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+      sliderComponent = fixture.debugElement.query(By.directive(LuxSliderComponent)).componentInstance;
+    });
+
+    it('Sollte den Wert setzen', async () => {
+      // Vorbedingungen testen
+      expect(component.form.value.slider).toEqual(0);
+
+      // Änderungen durchführen
+      component.form.get('slider')!.setValue(25);
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen
+      expect(component.form.value.slider).toEqual(25);
+      expect(sliderComponent.formControl.value).toEqual(25);
+    });
+
+    it('Sollte den Wert und Prozent-Wert richtig emitten (bei geändertem Max/Min Wert)', async () => {
+      // Vorbedingungen testen
+      const valueSpy = vi.spyOn(component, 'valueChanged').mockReturnValue(undefined);
+      const percentSpy = vi.spyOn(component, 'percentChanged').mockReturnValue(undefined);
+
+      expect(valueSpy).toHaveBeenCalledTimes(0);
+      expect(percentSpy).toHaveBeenCalledTimes(0);
+
+      // Änderungen durchführen
+      component.max.set(50);
+      component.min.set(25);
+      fixture.detectChanges();
+      component.form.get('slider')!.setValue(30);
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen
+      expect(valueSpy).toHaveBeenCalledTimes(1);
+      expect(percentSpy).toHaveBeenCalledTimes(1);
+      expect(valueSpy).toHaveBeenCalledWith(30);
+      expect(percentSpy).toHaveBeenCalledWith(20);
+    });
+
+    it('Sollte den Min- und Max-Wert nicht überschreiten', async () => {
+      // Vorbedingungen testen
+      expect(component.form.get('slider')!.value).toEqual(0);
+      expect(sliderComponent.value()).toEqual(0);
+
+      // Änderungen durchführen
+      component.max.set(50);
+      component.min.set(25);
+      fixture.detectChanges();
+      component.form.get('slider')!.setValue(20);
+      fixture.detectChanges();
+      await fixture.whenStable();
+
+      // Nachbedingungen prüfen
+      expect(component.form.get('slider')!.value).toEqual(25);
+      expect(sliderComponent.value()).toEqual(25);
+
+      // Änderungen durchführen
+      component.form.get('slider')!.setValue(55);
+      fixture.detectChanges();
+      await fixture.whenStable();
+
+      // Nachbedingungen prüfen
+      expect(component.form.get('slider')!.value).toEqual(50);
+      expect(sliderComponent.value()).toEqual(50);
+    });
+
+    it('Sollte deaktiviert werden (über die Property)', async () => {
+      // Vorbedingungen testen
+      let disabledSlider = fixture.debugElement.query(By.css('.mat-slider-disabled'));
+      expect(disabledSlider).toBeNull();
+      expect(sliderComponent.luxDisabled()).toBe(false);
+
+      // Änderungen durchführen
+      component.disabled.set(true);
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen
+      disabledSlider = fixture.debugElement.query(By.css('.mat-slider-disabled'));
+      expect(disabledSlider).toBeDefined();
+      expect(sliderComponent.luxDisabled()).toBe(true);
+    });
+
+    it('Sollte deaktiviert werden (über die FormControl)', async () => {
+      // Vorbedingungen testen
+      expect(sliderComponent.formControl.disabled).toBe(false);
+
+      // Änderungen durchführen
+      component.form.get('slider')!.disable();
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen
+      expect(sliderComponent.formControl.disabled).toBe(true);
+    });
+  });
+
+  describe('Ohne ReactiveForm', () => {
+    let component: MockSliderNoFormComponent;
+    let fixture: ComponentFixture<MockSliderNoFormComponent>;
+    let sliderComponent: LuxSliderComponent;
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(MockSliderNoFormComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+      sliderComponent = fixture.debugElement.query(By.directive(LuxSliderComponent)).componentInstance;
+    });
+
+    it('Sollte den Wert setzen', async () => {
+      // Vorbedingungen testen
+      expect(component.value()).toEqual(0);
+      expect(sliderComponent.value()).toEqual(0);
+
+      // Änderungen durchführen
+      component.value.set(50);
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen
+      expect(component.value()).toEqual(50);
+      expect(sliderComponent.value()).toEqual(50);
+    });
+
+    it('Sollte den Wert und Prozent-Wert richtig emitten (bei geändertem Max/Min Wert)', async () => {
+      // Vorbedingungen testen
+      const valueSpy = vi.spyOn(component, 'valueChanged').mockReturnValue(undefined);
+      const percentSpy = vi.spyOn(component, 'percentChanged').mockReturnValue(undefined);
+
+      expect(valueSpy).toHaveBeenCalledTimes(0);
+      expect(percentSpy).toHaveBeenCalledTimes(0);
+
+      // Änderungen durchführen
+      component.max.set(50);
+      component.min.set(25);
+      fixture.detectChanges();
+      component.value.set(30);
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen
+      expect(valueSpy).toHaveBeenCalledTimes(1);
+      expect(percentSpy).toHaveBeenCalledTimes(1);
+      expect(valueSpy).toHaveBeenCalledWith(30);
+      expect(percentSpy).toHaveBeenCalledWith(20);
+    });
+
+    it('Sollte deaktiviert werden', async () => {
+      // Vorbedingungen testen
+      let disabledSlider = fixture.debugElement.query(By.css('.mat-slider-disabled'));
+      expect(disabledSlider).toBeNull();
+      expect(sliderComponent.luxDisabled()).toBe(false);
+
+      // Änderungen durchführen
+      component.disabled.set(true);
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen
+      disabledSlider = fixture.debugElement.query(By.css('.mat-slider-disabled'));
+      expect(disabledSlider).toBeDefined();
+      expect(sliderComponent.luxDisabled()).toBe(true);
+    });
+
+    it('Sollte den Min- und Max-Wert nicht überschreiten', async () => {
+      // Vorbedingungen testen
+      expect(component.value()).toEqual(0);
+      expect(sliderComponent.value()).toEqual(0);
+
+      // Änderungen durchführen
+      component.max.set(50);
+      component.min.set(25);
+      fixture.detectChanges();
+      component.value.set(20);
+      fixture.detectChanges();
+      await fixture.whenStable();
+
+      // Nachbedingungen prüfen
+      expect(component.value()).toEqual(25);
+      expect(sliderComponent.value()).toEqual(25);
+
+      // Änderungen durchführen
+      component.value.set(55);
+      fixture.detectChanges();
+      await fixture.whenStable();
+
+      // Nachbedingungen prüfen
+      expect(component.value()).toEqual(50);
+      expect(sliderComponent.value()).toEqual(50);
+    });
+
+    it('Sollte den Thumb-Label anzeigen und verstecken', async () => {
+      // Vorbedingungen testen
+      let thumbLabel = fixture.debugElement.query(By.css('.mat-slider-thumb-label-showing .mat-slider-thumb-label'));
+      expect(thumbLabel).toBeDefined();
+
+      // Änderungen durchführen
+      component.showThumbLabel.set(false);
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen
+      thumbLabel = fixture.debugElement.query(By.css('.mat-slider-thumb-label-showing .mat-slider-thumb-label'));
+      expect(thumbLabel).toBeNull();
+    });
+
+    it('Sollte die displayWith-Funktion korrekt ausführen', async () => {
+      // Vorbedingungen testen
+      let thumbLabelText = fixture.debugElement.query(By.css('.mdc-slider__value-indicator-text'));
+      expect(thumbLabelText.nativeElement.textContent).toEqual('0');
+
+      // Änderungen durchführen
+      component.max.set(10000);
+      component.showThumbLabel.set(true);
+      component.displayWith.set((value: number) => {
+        const result = value ? '' + value : '0';
+        if (value && value >= 1000) {
+          return Math.round(value / 1000) + 'k';
+        }
+        return result;
+      });
+      fixture.detectChanges();
+      component.value.set(1000);
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen
+      thumbLabelText = fixture.debugElement.query(By.css('.mdc-slider__value-indicator-text'));
+      expect(thumbLabelText.nativeElement.textContent).toEqual('1k');
+
+      component.value.set(5600);
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen
+      thumbLabelText = fixture.debugElement.query(By.css('.mdc-slider__value-indicator-text'));
+      expect(thumbLabelText.nativeElement.textContent).toEqual('6k');
+    });
+  });
+
+  describe('A11y', () => {
+    let fixture: ComponentFixture<LuxSliderA11yComponent>;
+    let testComponent: LuxSliderA11yComponent;
+
+    beforeAll(() => {
+      LuxA11yTestHelper.addA11yMatchers();
+    });
+
+    beforeEach(async () => {
+      fixture = TestBed.createComponent(LuxSliderA11yComponent);
+      fixture.detectChanges();
+      testComponent = fixture.componentInstance;
+    });
+
+    it('sollte keine Barrierefreiheitsverletzungen haben (leer)', async () => {
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+
+    it('sollte keine Barrierefreiheitsverletzungen haben (disabled)', async () => {
+      testComponent.disabled.set(true);
+      fixture.detectChanges();
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+
+    it('sollte keine Barrierefreiheitsverletzungen haben (readonly)', async () => {
+      testComponent.readonly.set(true);
+      fixture.detectChanges();
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+
+    it('sollte keine Barrierefreiheitsverletzungen haben (required)', async () => {
+      testComponent.required.set(true);
+      fixture.detectChanges();
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+  });
+});
+
+@Component({
+  template: `<lux-slider
+    luxLabel="Lorem ipsum"
+    [luxColor]="color()"
+    [luxDisabled]="disabled()"
+    [luxShowThumbLabel]="showThumbLabel()"
+    [(luxValue)]="value"
+    [luxMax]="max()"
+    [luxMin]="min()"
+    [luxDisplayWith]="displayWith()"
+    (luxValuePercent)="percentChanged($event)"
+    (luxValueChange)="valueChanged($event)"
+    luxTagId="slidernoform"
+  >
+  </lux-slider>`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [LuxSliderComponent]
+})
+class MockSliderNoFormComponent {
+  color = signal<LuxSliderColor>('primary');
+  disabled = signal(false);
+  showThumbLabel = signal(true);
+  value = signal(0);
+  max = signal(100);
+  min = signal(0);
+  displayWith = signal<LuxDisplayWithFnType | undefined>(undefined);
+
+  percentChanged(value: number) {}
+
+  valueChanged(value: number) {}
+}
+
+@Component({
+  template: `<div [formGroup]="form">
+    <lux-slider
+      [luxDisabled]="disabled()"
+      [luxMax]="max()"
+      [luxMin]="min()"
+      luxControlBinding="slider"
+      (luxValuePercent)="percentChanged($event)"
+      (luxValueChange)="valueChanged($event)"
+      luxTagId="slidernoform"
+    >
+    </lux-slider>
+  </div>`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [ReactiveFormsModule, LuxSliderComponent]
+})
+class MockSliderFormComponent {
+  disabled = signal(false);
+  max = signal(100);
+  min = signal(0);
+
+  form;
+
+  percentChanged(value: number) {}
+
+  valueChanged(value: number) {}
+
+  constructor() {
+    this.form = new FormGroup({
+      slider: new FormControl<number>(0)
+    });
+  }
+}
+
+@Component({
+  template: `
+    <lux-slider luxLabel="Slider" [luxDisabled]="disabled()" [luxReadonly]="readonly()" [luxRequired]="required()"></lux-slider>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [LuxSliderComponent]
+})
+class LuxSliderA11yComponent {
+  disabled = signal(false);
+  readonly = signal(false);
+  required = signal(false);
+}

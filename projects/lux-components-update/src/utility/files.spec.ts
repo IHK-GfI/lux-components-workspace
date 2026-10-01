@@ -14,6 +14,7 @@ import {
 import { appOptions, workspaceOptions } from './test';
 import { Options } from './types';
 import { UtilConfig } from './util';
+import { lastValueFrom } from 'rxjs';
 
 const collectionPath = path.join(__dirname, '../../collection.json');
 
@@ -38,195 +39,161 @@ describe('file', () => {
   });
 
   describe('replaceRule', () => {
-    it('Sollte nur den ersten Treffer ersetzen (string)', (done) => {
+    it('Sollte nur den ersten Treffer ersetzen (string)', async () => {
       const filePath = testOptions.path + '/replaceRule/replaceStringAllFile.json';
 
       appTree.create(filePath, replaceStringAllFile);
-
-      callRule(
-        replaceRule(testOptions, 'startMsg', 'endMsg', 'replaceStringAllFile.json', new ReplaceItem('before', 'after', false)),
-        appTree,
-        context
-      ).subscribe({
-        next: (successTree: Tree) => {
-          const content = successTree.read(filePath)?.toString();
-          expect(content).toContain(`"newProjectRoot": "after"`);
-          expect(content).toContain(`"outputPath": "before",`);
-
-          done();
-        },
-        error: (reason) => expect(reason).toBeUndefined()
-      });
+      const successTree: Tree = await lastValueFrom(
+        callRule(
+          replaceRule(testOptions, 'startMsg', 'endMsg', 'replaceStringAllFile.json', new ReplaceItem('before', 'after', false)),
+          appTree,
+          context
+        )
+      );
+      const content = successTree.read(filePath)?.toString();
+      expect(content).toContain(`"newProjectRoot": "after"`);
+      expect(content).toContain(`"outputPath": "before",`);
     });
 
-    it('Sollte nur den ersten Treffer ersetzen (RegExp)', (done) => {
+    it('Sollte nur den ersten Treffer ersetzen (RegExp)', async () => {
       const filePath = testOptions.path + '/replaceRule/replaceStringAllFile.json';
 
       appTree.create(filePath, replaceStringAllFile);
-
-      callRule(
-        replaceRule(testOptions, 'startMsg', 'endMsg', 'replaceStringAllFile.json', new ReplaceItem(/before/m, 'after', false)),
-        appTree,
-        context
-      ).subscribe({
-        next: (successTree: Tree) => {
-          const content = successTree.read(filePath)?.toString();
-          expect(content).toContain(`"newProjectRoot": "after"`);
-          expect(content).toContain(`"outputPath": "before",`);
-
-          done();
-        },
-        error: (reason) => expect(reason).toBeUndefined()
-      });
+      const successTree: Tree = await lastValueFrom(
+        callRule(
+          replaceRule(testOptions, 'startMsg', 'endMsg', 'replaceStringAllFile.json', new ReplaceItem(/before/m, 'after', false)),
+          appTree,
+          context
+        )
+      );
+      const content = successTree.read(filePath)?.toString();
+      expect(content).toContain(`"newProjectRoot": "after"`);
+      expect(content).toContain(`"outputPath": "before",`);
     });
 
-    it('Sollte alle Treffer ersetzen (string)', (done) => {
+    it('Sollte alle Treffer ersetzen (string)', async () => {
       const filePath = testOptions.path + '/replaceRule/replaceStringAllFile.json';
 
       appTree.create(filePath, replaceStringAllFile);
-
-      callRule(
-        replaceRule(testOptions, 'startMsg', 'endMsg', 'replaceStringAllFile.json', new ReplaceItem('before', 'after', true)),
-        appTree,
-        context
-      ).subscribe({
-        next: (successTree: Tree) => {
-          const content = successTree.read(filePath)?.toString();
-          expect(content).toContain(`"newProjectRoot": "after"`);
-          expect(content).toContain(`"outputPath": "after",`);
-
-          done();
-        },
-        error: (reason) => expect(reason).toBeUndefined()
-      });
+      const successTree: Tree = await lastValueFrom(
+        callRule(
+          replaceRule(testOptions, 'startMsg', 'endMsg', 'replaceStringAllFile.json', new ReplaceItem('before', 'after', true)),
+          appTree,
+          context
+        )
+      );
+      const content = successTree.read(filePath)?.toString();
+      expect(content).toContain(`"newProjectRoot": "after"`);
+      expect(content).toContain(`"outputPath": "after",`);
     });
 
-    it('Sollte alle Treffer ersetzen (RegExp)', (done) => {
+    it('Sollte alle Treffer ersetzen (RegExp)', async () => {
       const filePath = testOptions.path + '/replaceRule/replaceStringAllFile.json';
 
       appTree.create(filePath, replaceStringAllFile);
-
-      callRule(
-        replaceRule(testOptions, 'startMsg', 'endMsg', 'replaceStringAllFile.json', new ReplaceItem(/before/gm, 'after', true)),
-        appTree,
-        context
-      ).subscribe({
-        next: (successTree: Tree) => {
-          const content = successTree.read(filePath)?.toString();
-          expect(content).toContain(`"newProjectRoot": "after"`);
-          expect(content).toContain(`"outputPath": "after",`);
-
-          done();
-        },
-        error: (reason) => expect(reason).toBeUndefined()
-      });
+      const successTree: Tree = await lastValueFrom(
+        callRule(
+          replaceRule(testOptions, 'startMsg', 'endMsg', 'replaceStringAllFile.json', new ReplaceItem(/before/gm, 'after', true)),
+          appTree,
+          context
+        )
+      );
+      const content = successTree.read(filePath)?.toString();
+      expect(content).toContain(`"newProjectRoot": "after"`);
+      expect(content).toContain(`"outputPath": "after",`);
     });
 
-    it('Sollte alle HTML-Attribute ersetzen (RegExp)', (done) => {
+    it('Sollte alle HTML-Attribute ersetzen (RegExp)', async () => {
       const filePath = testOptions.path + '/replaceRule/replaceHtmlAttribut.html';
 
       appTree.create(filePath, replaceHtmlAttribut);
+      const successTree: Tree = await lastValueFrom(
+        callRule(
+          replaceRule(
+            testOptions,
+            'startMsg',
+            'endMsg',
+            'replaceHtmlAttribut.html',
+            new ReplaceHtmlAttributeItem('luxColor', '$1="color2"')
+          ),
+          appTree,
+          context
+        )
+      );
+      const content = successTree.read(filePath)?.toString();
+      expect(content).not.toContain(`luxColor="color"`);
+      expect(content).not.toContain(`[luxColor]="color"`);
+      expect(content).not.toContain(`(luxColor)="color"`);
+      expect(content).not.toContain(`[(luxColor)]="color"`);
 
-      callRule(
-        replaceRule(testOptions, 'startMsg', 'endMsg', 'replaceHtmlAttribut.html', new ReplaceHtmlAttributeItem('luxColor', '$1="color2"')),
-        appTree,
-        context
-      ).subscribe({
-        next: (successTree: Tree) => {
-          const content = successTree.read(filePath)?.toString();
-          expect(content).not.toContain(`luxColor="color"`);
-          expect(content).not.toContain(`[luxColor]="color"`);
-          expect(content).not.toContain(`(luxColor)="color"`);
-          expect(content).not.toContain(`[(luxColor)]="color"`);
-
-          expect(content).toContain(`luxColor="color2"`);
-          expect(content).toContain(`[luxColor]="color2"`);
-          expect(content).toContain(`(luxColor)="color2"`);
-          expect(content).toContain(`[(luxColor)]="color2"`);
-
-          done();
-        },
-        error: (reason) => expect(reason).toBeUndefined()
-      });
+      expect(content).toContain(`luxColor="color2"`);
+      expect(content).toContain(`[luxColor]="color2"`);
+      expect(content).toContain(`(luxColor)="color2"`);
+      expect(content).toContain(`[(luxColor)]="color2"`);
     });
 
-    it('Sollte alle HTML-Attribute entfernen (RegExp)', (done) => {
+    it('Sollte alle HTML-Attribute entfernen (RegExp)', async () => {
       const filePath = testOptions.path + '/replaceRule/replaceHtmlAttribut.html';
 
       appTree.create(filePath, replaceHtmlAttribut);
-
-      callRule(
-        replaceRule(testOptions, 'startMsg', 'endMsg', 'replaceHtmlAttribut.html', new RemoveHtmlAttributeItem('luxColor')),
-        appTree,
-        context
-      ).subscribe({
-        next: (successTree: Tree) => {
-          const content = successTree.read(filePath)?.toString();
-          expect(content).not.toContain(`luxColor="color"`);
-          expect(content).not.toContain(`[luxColor]="color"`);
-          expect(content).not.toContain(`(luxColor)="color"`);
-          expect(content).not.toContain(`[(luxColor)]="color"`);
-
-          done();
-        },
-        error: (reason) => expect(reason).toBeUndefined()
-      });
+      const successTree: Tree = await lastValueFrom(
+        callRule(
+          replaceRule(testOptions, 'startMsg', 'endMsg', 'replaceHtmlAttribut.html', new RemoveHtmlAttributeItem('luxColor')),
+          appTree,
+          context
+        )
+      );
+      const content = successTree.read(filePath)?.toString();
+      expect(content).not.toContain(`luxColor="color"`);
+      expect(content).not.toContain(`[luxColor]="color"`);
+      expect(content).not.toContain(`(luxColor)="color"`);
+      expect(content).not.toContain(`[(luxColor)]="color"`);
     });
 
-    it('Sollte alle HTML-Attribute eines speziellen Tags entfernen (RegExp)', (done) => {
+    it('Sollte alle HTML-Attribute eines speziellen Tags entfernen (RegExp)', async () => {
       const filePath = testOptions.path + '/replaceRule/removeHtmlTagAttribut.html';
 
       appTree.create(filePath, removeHtmlTagAttribut);
-
-      callRule(
-        replaceRule(
-          testOptions,
-          'startMsg',
-          'endMsg',
-          'removeHtmlTagAttribut.html',
-          new RemoveHtmlTagAttributeItem('lux-slider-ac', 'luxVertical')
-        ),
-        appTree,
-        context
-      ).subscribe({
-        next: (successTree: Tree) => {
-          const content = successTree.read(filePath)?.toString();
-          expect(content).toEqual(removeHtmlTagAttributResult);
-
-          done();
-        },
-        error: (reason) => expect(reason).toBeUndefined()
-      });
+      const successTree: Tree = await lastValueFrom(
+        callRule(
+          replaceRule(
+            testOptions,
+            'startMsg',
+            'endMsg',
+            'removeHtmlTagAttribut.html',
+            new RemoveHtmlTagAttributeItem('lux-slider-ac', 'luxVertical')
+          ),
+          appTree,
+          context
+        )
+      );
+      const content = successTree.read(filePath)?.toString();
+      expect(content).toEqual(removeHtmlTagAttributResult);
     });
 
-    it('Sollte alle HTML-Attribute eines speziellen Tags ersetzen (RegExp)', (done) => {
+    it('Sollte alle HTML-Attribute eines speziellen Tags ersetzen (RegExp)', async () => {
       const filePath = testOptions.path + '/replaceRule/replaceHtmlTagAttribut.html';
 
       appTree.create(filePath, replaceHtmlTagAttribut);
-
-      callRule(
-        replaceRule(
-          testOptions,
-          'startMsg',
-          'endMsg',
-          'replaceHtmlTagAttribut.html',
-          new ReplaceHtmlTagAttributeItem('lux-slider-ac', 'luxVertical', 'luxVertical2', 'color2')
-        ),
-        appTree,
-        context
-      ).subscribe({
-        next: (successTree: Tree) => {
-          const content = successTree.read(filePath)?.toString();
-          expect(content).toEqual(replaceHtmlTagAttributResult);
-
-          done();
-        },
-        error: (reason) => expect(reason).toBeUndefined()
-      });
+      const successTree: Tree = await lastValueFrom(
+        callRule(
+          replaceRule(
+            testOptions,
+            'startMsg',
+            'endMsg',
+            'replaceHtmlTagAttribut.html',
+            new ReplaceHtmlTagAttributeItem('lux-slider-ac', 'luxVertical', 'luxVertical2', 'color2')
+          ),
+          appTree,
+          context
+        )
+      );
+      const content = successTree.read(filePath)?.toString();
+      expect(content).toEqual(replaceHtmlTagAttributResult);
     });
   });
 
-  it('Sollte eine TransUnit hinzufügen (RegExp)', (done) => {
+  it('Sollte eine TransUnit hinzufügen (RegExp)', async () => {
     const filePath = testOptions.path + '/replaceRule/addTransUnitItem.html';
 
     appTree.create(filePath, transUnitItemHtml);
@@ -238,52 +205,43 @@ describe('file', () => {
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>`;
-
-    callRule(
-      replaceRule(
-        testOptions,
-        'startMsg',
-        'endMsg',
-        'addTransUnitItem.html',
-        new AddTransUnitItem('luxc.message.btn.close.arialabel', newTransUnit)
-      ),
-      appTree,
-      context
-    ).subscribe({
-      next: (successTree: Tree) => {
-        const content = successTree.read(filePath)?.toString();
-        expect(content).toContain(newTransUnit);
-        expect(content).toContain('luxc.message.btn.close.arialabel');
-        done();
-      },
-      error: (reason) => expect(reason).toBeUndefined()
-    });
+    const successTree: Tree = await lastValueFrom(
+      callRule(
+        replaceRule(
+          testOptions,
+          'startMsg',
+          'endMsg',
+          'addTransUnitItem.html',
+          new AddTransUnitItem('luxc.message.btn.close.arialabel', newTransUnit)
+        ),
+        appTree,
+        context
+      )
+    );
+    const content = successTree.read(filePath)?.toString();
+    expect(content).toContain(newTransUnit);
+    expect(content).toContain('luxc.message.btn.close.arialabel');
   });
 
-  it('Sollte eine TransUnit löschen (RegExp)', (done) => {
+  it('Sollte eine TransUnit löschen (RegExp)', async () => {
     const filePath = testOptions.path + '/replaceRule/removeTransUnitItem.html';
 
     appTree.create(filePath, transUnitItemHtml);
-
-    callRule(
-      replaceRule(
-        testOptions,
-        'startMsg',
-        'endMsg',
-        'removeTransUnitItem.html',
-        new RemoveTransUnitItem('luxc.message.btn.close.arialabel')
-      ),
-      appTree,
-      context
-    ).subscribe({
-      next: (successTree: Tree) => {
-        const content = successTree.read(filePath)?.toString();
-        expect(content).not.toContain('luxc.message.btn.close.arialabel');
-
-        done();
-      },
-      error: (reason) => expect(reason).toBeUndefined()
-    });
+    const successTree: Tree = await lastValueFrom(
+      callRule(
+        replaceRule(
+          testOptions,
+          'startMsg',
+          'endMsg',
+          'removeTransUnitItem.html',
+          new RemoveTransUnitItem('luxc.message.btn.close.arialabel')
+        ),
+        appTree,
+        context
+      )
+    );
+    const content = successTree.read(filePath)?.toString();
+    expect(content).not.toContain('luxc.message.btn.close.arialabel');
   });
 
   it('deleteLineFromFile entfernt die Zeile und entfernt das Komma in vorheriger Zeile (JSON)', () => {
@@ -299,7 +257,7 @@ describe('file', () => {
     appTree.create(filePath, json);
 
     const changed = deleteLineFromFile(appTree, null as any, filePath, 'lux-components', true);
-    expect(changed).toBeTrue();
+    expect(changed).toBe(true);
 
     const content = appTree.read(filePath)?.toString() ?? '';
     // Die entfernte Zeile darf nicht mehr vorkommen

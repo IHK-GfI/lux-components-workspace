@@ -13,11 +13,11 @@ import { LuxSnackbarConfig } from './lux-snackbar-config';
   providedIn: 'root'
 })
 export class LuxSnackbarService implements OnDestroy {
-  private snackBar = inject(MatSnackBar);
-  private appService = inject(LuxAppService);
-
   private static readonly VERTICAL_POSITION = 'top';
   private static readonly HORIZONTAL_POSITION = 'end';
+
+  private snackBar = inject(MatSnackBar);
+  private appService = inject(LuxAppService);
 
   private afterOpenedSubscription?: Subscription;
   private resizeSubscription: Subscription;
@@ -26,6 +26,14 @@ export class LuxSnackbarService implements OnDestroy {
     this.resizeSubscription = this.appService.resize$.asObservable().subscribe(() => {
       this.updateSnackbarPosition(false);
     });
+  }
+
+  ngOnDestroy() {
+    if (this.afterOpenedSubscription) {
+      this.afterOpenedSubscription.unsubscribe();
+    }
+
+    this.resizeSubscription.unsubscribe();
   }
 
   /**
@@ -141,14 +149,6 @@ export class LuxSnackbarService implements OnDestroy {
    */
   public dismiss() {
     this.snackBar.dismiss();
-  }
-
-  ngOnDestroy() {
-    if (this.afterOpenedSubscription) {
-      this.afterOpenedSubscription.unsubscribe();
-    }
-
-    this.resizeSubscription.unsubscribe();
   }
 
   private updateSnackbarPosition(logError: boolean) {

@@ -1,17 +1,16 @@
+import { describe, it, beforeEach, afterEach, expect, vi } from 'vitest';
 // noinspection DuplicatedCode
 
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
-import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, flushMicrotasks, TestBed, waitForAsync } from '@angular/core/testing';
+import { ChangeDetectionStrategy, Component, signal, viewChild } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
-import { Viewport } from 'karma-viewport/dist/adapter/viewport';
 import { LuxOverlayHelper, LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxMenuItemComponent } from '../../lux-action/lux-menu/lux-menu-subcomponents/lux-menu-item.component';
-import { LuxComponentsConfigService } from '../../lux-components-config/lux-components-config.service';
 import { LuxConsoleService } from '../../lux-util/lux-console.service';
 import { LuxSideNavFooterComponent } from '../lux-app-header/lux-app-header-subcomponents/lux-side-nav/lux-side-nav-subcomponents/lux-side-nav-footer.component';
 import { LuxSideNavHeaderComponent } from '../lux-app-header/lux-app-header-subcomponents/lux-side-nav/lux-side-nav-subcomponents/lux-side-nav-header.component';
@@ -22,12 +21,9 @@ import { LuxAppHeaderRightNavComponent } from './lux-app-header-subcomponents/lu
 import { LuxSideNavComponent } from './lux-app-header-subcomponents/lux-side-nav/lux-side-nav.component';
 import { LuxAppHeaderComponent } from './lux-app-header.component';
 
-declare const viewport: Viewport;
-
 describe('LuxAppHeaderComponent', () => {
-  beforeEach(waitForAsync(() => {
-    viewport.set('desktop');
-
+  beforeEach(async () => {
+    vi.useFakeTimers();
     TestBed.configureTestingModule({
       providers: [
         LuxConsoleService,
@@ -37,120 +33,127 @@ describe('LuxAppHeaderComponent', () => {
         provideLuxTranslocoTesting()
       ]
     }).compileComponents();
-  }));
+  });
+
+  afterEach(async () => {
+    if (vi.isFakeTimers()) {
+      await vi.runAllTimersAsync();
+    }
+    vi.useRealTimers();
+  });
 
   describe('luxClicked', () => {
-    it('Label im App-Header sollte angeklickt werden können', fakeAsync(() => {
+    it('Label im App-Header sollte angeklickt werden können', async () => {
       const fixture = TestBed.createComponent(MockLabelClickedAppHeaderComponent);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       const element = fixture.debugElement.query(By.css('span.lux-cursor-pointer'));
-      const onClickSpy = spyOn(fixture.componentInstance, 'onClicked');
+      const onClickSpy = vi.spyOn(fixture.componentInstance, 'onClicked').mockReturnValue(undefined);
 
       element.nativeElement.click();
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       expect(element).toBeDefined();
       expect(onClickSpy).toHaveBeenCalled();
-      expect(element.classes['lux-cursor-pointer']).toBeTrue();
-    }));
+      expect(element.classes['lux-cursor-pointer']).toBe(true);
+    });
 
-    it('Icon im App-Header sollte angeklickt werden können', fakeAsync(() => {
+    it('Icon im App-Header sollte angeklickt werden können', async () => {
       const fixture = TestBed.createComponent(MockIconClickedAppHeaderComponent);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       const element = fixture.debugElement.query(By.css('lux-icon.lux-cursor-pointer'));
-      const onClickSpy = spyOn(fixture.componentInstance, 'onClicked');
+      const onClickSpy = vi.spyOn(fixture.componentInstance, 'onClicked').mockReturnValue(undefined);
 
       element.nativeElement.click();
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       expect(element).toBeDefined();
       expect(onClickSpy).toHaveBeenCalled();
-      expect(element.classes['lux-cursor-pointer']).toBeTrue();
-    }));
+      expect(element.classes['lux-cursor-pointer']).toBe(true);
+    });
 
-    it('Image im App-Header sollte angeklickt werden können', fakeAsync(() => {
+    it('Image im App-Header sollte angeklickt werden können', async () => {
       const fixture = TestBed.createComponent(MockImageClickedAppHeaderComponent);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       const element = fixture.debugElement.query(By.css('lux-image.lux-cursor-pointer'));
-      const onClickSpy = spyOn(fixture.componentInstance, 'onClicked');
+      const onClickSpy = vi.spyOn(fixture.componentInstance, 'onClicked').mockReturnValue(undefined);
 
       element.nativeElement.click();
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       expect(element).toBeDefined();
       expect(onClickSpy).toHaveBeenCalled();
-      expect(element.classes['lux-cursor-pointer']).toBeTrue();
-    }));
+      expect(element.classes['lux-cursor-pointer']).toBe(true);
+    });
   });
 
   describe('ohne lux-side-nav und lux-app-header-right-nav', () => {
     let fixture: ComponentFixture<MockAppHeaderComponent>;
     let testComponent: MockAppHeaderComponent;
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(async () => {
       fixture = TestBed.createComponent(MockAppHeaderComponent);
       testComponent = fixture.componentInstance;
-      testComponent.testUseRightNav = false;
-      testComponent.testUseSideNav = false;
-      LuxTestHelper.wait(fixture);
-    }));
+      testComponent.testUseRightNav.set(false);
+      testComponent.testUseSideNav.set(false);
+      await LuxTestHelper.wait(fixture);
+    });
 
-    it('Sollte erstellt werden', fakeAsync(() => {
+    it('Sollte erstellt werden', async () => {
       expect(testComponent).toBeTruthy();
-    }));
+    });
 
-    it('Sollte den luxAppTitle darstellen ', fakeAsync(() => {
+    it('Sollte den luxAppTitle darstellen ', async () => {
       // Vorbedingungen testen
       expect(fixture.debugElement.query(By.css('.lux-header-title')).nativeElement.textContent.trim()).toEqual('');
 
       // Änderungen durchführen
-      testComponent.title = 'Titel';
-      LuxTestHelper.wait(fixture);
+      testComponent.title.set('Titel');
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       expect(fixture.debugElement.query(By.css('.lux-header-title')).nativeElement.textContent.trim()).toEqual('Titel');
-    }));
+    });
 
-    it('Sollte in kleiner Auflösung den luxAppTitleShort darstellen', fakeAsync(() => {
+    it('Sollte in kleiner Auflösung den luxAppTitleShort darstellen', async () => {
       // Vorbedingungen testen
       expect(fixture.debugElement.query(By.css('.lux-header-title')).nativeElement.textContent.trim()).toEqual('');
 
       // Änderungen durchführen
-      testComponent.titleShort = 'T';
-      testComponent.appHeaderComponent.mobileView = true;
-      LuxTestHelper.wait(fixture);
+      testComponent.titleShort.set('T');
+      testComponent.appHeaderComponent().mobileView.set(true);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       expect(fixture.debugElement.query(By.css('.lux-header-title')).nativeElement.textContent.trim()).toEqual('T');
 
-      testComponent.appHeaderComponent.mobileView = false;
-      LuxTestHelper.wait(fixture);
-    }));
+      testComponent.appHeaderComponent().mobileView.set(false);
+      await LuxTestHelper.wait(fixture);
+    });
   });
 
   describe('mit lux-side-nav', () => {
     let fixture: ComponentFixture<MockAppHeaderComponent>;
     let testComponent: MockAppHeaderComponent;
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(async () => {
       fixture = TestBed.createComponent(MockAppHeaderComponent);
       testComponent = fixture.componentInstance;
-      testComponent.testUseSideNav = true;
-      LuxTestHelper.wait(fixture);
-    }));
+      testComponent.testUseSideNav.set(true);
+      await LuxTestHelper.wait(fixture);
+    });
 
-    it('Sollte erstellt werden', fakeAsync(() => {
+    it('Sollte erstellt werden', async () => {
       expect(testComponent).toBeTruthy();
-    }));
+    });
 
-    it('Sollte den Trigger für lux-side-nav darstellen', fakeAsync(() => {
+    it('Sollte den Trigger für lux-side-nav darstellen', async () => {
       expect(fixture.debugElement.query(By.css('.lux-side-nav-trigger'))).not.toBeNull();
-    }));
+    });
 
-    it('Sollte das lux-side-nav ausklappen', fakeAsync(() => {
+    it('Sollte das lux-side-nav ausklappen', async () => {
       // Vorbedingungen testen
       const sideNavEl = fixture.debugElement.query(By.css('.lux-side-nav')).nativeElement;
       expect(sideNavEl.style.opacity).toEqual('0');
@@ -158,48 +161,48 @@ describe('LuxAppHeaderComponent', () => {
 
       // Änderungen durchführen
       fixture.debugElement.query(By.css('.lux-side-nav-trigger button')).nativeElement.click();
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       expect(sideNavEl.style.opacity).toEqual('1');
       expect(fixture.debugElement.query(By.css('.lux-side-nav-overlay')).nativeElement.style.display).toEqual('');
+    });
 
-      discardPeriodicTasks();
-    }));
-
-    it('Sollte den lux-side-nav-header und lux-side-nav-footer darstellen', fakeAsync(() => {
+    it('Sollte den lux-side-nav-header und lux-side-nav-footer darstellen', async () => {
       expect(fixture.debugElement.query(By.css('.test-side-nav-header')).nativeElement.textContent.trim()).toEqual('SideNav-Header');
       expect(fixture.debugElement.query(By.css('.test-side-nav-footer')).nativeElement.textContent.trim()).toEqual('SideNav-Footer');
-    }));
+    });
 
-    it('Sollte lux-side-nav-items via *ngIf ausblenden können', fakeAsync(() => {
+    it('Sollte lux-side-nav-items via *ngIf ausblenden können', async () => {
       // Vorbedingungen testen
       testComponent.createSideNavItems(2);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
       expect(fixture.debugElement.queryAll(By.css('.lux-side-nav-item')).length).toBe(2);
 
       // Änderungen durchführen
-      testComponent.sideNavItems[0].ignoreThisItem = true;
-      LuxTestHelper.wait(fixture);
+      testComponent.sideNavItems()[0].ignoreThisItem = true;
+      testComponent.refreshSideNavItems();
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       expect(fixture.debugElement.queryAll(By.css('.lux-side-nav-item')).length).toBe(1);
 
       // Änderungen durchführen
-      testComponent.sideNavItems[1].ignoreThisItem = true;
-      LuxTestHelper.wait(fixture);
+      testComponent.sideNavItems()[1].ignoreThisItem = true;
+      testComponent.refreshSideNavItems();
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       expect(fixture.debugElement.queryAll(By.css('.lux-side-nav-item')).length).toBe(0);
-    }));
+    });
 
-    it('Sollte label und icon für lux-side-nav-items darstellen', fakeAsync(() => {
+    it('Sollte label und icon für lux-side-nav-items darstellen', async () => {
       // Vorbedingungen testen
       expect(fixture.debugElement.queryAll(By.css('.lux-side-nav-item')).length).toBe(0);
 
       // Änderungen durchführen
       testComponent.createSideNavItems(4);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       const luxSideNavItems = fixture.debugElement.queryAll(By.css('.lux-side-nav-item'));
@@ -222,89 +225,90 @@ describe('LuxAppHeaderComponent', () => {
       expect(
         luxSideNavItems[3].query(By.css('[data-mat-icon-name="lux-interface-validation-check"]')).nativeElement.textContent.trim()
       ).not.toBeNull();
-    }));
+    });
 
-    it('Sollte lux-side-nav-items deaktivieren', fakeAsync(() => {
+    it('Sollte lux-side-nav-items deaktivieren', async () => {
       // Vorbedingungen testen
       expect(fixture.debugElement.queryAll(By.css('.lux-side-nav-item')).length).toBe(0);
 
       // Änderungen durchführen
       testComponent.createSideNavItems(2);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       expect(fixture.debugElement.queryAll(By.css('.lux-side-nav-item button'))[0].nativeElement.disabled).toBe(false);
       expect(fixture.debugElement.queryAll(By.css('.lux-side-nav-item button'))[1].nativeElement.disabled).toBe(false);
 
       // Änderungen durchführen
-      testComponent.sideNavItems[0].disabled = true;
-      testComponent.sideNavItems[1].disabled = true;
-      LuxTestHelper.wait(fixture);
+      testComponent.sideNavItems()[0].disabled = true;
+      testComponent.sideNavItems()[1].disabled = true;
+      testComponent.refreshSideNavItems();
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       expect(fixture.debugElement.queryAll(By.css('.lux-side-nav-item button'))[0].nativeElement.disabled).toBe(true);
       expect(fixture.debugElement.queryAll(By.css('.lux-side-nav-item button'))[1].nativeElement.disabled).toBe(true);
-    }));
+    });
 
-    it('Sollte lux-side-nav-items selektieren', fakeAsync(() => {
+    it('Sollte lux-side-nav-items selektieren', async () => {
       // Vorbedingungen testen
       expect(fixture.debugElement.queryAll(By.css('.lux-side-nav-item-selected')).length).toBe(0);
 
       // Änderungen durchführen
       testComponent.createSideNavItems(2);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       expect(fixture.debugElement.queryAll(By.css('.lux-side-nav-item-selected')).length).toBe(0);
 
       // Änderungen durchführen
-      testComponent.sideNavItems[0].selected = true;
-      LuxTestHelper.wait(fixture);
+      testComponent.sideNavItems()[0].selected = true;
+      testComponent.refreshSideNavItems();
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       expect(fixture.debugElement.queryAll(By.css('.lux-side-nav-item-selected')).length).toBe(1);
 
       // Änderungen durchführen
-      testComponent.sideNavItems[1].selected = true;
-      LuxTestHelper.wait(fixture);
+      testComponent.sideNavItems()[1].selected = true;
+      testComponent.refreshSideNavItems();
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       expect(fixture.debugElement.queryAll(By.css('.lux-side-nav-item-selected')).length).toBe(2);
-    }));
+    });
 
-    it('Sollte onClick aufrufen', fakeAsync(() => {
+    it('Sollte onClick aufrufen', async () => {
       // Vorbedingungen testen
-      const spy = spyOn(testComponent, 'onClick');
+      const spy = vi.spyOn(testComponent, 'onClick').mockReturnValue(undefined);
       expect(spy).toHaveBeenCalledTimes(0);
 
       // Änderungen durchführen
       testComponent.createSideNavItems(2);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       fixture.debugElement.queryAll(By.css('.lux-side-nav-item button'))[0].nativeElement.click();
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       expect(spy).toHaveBeenCalledTimes(1);
-      expect(spy).toHaveBeenCalledWith(testComponent.sideNavItems[0]);
+      expect(spy).toHaveBeenCalledWith(testComponent.sideNavItems()[0]);
 
       // Änderungen durchführen
       fixture.debugElement.queryAll(By.css('.lux-side-nav-item button'))[1].nativeElement.click();
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       expect(spy).toHaveBeenCalledTimes(2);
-      expect(spy).toHaveBeenCalledWith(testComponent.sideNavItems[1]);
+      expect(spy).toHaveBeenCalledWith(testComponent.sideNavItems()[1]);
+    });
 
-      discardPeriodicTasks();
-    }));
-
-    it('Sollte das lux-side-nav beim Klick auf ein lux-side-nav-item schließen', fakeAsync(() => {
+    it('Sollte das lux-side-nav beim Klick auf ein lux-side-nav-item schließen', async () => {
       // Vorbedingungen testen
       testComponent.createSideNavItems(1);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
       fixture.debugElement.query(By.css('.lux-side-nav-trigger button')).nativeElement.click();
-      LuxTestHelper.wait(fixture, LuxComponentsConfigService.DEFAULT_CONFIG.buttonConfiguration.throttleTimeMs);
+      await LuxTestHelper.wait(fixture);
 
       const sideNavEl = fixture.debugElement.query(By.css('.lux-side-nav')).nativeElement;
       expect(sideNavEl.style.opacity).toEqual('1');
@@ -312,38 +316,43 @@ describe('LuxAppHeaderComponent', () => {
 
       // Änderungen durchführen
       fixture.debugElement.query(By.css('.lux-side-nav-item button')).nativeElement.click();
-      LuxTestHelper.wait(fixture, LuxComponentsConfigService.DEFAULT_CONFIG.buttonConfiguration.throttleTimeMs);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       expect(sideNavEl.style.opacity).toEqual('1');
       expect(fixture.debugElement.query(By.css('.lux-side-nav-overlay')).nativeElement.style.display).toEqual('');
 
       // Änderungen durchführen
-      testComponent.sideNavItems[0].closeOnClick = true;
-      LuxTestHelper.wait(fixture);
+      testComponent.sideNavItems()[0].closeOnClick = true;
+      testComponent.refreshSideNavItems();
+      await LuxTestHelper.wait(fixture);
       fixture.debugElement.query(By.css('.lux-side-nav-item button')).nativeElement.click();
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       expect(sideNavEl.style.opacity).toEqual('0');
       expect(fixture.debugElement.query(By.css('.lux-side-nav-overlay'))).toBeNull();
+    });
 
-      discardPeriodicTasks();
-    }));
-
-    it('Sollte den Dashboard-Link darstellen und öffnen', fakeAsync(() => {
+    it('Sollte den Dashboard-Link darstellen und öffnen', async () => {
       // Vorbedingungen testen
-      const spy = spyOn(window, 'open').and.callFake(() => null);
+      // mockClear() zusätzlich zu vi.restoreAllMocks() (test-setup.ts): unter isolate:false (Default
+      // dieses Vitest-Runners) kann window.open bereits durch einen anderen Test wieder gemockt
+      // worden sein, bevor dieser Mock zurückgesetzt wurde.
+      const spy = vi
+        .spyOn(window, 'open')
+        .mockImplementation(() => null)
+        .mockClear();
 
       fixture.debugElement.query(By.css('.lux-side-nav-trigger button')).nativeElement.click();
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       expect(fixture.debugElement.query(By.css('.lux-side-nav-content lux-link'))).toBeNull();
 
       // Änderungen durchführen
-      testComponent.dashboardTitle = 'Dashboard';
-      testComponent.dashboardLink = 'https:///www.ihk-gfi.de';
-      LuxTestHelper.wait(fixture);
+      testComponent.dashboardTitle.set('Dashboard');
+      testComponent.dashboardLink.set('https:///www.ihk-gfi.de');
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       expect(
@@ -353,23 +362,24 @@ describe('LuxAppHeaderComponent', () => {
       // Änderungen durchführen
       const link = fixture.debugElement.query(By.css('.lux-side-nav-content lux-link a'));
       link.triggerEventHandler('click', new MouseEvent('click', { bubbles: true, cancelable: true }));
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       expect(spy).toHaveBeenCalledTimes(1);
       expect(spy).toHaveBeenCalledWith('https:///www.ihk-gfi.de', '_self');
+    });
 
-      discardPeriodicTasks();
-    }));
-
-    it('Sollte den Dashboard-Link in einem neuen Tab öffnen', fakeAsync(() => {
+    it('Sollte den Dashboard-Link in einem neuen Tab öffnen', async () => {
       // Vorbedingungen testen
-      const spy = spyOn(window, 'open').and.callFake(() => null);
+      const spy = vi
+        .spyOn(window, 'open')
+        .mockImplementation(() => null)
+        .mockClear();
 
-      testComponent.dashboardTitle = 'Dashboard';
-      testComponent.dashboardLink = 'https:///www.ihk-gfi.de';
+      testComponent.dashboardTitle.set('Dashboard');
+      testComponent.dashboardLink.set('https:///www.ihk-gfi.de');
 
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       expect(
         fixture.debugElement.query(By.css('.lux-side-nav-content lux-link .lux-button-label')).nativeElement.textContent.trim()
@@ -377,34 +387,32 @@ describe('LuxAppHeaderComponent', () => {
 
       let link = fixture.debugElement.query(By.css('.lux-side-nav-content lux-link a'));
       link.triggerEventHandler('click', new MouseEvent('click', { bubbles: true, cancelable: true }));
-      LuxTestHelper.wait(fixture, LuxComponentsConfigService.DEFAULT_CONFIG.buttonConfiguration.throttleTimeMs);
+      await LuxTestHelper.wait(fixture);
 
       expect(spy).toHaveBeenCalledTimes(1);
       expect(spy).toHaveBeenCalledWith('https:///www.ihk-gfi.de', '_self');
 
       // Änderungen durchführen
-      testComponent.dashboardBlank = true;
-      LuxTestHelper.wait(fixture);
+      testComponent.dashboardBlank.set(true);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       link = fixture.debugElement.query(By.css('.lux-side-nav-content lux-link a'));
       link.triggerEventHandler('click', new MouseEvent('click', { bubbles: true, cancelable: true }));
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       expect(spy).toHaveBeenCalledTimes(2);
       expect(spy).toHaveBeenCalledWith('https:///www.ihk-gfi.de', '_blank', 'noopener,noreferrer');
+    });
 
-      discardPeriodicTasks();
-    }));
-
-    it('Sollte den Dashboard-Link innerhalb der Applikation routen', fakeAsync(() => {
+    it('Sollte den Dashboard-Link innerhalb der Applikation routen', async () => {
       // Vorbedingungen testen
-      const spy = spyOn(TestBed.inject(Router), 'navigate').and.returnValue(Promise.resolve(true));
+      const spy = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
 
-      testComponent.dashboardTitle = 'Dashboard';
-      testComponent.dashboardLink = '/mock-route';
+      testComponent.dashboardTitle.set('Dashboard');
+      testComponent.dashboardLink.set('/mock-route');
 
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       expect(
         fixture.debugElement.query(By.css('.lux-side-nav-content lux-link .lux-button-label')).nativeElement.textContent.trim()
@@ -412,13 +420,11 @@ describe('LuxAppHeaderComponent', () => {
 
       const link = fixture.debugElement.query(By.css('.lux-side-nav-content lux-link a'));
       link.triggerEventHandler('click', new MouseEvent('click', { bubbles: true, cancelable: true }));
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       expect(spy).toHaveBeenCalledTimes(1);
       expect(spy).toHaveBeenCalledWith(['/mock-route']);
-
-      discardPeriodicTasks();
-    }));
+    });
   });
 
   describe('mit lux-app-header-right-nav', () => {
@@ -426,163 +432,147 @@ describe('LuxAppHeaderComponent', () => {
     let testComponent: MockAppHeaderComponent;
     let overlayHelper: LuxOverlayHelper;
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(async () => {
       fixture = TestBed.createComponent(MockAppHeaderComponent);
       testComponent = fixture.componentInstance;
-      testComponent.testUseRightNav = true;
-      LuxTestHelper.wait(fixture);
+      testComponent.testUseRightNav.set(true);
+      await LuxTestHelper.wait(fixture);
 
       overlayHelper = new LuxOverlayHelper();
-    }));
-
-    it('Sollte das User-Icon anzeigen', () => {
-      expect(testComponent).toBeTruthy();
-
-      testComponent.username = '';
-      fixture.detectChanges();
-
-      viewport.set('desktop');
-      expect(fixture.debugElement.query(By.css('[luxIconName="lux-interface-user-single"]')).nativeElement.style.display).not.toEqual(
-        'none'
-      );
-
-      viewport.set('mobile');
-      expect(fixture.debugElement.query(By.css('[luxIconName="lux-interface-user-single"]')).nativeElement.style.display).not.toEqual(
-        'none'
-      );
-
-      viewport.set('desktop');
     });
 
-    it('Sollte erstellt werden', fakeAsync(() => {
-      fixture.detectChanges();
+    it('Sollte erstellt werden', async () => {
+      await LuxTestHelper.wait(fixture);
 
       expect(testComponent).toBeTruthy();
 
-      flushMicrotasks();
-    }));
+      await LuxTestHelper.wait(fixture);
+    });
 
-    it('Sollte das lux-app-header-menu-right darstellen', fakeAsync(() => {
+    it('Sollte das lux-app-header-menu-right darstellen', async () => {
       expect(fixture.debugElement.query(By.css('.lux-header-user'))).not.toBeNull();
-    }));
+    });
 
-    it('Sollte luxUserName darstellen', fakeAsync(() => {
+    it('Sollte luxUserName darstellen', async () => {
       // Vorbedingungen testen
       expect(fixture.debugElement.query(By.css('.lux-header-username'))).toBeNull();
 
       // Änderungen durchführen
-      testComponent.username = 'Gollum Smeagol';
-      LuxTestHelper.wait(fixture);
+      testComponent.username.set('Gollum Smeagol');
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       expect(fixture.debugElement.query(By.css('.lux-header-username')).nativeElement.textContent.trim()).toEqual('Gollum Smeagol');
-    }));
+    });
 
-    it('Sollte luxUserNameShort korrekt generieren', fakeAsync(() => {
+    it('Sollte luxUserNameShort korrekt generieren', async () => {
       // Vorbedingungen testen
       expect(fixture.debugElement.query(By.css('.lux-header-user-short > span'))).toBeNull();
 
       // Änderungen durchführen
-      testComponent.username = 'Gollum Smeagol';
-      LuxTestHelper.wait(fixture);
+      testComponent.username.set('Gollum Smeagol');
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       expect(fixture.debugElement.query(By.css('.lux-header-user-short > span')).nativeElement.textContent).toEqual('G');
-    }));
+    });
 
-    it('Sollte das Menu ausklappen und die lux-menu-items darstellen', fakeAsync(() => {
+    it('Sollte das Menu ausklappen und die lux-menu-items darstellen', async () => {
       // Vorbedingungen testen
       testComponent.createRightNavItems(2);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
       expect(overlayHelper.selectAllFromOverlay('.lux-menu-item').length).toEqual(0);
 
       // Änderungen durchführen
       fixture.debugElement.query(By.css('.lux-right-nav-trigger')).nativeElement.click();
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       expect(overlayHelper.selectAllFromOverlay('.lux-menu-item').length).toEqual(2);
 
-      flush();
-    }));
+      await LuxTestHelper.wait(fixture);
+    });
 
-    it('Sollte die lux-menu-items korrekt darstellen', fakeAsync(() => {
+    it('Sollte die lux-menu-items korrekt darstellen', async () => {
       // Vorbedingungen testen
       testComponent.createRightNavItems(2);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
       expect(overlayHelper.selectAllFromOverlay('.lux-menu-item').length).toEqual(0);
 
       // Änderungen durchführen
       fixture.debugElement.query(By.css('.lux-right-nav-trigger')).nativeElement.click();
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       expect(overlayHelper.selectAllFromOverlay('.lux-menu-item .lux-button-label')[0].textContent!.trim()).toEqual('Label 0');
       expect(overlayHelper.selectAllFromOverlay('.lux-menu-item .lux-button-label')[1].textContent!.trim()).toEqual('Label 1');
 
-      flush();
-    }));
+      await LuxTestHelper.wait(fixture);
+    });
 
-    it('Sollte die lux-menu-items deaktivieren', fakeAsync(() => {
+    it('Sollte die lux-menu-items deaktivieren', async () => {
       // Vorbedingungen testen
       testComponent.createRightNavItems(2);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
       expect(overlayHelper.selectAllFromOverlay('.lux-menu-item').length).toEqual(0);
 
       // Änderungen durchführen
       fixture.debugElement.query(By.css('.lux-right-nav-trigger')).nativeElement.click();
-      LuxTestHelper.wait(fixture);
-      testComponent.rightNavItems[0].disabled = true;
-      testComponent.rightNavItems[1].disabled = true;
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
+      testComponent.rightNavItems()[0].disabled = true;
+      testComponent.rightNavItems()[1].disabled = true;
+      testComponent.refreshRightNavItems();
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       expect((overlayHelper.selectAllFromOverlay('.lux-menu-item')[0] as any).disabled).toEqual(true);
       expect((overlayHelper.selectAllFromOverlay('.lux-menu-item')[1] as any).disabled).toEqual(true);
 
-      flush();
-    }));
+      await LuxTestHelper.wait(fixture);
+    });
   });
 
   describe('mit lux-app-header-action-nav', () => {
     let fixture: ComponentFixture<MockAppHeaderComponent>;
     let testComponent: MockAppHeaderComponent;
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(async () => {
       fixture = TestBed.createComponent(MockAppHeaderComponent);
       testComponent = fixture.componentInstance;
-      testComponent.testUseActionNav = true;
-      LuxTestHelper.wait(fixture);
-    }));
+      testComponent.testUseActionNav.set(true);
+      await LuxTestHelper.wait(fixture);
+    });
 
-    it('Sollte erstellt werden', fakeAsync(() => {
+    it('Sollte erstellt werden', async () => {
       expect(testComponent).toBeTruthy();
-    }));
+    });
 
-    it('Sollte das lux-app-header-action-nav darstellen', fakeAsync(() => {
+    it('Sollte das lux-app-header-action-nav darstellen', async () => {
       testComponent.createActionNavItems(3);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       expect(fixture.debugElement.query(By.css('.lux-app-header-action-nav'))).not.toBeNull();
-    }));
+    });
 
-    it('Sollte die MenuItems darstellen', fakeAsync(() => {
+    it('Sollte die MenuItems darstellen', async () => {
       // Vorbedingungen testen
       expect(fixture.debugElement.queryAll(By.css('lux-app-header-action-nav-item')).length).toEqual(0);
 
       // Änderungen durchführen
       testComponent.createActionNavItems(3);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       expect(fixture.debugElement.queryAll(By.css('lux-app-header-action-nav-item')).length).toEqual(3);
-    }));
+    });
   });
 });
 
 @Component({
-  template: ` <lux-app-header (luxClicked)="onClicked()" luxAppTitle="MyClickTitle" luxAppTitleShort="MyClick"></lux-app-header> `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  template: `
+    <lux-app-header [luxClickable]="true" (luxClicked)="onClicked()" luxAppTitle="MyClickTitle" luxAppTitleShort="MyClick"></lux-app-header>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxAppHeaderComponent]
 })
 class MockLabelClickedAppHeaderComponent {
@@ -592,13 +582,14 @@ class MockLabelClickedAppHeaderComponent {
 @Component({
   template: `
     <lux-app-header
+      [luxClickable]="true"
       (luxClicked)="onClicked()"
       luxImageSrc="assets/png/example.png"
       luxAppTitle="MyClickTitle"
       luxAppTitleShort="MyClick"
     ></lux-app-header>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxAppHeaderComponent]
 })
 class MockImageClickedAppHeaderComponent {
@@ -608,13 +599,14 @@ class MockImageClickedAppHeaderComponent {
 @Component({
   template: `
     <lux-app-header
+      [luxClickable]="true"
       (luxClicked)="onClicked()"
       luxIconName="lux-interface-user-single"
       luxAppTitle="MyClickTitle"
       luxAppTitleShort="MyClick"
     ></lux-app-header>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxAppHeaderComponent]
 })
 class MockIconClickedAppHeaderComponent {
@@ -623,13 +615,13 @@ class MockIconClickedAppHeaderComponent {
 
 @Component({
   template: `
-    <lux-app-header [luxUserName]="username" [luxAppTitle]="title" [luxAppTitleShort]="titleShort">
-      @if (testUseSideNav) {
-        <lux-side-nav [luxDashboardLink]="dashboardLink" [luxDashboardLinkTitle]="dashboardTitle" [luxOpenLinkBlank]="dashboardBlank">
+    <lux-app-header [luxUserName]="username()" [luxAppTitle]="title()" [luxAppTitleShort]="titleShort()">
+      @if (testUseSideNav()) {
+        <lux-side-nav [luxDashboardLink]="dashboardLink()" [luxDashboardLinkTitle]="dashboardTitle()" [luxOpenLinkBlank]="dashboardBlank()">
           <lux-side-nav-header>
             <span class="test-side-nav-header">SideNav-Header</span>
           </lux-side-nav-header>
-          @for (sideNavItem of sideNavItems; track sideNavItem.label) {
+          @for (sideNavItem of sideNavItems(); track sideNavItem.label) {
             <ng-container ngProjectAs="lux-side-nav-item">
               @if (!sideNavItem.ignoreThisItem) {
                 <lux-side-nav-item
@@ -648,9 +640,9 @@ class MockIconClickedAppHeaderComponent {
           </lux-side-nav-footer>
         </lux-side-nav>
       }
-      @if (testUseActionNav) {
+      @if (testUseActionNav()) {
         <lux-app-header-action-nav>
-          @for (actionNavItem of actionNavItems; track actionNavItem.label) {
+          @for (actionNavItem of actionNavItems(); track actionNavItem.label) {
             <lux-app-header-action-nav-item
               [luxIconName]="actionNavItem.iconName"
               [luxDisabled]="actionNavItem.disabled"
@@ -661,9 +653,9 @@ class MockIconClickedAppHeaderComponent {
           }
         </lux-app-header-action-nav>
       }
-      @if (testUseRightNav) {
+      @if (testUseRightNav()) {
         <lux-app-header-right-nav>
-          @for (rightNavItem of rightNavItems; track rightNavItem.label) {
+          @for (rightNavItem of rightNavItems(); track rightNavItem.label) {
             <lux-menu-item
               [luxIconName]="rightNavItem.iconName"
               [luxDisabled]="rightNavItem.disabled"
@@ -675,7 +667,7 @@ class MockIconClickedAppHeaderComponent {
       }
     </lux-app-header>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxAppHeaderActionNavComponent,
     LuxAppHeaderActionNavItemComponent,
@@ -689,36 +681,57 @@ class MockIconClickedAppHeaderComponent {
   ]
 })
 class MockAppHeaderComponent {
-  @ViewChild(LuxAppHeaderComponent) appHeaderComponent!: LuxAppHeaderComponent;
+  readonly appHeaderComponent = viewChild.required(LuxAppHeaderComponent);
 
-  username?: string;
-  title?: string;
-  titleShort?: string;
+  username = signal<string | undefined>(undefined);
+  title = signal<string | undefined>(undefined);
+  titleShort = signal<string | undefined>(undefined);
 
-  dashboardLink?: string;
-  dashboardTitle?: string;
-  dashboardBlank?: boolean;
+  dashboardLink = signal<string | undefined>(undefined);
+  dashboardTitle = signal('');
+  dashboardBlank = signal(false);
 
-  testUseSideNav?: boolean;
-  testUseRightNav?: boolean;
-  testUseActionNav?: boolean;
+  testUseSideNav = signal<boolean | undefined>(undefined);
+  testUseRightNav = signal<boolean | undefined>(undefined);
+  testUseActionNav = signal<boolean | undefined>(undefined);
 
-  sideNavItems: {
-    disabled: boolean;
-    label: string;
-    iconName: string;
-    selected: boolean;
-    closeOnClick: boolean;
-    ignoreThisItem: boolean;
-  }[] = [];
-  rightNavItems: { disabled: boolean; label: string; iconName: string }[] = [];
-  actionNavItems: { disabled: boolean; label: string; iconName: string }[] = [];
+  sideNavItems = signal<
+    {
+      disabled: boolean;
+      label: string;
+      iconName: string;
+      selected: boolean;
+      closeOnClick: boolean;
+      ignoreThisItem: boolean;
+    }[]
+  >([]);
+  rightNavItems = signal<
+    {
+      disabled: boolean;
+      label: string;
+      iconName: string;
+    }[]
+  >([]);
+  actionNavItems = signal<
+    {
+      disabled: boolean;
+      label: string;
+      iconName: string;
+    }[]
+  >([]);
 
   createSideNavItems(amount: number) {
-    this.sideNavItems = [];
+    const items: {
+      disabled: boolean;
+      label: string;
+      iconName: string;
+      selected: boolean;
+      closeOnClick: boolean;
+      ignoreThisItem: boolean;
+    }[] = [];
 
     for (let i = 0; i < amount; i++) {
-      this.sideNavItems.push({
+      items.push({
         disabled: false,
         label: 'Label ' + i,
         iconName: 'lux-interface-validation-check',
@@ -727,30 +740,52 @@ class MockAppHeaderComponent {
         ignoreThisItem: false
       });
     }
+
+    this.sideNavItems.set(items);
   }
 
   createRightNavItems(amount: number) {
-    this.rightNavItems = [];
+    const items: {
+      disabled: boolean;
+      label: string;
+      iconName: string;
+    }[] = [];
 
     for (let i = 0; i < amount; i++) {
-      this.rightNavItems.push({
+      items.push({
         disabled: false,
         label: 'Label ' + i,
         iconName: 'lux-interface-validation-check'
       });
     }
+
+    this.rightNavItems.set(items);
   }
 
   createActionNavItems(amount: number) {
-    this.actionNavItems = [];
+    const items: {
+      disabled: boolean;
+      label: string;
+      iconName: string;
+    }[] = [];
 
     for (let i = 0; i < amount; i++) {
-      this.actionNavItems.push({
+      items.push({
         disabled: false,
         label: 'Label ' + i,
         iconName: 'lux-interface-validation-check'
       });
     }
+
+    this.actionNavItems.set(items);
+  }
+
+  refreshSideNavItems() {
+    this.sideNavItems.update((items) => [...items]);
+  }
+
+  refreshRightNavItems() {
+    this.rightNavItems.update((items) => [...items]);
   }
 
   onClick(navItem: any) {}

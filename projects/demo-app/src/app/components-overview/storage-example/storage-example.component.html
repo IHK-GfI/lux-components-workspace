@@ -5,47 +5,47 @@
   <example-base-content class="lux-flex lux-flex-col">
     <div class="example-storage-list">
       <h3>Aktuelle LocalStorage-Einträge</h3>
-      @for (item of [].constructor(storageLength); track item; let i = $index) {
-      <div class="lux-highlight-section lux-flex lux-flex-col lux-gap-4">
-        <div class="lux-flex lux-flex-col lux-gap-2">
-          <div class="lux-flex">
-            <div class="lux-flex lux-flex-basis-12 lux-flex-shrink-0 lux-flex-grow-0"><b>Key:</b></div>
-            <div class="lux-flex-auto">{{ localKeys[i] }}</div>
+      @for (storageKey of localKeys(); track storageKey) {
+        <div class="lux-highlight-section lux-flex lux-flex-col lux-gap-4">
+          <div class="lux-flex lux-flex-col lux-gap-2">
+            <div class="lux-flex">
+              <div class="lux-flex lux-flex-basis-12 lux-flex-shrink-0 lux-flex-grow-0"><b>Key:</b></div>
+              <div class="lux-flex-auto">{{ storageKey }}</div>
+            </div>
+            <div class="lux-flex">
+              <div class="lux-flex lux-flex-basis-12 lux-flex-shrink-0 lux-flex-grow-0"><b>Value:</b></div>
+              <div class="lux-flex-auto">{{ luxStorageService.getItemAsObservable(storageKey) | async }}</div>
+            </div>
           </div>
-          <div class="lux-flex">
-            <div class="lux-flex lux-flex-basis-12 lux-flex-shrink-0 lux-flex-grow-0"><b>Value:</b></div>
-            <div class="lux-flex-auto">{{ luxStorageService.getItemAsObservable(localKeys[i]!) | async }}</div>
-          </div>
+          @if (!storageKey.endsWith('sensitive')) {
+            <div class="lux-flex lux-gap-2 lt-md:lux-flex-col lt-md:lux-gap-0">
+              <lux-input class="lux-flex-auto" luxLabel="Neuer Value" #luxInput [luxNoBottomLabel]="true"></lux-input>
+              <div class="lux-flex lux-flex-none lux-gap-2">
+                <lux-button
+                  class="lux-flex lux-flex-none round-btn"
+                  luxIconName="lux-interface-arrows-synchronize"
+                  luxColor="accent"
+                  luxTagId="refresh-storage-entry-btn"
+                  [luxRounded]="true"
+                  [luxDisabled]="!luxInput.value()"
+                  luxAriaLabel="Wert speichern"
+                  (luxClicked)="updateExisting(storageKey, luxInput)"
+                >
+                </lux-button>
+                <lux-button
+                  class="lux-flex lux-flex-none round-btn"
+                  luxIconName="lux-interface-delete-1"
+                  luxColor="warn"
+                  luxTagId="remove-storage-entry-btn"
+                  [luxRounded]="true"
+                  (luxClicked)="luxStorageService.removeItem(storageKey)"
+                  luxAriaLabel="Wert löschen"
+                >
+                </lux-button>
+              </div>
+            </div>
+          }
         </div>
-        @if (!localKeys[i]!.endsWith('sensitive')) {
-        <div class="lux-flex lux-gap-2 lt-md:lux-flex-col lt-md:lux-gap-0">
-          <lux-input-ac class="lux-flex-auto" luxLabel="Neuer Value" #luxInput [luxNoBottomLabel]="true"></lux-input-ac>
-          <div class="lux-flex lux-flex-none lux-gap-2">
-            <lux-button
-              class="lux-flex lux-flex-none round-btn"
-              luxIconName="lux-interface-arrows-synchronize"
-              luxColor="accent"
-              luxTagId="refresh-storage-entry-btn"
-              [luxRounded]="true"
-              [luxDisabled]="!luxInput.luxValue"
-              luxAriaLabel="Wert speichern"
-              (luxClicked)="updateExisting(localKeys[i]!, luxInput)"
-            >
-            </lux-button>
-            <lux-button
-              class="lux-flex lux-flex-none round-btn"
-              luxIconName="lux-interface-delete-1"
-              luxColor="warn"
-              luxTagId="remove-storage-entry-btn"
-              [luxRounded]="true"
-              (luxClicked)="luxStorageService.removeItem(localKeys[i]!)"
-              luxAriaLabel="Wert löschen"
-            >
-            </lux-button>
-          </div>
-        </div>
-        }
-      </div>
       }
     </div>
   </example-base-content>
@@ -62,33 +62,28 @@
       </ol>
     </div>
     <div class="lux-highlight-section column">
-      <lux-input-ac
-        luxLabel="Key"
-        luxHint="Hier kann ein Key für einen Storage-Eintrag gesetzt werden."
-        luxAutocomplete="off"
-        [(luxValue)]="key"
-      >
-      </lux-input-ac>
-      <lux-input-ac
+      <lux-input luxLabel="Key" luxHint="Hier kann ein Key für einen Storage-Eintrag gesetzt werden." luxAutocomplete="off" [(value)]="key">
+      </lux-input>
+      <lux-input
         luxLabel="Value"
-        luxHint="Hier kann der Wert für den Key {{ key }} eingetragen werden."
+        luxHint="Hier kann der Wert für den Key {{ key() }} eingetragen werden."
         luxAutocomplete="off"
-        [(luxValue)]="value"
+        [(value)]="value"
       >
-      </lux-input-ac>
-      <lux-toggle-ac luxLabel="sensitive" [(luxChecked)]="sensitive" [luxNoTopLabel]="true">
+      </lux-input>
+      <lux-toggle luxLabel="sensitive" [(checked)]="sensitive" [luxNoTopLabel]="true">
         <lux-form-hint>
           Dieser Wert bestimmt, ob der eingetragene Schlüssel als 'empfindlicher' Datensatz gilt.<br />
           Sensible Datensätze können über den <i>LuxStorageService</i> gezielt entfernt werden.
         </lux-form-hint>
-      </lux-toggle-ac>
+      </lux-toggle>
       <lux-button
         class="lux-flex lux-max-width-40"
         luxLabel="Hinzufügen"
         luxColor="primary"
         [luxStroked]="true"
         (luxClicked)="submit()"
-        [luxDisabled]="!key"
+        [luxDisabled]="!key()"
         luxTagId="add-new-storage-entry-btn"
         luxAriaLabel="Wert hinzufügen"
       >
@@ -106,7 +101,7 @@
       <lux-menu-item
         luxLabel="Sensible Daten löschen"
         [luxStroked]="true"
-        [luxDisabled]="storageLength === 0"
+        [luxDisabled]="storageLength() === 0"
         luxColor="warn"
         (luxClicked)="clearSensitiveItems()"
         luxTagId="menu-sensible-data"
@@ -115,7 +110,7 @@
       <lux-menu-item
         luxLabel="Alle Daten löschen"
         [luxStroked]="true"
-        [luxDisabled]="storageLength === 0"
+        [luxDisabled]="storageLength() === 0"
         luxColor="warn"
         (luxClicked)="clearAll()"
         luxTagId="menu-all-data"

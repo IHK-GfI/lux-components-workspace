@@ -18,12 +18,14 @@ export interface InitializedTourHintConfig {
   providedIn: 'root'
 })
 export class LuxTourHintService {
-  private appRef = inject(ApplicationRef);
-  private injector = inject(EnvironmentInjector);
-  private tourHintRef = inject(LuxTourHintRef);
-  private storage = inject(LuxStorageService);
-  private consentService = inject(LuxConsentService);
   public tourContainer?: ComponentRef<LuxTourHintComponent>;
+
+  private innerComponentRef?: ComponentRef<unknown>;
+  private readonly appRef = inject(ApplicationRef);
+  private readonly injector = inject(EnvironmentInjector);
+  private readonly tourHintRef = inject(LuxTourHintRef);
+  private readonly storage = inject(LuxStorageService);
+  private readonly consentService = inject(LuxConsentService);
 
   constructor() {
     window.addEventListener('popstate', () => {
@@ -67,10 +69,15 @@ export class LuxTourHintService {
       this.storage.removeItem(dsaCacheId);
     }
 
+    // Falls noch eine vorherige Tour-Hint-Instanz besteht (z.B. openComponent() ohne vorheriges close()
+    // aufgerufen), diese zuerst sauber zerstören, damit sie nicht dauerhaft im CD-Baum hängen bleibt.
+    this.destroyTourComponents();
+
     //The preset / custom component
     const innerComp = createComponent(comp, {
       environmentInjector: this.injector
     });
+    this.innerComponentRef = innerComp;
 
     //The outer container for the modal
     this.tourContainer = createComponent(LuxTourHintComponent, {
@@ -93,7 +100,33 @@ export class LuxTourHintService {
       this.dsaCallback(dsaCacheId);
     });
 
+    // Ohne dies blieben tourContainer und innerComp nach dem Schließen (das bisher nur den DOM-Knoten
+    // entfernt hat, siehe LuxTourHintComponent.close()) dauerhaft an appRef angehängt und würden bei
+    // jedem Change-Detection-Zyklus der gesamten App für den Rest der Session weiter geprüft.
+    this.tourHintRef.onClose(() => {
+      this.destroyTourComponents();
+    });
+
     return this.tourHintRef;
+  }
+
+  /**
+   * Löst tourContainer und innerComponentRef aus dem ApplicationRef-Change-Detection-Baum und zerstört
+   * beide Komponenten. Ohne diesen Schritt bleiben manuell per createComponent() erzeugte und via
+   * appRef.attachView() angehängte Komponenten (anders als über einen ViewContainerRef erzeugte) auch
+   * nach dem Entfernen aus dem DOM dauerhaft an appRef gebunden.
+   */
+  private destroyTourComponents() {
+    if (this.innerComponentRef) {
+      this.appRef.detachView(this.innerComponentRef.hostView);
+      this.innerComponentRef.destroy();
+      this.innerComponentRef = undefined;
+    }
+    if (this.tourContainer) {
+      this.appRef.detachView(this.tourContainer.hostView);
+      this.tourContainer.destroy();
+      this.tourContainer = undefined;
+    }
   }
 
   private prepareConfigs(configs: ILuxTourHintStepConfig[]): InitializedTourHintConfig[] {

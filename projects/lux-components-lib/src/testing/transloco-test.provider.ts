@@ -35,7 +35,14 @@ export function provideLuxTranslocoTesting(customLangs: Record<string, any> = {}
         ],
         defaultLang: 'de',
         reRenderOnLangChange: true,
-        prodMode: true
+        prodMode: true,
+        // luxc-de/en.json enthalten bewusst leere Übersetzungen (z.B. "aria.title.link.lbl") als
+        // Signal für Komponenten, auf einen anderen Fallback-Wert auszuweichen. Ohne allowEmpty
+        // behandelt Transloco einen leeren String wie einen fehlenden Key: es loggt "Missing
+        // translation" UND liefert den unübersetzten Key statt "" zurück, was den Fallback in der
+        // konsumierenden Komponente unwirksam macht. allowEmpty betrifft nur Keys mit Wert "";
+        // echte fehlende Keys (Wert undefined) lösen weiterhin die reguläre Missing-Warnung aus.
+        missingHandler: { allowEmpty: true }
       },
       loader: TestingLoader
     }),

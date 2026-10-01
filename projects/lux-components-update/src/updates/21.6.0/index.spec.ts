@@ -6,6 +6,7 @@ import { appOptions, workspaceOptions } from '../../utility/test';
 import { Options } from '../../utility/types';
 import { UtilConfig } from '../../utility/util';
 import { update210600 } from './index';
+import { lastValueFrom } from 'rxjs';
 
 describe('update210600', () => {
   let appTree: UnitTestTree;
@@ -32,7 +33,7 @@ describe('update210600', () => {
   });
 
   describe('[Rule] update210600', () => {
-    it('Sollte die Abhängigkeiten aktualisieren', (done) => {
+    it('Sollte die Abhängigkeiten aktualisieren', async () => {
       appTree.overwrite(
         '/package.json',
         `
@@ -61,18 +62,12 @@ describe('update210600', () => {
         `
       );
 
-      callRule(update210600(testOptions), appTree, context).subscribe(
-        () => {
-          expect(getDep(appTree, '@ihk-gfi/lux-components').version).not.toEqual('21.5.0');
-          expect(getDep(appTree, '@ihk-gfi/lux-components').version).toEqual('21.6.0');
+      await lastValueFrom(callRule(update210600(testOptions), appTree, context));
+      expect(getDep(appTree, '@ihk-gfi/lux-components').version).not.toEqual('21.5.0');
+      expect(getDep(appTree, '@ihk-gfi/lux-components').version).toEqual('21.6.0');
 
-          expect(getDep(appTree, '@ihk-gfi/lux-components-theme').version).not.toEqual('21.5.0');
-          expect(getDep(appTree, '@ihk-gfi/lux-components-theme').version).toEqual('21.6.0');
-
-          done();
-        },
-        (reason) => expect(reason).toBeUndefined()
-      );
+      expect(getDep(appTree, '@ihk-gfi/lux-components-theme').version).not.toEqual('21.5.0');
+      expect(getDep(appTree, '@ihk-gfi/lux-components-theme').version).toEqual('21.6.0');
     });
   });
 });

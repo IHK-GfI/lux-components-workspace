@@ -1,12 +1,15 @@
-<example-base-structure exampleTitle="Tooltip" exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/luxTooltip-v21">
+<example-base-structure
+  exampleTitle="Tooltip"
+  exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/luxTooltip-v21"
+>
   <example-base-content [exampleCentered]="true" class="lux-flex lux-flex-col lux-gap-10">
     <div
       tabindex="0"
-      luxTooltip="{{ message }}"
-      [luxTooltipDisabled]="disabled"
-      [luxTooltipPosition]="position"
-      [luxTooltipHideDelay]="hideDelay"
-      [luxTooltipShowDelay]="showDelay"
+      luxTooltip="{{ message() }}"
+      [luxTooltipDisabled]="disabled()"
+      [luxTooltipPosition]="position()"
+      [luxTooltipHideDelay]="hideDelay()"
+      [luxTooltipShowDelay]="showDelay()"
       class="lux-highlight-section"
       style="color: var(--lux-theme-primary-color)"
     >
@@ -15,52 +18,52 @@
     <lux-button
       luxLabel="Button (default)"
       luxColor="primary"
-      luxTooltip="{{ message }}"
-      [luxTooltipDisabled]="disabled"
-      [luxTooltipPosition]="position"
-      [luxTooltipHideDelay]="hideDelay"
-      [luxTooltipShowDelay]="showDelay"
+      luxTooltip="{{ message() }}"
+      [luxTooltipDisabled]="disabled()"
+      [luxTooltipPosition]="position()"
+      [luxTooltipHideDelay]="hideDelay()"
+      [luxTooltipShowDelay]="showDelay()"
     ></lux-button>
     <lux-button
       luxLabel="Button (flat)"
       luxColor="primary"
       [luxFlat]="true"
-      luxTooltip="{{ message }}"
-      [luxTooltipDisabled]="disabled"
-      [luxTooltipPosition]="position"
-      [luxTooltipHideDelay]="hideDelay"
-      [luxTooltipShowDelay]="showDelay"
+      luxTooltip="{{ message() }}"
+      [luxTooltipDisabled]="disabled()"
+      [luxTooltipPosition]="position()"
+      [luxTooltipHideDelay]="hideDelay()"
+      [luxTooltipShowDelay]="showDelay()"
     ></lux-button>
     <lux-button
       luxLabel="Button (raised)"
       luxColor="primary"
       [luxRaised]="true"
-      luxTooltip="{{ message }}"
-      [luxTooltipDisabled]="disabled"
-      [luxTooltipPosition]="position"
-      [luxTooltipHideDelay]="hideDelay"
-      [luxTooltipShowDelay]="showDelay"
+      luxTooltip="{{ message() }}"
+      [luxTooltipDisabled]="disabled()"
+      [luxTooltipPosition]="position()"
+      [luxTooltipHideDelay]="hideDelay()"
+      [luxTooltipShowDelay]="showDelay()"
     ></lux-button>
     <lux-button
       luxLabel="Button (stroked)"
       luxColor="primary"
       [luxStroked]="true"
-      luxTooltip="{{ message }}"
-      [luxTooltipDisabled]="disabled"
-      [luxTooltipPosition]="position"
-      [luxTooltipHideDelay]="hideDelay"
-      [luxTooltipShowDelay]="showDelay"
+      luxTooltip="{{ message() }}"
+      [luxTooltipDisabled]="disabled()"
+      [luxTooltipPosition]="position()"
+      [luxTooltipHideDelay]="hideDelay()"
+      [luxTooltipShowDelay]="showDelay()"
     ></lux-button>
     <lux-button
       luxLabel="Button (rounded)"
       luxColor="primary"
       luxIconName="lux-save"
       [luxRounded]="true"
-      luxTooltip="{{ message }}"
-      [luxTooltipDisabled]="disabled"
-      [luxTooltipPosition]="position"
-      [luxTooltipHideDelay]="hideDelay"
-      [luxTooltipShowDelay]="showDelay"
+      luxTooltip="{{ message() }}"
+      [luxTooltipDisabled]="disabled()"
+      [luxTooltipPosition]="position()"
+      [luxTooltipHideDelay]="hideDelay()"
+      [luxTooltipShowDelay]="showDelay()"
     ></lux-button>
     <lux-button
       luxLabel="Button (stroked)"
@@ -68,27 +71,27 @@
       luxIconName="lux-save"
       [luxRounded]="true"
       [luxStroked]="true"
-      luxTooltip="{{ message }}"
-      [luxTooltipDisabled]="disabled"
-      [luxTooltipPosition]="position"
-      [luxTooltipHideDelay]="hideDelay"
-      [luxTooltipShowDelay]="showDelay"
+      luxTooltip="{{ message() }}"
+      [luxTooltipDisabled]="disabled()"
+      [luxTooltipPosition]="position()"
+      [luxTooltipHideDelay]="hideDelay()"
+      [luxTooltipShowDelay]="showDelay()"
     ></lux-button>
     <lux-link
       luxLabel="Link"
-      luxTooltip="{{ message }}"
-      [luxTooltipDisabled]="disabled"
-      [luxTooltipPosition]="position"
-      [luxTooltipHideDelay]="hideDelay"
-      [luxTooltipShowDelay]="showDelay"
+      luxTooltip="{{ message() }}"
+      [luxTooltipDisabled]="disabled()"
+      [luxTooltipPosition]="position()"
+      [luxTooltipHideDelay]="hideDelay()"
+      [luxTooltipShowDelay]="showDelay()"
     ></lux-link>
     <lux-link-plain
       luxLabel="Link-Plain"
-      luxTooltip="{{ message }}"
-      [luxTooltipDisabled]="disabled"
-      [luxTooltipPosition]="position"
-      [luxTooltipHideDelay]="hideDelay"
-      [luxTooltipShowDelay]="showDelay"
+      luxTooltip="{{ message() }}"
+      [luxTooltipDisabled]="disabled()"
+      [luxTooltipPosition]="position()"
+      [luxTooltipHideDelay]="hideDelay()"
+      [luxTooltipShowDelay]="showDelay()"
     ></lux-link-plain>
 
     <!-- Eigene Sektion: Tooltip nur bei abgeschnittenem Text (luxTooltipIfTruncated).
@@ -101,9 +104,9 @@
     >
       <span style="font-weight: 600; font-size: 1.1em">Tooltip nur bei abgeschnittenem Text</span>
       <span>
-        Aktiviert wird der Tooltip über den Input <code>[luxTooltipIfTruncated]="true"</code> zusammen mit einer Crop-Klasse
-        (hier <code>.lux-crop</code> mit <code>overflow: hidden; white-space: nowrap; text-overflow: ellipsis</code>).
-        <code>luxTooltip</code>, <code>luxTooltipIfTruncated</code> und die Crop-Klasse müssen auf demselben Element liegen.
+        Aktiviert wird der Tooltip über den Input <code>[luxTooltipIfTruncated]="true"</code> zusammen mit einer Crop-Klasse (hier
+        <code>.lux-crop</code> mit <code>overflow: hidden; white-space: nowrap; text-overflow: ellipsis</code>). <code>luxTooltip</code>,
+        <code>luxTooltipIfTruncated</code> und die Crop-Klasse müssen auf demselben Element liegen.
       </span>
       <div
         style="
@@ -135,8 +138,9 @@
 
       <span style="font-weight: 600; margin-top: 16px">Mehrzeilig gekürzter Text (line-clamp)</span>
       <span>
-        Die Erkennung funktioniert auch bei vertikaler Kürzung, z.B. mit der Klasse <code>.lux-crop-2-lines</code>
-        (<code>-webkit-line-clamp: 2</code>). Der Text darf umbrechen, wird aber nach zwei Zeilen ausgepunktet.
+        Die Erkennung funktioniert auch bei vertikaler Kürzung, z.B. mit der Klasse <code>.lux-crop-2-lines</code> (<code
+          >-webkit-line-clamp: 2</code
+        >). Der Text darf umbrechen, wird aber nach zwei Zeilen ausgepunktet.
       </span>
       <div
         style="
@@ -162,50 +166,50 @@
         </div>
       </div>
       <span class="lux-hint">
-        Solange der Text in zwei Zeilen passt, bleibt der Tooltip aus. Wird das Fenster schmaler gezogen und der Text nach der zweiten
-        Zeile abgeschnitten, erscheint der Tooltip beim Hover.
+        Solange der Text in zwei Zeilen passt, bleibt der Tooltip aus. Wird das Fenster schmaler gezogen und der Text nach der zweiten Zeile
+        abgeschnitten, erscheint der Tooltip beim Hover.
       </span>
     </div>
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
-    <lux-input-ac
+    <lux-input
       luxAutocomplete="off"
       luxLabel="luxTooltip"
       luxHint="Diese Property bestimmt den Text innerhalb des Tooltips."
-      [(luxValue)]="message"
+      [(value)]="message"
     >
-    </lux-input-ac>
-    <lux-select-ac
+    </lux-input>
+    <lux-select
       luxLabel="luxTooltipPosition"
       luxHint="Diese Property ändert die Position des Tooltips relativ zum Zielelement."
-      [(luxSelected)]="position"
+      [(value)]="position"
       [luxOptions]="positionOptions"
     >
-    </lux-select-ac>
-    <lux-input-ac
+    </lux-select>
+    <lux-input
       luxType="number"
       [luxNumberAlignLeft]="true"
       luxAutocomplete="off"
       luxLabel="luxTooltipHideDelay"
       luxHint="Mit dieser Property wird die zeitliche Verzögerung (in ms) zum Ausblenden des Tooltips eingerichtet."
-      [(luxValue)]="hideDelay"
+      [(value)]="hideDelay"
     >
-    </lux-input-ac>
-    <lux-input-ac
+    </lux-input>
+    <lux-input
       luxType="number"
       [luxNumberAlignLeft]="true"
       luxAutocomplete="off"
       luxLabel="luxTooltipShowDelay"
       luxHint="Mit dieser Property wird die zeitliche Verzögerung (in ms) zum Einblenden des Tooltips eingerichtet."
-      [(luxValue)]="showDelay"
+      [(value)]="showDelay"
     >
-    </lux-input-ac>
-    <lux-toggle-ac
+    </lux-input>
+    <lux-toggle
       luxLabel="luxTooltipDisabled"
       luxHint="Mit diesem Flag lässt sich der Tooltip deaktivieren."
-      [(luxChecked)]="disabled"
+      [(checked)]="disabled"
       [luxNoTopLabel]="true"
     >
-    </lux-toggle-ac>
+    </lux-toggle>
   </example-base-simple-options>
 </example-base-structure>

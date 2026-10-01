@@ -1,8 +1,8 @@
-import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.component';
 import { LuxAriaLabelDirective } from '../../lux-directives/lux-aria/lux-aria-label.directive';
-import { LuxCheckboxAcComponent } from '../../lux-form/lux-checkbox-ac/lux-checkbox-ac.component';
+import { LuxCheckboxComponent } from '../../lux-form/lux-checkbox/lux-checkbox.component';
 import { LuxIconComponent } from '../../lux-icon/lux-icon/lux-icon.component';
 import { LuxTourHintRef } from '../lux-tour-hint-model/lux-tour-hint-ref.class';
 
@@ -10,15 +10,15 @@ import { LuxTourHintRef } from '../lux-tour-hint-model/lux-tour-hint-ref.class';
   selector: 'lux-tour-hint-preset',
   templateUrl: './lux-tour-hint-preset.component.html',
   styleUrls: ['./lux-tour-hint-preset.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [LuxIconComponent, LuxCheckboxAcComponent, LuxButtonComponent, LuxAriaLabelDirective, TranslocoPipe]
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [LuxIconComponent, LuxCheckboxComponent, LuxButtonComponent, LuxAriaLabelDirective, TranslocoPipe]
 })
 export class LuxTourHintPresetComponent {
-  tourRef = inject(LuxTourHintRef);
+  protected readonly tourRef = inject(LuxTourHintRef);
 
-  public dontShowAgainChecked = false;
+  protected readonly dontShowAgainChecked = signal(false);
 
   public close() {
-    this.tourRef.close(this.dontShowAgainChecked);
+    this.tourRef.close(this.dontShowAgainChecked());
   }
 }

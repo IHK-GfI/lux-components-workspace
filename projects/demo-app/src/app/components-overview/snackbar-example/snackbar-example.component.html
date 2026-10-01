@@ -4,49 +4,46 @@
   exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/lux%E2%80%90snackbar-v21"
 >
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
-    <lux-toggle-ac
+    <lux-toggle
       luxLabel="Output-Events loggen"
       luxHint="(Console --> F12/CMD+ALT+I)"
-      [(luxChecked)]="showOutputEvents"
+      [(checked)]="showOutputEvents"
       [luxNoTopLabel]="true"
-    >
-    </lux-toggle-ac>
-    <lux-input-ac luxLabel="text" luxHint="Diese Property definiert den Text der Snackbar." [(luxValue)]="snackbarConfig.text">
-    </lux-input-ac>
-    <lux-select-ac
+    />
+    <lux-input luxLabel="text" luxHint="Diese Property definiert den Text der Snackbar." [(value)]="snackbarConfig.text" />
+    <lux-select
       luxLabel="textColor"
       [luxOptions]="colors"
       luxHint="Hier kann ein Farbwert für den Text eingetragen werden (aus dem entsprechenden Enum)."
-      [(luxSelected)]="snackbarConfig.textColor"
-    >
-    </lux-select-ac>
-    <lux-input-ac luxLabel="iconName" luxHint="Diese Property definiert das Icon der Snackbar." [(luxValue)]="snackbarConfig.iconName">
-    </lux-input-ac>
-    <lux-select-ac
+      [(value)]="textColor"
+    />
+    <lux-input luxLabel="iconName" luxHint="Diese Property definiert das Icon der Snackbar." [(value)]="snackbarConfig.iconName" />
+    <lux-select
       luxLabel="iconSize"
       luxHint="Die Property bestimmt die (relative) Größe des Icons."
-      [(luxSelected)]="snackbarConfig.iconSize"
+      [(value)]="snackbarConfig.iconSize"
       [luxOptions]="['1x', '2x', '3x', '4x', '5x']"
-    >
-    </lux-select-ac>
-    <lux-select-ac
+    />
+    <lux-select
       luxLabel="iconColor"
       [luxOptions]="colors"
       luxHint="Hier kann ein Farbwert für das Icon eingetragen werden (aus dem entsprechenden Enum)."
-      [(luxSelected)]="snackbarConfig.iconColor"
-    >
-    </lux-select-ac>
-    <lux-input-ac luxLabel="action" luxHint="Diese Property definiert die Action der Snackbar." [(luxValue)]="snackbarConfig.action">
-    </lux-input-ac>
-    <lux-select-ac
+      [(value)]="iconColor"
+    />
+    <lux-input luxLabel="action" luxHint="Diese Property definiert die Action der Snackbar." [(value)]="snackbarConfig.action" />
+    <lux-select
       luxLabel="actionColor"
       [luxOptions]="colors"
       luxHint="Hier kann ein Farbwert für die Action eingetragen werden (aus dem entsprechenden Enum)."
-      [(luxSelected)]="snackbarConfig.actionColor"
-    >
-    </lux-select-ac>
-    <lux-input-ac luxLabel="duration" luxHint="Diese Property definiert wie lange die Snackbar angezeigt wird." luxType="number" [luxNumberAlignLeft]="true" [(luxValue)]="duration">
-    </lux-input-ac>
+      [(value)]="actionColor"
+    />
+    <lux-input
+      luxLabel="duration"
+      luxHint="Diese Property definiert wie lange die Snackbar angezeigt wird."
+      luxType="number"
+      [luxNumberAlignLeft]="true"
+      [(value)]="duration"
+    />
   </example-base-simple-options>
   <example-base-options-actions>
     <div class="lux-flex lux-flex-wrap">
@@ -58,8 +55,7 @@
         luxColor="primary"
         [luxStroked]="true"
         (luxClicked)="openSnackbar()"
-      >
-      </lux-button>
+      />
       <lux-button
         class="lux-mr-4 lux-mb-3"
         luxLabel="Farbshow-Snackbar"
@@ -68,26 +64,17 @@
         luxColor="primary"
         [luxStroked]="true"
         (luxClicked)="openSnackbarShow()"
-      >
-      </lux-button>
+      />
       <lux-button
-      class="lux-mr-4 lux-mb-3"
-      luxLabel="Text-Snackbar"
-      luxTooltip="Dieser Button öffnet eine einfache Snackbar über die Methode openText(). Es werden nur die beiden Felder 'text' und 'action' verwendet."
-      [luxTooltipShowDelay]="1000"
-      luxColor="primary"
-      [luxStroked]="true"
-      (luxClicked)="openSnackbarText()"
-      >
-    </lux-button>
-    <lux-button
-      class="lux-mr-4 lux-mb-3"
-      luxLabel="Ausblenden"
-      luxColor="primary"
-      [luxStroked]="true"
-      (luxClicked)="dismissSnackbar()"
-    >
-    </lux-button>
+        class="lux-mr-4 lux-mb-3"
+        luxLabel="Text-Snackbar"
+        luxTooltip="Dieser Button öffnet eine einfache Snackbar über die Methode openText(). Es werden nur die beiden Felder 'text' und 'action' verwendet."
+        [luxTooltipShowDelay]="1000"
+        luxColor="primary"
+        [luxStroked]="true"
+        (luxClicked)="openSnackbarText()"
+      />
+      <lux-button class="lux-mr-4 lux-mb-3" luxLabel="Ausblenden" luxColor="primary" [luxStroked]="true" (luxClicked)="dismissSnackbar()" />
     </div>
   </example-base-options-actions>
 </example-base-structure>

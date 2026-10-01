@@ -9,35 +9,33 @@
           @for (color of colors; track color; let i = $index) {
             <lux-link
               id="lux-button-{{ i }}"
-              [luxLabel]="label"
+              [luxLabel]="label()"
               [luxColor]="color.value"
-              [luxIconName]="iconName"
-              [luxIconShowRight]="iconShowRight"
+              [luxIconName]="iconName()"
+              [luxIconShowRight]="iconShowRight()"
               [luxRaised]="true"
-              [luxDisabled]="disabled"
+              [luxDisabled]="disabled()"
               luxTagId="demo-link-default{{ i }}"
-              [luxHref]="href"
-              [luxBlank]="blank"
+              [luxHref]="href()"
+              [luxBlank]="blank()"
               (luxClicked)="click($event)"
-            >
-            </lux-link>
+            />
           }
         </div>
         <div class="lux-flex lux-flex-col lux-gap-4">
           @for (color of colors; track color; let i = $index) {
             <lux-link
-              [luxLabel]="label"
+              [luxLabel]="label()"
               [luxColor]="color.value"
-              [luxIconName]="iconName"
-              [luxIconShowRight]="iconShowRight"
+              [luxIconName]="iconName()"
+              [luxIconShowRight]="iconShowRight()"
               [luxFlat]="true"
-              [luxDisabled]="disabled"
+              [luxDisabled]="disabled()"
               luxTagId="demo-link-default{{ i }}"
-              [luxHref]="href"
-              [luxBlank]="blank"
+              [luxHref]="href()"
+              [luxBlank]="blank()"
               (luxClicked)="click($event)"
-            >
-            </lux-link>
+            />
           }
         </div>
       </div>
@@ -45,34 +43,32 @@
         <div class="lux-flex lux-flex-col lux-gap-4">
           @for (color of colors; track color; let i = $index) {
             <lux-link
-              [luxLabel]="label"
+              [luxLabel]="label()"
               [luxColor]="color.value"
-              [luxIconName]="iconName"
-              [luxIconShowRight]="iconShowRight"
+              [luxIconName]="iconName()"
+              [luxIconShowRight]="iconShowRight()"
               [luxStroked]="true"
-              [luxDisabled]="disabled"
+              [luxDisabled]="disabled()"
               luxTagId="demo-link-default{{ i }}"
-              [luxHref]="href"
-              [luxBlank]="blank"
+              [luxHref]="href()"
+              [luxBlank]="blank()"
               (luxClicked)="click($event)"
-            >
-            </lux-link>
+            />
           }
         </div>
         <div class="lux-flex lux-flex-col lux-gap-4">
           @for (color of colors; track color; let i = $index) {
             <lux-link
-              [luxLabel]="label"
+              [luxLabel]="label()"
               [luxColor]="color.value"
-              [luxIconName]="iconName"
-              [luxIconShowRight]="iconShowRight"
-              [luxDisabled]="disabled"
+              [luxIconName]="iconName()"
+              [luxIconShowRight]="iconShowRight()"
+              [luxDisabled]="disabled()"
               luxTagId="demo-link-hover{{ i }}"
-              [luxHref]="href"
-              [luxBlank]="blank"
+              [luxHref]="href()"
+              [luxBlank]="blank()"
               (luxClicked)="click($event)"
-            >
-            </lux-link>
+            />
           }
         </div>
       </div>
@@ -80,81 +76,77 @@
         <div class="lux-flex lux-flex-col lux-gap-4">
           @for (color of colors; track color; let i = $index) {
             <lux-link
-              [luxLabel]="label"
+              [luxLabel]="label()"
               [luxColor]="color.value"
-              [luxIconName]="iconName"
-              [luxIconShowRight]="iconShowRight"
+              [luxIconName]="iconName()"
+              [luxIconShowRight]="iconShowRight()"
               [luxRounded]="true"
-              [luxDisabled]="disabled"
+              [luxDisabled]="disabled()"
               luxTagId="demo-button-focus{{ i }}"
-              [luxHref]="href"
-              [luxBlank]="blank"
+              [luxHref]="href()"
+              [luxBlank]="blank()"
               (luxClicked)="click($event)"
-            >
-            </lux-link>
+            />
           }
         </div>
         <div class="lux-flex lux-flex-col lux-gap-4">
           @for (color of colors; track color; let i = $index) {
             <lux-link
-              [luxLabel]="label"
+              [luxLabel]="label()"
               [luxColor]="color.value"
-              [luxIconName]="iconName"
-              [luxIconShowRight]="iconShowRight"
+              [luxIconName]="iconName()"
+              [luxIconShowRight]="iconShowRight()"
               [luxRounded]="true"
               [luxStroked]="true"
-              [luxDisabled]="disabled"
+              [luxDisabled]="disabled()"
               luxTagId="demo-button-rounded-stroked{{ i }}"
-              [luxHref]="href"
-              [luxBlank]="blank"
+              [luxHref]="href()"
+              [luxBlank]="blank()"
               (luxClicked)="click($event)"
-            >
-            </lux-link>
+            />
           }
         </div>
       </div>
     </div>
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
-    <lux-toggle-ac
+    <lux-toggle
       luxLabel="Output-Events loggen"
       luxHint="(Console --> F12/CMD+ALT+I)"
-      [(luxChecked)]="showOutputEvents"
+      [(checked)]="showOutputEvents"
       [luxNoTopLabel]="true"
-    ></lux-toggle-ac>
-    <lux-input-ac luxName="link_luxHref" [(luxValue)]="href" luxLabel="luxHref">
+    />
+    <lux-input luxName="link_luxHref" [(value)]="href" luxLabel="luxHref">
       <lux-form-hint>
         Bestimmt die URL, zu der der Link routet.<br />
         Wenn die URL nicht mit <i>http</i> beginnt, wird automatisch der Angular-Router für Routing innerhalb der Applikation genommen.
       </lux-form-hint>
-    </lux-input-ac>
-    <lux-toggle-ac
-      [(luxChecked)]="blank"
+    </lux-input>
+    <lux-toggle
+      [(checked)]="blank"
       luxLabel="luxBlank"
       luxHint="Diese Property bestimmt ob (externe) Links in einem neuen Tab geöffnet werden."
       [luxNoTopLabel]="true"
-    >
-    </lux-toggle-ac>
+    />
 
-    <lux-input-ac [(luxValue)]="label" luxLabel="luxLabel" luxHint="Bestimmt den Text, der für den Link angezeigt wird."></lux-input-ac>
-    <lux-input-ac luxName="button_luxIconName" [(luxValue)]="iconName" luxLabel="luxIconName">
+    <lux-input [(value)]="label" luxLabel="luxLabel" luxHint="Bestimmt den Text, der für den Link angezeigt wird." />
+    <lux-input luxName="button_luxIconName" [(value)]="iconName" luxLabel="luxIconName">
       <lux-form-hint>
         Diese Property definiert das Icon, welches in dem Button (linksbündig, wenn zusätzlich auch noch
         <i>luxLabel</i> gesetzt ist).<br />
       </lux-form-hint>
-    </lux-input-ac>
-    <lux-toggle-ac luxLabel="luxIconShowRight" [(luxChecked)]="iconShowRight" [luxNoLabels]="true"></lux-toggle-ac>
-    <lux-toggle-ac [(luxChecked)]="disabled" luxLabel="luxDisabled" luxHint="Diese Property deaktiviert den Link." [luxNoTopLabel]="true">
-    </lux-toggle-ac>
-    <lux-toggle-ac
+    </lux-input>
+    <lux-toggle luxLabel="luxIconShowRight" [(checked)]="iconShowRight" [luxNoLabels]="true" />
+    <lux-toggle [(checked)]="disabled" luxLabel="luxDisabled" luxHint="Diese Property deaktiviert den Link." [luxNoTopLabel]="true" />
+    <lux-toggle
       luxLabel="Label Uppercase"
-      [(luxChecked)]="config.labelConfiguration!.allUppercase"
-      (luxCheckedChange)="updateConfiguration()"
+      [(checked)]="config().labelConfiguration!.allUppercase"
+      (checkedChange)="updateConfiguration()"
       [luxNoTopLabel]="true"
     >
       <lux-form-hint>
         Über den <i>LuxComponentsConfigService</i> kann für alle LuxLinks applikationsweit eine Uppercase-Darstellung forciert werden.
       </lux-form-hint>
-    </lux-toggle-ac>
+    </lux-toggle>
   </example-base-simple-options>
 </example-base-structure>

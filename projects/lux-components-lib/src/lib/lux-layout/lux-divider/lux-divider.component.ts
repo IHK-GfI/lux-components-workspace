@@ -9,12 +9,10 @@ import { MatDivider } from '@angular/material/divider';
   host: {
     '[class.lux-vertical-divider]': 'luxVertical()',
     '[class.lux-horizontal-divider]': '!luxVertical()'
-  }
-  ,changeDetection: ChangeDetectionStrategy.OnPush
+  },
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LuxDividerComponent {
-  luxInset = input<boolean>(false);
-  luxVertical = input<boolean>(false);
-
-  constructor() {}
+  readonly luxInset = input<boolean>(false);
+  readonly luxVertical = input<boolean>(false);
 }

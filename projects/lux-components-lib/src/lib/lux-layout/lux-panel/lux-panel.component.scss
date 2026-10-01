@@ -3,9 +3,7 @@
 }
 
 .lux-panel {
-
-  ::ng-deep .mat-expansion-panel-header:not([aria-disabled='true']) {
-
+  ::ng-deep .mat-expansion-panel-header:not([aria-disabled="true"]) {
     .mat-expansion-panel-header-title {
       //color: $dark-primary-text;
     }

@@ -25,11 +25,17 @@
           "defaultConfiguration": "production"
         },
         "test": {
-          "builder": "@angular/build:karma",
+          "builder": "@angular/build:unit-test",
           "options": {
             "tsConfig": "projects/lux-components-lib/tsconfig.spec.json",
-            "karmaConfig": "projects/lux-components-lib/karma.conf.js",
-            "polyfills": ["zone.js", "zone.js/testing"]
+            "setupFiles": ["projects/lux-components-lib/test-setup.ts"],
+            "coverageReporters": ["html", "text-summary"],
+            "coverageThresholds": {
+              "statements": 60,
+              "branches": 50,
+              "functions": 55,
+              "lines": 60
+            }
           }
         },
         "lint": {
@@ -132,35 +138,9 @@
           "defaultConfiguration": "development"
         },
         "test": {
-          "builder": "@angular/build:karma",
+          "builder": "@angular/build:unit-test",
           "options": {
-            "polyfills": ["zone.js", "zone.js/testing"],
-            "tsConfig": "projects/demo-app/tsconfig.spec.json",
-            "inlineStyleLanguage": "scss",
-            "assets": [
-              {
-                "glob": "*.json",
-                "input": "node_modules/@ihk-gfi/lux-components/locale",
-                "output": "./assets/i18n"
-              },
-              {
-                "glob": "*.json",
-                "input": "projects/demo-app/src/locale",
-                "output": "./assets/i18n"
-              },
-              {
-                "glob": "**/*",
-                "input": "projects/demo-app/public",
-                "output": "./assets"
-              },
-              {
-                "glob": "*(*min.css|*min.css.map)",
-                "input": "./dist/theme/prebuilt-themes",
-                "output": "./assets/themes"
-              }
-            ],
-            "styles": ["projects/demo-app/src/styles.scss"],
-            "scripts": []
+            "tsConfig": "projects/demo-app/tsconfig.spec.json"
           }
         },
         "lint": {

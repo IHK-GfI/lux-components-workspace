@@ -1,8 +1,10 @@
 @use "@angular/material" as mat;
 
 :root {
-  @include mat.tooltip-overrides((
-    container-shape: var(--lux-theme-app-border-radius),
-    supporting-text-size: 0.875rem
-  ));
+  @include mat.tooltip-overrides(
+    (
+      container-shape: var(--lux-theme-app-border-radius),
+      supporting-text-size: 0.875rem
+    )
+  );
 }

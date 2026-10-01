@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component, HostBinding, effect, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { Router } from '@angular/router';
 import { LuxAriaLabelDirective } from '../../lux-directives/lux-aria/lux-aria-label.directive';
 import { LuxTooltipDirective } from '../../lux-directives/lux-tooltip/lux-tooltip.directive';
@@ -10,34 +10,20 @@ import { LuxActionComponentBaseClass } from '../lux-action-model/lux-action-comp
   selector: 'lux-link-plain',
   templateUrl: './lux-link-plain.component.html',
   styleUrls: ['./lux-link-plain.component.scss'],
-  host: { '[class.lux-disabled]': 'luxDisabled()' },
+  host: { '[class.lux-disabled]': 'luxDisabled()', '[class]': 'classes()' },
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxAriaLabelDirective, NgClass, LuxIconComponent]
 })
 export class LuxLinkPlainComponent extends LuxActionComponentBaseClass {
-  private router = inject(Router);
-  tooltipDirective?: LuxTooltipDirective;
-
-  @HostBinding('class') classes = '';
   readonly luxHref = input('');
   readonly luxBlank = input(false);
   readonly luxCustomClass = input('');
 
-  constructor() {
-    super();
+  tooltipDirective?: LuxTooltipDirective;
 
-    effect(() => {
-      this.updateHostClasses();
-    });
-  }
+  private readonly router = inject(Router);
 
-  private updateHostClasses() {
-    if (this.luxCustomClass()) {
-      this.classes = this.luxCustomClass();
-    } else {
-      this.classes = 'default-style';
-    }
-  }
+  readonly classes = computed(() => this.luxCustomClass() || 'default-style');
 
   isExternal(): boolean {
     if (!this.luxHref()) return false;

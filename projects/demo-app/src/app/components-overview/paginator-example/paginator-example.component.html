@@ -31,102 +31,92 @@
         [luxLastPageLabel]="toOptionalLabel(lastPageLabel())"
         [luxGetRangeLabel]="rangeLabel()"
         (luxPageChange)="onPageChange($event)"
-      >
-      </lux-paginator>
+      />
     </div>
   </example-base-content>
 
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
-    <lux-toggle-ac
+    <lux-toggle
       luxLabel="Output-Events loggen"
       luxHint="(Console --> F12/CMD+ALT+I)"
-      [(luxChecked)]="showOutputEvents"
+      [(checked)]="showOutputEvents"
       [luxNoTopLabel]="true"
-    >
-    </lux-toggle-ac>
+    />
 
-    <lux-input-ac
+    <lux-input
       luxName="paginator_pageIndex"
       luxLabel="luxPageIndex"
       luxHint="Der aktuelle Seitenindex (0-basiert)"
       luxType="number"
       [luxNumberAlignLeft]="true"
-      [(luxValue)]="pageIndex"
-    >
-    </lux-input-ac>
+      [(value)]="pageIndex"
+    />
 
-    <lux-select-ac
+    <lux-select
       luxLabel="luxPageSizeOptions"
       [luxOptions]="pageSizeOptions()"
       luxOptionLabelProp="label"
       [luxPickValue]="(item) => item.value"
       luxHint="Auswahl der Seitengroessen-Arrays (aus dem Table-Beispiel)"
-      [(luxSelected)]="selectedPageSizeOption"
-    >
-    </lux-select-ac>
+      [(value)]="selectedPageSizeOption"
+    />
 
-    <lux-toggle-ac luxLabel="luxShowFirstLastButtons" [(luxChecked)]="showFirstLastButtons" [luxNoLabels]="true"> </lux-toggle-ac>
-    <lux-toggle-ac luxLabel="luxHidePageSize" [(luxChecked)]="hidePageSize" [luxNoLabels]="true"> </lux-toggle-ac>
-    <lux-toggle-ac luxLabel="luxDisabled" [(luxChecked)]="disabled" [luxNoLabels]="true"> </lux-toggle-ac>
-    <lux-toggle-ac luxLabel="luxDense" [(luxChecked)]="denseFormat" [luxNoLabels]="true"> </lux-toggle-ac>
-    <lux-toggle-ac luxLabel="luxNoWrap" [(luxChecked)]="noWrap" [luxNoLabels]="true"> </lux-toggle-ac>
+    <lux-toggle luxLabel="luxShowFirstLastButtons" [(checked)]="showFirstLastButtons" [luxNoLabels]="true" />
+    <lux-toggle luxLabel="luxHidePageSize" [(checked)]="hidePageSize" [luxNoLabels]="true" />
+    <lux-toggle luxLabel="luxDisabled" [(checked)]="disabled" [luxNoLabels]="true" />
+    <lux-toggle luxLabel="luxDense" [(checked)]="denseFormat" [luxNoLabels]="true" />
+    <lux-toggle luxLabel="luxNoWrap" [(checked)]="noWrap" [luxNoLabels]="true" />
   </example-base-simple-options>
   <example-base-advanced-options>
     <div class="lux-flex lux-flex-col lux-gap-4">
-      <lux-input-ac
+      <lux-input
         luxName="paginator_itemsPerPageLabel"
         luxLabel="luxItemsPerPageLabel"
         luxPlaceholder="Standardübersetzung wird verwendet"
         [luxNoBottomLabel]="true"
-        [(luxValue)]="itemsPerPageLabel"
-      >
-      </lux-input-ac>
+        [(value)]="itemsPerPageLabel"
+      />
 
-      <lux-input-ac
+      <lux-input
         luxName="paginator_nextPageLabel"
         luxLabel="luxNextPageLabel"
         luxPlaceholder="Standardübersetzung wird verwendet"
         [luxNoBottomLabel]="true"
-        [(luxValue)]="nextPageLabel"
-      >
-      </lux-input-ac>
+        [(value)]="nextPageLabel"
+      />
 
-      <lux-input-ac
+      <lux-input
         luxName="paginator_previousPageLabel"
         luxLabel="luxPreviousPageLabel"
         luxPlaceholder="Standardübersetzung wird verwendet"
         [luxNoBottomLabel]="true"
-        [(luxValue)]="previousPageLabel"
-      >
-      </lux-input-ac>
+        [(value)]="previousPageLabel"
+      />
 
-      <lux-input-ac
+      <lux-input
         luxName="paginator_firstPageLabel"
         luxLabel="luxFirstPageLabel"
         luxPlaceholder="Standardübersetzung wird verwendet"
         [luxNoBottomLabel]="true"
-        [(luxValue)]="firstPageLabel"
-      >
-      </lux-input-ac>
+        [(value)]="firstPageLabel"
+      />
 
-      <lux-input-ac
+      <lux-input
         luxName="paginator_lastPageLabel"
         luxLabel="luxLastPageLabel"
         luxPlaceholder="Standardübersetzung wird verwendet"
         [luxNoBottomLabel]="true"
-        [(luxValue)]="lastPageLabel"
-      >
-      </lux-input-ac>
+        [(value)]="lastPageLabel"
+      />
 
-      <lux-select-ac
+      <lux-select
         luxLabel="luxGetRangeLabel"
         [luxOptions]="rangeLabelOptions"
         [luxPickValue]="(item) => item?.value"
         luxOptionLabelProp="label"
         luxHint="Wählt ein vordefiniertes Bereichslabel für den Paginator aus"
-        [(luxSelected)]="selectedRangeLabelOption"
-      >
-      </lux-select-ac>
+        [(value)]="selectedRangeLabelOption"
+      />
     </div>
   </example-base-advanced-options>
 </example-base-structure>

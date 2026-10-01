@@ -2,65 +2,65 @@
   <lux-panel>
     <lux-panel-header-title> luxUploadActionConfig </lux-panel-header-title>
     <lux-panel-content class="lux-simple-form column lux-mt-4">
-      <lux-input-ac
+      <lux-input
         luxLabel="iconName"
         luxHint="Diese Eigenschaft legt das Icon fest, welches für das Hochladen von Dateien genutzt wird."
-        [(luxValue)]="fileExample.uploadActionConfig.iconName"
-      >
-      </lux-input-ac>
-      @if (showHeaderConfigProperties) {
-      <lux-input-ac
-        luxLabel="iconNameHeader"
-        luxHint="Diese Eigenschaft legt das Icon fest, welches für das Hochladen von Dateien im Header genutzt wird."
-        [(luxValue)]="fileExample.uploadActionConfig.iconNameHeader"
-      >
-      </lux-input-ac>
+        [value]="fileExample().uploadActionConfig.iconName"
+        (valueChange)="updateUploadActionConfig({ iconName: $event })"
+      />
+      @if (showHeaderConfigProperties()) {
+        <lux-input
+          luxLabel="iconNameHeader"
+          luxHint="Diese Eigenschaft legt das Icon fest, welches für das Hochladen von Dateien im Header genutzt wird."
+          [value]="fileExample().uploadActionConfig.iconNameHeader"
+          (valueChange)="updateUploadActionConfig({ iconNameHeader: $event })"
+        />
       }
-      <lux-input-ac
+      <lux-input
         luxLabel="label"
         luxHint="Diese Eigenschaft legt das Label fest, welches für das Hochladen von Dateien genutzt wird."
-        [(luxValue)]="fileExample.uploadActionConfig.label"
-      >
-      </lux-input-ac>
-      @if (showHeaderConfigProperties) {
-      <lux-input-ac
-        luxLabel="labelHeader"
-        luxHint="Diese Eigenschaft legt das Label fest, welches für das Hochladen von Dateien im Header genutzt wird."
-        [(luxValue)]="fileExample.uploadActionConfig.labelHeader"
-      >
-      </lux-input-ac>
+        [value]="fileExample().uploadActionConfig.label"
+        (valueChange)="updateUploadActionConfig({ label: $event })"
+      />
+      @if (showHeaderConfigProperties()) {
+        <lux-input
+          luxLabel="labelHeader"
+          luxHint="Diese Eigenschaft legt das Label fest, welches für das Hochladen von Dateien im Header genutzt wird."
+          [value]="fileExample().uploadActionConfig.labelHeader"
+          (valueChange)="updateUploadActionConfig({ labelHeader: $event })"
+        />
       }
-      <lux-toggle-ac
+      <lux-toggle
         luxLabel="hidden"
         luxHint="Diese Property bestimmt ob etwaige Upload-Buttons angezeigt werden."
-        [(luxChecked)]="fileExample.uploadActionConfig.hidden"
+        [checked]="fileExample().uploadActionConfig.hidden"
+        (checkedChange)="updateUploadActionConfig({ hidden: $event })"
         [luxNoTopLabel]="true"
-      >
-      </lux-toggle-ac>
-      @if (showHeaderConfigProperties) {
-      <lux-toggle-ac
-        luxLabel="hiddenHeader"
-        luxHint="Diese Property bestimmt ob der Upload-Button für den Header angezeigt wird."
-        [(luxChecked)]="fileExample.uploadActionConfig.hiddenHeader"
-        [luxNoTopLabel]="true"
-      >
-      </lux-toggle-ac>
+      />
+      @if (showHeaderConfigProperties()) {
+        <lux-toggle
+          luxLabel="hiddenHeader"
+          luxHint="Diese Property bestimmt ob der Upload-Button für den Header angezeigt wird."
+          [checked]="fileExample().uploadActionConfig.hiddenHeader"
+          (checkedChange)="updateUploadActionConfig({ hiddenHeader: $event })"
+          [luxNoTopLabel]="true"
+        />
       }
-      <lux-toggle-ac
+      <lux-toggle
         luxLabel="disabled"
         luxHint="Diese Property bestimmt ob Upload-Buttons deaktiviert sind oder nicht."
-        [(luxChecked)]="fileExample.uploadActionConfig.disabled"
+        [checked]="fileExample().uploadActionConfig.disabled"
+        (checkedChange)="updateUploadActionConfig({ disabled: $event })"
         [luxNoTopLabel]="true"
-      >
-      </lux-toggle-ac>
-      @if (showHeaderConfigProperties) {
-      <lux-toggle-ac
-        luxLabel="disabledHeader"
-        luxHint="Diese Property bestimmt ob der Upload-Button für den Header deaktiviert ist oder nicht."
-        [(luxChecked)]="fileExample.uploadActionConfig.disabledHeader"
-        [luxNoTopLabel]="true"
-      >
-      </lux-toggle-ac>
+      />
+      @if (showHeaderConfigProperties()) {
+        <lux-toggle
+          luxLabel="disabledHeader"
+          luxHint="Diese Property bestimmt ob der Upload-Button für den Header deaktiviert ist oder nicht."
+          [checked]="fileExample().uploadActionConfig.disabledHeader"
+          (checkedChange)="updateUploadActionConfig({ disabledHeader: $event })"
+          [luxNoTopLabel]="true"
+        />
       }
     </lux-panel-content>
   </lux-panel>
@@ -68,65 +68,65 @@
     <lux-panel-header-title> luxDeleteActionConfig </lux-panel-header-title>
     <lux-panel-content>
       <div class="lux-simple-form column lux-mt-4">
-        <lux-input-ac
+        <lux-input
           luxLabel="iconName"
           luxHint="Diese Eigenschaft legt das Icon fest, welches für das Löschen von Dateien genutzt wird."
-          [(luxValue)]="fileExample.deleteActionConfig.iconName"
-        >
-        </lux-input-ac>
-        @if (showHeaderConfigProperties) {
-        <lux-input-ac
-          luxLabel="iconNameHeader"
-          luxHint="Diese Eigenschaft legt das Icon fest, welches für das Löschen von Dateien im Header genutzt wird."
-          [(luxValue)]="fileExample.deleteActionConfig.iconNameHeader"
-        >
-        </lux-input-ac>
+          [value]="fileExample().deleteActionConfig.iconName"
+          (valueChange)="updateDeleteActionConfig({ iconName: $event })"
+        />
+        @if (showHeaderConfigProperties()) {
+          <lux-input
+            luxLabel="iconNameHeader"
+            luxHint="Diese Eigenschaft legt das Icon fest, welches für das Löschen von Dateien im Header genutzt wird."
+            [value]="fileExample().deleteActionConfig.iconNameHeader"
+            (valueChange)="updateDeleteActionConfig({ iconNameHeader: $event })"
+          />
         }
-        <lux-input-ac
+        <lux-input
           luxLabel="label"
           luxHint="Diese Eigenschaft legt das Label fest, welches für das Löschen von Dateien genutzt wird."
-          [(luxValue)]="fileExample.deleteActionConfig.label"
-        >
-        </lux-input-ac>
-        @if (showHeaderConfigProperties) {
-        <lux-input-ac
-          luxLabel="labelHeader"
-          luxHint="Diese Eigenschaft legt das Label fest, welches für das Löschen von Dateien im Header genutzt wird."
-          [(luxValue)]="fileExample.deleteActionConfig.labelHeader"
-        >
-        </lux-input-ac>
+          [value]="fileExample().deleteActionConfig.label"
+          (valueChange)="updateDeleteActionConfig({ label: $event })"
+        />
+        @if (showHeaderConfigProperties()) {
+          <lux-input
+            luxLabel="labelHeader"
+            luxHint="Diese Eigenschaft legt das Label fest, welches für das Löschen von Dateien im Header genutzt wird."
+            [value]="fileExample().deleteActionConfig.labelHeader"
+            (valueChange)="updateDeleteActionConfig({ labelHeader: $event })"
+          />
         }
-        <lux-toggle-ac
+        <lux-toggle
           luxLabel="hidden"
           luxHint="Diese Property bestimmt ob etwaige Delete-Buttons angezeigt werden."
-          [(luxChecked)]="fileExample.deleteActionConfig.hidden"
+          [checked]="fileExample().deleteActionConfig.hidden"
+          (checkedChange)="updateDeleteActionConfig({ hidden: $event })"
           [luxNoTopLabel]="true"
-        >
-        </lux-toggle-ac>
-        @if (showHeaderConfigProperties) {
-        <lux-toggle-ac
-          luxLabel="hiddenHeader"
-          luxHint="Diese Property bestimmt ob der Delete-Button im Header angezeigt wird."
-          [(luxChecked)]="fileExample.deleteActionConfig.hiddenHeader"
-          [luxNoTopLabel]="true"
-        >
-        </lux-toggle-ac>
+        />
+        @if (showHeaderConfigProperties()) {
+          <lux-toggle
+            luxLabel="hiddenHeader"
+            luxHint="Diese Property bestimmt ob der Delete-Button im Header angezeigt wird."
+            [checked]="fileExample().deleteActionConfig.hiddenHeader"
+            (checkedChange)="updateDeleteActionConfig({ hiddenHeader: $event })"
+            [luxNoTopLabel]="true"
+          />
         }
-        <lux-toggle-ac
+        <lux-toggle
           luxLabel="disabled"
           luxHint="Diese Property bestimmt ob Delete-Buttons deaktiviert sind oder nicht."
           [luxNoTopLabel]="true"
-          [(luxChecked)]="fileExample.deleteActionConfig.disabled"
-        >
-        </lux-toggle-ac>
-        @if (showHeaderConfigProperties) {
-        <lux-toggle-ac
-          luxLabel="disabledHeader"
-          luxHint="Diese Property bestimmt ob der Delete-Button im Header deaktiviert wird oder nicht."
-          [(luxChecked)]="fileExample.deleteActionConfig.disabledHeader"
-          [luxNoTopLabel]="true"
-        >
-        </lux-toggle-ac>
+          [checked]="fileExample().deleteActionConfig.disabled"
+          (checkedChange)="updateDeleteActionConfig({ disabled: $event })"
+        />
+        @if (showHeaderConfigProperties()) {
+          <lux-toggle
+            luxLabel="disabledHeader"
+            luxHint="Diese Property bestimmt ob der Delete-Button im Header deaktiviert wird oder nicht."
+            [checked]="fileExample().deleteActionConfig.disabledHeader"
+            (checkedChange)="updateDeleteActionConfig({ disabledHeader: $event })"
+            [luxNoTopLabel]="true"
+          />
         }
       </div>
     </lux-panel-content>
@@ -135,32 +135,32 @@
     <lux-panel-header-title> luxViewActionConfig </lux-panel-header-title>
     <lux-panel-content>
       <div class="lux-simple-form column lux-mt-4">
-        <lux-input-ac
+        <lux-input
           luxLabel="iconName"
           luxHint="Diese Eigenschaft legt das Icon fest, welches für das Anzeigen von Dateien genutzt wird."
-          [(luxValue)]="fileExample.viewActionConfig.iconName"
-        >
-        </lux-input-ac>
-        <lux-input-ac
+          [value]="fileExample().viewActionConfig.iconName"
+          (valueChange)="updateViewActionConfig({ iconName: $event })"
+        />
+        <lux-input
           luxLabel="label"
           luxHint="Diese Eigenschaft legt das Label fest, welches für das Anzeigen von Dateien genutzt wird."
-          [(luxValue)]="fileExample.viewActionConfig.label"
-        >
-        </lux-input-ac>
-        <lux-toggle-ac
+          [value]="fileExample().viewActionConfig.label"
+          (valueChange)="updateViewActionConfig({ label: $event })"
+        />
+        <lux-toggle
           luxLabel="hidden"
           luxHint="Diese Property bestimmt ob etwaige View-Buttons angezeigt werden."
-          [(luxChecked)]="fileExample.viewActionConfig.hidden"
+          [checked]="fileExample().viewActionConfig.hidden"
+          (checkedChange)="updateViewActionConfig({ hidden: $event })"
           [luxNoTopLabel]="true"
-        >
-        </lux-toggle-ac>
-        <lux-toggle-ac
+        />
+        <lux-toggle
           luxLabel="disabled"
           luxHint="Diese Property bestimmt ob View-Buttons deaktiviert sind oder nicht."
-          [(luxChecked)]="fileExample.viewActionConfig.disabled"
+          [checked]="fileExample().viewActionConfig.disabled"
+          (checkedChange)="updateViewActionConfig({ disabled: $event })"
           [luxNoTopLabel]="true"
-        >
-        </lux-toggle-ac>
+        />
       </div>
     </lux-panel-content>
   </lux-panel>
@@ -168,32 +168,32 @@
     <lux-panel-header-title> luxDownloadActionConfig </lux-panel-header-title>
     <lux-panel-content>
       <div class="lux-simple-form column lux-mt-4">
-        <lux-input-ac
+        <lux-input
           luxLabel="iconName"
           luxHint="Diese Eigenschaft legt das Icon fest, welches für das Downloaden von Dateien genutzt wird."
-          [(luxValue)]="fileExample.downloadActionConfig.iconName"
-        >
-        </lux-input-ac>
-        <lux-input-ac
+          [value]="fileExample().downloadActionConfig.iconName"
+          (valueChange)="updateDownloadActionConfig({ iconName: $event })"
+        />
+        <lux-input
           luxLabel="label"
           luxHint="Diese Eigenschaft legt das Label fest, welches für das Downloaden von Dateien genutzt wird."
-          [(luxValue)]="fileExample.downloadActionConfig.label"
-        >
-        </lux-input-ac>
-        <lux-toggle-ac
+          [value]="fileExample().downloadActionConfig.label"
+          (valueChange)="updateDownloadActionConfig({ label: $event })"
+        />
+        <lux-toggle
           luxLabel="hidden"
           luxHint="Diese Property bestimmt ob etwaige Download-Buttons angezeigt werden."
-          [(luxChecked)]="fileExample.downloadActionConfig.hidden"
+          [checked]="fileExample().downloadActionConfig.hidden"
+          (checkedChange)="updateDownloadActionConfig({ hidden: $event })"
           [luxNoTopLabel]="true"
-        >
-        </lux-toggle-ac>
-        <lux-toggle-ac
+        />
+        <lux-toggle
           luxLabel="disabled"
           luxHint="Diese Property bestimmt ob Download-Buttons deaktiviert sind oder nicht."
-          [(luxChecked)]="fileExample.downloadActionConfig.disabled"
+          [checked]="fileExample().downloadActionConfig.disabled"
+          (checkedChange)="updateDownloadActionConfig({ disabled: $event })"
           [luxNoTopLabel]="true"
-        >
-        </lux-toggle-ac>
+        />
       </div>
     </lux-panel-content>
   </lux-panel>

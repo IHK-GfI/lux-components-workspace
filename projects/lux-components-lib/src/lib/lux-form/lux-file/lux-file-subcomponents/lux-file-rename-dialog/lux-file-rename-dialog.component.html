@@ -5,14 +5,14 @@
     </div></lux-dialog-title
   >
   <lux-dialog-content class="lux-flex lux-flex-col lux-m-2">
-    <lux-input-ac
+    <lux-input
       luxLabel="{{ 'luxc.file.rename.input.lbl' | transloco }}"
       [luxValue]="luxDialogRef.data.name"
       [luxRequired]="true"
       (keydown.enter)="luxDialogRef.closeDialog(filename.luxValue)"
       luxAutofocus
       #filename
-    ></lux-input-ac>
+    />
   </lux-dialog-content>
 
   <lux-dialog-actions class="lux-flex lux-flex-wrap">
@@ -22,12 +22,12 @@
       [luxStroked]="true"
       (luxClicked)="luxDialogRef.closeDialog()"
       class="lux-mr-4"
-    ></lux-button>
+    />
     <lux-button
       luxLabel="{{ 'luxc.file.rename.dialog.rename.lbl' | transloco }}"
       luxColor="primary"
       [luxFlat]="true"
       (luxClicked)="luxDialogRef.closeDialog(filename.luxValue)"
-    ></lux-button>
+    />
   </lux-dialog-actions>
 </lux-dialog-structure>
