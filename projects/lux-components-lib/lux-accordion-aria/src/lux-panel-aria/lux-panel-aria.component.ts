@@ -98,7 +98,7 @@ export class LuxPanelAriaComponent {
       .scrolled(0)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((scrollable) => {
-        this.hasScrolled.set(scrollable ? scrollable.measureScrollOffset('top') > 0 : window.scrollY > 0);
+        this.hasScrolled.set(scrollable ? scrollable.getElementRef().nativeElement.scrollTop > 0 : window.scrollY > 0);
       });
 
     this.mediaQuery
@@ -154,6 +154,10 @@ export class LuxPanelAriaComponent {
   }
 
   protected onHeaderClick(event: Event): void {
+    // Das Umschalten übernimmt diese Komponente selbst (wie in toggleFromKeyboard). Seit @angular/aria 22
+    // reagiert ngAccordionGroup ebenfalls auf click, ohne stopPropagation würde das Panel doppelt umgeschaltet.
+    event.stopPropagation();
+
     if (this.effectiveDisabled()) {
       this.luxClickNotAllowed.emit(event);
       return;
