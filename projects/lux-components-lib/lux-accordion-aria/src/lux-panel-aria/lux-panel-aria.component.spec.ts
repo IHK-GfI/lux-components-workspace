@@ -1,19 +1,24 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { LuxPanelAriaComponent } from './lux-panel-aria.component';
-import { LuxPanelAriaHeaderTitleComponent } from './lux-panel-aria-subcomponents/lux-panel-aria-header-title.component';
+import { LuxMediaQueryObserverService } from '@ihk-gfi/lux-components';
+import { beforeAll, beforeEach, describe, expect, it } from 'vitest';
+import { LuxA11yTestHelper } from '../../../test-utils/src/test-utils/lux-a11y-test-helper';
+import { LuxTestHelper } from '../../../test-utils/src/test-utils/lux-test-helper';
+import { LuxAccordionAriaComponent } from '../lux-accordion-aria/lux-accordion-aria.component';
 import { LuxPanelAriaContentComponent } from './lux-panel-aria-subcomponents/lux-panel-aria-content.component';
 import { LuxPanelAriaHeaderCustomComponent } from './lux-panel-aria-subcomponents/lux-panel-aria-header-custom.component';
-import { LuxA11yTestHelper } from '../../../test-utils/src/test-utils/lux-a11y-test-helper';
-import { LuxAccordionAriaComponent } from '../lux-accordion-aria/lux-accordion-aria.component';
 import { LuxPanelAriaHeaderDescriptionComponent } from './lux-panel-aria-subcomponents/lux-panel-aria-header-description.component';
+import { LuxPanelAriaHeaderTitleComponent } from './lux-panel-aria-subcomponents/lux-panel-aria-header-title.component';
+import { LuxPanelAriaComponent } from './lux-panel-aria.component';
+import { MockMediaObserverService } from '../../../src/lib/lux-util/testing/mock-media-observer.service';
 
 describe('LuxPanelAriaComponent', () => {
   let fixture: ComponentFixture<LuxPanelAriaTestComponent>;
   let testComponent: LuxPanelAriaTestComponent;
+  let mediaQueryService: MockMediaObserverService;
 
-  beforeEach(fakeAsync(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       imports: [
         LuxPanelAriaComponent,
@@ -21,15 +26,17 @@ describe('LuxPanelAriaComponent', () => {
         LuxPanelAriaContentComponent,
         LuxPanelAriaHeaderCustomComponent,
         LuxPanelAriaTestComponent
-      ]
+      ],
+      providers: [{ provide: LuxMediaQueryObserverService, useClass: MockMediaObserverService }]
     });
 
     fixture = TestBed.createComponent(LuxPanelAriaTestComponent);
     fixture.detectChanges();
     testComponent = fixture.componentInstance;
-    tick();
+    mediaQueryService = TestBed.inject(LuxMediaQueryObserverService) as unknown as MockMediaObserverService;
+    await LuxTestHelper.wait(fixture);
     fixture.detectChanges();
-  }));
+  });
 
   it('sollte erstellt werden', () => {
     expect(testComponent).toBeTruthy();
@@ -40,244 +47,257 @@ describe('LuxPanelAriaComponent', () => {
     expect(content).toBeNull();
     const panel = fixture.debugElement.query(By.css('[ngAccordionPanel]'));
     expect(panel.nativeElement.getAttribute('role')).toBe('region');
-    expect(panel.nativeElement.hasAttribute('inert')).toBeTrue();
+    expect(panel.nativeElement.hasAttribute('inert')).toBe(true);
   });
 
-  it('sollte Panel-Inhalt nach dem Öffnen anzeigen', fakeAsync(() => {
+  it('sollte Panel-Inhalt nach dem Öffnen anzeigen', async () => {
     const headerButton = fixture.debugElement.query(By.css('.lux-expansion-panel-header-toggle'));
 
     headerButton.nativeElement.click();
     fixture.detectChanges();
-    tick();
-    flush();
+    await LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
     fixture.detectChanges();
 
     const content = fixture.debugElement.query(By.css('.lux-expansion-panel-content'));
     expect(content).toBeTruthy();
-    expect(fixture.debugElement.query(By.css('[ngAccordionPanel]')).nativeElement.hasAttribute('inert')).toBeFalse();
+    expect(fixture.debugElement.query(By.css('[ngAccordionPanel]')).nativeElement.hasAttribute('inert')).toBe(false);
     expect(content.nativeElement.textContent).toContain('Content');
-  }));
+  });
 
-  it('sollte bei Header-Klick expandieren und schließen', fakeAsync(() => {
+  it('sollte bei Header-Klick expandieren und schließen', async () => {
     const headerButton = fixture.debugElement.query(By.css('.lux-expansion-panel-header-toggle'));
 
     headerButton.nativeElement.click();
     fixture.detectChanges();
-    tick();
+    await LuxTestHelper.wait(fixture);
 
     expect(testComponent.expandedEvents).toContain(true);
 
     headerButton.nativeElement.click();
     fixture.detectChanges();
-    tick();
+    await LuxTestHelper.wait(fixture);
 
     expect(testComponent.expandedEvents).toContain(false);
-  }));
+  });
 
-  it('sollte bei Enter expandieren und schließen', fakeAsync(() => {
+  it('sollte bei Enter expandieren und schließen', async () => {
     const headerButton = fixture.debugElement.query(By.css('.lux-expansion-panel-header-toggle'));
 
     headerButton.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
     fixture.detectChanges();
-    tick();
+    await LuxTestHelper.wait(fixture);
 
     expect(testComponent.expandedEvents).toContain(true);
 
     headerButton.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
     fixture.detectChanges();
-    tick();
+    await LuxTestHelper.wait(fixture);
 
     expect(testComponent.expandedEvents).toContain(false);
-  }));
+  });
 
-  it('sollte bei Leertaste expandieren und schließen', fakeAsync(() => {
+  it('sollte bei Leertaste expandieren und schließen', async () => {
     const headerButton = fixture.debugElement.query(By.css('.lux-expansion-panel-header-toggle'));
 
     headerButton.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: ' ' }));
     fixture.detectChanges();
-    tick();
+    await LuxTestHelper.wait(fixture);
 
     expect(testComponent.expandedEvents).toContain(true);
 
     headerButton.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: ' ' }));
     fixture.detectChanges();
-    tick();
+    await LuxTestHelper.wait(fixture);
 
     expect(testComponent.expandedEvents).toContain(false);
-  }));
+  });
 
-  it('sollte Toggle-Position before rendern', fakeAsync(() => {
-    testComponent.togglePosition = 'before';
+  it('sollte Toggle-Position before rendern', async () => {
+    testComponent.togglePosition.set('before');
     fixture.detectChanges();
-    tick();
+    await LuxTestHelper.wait(fixture);
 
     const header = fixture.debugElement.query(By.css('.lux-expansion-panel-header-toggle'));
-    expect(header.nativeElement.classList.contains('lux-expansion-toggle-indicator-before')).toBeTrue();
-  }));
+    expect(header.nativeElement.classList.contains('lux-expansion-toggle-indicator-before')).toBe(true);
+  });
 
-  it('sollte den Indikator bei luxHideToggle ausblenden', fakeAsync(() => {
-    testComponent.hideToggle = true;
+  it('sollte den Indikator bei luxHideToggle ausblenden', async () => {
+    testComponent.hideToggle.set(true);
     fixture.detectChanges();
-    tick();
+    await LuxTestHelper.wait(fixture);
 
     const indicators = fixture.debugElement.queryAll(By.css('.lux-expansion-indicator'));
     expect(indicators.length).toBe(0);
-  }));
+  });
 
-  it('sollte den Indikator bei einem deaktivierten Panel ausblenden', fakeAsync(() => {
-    testComponent.disabled = true;
+  it('sollte den Indikator bei einem deaktivierten Panel ausblenden', async () => {
+    testComponent.disabled.set(true);
     fixture.detectChanges();
-    tick();
+    await LuxTestHelper.wait(fixture);
 
     const indicators = fixture.debugElement.queryAll(By.css('.lux-expansion-indicator'));
     expect(indicators.length).toBe(0);
-  }));
+  });
 
-  it('sollte bei luxDynamicHeaderHeight keine feste Header-Hoehe setzen', fakeAsync(() => {
-    testComponent.dynamicHeaderHeight = true;
+  it('sollte bei luxDynamicHeaderHeight keine feste Header-Hoehe setzen', async () => {
+    testComponent.dynamicHeaderHeight.set(true);
     fixture.detectChanges();
-    tick();
+    await LuxTestHelper.wait(fixture);
 
     const header = fixture.debugElement.query(By.css('.lux-expansion-panel-header'));
     expect(header.nativeElement.style.height).toBe('');
-  }));
+  });
 
-  it('sollte den Header bei luxStickyHeader als sticky markieren', fakeAsync(() => {
-    testComponent.stickyHeader = true;
-    testComponent.stickyHeaderOffset = '48px';
+  it('sollte den Header bei luxStickyHeader als sticky markieren', async () => {
+    testComponent.stickyHeader.set(true);
+    testComponent.stickyHeaderOffset.set('48px');
     fixture.detectChanges();
-    tick();
+    await LuxTestHelper.wait(fixture);
 
     const panel = fixture.debugElement.query(By.css('.lux-panel'));
-    expect(panel.nativeElement.classList.contains('lux-panel-sticky-header')).toBeTrue();
+    expect(panel.nativeElement.classList.contains('lux-panel-sticky-header')).toBe(true);
     expect(panel.nativeElement.style.getPropertyValue('--lux-panel-sticky-header-offset')).toBe('48px');
-  }));
+  });
 
-  it('sollte ein sticky Panel beim Scrollen geöffnet lassen', fakeAsync(() => {
-    testComponent.stickyHeader = true;
-    testComponent.expanded = true;
+  it('sollte ein sticky Panel beim Scrollen geöffnet lassen', async () => {
+    testComponent.stickyHeader.set(true);
+    testComponent.expanded.set(true);
     fixture.detectChanges();
-    tick();
+    await LuxTestHelper.wait(fixture);
     fixture.detectChanges();
 
     const panelContent = fixture.debugElement.query(By.css('.lux-expansion-panel-content-wrapper')).nativeElement as HTMLElement;
     document.documentElement.dispatchEvent(new Event('scroll'));
-    tick();
+    await LuxTestHelper.wait(fixture);
     fixture.detectChanges();
 
     expect(testComponent.expandedEvents).toEqual([true]);
-    expect(panelContent.hasAttribute('inert')).toBeFalse();
-  }));
+    expect(panelContent.hasAttribute('inert')).toBe(false);
+  });
 
-  it('sollte luxColor auch ohne umgebendes Accordion auf das Panel anwenden', fakeAsync(() => {
+  it('sollte luxColor auch ohne umgebendes Accordion auf das Panel anwenden', async () => {
     const standaloneFixture = TestBed.createComponent(LuxPanelAriaStandaloneTestComponent);
     standaloneFixture.detectChanges();
-    tick();
+    await LuxTestHelper.wait(fixture);
 
     const panel = standaloneFixture.debugElement.query(By.css('.lux-panel'));
-    expect(panel.nativeElement.classList.contains('lux-warn')).toBeTrue();
-  }));
+    expect(panel.nativeElement.classList.contains('lux-warn')).toBe(true);
+  });
 
-  it('sollte bei luxTruncated Titel und Beschreibung abschneiden', fakeAsync(() => {
-    testComponent.truncated = true;
+  it('sollte bei luxTruncated Titel und Beschreibung abschneiden', async () => {
+    testComponent.truncated.set(true);
     fixture.detectChanges();
-    tick();
+    await LuxTestHelper.wait(fixture);
 
     const title = fixture.debugElement.query(By.css('.lux-expansion-panel-header-title'));
     const description = fixture.debugElement.query(By.css('.lux-expansion-panel-header-description'));
 
-    expect(title.nativeElement.classList.contains('lux-crop')).toBeTrue();
-    expect(title.nativeElement.classList.contains('lux-hyphenate')).toBeFalse();
+    expect(title.nativeElement.classList.contains('lux-crop')).toBe(true);
+    expect(title.nativeElement.classList.contains('lux-hyphenate')).toBe(false);
     expect(title.nativeElement.style.display).toBe('block');
-    expect(title.nativeElement.hasAttribute('tabindex')).toBeFalse();
+    expect(title.nativeElement.hasAttribute('tabindex')).toBe(false);
 
-    expect(description.nativeElement.classList.contains('lux-crop')).toBeTrue();
-    expect(description.nativeElement.classList.contains('lux-hyphenate')).toBeFalse();
+    expect(description.nativeElement.classList.contains('lux-crop')).toBe(true);
+    expect(description.nativeElement.classList.contains('lux-hyphenate')).toBe(false);
     expect(description.nativeElement.style.display).toBe('block');
-    expect(description.nativeElement.hasAttribute('tabindex')).toBeFalse();
-  }));
+    expect(description.nativeElement.hasAttribute('tabindex')).toBe(false);
+  });
 
-  it('sollte deaktiviertes Panel nicht öffnen', fakeAsync(() => {
-    testComponent.disabled = true;
+  it('sollte deaktiviertes Panel nicht öffnen', async () => {
+    testComponent.disabled.set(true);
     fixture.detectChanges();
-    tick();
+    await LuxTestHelper.wait(fixture);
 
     const header = fixture.debugElement.query(By.css('.lux-expansion-panel-header-toggle'));
     header.nativeElement.click();
     fixture.detectChanges();
-    tick();
+    await LuxTestHelper.wait(fixture);
 
     const content = fixture.debugElement.query(By.css('.lux-expansion-panel-content'));
     expect(header.nativeElement.getAttribute('aria-disabled')).toBe('true');
     expect(content).toBeNull();
-  }));
+  });
 
-  it('sollte luxClickNotAllowed bei Klick auf ein deaktiviertes Panel emittieren', fakeAsync(() => {
-    testComponent.disabled = true;
+  it('sollte luxClickNotAllowed bei Klick auf ein deaktiviertes Panel emittieren', async () => {
+    testComponent.disabled.set(true);
     fixture.detectChanges();
-    tick();
+    await LuxTestHelper.wait(fixture);
 
     const header = fixture.debugElement.query(By.css('.lux-expansion-panel-header-toggle'));
     header.nativeElement.click();
     fixture.detectChanges();
-    tick();
+    await LuxTestHelper.wait(fixture);
 
     expect(testComponent.clickNotAllowedEvents.length).toBe(1);
     expect(testComponent.expandedEvents).not.toContain(true);
-  }));
+  });
 
-  it('sollte luxClickNotAllowed bei Tastatureingabe auf ein deaktiviertes Panel emittieren', fakeAsync(() => {
-    testComponent.disabled = true;
+  it('sollte luxClickNotAllowed bei Tastatureingabe auf ein deaktiviertes Panel emittieren', async () => {
+    testComponent.disabled.set(true);
     fixture.detectChanges();
-    tick();
+    await LuxTestHelper.wait(fixture);
 
     const header = fixture.debugElement.query(By.css('.lux-expansion-panel-header-toggle'));
     header.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
     fixture.detectChanges();
-    tick();
+    await LuxTestHelper.wait(fixture);
 
     expect(testComponent.clickNotAllowedEvents.length).toBe(1);
     expect(testComponent.expandedEvents).not.toContain(true);
-  }));
+  });
 
-  it('sollte luxClickNotAllowed bei einem aktiven Panel nicht emittieren', fakeAsync(() => {
+  it('sollte luxClickNotAllowed bei einem aktiven Panel nicht emittieren', async () => {
     const header = fixture.debugElement.query(By.css('.lux-expansion-panel-header-toggle'));
     header.nativeElement.click();
     fixture.detectChanges();
-    tick();
+    await LuxTestHelper.wait(fixture);
 
     expect(testComponent.clickNotAllowedEvents.length).toBe(0);
     expect(testComponent.expandedEvents).toContain(true);
-  }));
+  });
 
-  it('sollte den Custom-Header-Inhalt bei luxDisabled ausblenden', fakeAsync(() => {
+  it('sollte den Custom-Header-Inhalt bei luxDisabled ausblenden', async () => {
     const actions = fixture.debugElement.query(By.css('.lux-expansion-panel-header-custom'));
     expect(actions.nativeElement.style.display).toBe('');
 
-    testComponent.disabled = true;
+    testComponent.disabled.set(true);
     fixture.detectChanges();
-    tick();
+    await LuxTestHelper.wait(fixture);
 
     expect(actions.nativeElement.style.display).toBe('none');
 
-    testComponent.disabled = false;
+    testComponent.disabled.set(false);
     fixture.detectChanges();
-    tick();
+    await LuxTestHelper.wait(fixture);
 
     expect(actions.nativeElement.style.display).toBe('');
-  }));
+  });
 
   it('sollte den Custom-Header nur mobil in eine zweite Zeile verschieben', () => {
     const panel = fixture.debugElement.query(By.css('.lux-panel'));
     const panelComponent = panel.componentInstance as LuxPanelAriaComponent;
 
-    testComponent.secondRowForMobile = true;
-    panelComponent.mobile = false;
+    testComponent.secondRowForMobile.set(true);
+    panelComponent.mobile.set(false);
     fixture.detectChanges();
     expect(panel.nativeElement.classList).not.toContain('lux-panel-second-row-for-mobile');
 
-    panelComponent.mobile = true;
+    panelComponent.mobile.set(true);
     fixture.detectChanges();
+    expect(panel.nativeElement.classList).toContain('lux-panel-second-row-for-mobile');
+  });
+
+  it('sollte die Mobile-Klasse nach einer Media-Query-Aenderung von aussen aktualisieren (OnPush-Regression)', async () => {
+    const panel = fixture.debugElement.query(By.css('.lux-panel'));
+    testComponent.secondRowForMobile.set(true);
+    fixture.detectChanges();
+    expect(panel.nativeElement.classList).not.toContain('lux-panel-mobile');
+
+    mediaQueryService.emitMediaQuery('xs');
+    await LuxTestHelper.wait(fixture);
+
+    expect(panel.nativeElement.classList).toContain('lux-panel-mobile');
     expect(panel.nativeElement.classList).toContain('lux-panel-second-row-for-mobile');
   });
 
@@ -287,26 +307,26 @@ describe('LuxPanelAriaComponent', () => {
 
     const eventWasNotPrevented = actionButton.nativeElement.dispatchEvent(keydownEvent);
 
-    expect(eventWasNotPrevented).toBeTrue();
-    expect(keydownEvent.defaultPrevented).toBeFalse();
+    expect(eventWasNotPrevented).toBe(true);
+    expect(keydownEvent.defaultPrevented).toBe(false);
   });
 
-  it('sollte auch nicht-geslotteten Inhalt im Content-Bereich anzeigen', fakeAsync(() => {
+  it('sollte auch nicht-geslotteten Inhalt im Content-Bereich anzeigen', async () => {
     const plainFixture = TestBed.createComponent(LuxPanelAriaPlainContentTestComponent);
     plainFixture.detectChanges();
-    tick();
-    flush();
+    await LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
     plainFixture.detectChanges();
 
     const headerButton = plainFixture.debugElement.query(By.css('.lux-expansion-panel-header-toggle'));
     headerButton.nativeElement.click();
     plainFixture.detectChanges();
-    tick();
+    await LuxTestHelper.wait(fixture);
 
     const content = plainFixture.debugElement.query(By.css('.lux-expansion-panel-content'));
     expect(content).toBeTruthy();
     expect(content.nativeElement.textContent).toContain('Fallback Content');
-  }));
+  });
 });
 
 describe('LuxPanelAriaComponent A11y', () => {
@@ -317,7 +337,7 @@ describe('LuxPanelAriaComponent A11y', () => {
     LuxA11yTestHelper.addA11yMatchers();
   });
 
-  beforeEach(fakeAsync(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       imports: [
         LuxAccordionAriaComponent,
@@ -333,32 +353,32 @@ describe('LuxPanelAriaComponent A11y', () => {
     fixture = TestBed.createComponent(LuxPanelAriaTestComponent);
     fixture.detectChanges();
     testComponent = fixture.componentInstance;
-    tick();
+    await LuxTestHelper.wait(fixture);
     fixture.detectChanges();
-  }));
+  });
 
   it('Panel (kollabiert) hat keine Barrierefreiheitsverletzungen', async () => {
     await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
   });
 
-  it('Panel (expandiert) hat keine Barrierefreiheitsverletzungen', fakeAsync(async () => {
+  it('Panel (expandiert) hat keine Barrierefreiheitsverletzungen', async () => {
     const headerButton = fixture.debugElement.query(By.css('.lux-expansion-panel-header-toggle'));
     headerButton.nativeElement.click();
     fixture.detectChanges();
-    tick();
-    flush();
+    await LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
     fixture.detectChanges();
 
     await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
-  }));
+  });
 
-  it('Panel (disabled) hat keine Barrierefreiheitsverletzungen', fakeAsync(async () => {
-    testComponent.disabled = true;
+  it('Panel (disabled) hat keine Barrierefreiheitsverletzungen', async () => {
+    testComponent.disabled.set(true);
     fixture.detectChanges();
-    tick();
+    await LuxTestHelper.wait(fixture);
 
     await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
-  }));
+  });
 });
 
 @Component({
@@ -372,23 +392,25 @@ describe('LuxPanelAriaComponent A11y', () => {
     LuxPanelAriaHeaderCustomComponent,
     LuxPanelAriaContentComponent
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <lux-accordion-aria luxTogglePosition="before">
       <lux-panel-aria
-        [luxExpanded]="expanded"
-        [luxDisabled]="disabled"
-        [luxHideToggle]="hideToggle"
-        [luxDynamicHeaderHeight]="dynamicHeaderHeight"
-        [luxSecondRowForMobile]="secondRowForMobile"
-        [luxTogglePosition]="togglePosition"
-        [luxStickyHeader]="stickyHeader"
-        [luxStickyHeaderOffset]="stickyHeaderOffset"
+        [luxExpanded]="expanded()"
+        [luxDisabled]="disabled()"
+        [luxHideToggle]="hideToggle()"
+        [luxDynamicHeaderHeight]="dynamicHeaderHeight()"
+        [luxSecondRowForMobile]="secondRowForMobile()"
+        [luxTogglePosition]="togglePosition()"
+        [luxStickyHeader]="stickyHeader()"
+        [luxStickyHeaderOffset]="stickyHeaderOffset()"
         (luxExpandedChange)="expandedEvents.push($event)"
         (luxClickNotAllowed)="clickNotAllowedEvents.push($event)"
       >
-        <lux-panel-aria-header-title [luxTruncated]="truncated" [luxTruncatedTooltip]="truncatedTooltip">Titel</lux-panel-aria-header-title>
-        <lux-panel-aria-header-description [luxTruncated]="truncated" [luxTruncatedTooltip]="truncatedTooltip"
+        <lux-panel-aria-header-title [luxTruncated]="truncated()" [luxTruncatedTooltip]="truncatedTooltip"
+          >Titel</lux-panel-aria-header-title
+        >
+        <lux-panel-aria-header-description [luxTruncated]="truncated()" [luxTruncatedTooltip]="truncatedTooltip"
           >Beschreibung</lux-panel-aria-header-description
         >
         <lux-panel-aria-header-custom>
@@ -400,16 +422,16 @@ describe('LuxPanelAriaComponent A11y', () => {
   `
 })
 class LuxPanelAriaTestComponent {
-  expanded = false;
-  disabled = false;
-  hideToggle = false;
-  dynamicHeaderHeight = false;
-  secondRowForMobile = false;
-  stickyHeader = false;
-  stickyHeaderOffset?: string;
-  truncated = false;
+  expanded = signal(false);
+  disabled = signal(false);
+  hideToggle = signal(false);
+  dynamicHeaderHeight = signal(false);
+  secondRowForMobile = signal(false);
+  stickyHeader = signal(false);
+  stickyHeaderOffset = signal<string | undefined>(undefined);
+  truncated = signal(false);
   truncatedTooltip = 'Tooltip';
-  togglePosition: 'before' | 'after' = 'after';
+  togglePosition = signal<'before' | 'after'>('after');
   expandedEvents: boolean[] = [];
   clickNotAllowedEvents: Event[] = [];
 }
@@ -418,7 +440,7 @@ class LuxPanelAriaTestComponent {
   selector: 'lux-panel-aria-plain-content-test',
   standalone: true,
   imports: [LuxAccordionAriaComponent, LuxPanelAriaComponent, LuxPanelAriaHeaderTitleComponent],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <lux-accordion-aria>
       <lux-panel-aria>
@@ -434,7 +456,7 @@ class LuxPanelAriaPlainContentTestComponent {}
   selector: 'lux-panel-aria-standalone-test',
   standalone: true,
   imports: [LuxPanelAriaComponent, LuxPanelAriaHeaderTitleComponent],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <lux-panel-aria luxColor="warn">
       <lux-panel-aria-header-title>Titel</lux-panel-aria-header-title>
@@ -453,7 +475,7 @@ class LuxPanelAriaStandaloneTestComponent {}
     LuxPanelAriaHeaderCustomComponent,
     LuxPanelAriaContentComponent
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <lux-accordion-aria>
       <lux-panel-aria [luxTogglePosition]="'after'">

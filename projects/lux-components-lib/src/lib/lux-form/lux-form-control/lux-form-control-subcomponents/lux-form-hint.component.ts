@@ -1,17 +1,15 @@
-import { AfterViewInit, Component, TemplateRef, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, TemplateRef, viewChild } from '@angular/core';
 import { LuxUtil } from '../../../lux-util/lux-util';
 
 @Component({
   selector: 'lux-form-hint',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-template><ng-content></ng-content></ng-template>'
 })
 export class LuxFormHintComponent implements AfterViewInit {
-  @ViewChild(TemplateRef, { static: true }) templateRef!: TemplateRef<any>;
-
-  constructor() {}
+  readonly templateRef = viewChild.required(TemplateRef);
 
   ngAfterViewInit() {
-    LuxUtil.assertNonNull('templateRef', this.templateRef);
+    LuxUtil.assertNonNull('templateRef', this.templateRef());
   }
 }

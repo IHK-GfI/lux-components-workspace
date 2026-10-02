@@ -1,20 +1,21 @@
 import { NgClass, NgStyle, NgTemplateOutlet } from '@angular/common';
 import {
-  AfterViewChecked,
-  AfterViewInit,
+  ChangeDetectionStrategy,
   Component,
   ElementRef,
-  Input,
   OnDestroy,
-  QueryList,
-  ViewChild,
-  ViewChildren,
+  afterRenderEffect,
+  computed,
+  effect,
   inject,
-  ChangeDetectionStrategy
+  input,
+  signal,
+  untracked,
+  viewChild,
+  viewChildren
 } from '@angular/core';
 import { MatError, MatHint } from '@angular/material/form-field';
 import { TranslocoPipe } from '@jsverse/transloco';
-import { Subscription } from 'rxjs';
 import { LuxButtonComponent } from '../../../lux-action/lux-button/lux-button.component';
 import { LuxMenuItemComponent } from '../../../lux-action/lux-menu/lux-menu-subcomponents/lux-menu-item.component';
 import { LuxMenuComponent } from '../../../lux-action/lux-menu/lux-menu.component';
@@ -33,6 +34,7 @@ import {
 } from '../../../lux-popups/lux-dialog/lux-dialog-model/lux-dialog-config.interface';
 import { LuxDialogService } from '../../../lux-popups/lux-dialog/lux-dialog.service';
 import { LuxValidationErrors } from '../../lux-form-model/lux-form-component-base.class';
+import { provideLuxFormControl } from '../../lux-form-model/lux-form-control-base.class';
 import { LuxFormFileBase } from '../../lux-form-model/lux-form-file-base.class';
 import { ILuxFileActionConfig } from '../lux-file-model/lux-file-action-config.interface';
 import { LuxFileCaptureDirective } from '../lux-file-model/lux-file-capture.directive';
@@ -42,6 +44,40 @@ import { ILuxFileObject } from '../lux-file-model/lux-file-object.interface';
 import { LuxFileProgressComponent } from '../lux-file-subcomponents/lux-file-progress/lux-file-progress.component';
 import { LuxFileReplaceDialogComponent } from '../lux-file-subcomponents/lux-file-replace-dialog/lux-file-replace-dialog.component';
 
+const defaultUploadActionConfig: ILuxFilesListActionConfig = {
+  disabled: false,
+  disabledHeader: false,
+  hidden: false,
+  hiddenHeader: false,
+  iconName: 'lux-programming-cloud-upload',
+  iconNameHeader: 'lux-programming-cloud-upload',
+  label: '',
+  labelHeader: ''
+};
+const defaultDeleteActionConfig: ILuxFileListDeleteActionConfig = {
+  disabled: false,
+  disabledHeader: false,
+  hidden: false,
+  hiddenHeader: false,
+  iconName: 'lux-interface-delete-bin-5',
+  iconNameHeader: 'lux-interface-delete-bin-5',
+  label: '',
+  labelHeader: '',
+  isDeletable: () => true
+};
+const defaultViewActionConfig: ILuxFileActionConfig = {
+  disabled: false,
+  hidden: true,
+  iconName: 'lux-interface-edit-view',
+  label: ''
+};
+const defaultDownloadActionConfig: ILuxFileActionConfig = {
+  disabled: false,
+  hidden: true,
+  iconName: 'lux-interface-download-button-2',
+  label: ''
+};
+
 /**
  * @deprecated Diese Klasse ist veraltet und sollte nicht mehr verwendet werden.
  * Verwende stattdessen `LuxFileUploadComponent`.
@@ -50,7 +86,8 @@ import { LuxFileReplaceDialogComponent } from '../lux-file-subcomponents/lux-fil
   selector: 'lux-file-list',
   templateUrl: './lux-file-list.component.html',
   styleUrls: ['./lux-file-list.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [provideLuxFormControl(() => LuxFileListComponent)],
   imports: [
     NgClass,
     MatHint,
@@ -73,23 +110,30 @@ import { LuxFileReplaceDialogComponent } from '../lux-file-subcomponents/lux-fil
     TranslocoPipe
   ]
 })
-export class LuxFileListComponent extends LuxFormFileBase<ILuxFileObject[] | null> implements AfterViewInit, AfterViewChecked, OnDestroy {
-  private dialogService = inject(LuxDialogService);
+export class LuxFileListComponent extends LuxFormFileBase<ILuxFileObject[] | null> implements OnDestroy {
+  readonly luxShowPreview = input(true);
+  readonly luxMultiple = input(true);
+  readonly luxHeading = input(2);
+  readonly luxUploadActionConfig = input<ILuxFilesListActionConfig, ILuxFilesListActionConfig | undefined>(defaultUploadActionConfig, {
+    transform: (config) => config ?? defaultUploadActionConfig
+  });
+  readonly luxDeleteActionConfig = input<ILuxFileListDeleteActionConfig, ILuxFileListDeleteActionConfig | undefined>(
+    defaultDeleteActionConfig,
+    { transform: (config) => config ?? defaultDeleteActionConfig }
+  );
+  readonly luxViewActionConfig = input<ILuxFileActionConfig, ILuxFileActionConfig | undefined>(defaultViewActionConfig, {
+    transform: (config) => config ?? defaultViewActionConfig
+  });
+  readonly luxDownloadActionConfig = input<ILuxFileActionConfig, ILuxFileActionConfig | undefined>(defaultDownloadActionConfig, {
+    transform: (config) => config ?? defaultDownloadActionConfig
+  });
 
-  fileIcons: string[] = [];
+  readonly fileEntries = viewChildren('fileEntry', { read: ElementRef });
+  readonly fileUploadSingleInput = viewChild.required<ElementRef>('fileUploadSingle');
 
+  readonly fileIcons = computed(() => this.computeFileIcons(this.value()));
   rowWidth = 0;
-  iconActionBarWidth = 50;
-  subscriptions: Subscription[] = [];
-
-  @ViewChildren('fileEntry', { read: ElementRef }) fileEntries!: QueryList<ElementRef>;
-  @ViewChild('fileUploadSingle', { read: ElementRef, static: true }) fileUploadSingleInput!: ElementRef;
-  @ViewChild(LuxCardComponent, { read: ElementRef, static: true }) fileCard!: ElementRef;
-
-  @Input() luxShowPreview = true;
-  @Input() luxMultiple = true;
-  @Input() luxHeading = 2;
-
+  readonly iconActionBarWidth = signal(50);
   dialogReplaceConfig: ILuxDialogConfig = {
     disableClose: false,
     width: minWidth(DIALOG_WIDTH_SMALL_PX),
@@ -97,108 +141,64 @@ export class LuxFileListComponent extends LuxFormFileBase<ILuxFileObject[] | nul
     panelClass: ['file-dialog', 'file-replace-dialog']
   };
 
-  _luxUploadActionConfig: ILuxFilesListActionConfig = {
-    disabled: false,
-    disabledHeader: false,
-    hidden: false,
-    hiddenHeader: false,
-    iconName: 'lux-programming-cloud-upload',
-    iconNameHeader: 'lux-programming-cloud-upload',
-    label: '',
-    labelHeader: ''
-  };
-  _luxDeleteActionConfig: ILuxFileListDeleteActionConfig = {
-    disabled: false,
-    disabledHeader: false,
-    hidden: false,
-    hiddenHeader: false,
-    iconName: 'lux-interface-delete-bin-5',
-    iconNameHeader: 'lux-interface-delete-bin-5',
-    label: '',
-    labelHeader: '',
-    isDeletable: (_file: ILuxFileObject) => {
-      return true;
+  private dialogService = inject(LuxDialogService);
+
+  private resizeObserver?: ResizeObserver;
+  private observedRowElement?: HTMLElement;
+
+  constructor() {
+    super();
+
+    // afterRenderEffect statt effect: setImgSrc() liest das <img>-Element per querySelector aus dem DOM.
+    // Abhängigkeit von fileIcons() (statt getValue()) ist entscheidend: Erst wenn fileIcons() sich
+    // ändert, hat Angular das @switch von Icon auf <img> neu gerendert - erst dann existiert das
+    // <img>-Element, das setImgSrc() per querySelector befüllt.
+    afterRenderEffect({
+      mixedReadWrite: () => {
+        this.fileEntries();
+        this.fileIcons();
+        this.luxShowPreview();
+
+        untracked(() => this.updateIconAndImage());
+      }
+    });
+
+    // ResizeObserver statt Polling in ngAfterViewChecked (das bei jedem CD-Zyklus offsetWidth gelesen und damit
+    // potenziell einen synchronen Reflow erzwungen hat): beobachtet nur noch die erste Zeile (alle Zeilen sind
+    // gleich breit) und berechnet die Icon-Action-Bar-Breite nur bei tatsächlicher Größenänderung neu.
+    effect(() => {
+      const firstRow = this.fileEntries()[0]?.nativeElement;
+      untracked(() => this.observeRowResize(firstRow));
+    });
+  }
+
+  ngOnDestroy() {
+    this.resizeObserver?.disconnect();
+  }
+
+  private observeRowResize(element?: HTMLElement) {
+    if (this.observedRowElement === element) {
+      return;
     }
-  };
-  _luxViewActionConfig: ILuxFileActionConfig = {
-    disabled: false,
-    hidden: true,
-    iconName: 'lux-interface-edit-view',
-    label: ''
-  };
-  _luxDownloadActionConfig: ILuxFileActionConfig = {
-    disabled: false,
-    hidden: true,
-    iconName: 'lux-interface-download-button-2',
-    label: ''
-  };
 
-  get luxUploadActionConfig(): ILuxFilesListActionConfig {
-    return this._luxUploadActionConfig;
-  }
-
-  @Input() set luxUploadActionConfig(config: ILuxFilesListActionConfig) {
-    if (config) {
-      this._luxUploadActionConfig = config;
+    if (this.observedRowElement) {
+      this.resizeObserver?.unobserve(this.observedRowElement);
     }
-  }
+    this.observedRowElement = element;
 
-  get luxDeleteActionConfig(): ILuxFileListDeleteActionConfig {
-    return this._luxDeleteActionConfig;
-  }
-
-  @Input() set luxDeleteActionConfig(config: ILuxFileListDeleteActionConfig) {
-    if (config) {
-      this._luxDeleteActionConfig = config;
+    if (element) {
+      if (!this.resizeObserver) {
+        if (typeof ResizeObserver === 'undefined') {
+          return;
+        }
+        this.resizeObserver = new ResizeObserver(() => this.resizeIconActionBar());
+      }
+      this.resizeObserver.observe(element);
     }
-  }
-
-  get luxViewActionConfig(): ILuxFileActionConfig {
-    return this._luxViewActionConfig;
-  }
-
-  @Input() set luxViewActionConfig(config: ILuxFileActionConfig) {
-    if (config) {
-      this._luxViewActionConfig = config;
-    }
-  }
-
-  get luxDownloadActionConfig(): ILuxFileActionConfig {
-    return this._luxDownloadActionConfig;
-  }
-
-  @Input() set luxDownloadActionConfig(config: ILuxFileActionConfig) {
-    if (config) {
-      this._luxDownloadActionConfig = config;
-    }
-  }
-
-  ngAfterViewInit() {
-    this.subscriptions.push(
-      this.fileEntries.changes.subscribe(() => {
-        this.updateIconAndImage();
-      })
-    );
-
-    this.updateIconAndImage();
-  }
-
-  private updateIconAndImage() {
-    this.setFileIcons();
-
-    if (this.luxShowPreview) {
-      this.setImgSrc();
-    }
-  }
-
-  override ngOnDestroy() {
-    super.ngOnDestroy();
-
-    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
   }
 
   shouldDisplayPreviewImg(index: number): boolean {
-    return this.luxShowPreview && this.fileIcons && !!this.fileIcons[index] && this.fileIcons[index] === 'lux-file-image';
+    return this.luxShowPreview() && !!this.fileIcons()[index] && this.fileIcons()[index] === 'lux-file-image';
   }
 
   /**
@@ -206,26 +206,29 @@ export class LuxFileListComponent extends LuxFormFileBase<ILuxFileObject[] | nul
    * @param index
    */
   removeFile(index: number) {
-    this.formControl.markAsTouched();
-    this.formControl.markAsDirty();
+    this.markAsTouched();
+    this.markAsDirty();
 
     // Wenn mehrere Dateien selektiert sind, diese nach der entfernten Datei filtern ansonsten "null" nutzen
-    const newFiles = Array.isArray(this.luxSelected) ? this.luxSelected.filter((file, searchIndex) => searchIndex !== index) : null;
+    const selected = this.getValue();
+    const newFiles = Array.isArray(selected) ? selected.filter((file, searchIndex) => searchIndex !== index) : null;
 
     // Via LiveAnnouncer mitteilen welche Datei entfernt wird
-    const deletedFile = this.luxSelected![index];
+    const deletedFile = selected![index];
     this.announceFileRemove(deletedFile.name);
 
     // Wir entfernen hier nur eine Datei, deshalb ist das neue Auslesen der Base64-Strings nicht nötig
     this.uploadFiles(newFiles).then(
       () => {
-        this.luxSelected = newFiles;
+        this.setValue(newFiles);
         this.notifyFormValueChanged();
       },
       (error) => this.setFormControlErrors(error)
     );
-    if (this.luxDeleteActionConfig.onClick) {
-      this.luxDeleteActionConfig.onClick(deletedFile);
+    const deleteActionConfig = this.luxDeleteActionConfig();
+
+    if (deleteActionConfig.onClick) {
+      deleteActionConfig.onClick(deletedFile);
     }
   }
 
@@ -235,25 +238,31 @@ export class LuxFileListComponent extends LuxFormFileBase<ILuxFileObject[] | nul
   }
 
   resetSelected() {
-    this.luxSelected = [];
+    this.setValue([]);
   }
 
   handleViewFileClick(file: ILuxFileObject) {
-    if (file.content && this.luxViewActionConfig.onClick) {
-      this.luxViewActionConfig.onClick(file);
+    const viewActionConfig = this.luxViewActionConfig();
+
+    if (file.content && viewActionConfig.onClick) {
+      viewActionConfig.onClick(file);
       this.updateIconAndImage();
     }
   }
 
   handleDownloadClick(file: ILuxFileObject) {
-    if (this.luxDownloadActionConfig.onClick) {
-      this.luxDownloadActionConfig.onClick(file);
+    const downloadActionConfig = this.luxDownloadActionConfig();
+
+    if (downloadActionConfig.onClick) {
+      downloadActionConfig.onClick(file);
     }
   }
 
   handleUploadClick(files: ILuxFileObject[]) {
-    if (this.luxUploadActionConfig.onClick) {
-      this.luxUploadActionConfig.onClick(files);
+    const uploadActionConfig = this.luxUploadActionConfig();
+
+    if (uploadActionConfig.onClick) {
+      uploadActionConfig.onClick(files);
     }
   }
 
@@ -262,38 +271,23 @@ export class LuxFileListComponent extends LuxFormFileBase<ILuxFileObject[] | nul
    * @param event
    */
   clearFiles(event?: Event) {
-    this.formControl.markAsTouched();
-    this.formControl.markAsDirty();
+    this.markAsTouched();
+    this.markAsDirty();
 
-    if (!this.luxSelected) {
-      this.luxSelected = [];
-    }
+    const deleteActionConfig = this.luxDeleteActionConfig();
+    const selected = this.getValue() ?? [];
 
-    const deletedFiles = this.luxSelected
-      ? [
-          ...this.luxSelected.filter((file) =>
-            this.luxDeleteActionConfig.isDeletable ? this.luxDeleteActionConfig.isDeletable!(file) : true
-          )
-        ]
-      : [];
-    this.luxSelected = this.luxSelected
-      ? [
-          ...this.luxSelected.filter((file) =>
-            this.luxDeleteActionConfig.isDeletable ? !this.luxDeleteActionConfig.isDeletable!(file) : false
-          )
-        ]
-      : [];
+    const deletedFiles = selected.filter((file) => (deleteActionConfig.isDeletable ? deleteActionConfig.isDeletable(file) : true));
+    this.setValue(selected.filter((file) => (deleteActionConfig.isDeletable ? !deleteActionConfig.isDeletable(file) : false)));
 
     this.notifyFormValueChanged();
     this.clearFormControlErrors();
 
-    if (deletedFiles) {
-      deletedFiles.forEach((file) => {
-        if (this.luxDeleteActionConfig.onClick) {
-          this.luxDeleteActionConfig.onClick(file);
-        }
-      });
-    }
+    deletedFiles.forEach((file) => {
+      if (deleteActionConfig.onClick) {
+        deleteActionConfig.onClick(file);
+      }
+    });
 
     this.announceAllFilesRemove();
   }
@@ -303,55 +297,57 @@ export class LuxFileListComponent extends LuxFormFileBase<ILuxFileObject[] | nul
    * @param files
    */
   selectFiles(files: FileList | File[]) {
-    this.formControl.markAsTouched();
-    this.formControl.markAsDirty();
-    this.forceProgressIndeterminate = true;
+    this.markAsTouched();
+    this.markAsDirty();
+    this.forceProgressIndeterminate.set(true);
     this.announceFileProcess(files && files.length > 1);
 
     if (!files || files.length === 0) {
-      this.forceProgressIndeterminate = false;
+      this.forceProgressIndeterminate.set(false);
       return;
     }
 
     // Timeout, um Flackern durch Progress zu vermeiden
+    const deleteActionConfig = this.luxDeleteActionConfig();
+
     setTimeout(() => {
       // Prüfen, ob die Dateien bereits vorhanden sind
       let selectedFilesArray: ILuxFileObject[] = [];
       const replaceableFilesMap = new Map<number, File>();
       let replaceFileDeleteProtection = false;
-      if (this.luxSelected) {
+      const selected = this.getValue();
+      if (selected) {
         files = Array.from(files);
-        selectedFilesArray = Array.isArray(this.luxSelected) ? this.luxSelected : [this.luxSelected];
+        selectedFilesArray = Array.isArray(selected) ? selected : [selected];
         // zu ersetzende Indizes herausfinden
         files.forEach((file: File) => {
           const index = selectedFilesArray.findIndex((compareFile: ILuxFileObject) => compareFile.name === file.name);
           if (index > -1) {
             replaceableFilesMap.set(index, file);
             replaceFileDeleteProtection =
-              replaceFileDeleteProtection ||
-              (this.luxDeleteActionConfig.isDeletable ? !this.luxDeleteActionConfig.isDeletable(files[0]) : false);
+              replaceFileDeleteProtection || (deleteActionConfig.isDeletable ? !deleteActionConfig.isDeletable(files[0]) : false);
           }
         });
       }
 
-      if (this.luxMultiple) {
+      if (this.luxMultiple()) {
         if (replaceableFilesMap.size > 0) {
           const dialogRef = this.dialogService.openComponent(LuxFileReplaceDialogComponent, this.dialogReplaceConfig, {
-            multiple: this.luxMultiple,
+            multiple: this.luxMultiple(),
             deleteProtection: replaceFileDeleteProtection
           });
-          this.forceProgressIndeterminate = false;
+          this.forceProgressIndeterminate.set(false);
 
           dialogRef.dialogConfirmed.subscribe(() => {
             this.updateFilesIntern(files, selectedFilesArray, replaceableFilesMap);
           });
 
           dialogRef.dialogDeclined.subscribe(() => {
-            this.fileUploadInput.nativeElement.value = '';
+            this.fileUploadInput().nativeElement.value = '';
           });
 
           dialogRef.dialogClosed.subscribe(() => {
-            this.fileUploadInput.nativeElement.value = '';
+            this.fileUploadInput().nativeElement.value = '';
           });
         } else {
           this.updateFilesIntern(files, selectedFilesArray, replaceableFilesMap);
@@ -365,65 +361,92 @@ export class LuxFileListComponent extends LuxFormFileBase<ILuxFileObject[] | nul
           });
 
           return;
-        } else if (files.length === 1 && (!this.luxSelected || this.luxSelected.length === 0)) {
+        } else if (files.length === 1 && (!selected || selected.length === 0)) {
           this.updateSelectedFiles(files).then(
             (newFiles: ILuxFileObject[]) => {
-              this.luxSelected = newFiles;
+              this.setValue(newFiles);
               this.notifyFormValueChanged();
-              this.fileUploadInput.nativeElement.value = '';
+              this.fileUploadInput().nativeElement.value = '';
             },
             (error) => this.setFormControlErrors(error)
           );
-        } else if (files.length === 1 && this.luxSelected && this.luxSelected.length > 0) {
+        } else if (files.length === 1 && selected && selected.length > 0) {
           const dialogRef = this.dialogService.openComponent(LuxFileReplaceDialogComponent, this.dialogReplaceConfig, {
-            multiple: this.luxMultiple,
-            deleteProtection: this.luxDeleteActionConfig.isDeletable ? !this.luxDeleteActionConfig.isDeletable(files[0]) : false
+            multiple: this.luxMultiple(),
+            deleteProtection: deleteActionConfig.isDeletable ? !deleteActionConfig.isDeletable(files[0]) : false
           });
-          this.forceProgressIndeterminate = false;
+          this.forceProgressIndeterminate.set(false);
 
           dialogRef.dialogConfirmed.subscribe(() => {
             this.updateSelectedFiles(files).then(
               (newFiles: ILuxFileObject[]) => {
-                this.luxSelected = newFiles;
+                this.setValue(newFiles);
                 this.notifyFormValueChanged();
-                this.fileUploadInput.nativeElement.value = '';
+                this.fileUploadInput().nativeElement.value = '';
               },
               (error) => this.setFormControlErrors(error)
             );
           });
 
           dialogRef.dialogDeclined.subscribe(() => {
-            this.fileUploadInput.nativeElement.value = '';
+            this.fileUploadInput().nativeElement.value = '';
           });
 
           dialogRef.dialogClosed.subscribe(() => {
-            this.fileUploadInput.nativeElement.value = '';
+            this.fileUploadInput().nativeElement.value = '';
           });
         }
       }
     }, this.defaultReadFileDelay);
   }
 
+  useArray(): boolean {
+    return true;
+  }
+
+  isArray(object: any): boolean {
+    return object && Array.isArray(object);
+  }
+
+  hasOnlyDeleteProtectedFiles(): boolean {
+    return (
+      !!this.getValue() &&
+      this.getValue()!.length > 0 &&
+      this.getValue()!.every((file) =>
+        this.luxDeleteActionConfig().isDeletable ? !this.luxDeleteActionConfig().isDeletable!(file) : false
+      )
+    );
+  }
+
+  private updateIconAndImage() {
+    if (this.luxShowPreview()) {
+      this.setImgSrc();
+    }
+  }
+
   private updateFilesIntern(files: FileList | File[], selectedFilesArray: any[], replaceableFilesMap: Map<number, File>) {
     // Begrenzung der maximalen Anzahl an Dateien
-    const currentCount = Array.isArray(this.luxSelected) ? this.luxSelected.length : this.luxSelected ? 1 : 0;
+    const selected = this.getValue();
+    const currentCount = Array.isArray(selected) ? selected.length : selected ? 1 : 0;
     if (
-      this.luxMaxFileCount !== undefined &&
-      this.luxMaxFileCount !== null &&
-      currentCount + files.length - replaceableFilesMap.size > this.luxMaxFileCount
+      this.luxMaxFileCount() !== undefined &&
+      this.luxMaxFileCount() !== null &&
+      currentCount + files.length - replaceableFilesMap.size > this.luxMaxFileCount()
     ) {
       this.setFormControlErrors({
         cause: LuxFileErrorCause.MaxFileCount,
         exception: this.getMaxFileCountMessage(),
         file: undefined
       });
-      this.forceProgressIndeterminate = false;
+      this.forceProgressIndeterminate.set(false);
       return;
     }
 
     this.updateSelectedFiles(files).then(
       (newFiles: ILuxFileObject[]) => {
-        const tempSelectedFiles = selectedFilesArray;
+        // Kopie statt derselben Referenz wie this.getValue(): setValue() bricht sonst früh ab, weil
+        // Wert und aktueller Modellwert nach dem push() referenzgleich sind (siehe LuxLegacyFormBridge.setValue()).
+        const tempSelectedFiles = [...selectedFilesArray];
 
         // die zu ersetzenden Dateien durchgehen und aktualisieren
         replaceableFilesMap.forEach((file: File, index: number) => {
@@ -436,17 +459,12 @@ export class LuxFileListComponent extends LuxFormFileBase<ILuxFileObject[] | nul
         // die übrigen neuen Dateien anfügen
         tempSelectedFiles.push(...newFiles);
 
-        this.luxSelected =
-          tempSelectedFiles && tempSelectedFiles.length === 1 && !this.useArray() ? tempSelectedFiles[0] : tempSelectedFiles;
+        this.setValue(tempSelectedFiles && tempSelectedFiles.length === 1 && !this.useArray() ? tempSelectedFiles[0] : tempSelectedFiles);
         this.notifyFormValueChanged();
-        this.fileUploadInput.nativeElement.value = '';
+        this.fileUploadInput().nativeElement.value = '';
       },
       (error) => this.setFormControlErrors(error)
     );
-  }
-
-  useArray(): boolean {
-    return true;
   }
 
   /**
@@ -456,10 +474,12 @@ export class LuxFileListComponent extends LuxFormFileBase<ILuxFileObject[] | nul
    * wenn (große) Base64-Strings gegen die src gebunden werden.
    */
   private setImgSrc() {
-    this.fileEntries.forEach((item: ElementRef, index: number) => {
+    const selected = this.getValue();
+
+    this.fileEntries().forEach((item: ElementRef, index: number) => {
       const imgElement: HTMLImageElement | null = (item.nativeElement as HTMLElement).querySelector('img');
-      if (imgElement && this.luxSelected) {
-        const targetFileContent = this.luxSelected[index].content;
+      if (imgElement && selected) {
+        const targetFileContent = selected[index].content;
         if (targetFileContent instanceof Blob) {
           this.readFile(targetFileContent as File).then((content: any) => {
             imgElement.src = content;
@@ -472,20 +492,20 @@ export class LuxFileListComponent extends LuxFormFileBase<ILuxFileObject[] | nul
   }
 
   /**
-   * Setzt die Icons für die Elemente in der Auflistung
+   * Ermittelt die Icons für die Elemente in der Auflistung
    */
-  private setFileIcons() {
-    if (!this.luxSelected) {
-      return;
+  private computeFileIcons(selected: ILuxFileObject[] | null): string[] {
+    if (!selected) {
+      return [];
     }
 
-    this.fileIcons = [];
+    const fileIcons: string[] = [];
     const selectedFiles = [];
 
-    if (!Array.isArray(this.luxSelected)) {
-      selectedFiles.push(this.luxSelected);
+    if (!Array.isArray(selected)) {
+      selectedFiles.push(selected);
     } else {
-      selectedFiles.push(...this.luxSelected);
+      selectedFiles.push(...selected);
     }
     selectedFiles.forEach((selectedFile: ILuxFileObject) => {
       let newFileIcon = 'lux-interface-content-file';
@@ -502,66 +522,48 @@ export class LuxFileListComponent extends LuxFormFileBase<ILuxFileObject[] | nul
           newFileIcon = 'lux-programming-script-file-code-1';
         }
       }
-      this.fileIcons.push(newFileIcon);
+      fileIcons.push(newFileIcon);
     });
-    this.cdr.detectChanges();
-  }
 
-  ngAfterViewChecked(): void {
-    this.resizeIconActionBar();
-  }
-
-  isArray(object: any): boolean {
-    return object && Array.isArray(object);
-  }
-
-  hasOnlyDeleteProtectedFiles(): boolean {
-    return (
-      !!this.luxSelected &&
-      this.luxSelected.length > 0 &&
-      this.luxSelected.every((file) => (this.luxDeleteActionConfig.isDeletable ? !this.luxDeleteActionConfig.isDeletable(file) : false))
-    );
+    return fileIcons;
   }
 
   private resizeIconActionBar() {
-    if (this.fileEntries && this.fileEntries.first && this.cdr) {
-      const newRowWidth = this.fileEntries.first.nativeElement.offsetWidth;
+    const fileEntries = this.fileEntries();
+    if (fileEntries.length > 0) {
+      const newRowWidth = fileEntries[0].nativeElement.offsetWidth;
       if (this.rowWidth !== newRowWidth) {
         let buttonCount = 0;
-        if (this._luxViewActionConfig && !this._luxViewActionConfig.hidden) {
+        if (!this.luxViewActionConfig().hidden) {
           buttonCount++;
         }
-        if (this._luxDownloadActionConfig && !this._luxDownloadActionConfig.hidden) {
+        if (!this.luxDownloadActionConfig().hidden) {
           buttonCount++;
         }
-        if (this._luxUploadActionConfig && !this._luxUploadActionConfig.hidden) {
+        if (!this.luxUploadActionConfig().hidden) {
           buttonCount++;
         }
-        if (this._luxDeleteActionConfig && !this._luxDeleteActionConfig.hidden) {
+        if (!this.luxDeleteActionConfig().hidden) {
           buttonCount++;
         }
-        if (this._luxCustomActionConfigs) {
-          buttonCount += this._luxCustomActionConfigs.length;
-        }
+        buttonCount += this.luxCustomActionConfigs().length;
 
         this.rowWidth = newRowWidth;
         if (this.rowWidth >= 900) {
-          this.iconActionBarWidth = Math.min(400, buttonCount * 50);
+          this.iconActionBarWidth.set(Math.min(400, buttonCount * 50));
         } else if (this.rowWidth >= 800) {
-          this.iconActionBarWidth = Math.min(350, buttonCount * 50);
+          this.iconActionBarWidth.set(Math.min(350, buttonCount * 50));
         } else if (this.rowWidth >= 700) {
-          this.iconActionBarWidth = Math.min(300, buttonCount * 50);
+          this.iconActionBarWidth.set(Math.min(300, buttonCount * 50));
         } else if (this.rowWidth >= 600) {
-          this.iconActionBarWidth = Math.min(250, buttonCount * 50);
+          this.iconActionBarWidth.set(Math.min(250, buttonCount * 50));
         } else if (this.rowWidth >= 500) {
-          this.iconActionBarWidth = Math.min(200, buttonCount * 50);
+          this.iconActionBarWidth.set(Math.min(200, buttonCount * 50));
         } else if (this.rowWidth >= 400) {
-          this.iconActionBarWidth = Math.min(150, buttonCount * 50);
+          this.iconActionBarWidth.set(Math.min(150, buttonCount * 50));
         } else {
-          this.iconActionBarWidth = 50;
+          this.iconActionBarWidth.set(50);
         }
-
-        this.cdr.detectChanges();
       }
     }
   }
@@ -577,7 +579,6 @@ export class LuxFileListComponent extends LuxFormFileBase<ILuxFileObject[] | nul
     super.notifyFormValueChanged();
     this.formControl.updateValueAndValidity();
 
-    this.fileUploadSingleInput.nativeElement.value = null;
+    this.fileUploadSingleInput().nativeElement.value = null;
   }
 }
-

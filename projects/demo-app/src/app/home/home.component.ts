@@ -1,18 +1,17 @@
 import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import { LuxAutofocusDirective, LuxIconComponent, LuxTileAcComponent } from '@ihk-gfi/lux-components';
-import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
+import { TranslocoModule } from '@jsverse/transloco';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxIconComponent, LuxTileAcComponent, LuxAutofocusDirective, TranslocoModule]
 })
 export class HomeComponent {
   private router = inject(Router);
-  tService = inject(TranslocoService);
 
   goTo(target: string) {
     switch (target) {

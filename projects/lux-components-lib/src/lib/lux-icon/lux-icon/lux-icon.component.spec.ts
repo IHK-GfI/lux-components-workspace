@@ -1,7 +1,8 @@
+import { describe, it, beforeEach, expect, vi } from 'vitest';
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, waitForAsync } from '@angular/core/testing';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { LuxIconComponent } from './lux-icon.component';
 
@@ -10,57 +11,55 @@ describe('LuxIconComponent', () => {
     let fixture: ComponentFixture<LuxMockIconComponent>;
     let testComponent: LuxMockIconComponent;
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(async () => {
       TestBed.configureTestingModule({
         providers: [provideHttpClient(withXhr(), withInterceptorsFromDi()), provideHttpClientTesting()]
       }).compileComponents();
-    }));
+    });
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(async () => {
       fixture = TestBed.createComponent(LuxMockIconComponent);
       fixture.detectChanges();
       testComponent = fixture.componentInstance;
-    }));
+    });
 
-    it('Icon setzen', fakeAsync(() => {
+    it('Icon setzen', async () => {
       // Vorbedingungen testen
-      expect(fixture.componentInstance.iconName).toEqual('lux-interface-setting-cog');
+      expect(fixture.componentInstance.iconName()).toEqual('lux-interface-setting-cog');
 
       // Änderungen durchführen
       const expectedIcon = 'lux-interface-setting-cog';
-      fixture.componentInstance.iconName = expectedIcon;
+      fixture.componentInstance.iconName.set(expectedIcon);
       fixture.detectChanges();
 
       // Nachbedingungen testen
       const newIconEl = fixture.debugElement.query(By.css('lux-icon'));
-      expect(fixture.componentInstance.iconName).toEqual(expectedIcon);
+      expect(fixture.componentInstance.iconName()).toEqual(expectedIcon);
       expect(newIconEl.nativeElement.innerHTML).toContain(expectedIcon);
-    }));
+    });
 
-    it('Unbekanntes Icon fuehrt zur Anzeige des Warn-Icons', fakeAsync(() => {
-      spyOn(console, 'warn');
+    it('Unbekanntes Icon fuehrt zur Anzeige des Warn-Icons', () => {
+      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
       // Änderungen durchführen
-      fixture.componentInstance.iconName = 'lux-nicht-vorhandenes-icon';
+      fixture.componentInstance.iconName.set('lux-nicht-vorhandenes-icon');
       fixture.detectChanges();
 
       // Nachbedingungen testen
-      const iconComponent = fixture.debugElement.query(By.directive(LuxIconComponent)).componentInstance as LuxIconComponent;
-      expect(console.warn).toHaveBeenCalled();
-      expect(iconComponent.luxIconName).toEqual('lux-interface-alert-warning-diamond');
+      expect(warnSpy).toHaveBeenCalled();
 
       const matIconEl = fixture.debugElement.query(By.css('mat-icon'));
       expect(matIconEl.nativeElement.getAttribute('data-mat-icon-name')).toEqual('lux-interface-alert-warning-diamond');
-    }));
+    });
   });
 });
 
 @Component({
-  template: ` <lux-icon [luxIconName]="iconName" [luxIconSize]="iconSize"></lux-icon> `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  template: ` <lux-icon [luxIconName]="iconName()" [luxIconSize]="iconSize()"></lux-icon> `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxIconComponent]
 })
 class LuxMockIconComponent {
-  iconName = 'lux-interface-setting-cog';
-  iconSize = '2x';
+  readonly iconName = signal('lux-interface-setting-cog');
+  readonly iconSize = signal('2x');
 }

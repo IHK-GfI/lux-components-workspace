@@ -1,23 +1,19 @@
 import { Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import {
-    ILuxDialogPresetConfig,
-    LuxDialogService,
-    LuxSnackbarService,
-    LuxStepperLargeClickEvent,
-    LuxStepperLargeStepComponent,
-    LuxVetoState
+  ILuxDialogPresetConfig,
+  LuxDialogService,
+  LuxStepperLargeClickEvent,
+  LuxStepperLargeStepComponent,
+  LuxVetoState
 } from '@ihk-gfi/lux-components';
 
 @Component({
   selector: 'app-stepper-large-example-step-veto',
   templateUrl: './stepper-large-example-step-veto.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [{ provide: LuxStepperLargeStepComponent, useExisting: StepperLargeExampleStepVetoComponent }]
 })
 export class StepperLargeExampleStepVetoComponent extends LuxStepperLargeStepComponent implements OnInit {
-  private dialogService = inject(LuxDialogService);
-  private snackbar = inject(LuxSnackbarService);
-
   dialogConfig: ILuxDialogPresetConfig = {
     title: 'Lorem ipsum?',
     content:
@@ -44,15 +40,17 @@ export class StepperLargeExampleStepVetoComponent extends LuxStepperLargeStepCom
   vetoYesFn = (stepperEvent: LuxStepperLargeClickEvent) => this.createVetoYesPromise(stepperEvent);
   vetoNoFn = (stepperEvent: LuxStepperLargeClickEvent) => this.createVetoNoPromise(stepperEvent);
 
-  ngOnInit(): void {
-    this.luxTitle = 'Veto-Schritt';
-    this.luxCompleted = true;
+  private dialogService = inject(LuxDialogService);
 
-    this.luxVetoFn = this.myVetoFn;
+  ngOnInit(): void {
+    this.luxTitle.set('Veto-Schritt');
+    this.luxCompleted.set(true);
+
+    this.luxVetoFn.set(this.myVetoFn);
   }
 
   updateVetoFun(useVetoFn: boolean) {
-    this.luxVetoFn = useVetoFn ? this.vetoYesFn : this.vetoNoFn;
+    this.luxVetoFn.set(useVetoFn ? this.vetoYesFn : this.vetoNoFn);
   }
 
   createMyVetoPromis(_event: LuxStepperLargeClickEvent): Promise<LuxVetoState> {
@@ -102,11 +100,11 @@ export class StepperLargeExampleStepVetoComponent extends LuxStepperLargeStepCom
 
   logEvent(event: LuxStepperLargeClickEvent) {
     console.log(
-      `Event 'luxVetoFn': \nAktueller Schritt "${this.luxTitle}" (index = ${event.stepper.steps
-        .toArray()
-        .findIndex((step) => step === this)} - hier wird das Vetorecht geprüft) \nNächster Schritt wäre "${
-        event.newStep.luxTitle
-      }" (index = ${event.newIndex})`
+      `Event 'luxVetoFn': \nAktueller Schritt "${this.luxTitle()}" (index = ${event.stepper
+        .steps()
+        .findIndex(
+          (step) => step === this
+        )} - hier wird das Vetorecht geprüft) \nNächster Schritt wäre "${event.newStep.luxTitle()}" (index = ${event.newIndex})`
     );
   }
 }

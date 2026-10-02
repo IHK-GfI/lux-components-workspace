@@ -7,12 +7,9 @@ export type LuxCardActionAlignType = 'left' | 'right';
   selector: 'lux-card-actions',
   templateUrl: './lux-card-actions.component.html',
   imports: [NgClass],
-  changeDetection: ChangeDetectionStrategy.Eager,
-  host: { class: 'lux-flex lux-flex-auto'}
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'lux-flex lux-flex-auto' }
 })
 export class LuxCardActionsComponent {
-
-  luxAlign = input<LuxCardActionAlignType>('right');
-
-  constructor() {}
+  readonly luxAlign = input<LuxCardActionAlignType>('right');
 }

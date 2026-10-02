@@ -1,28 +1,29 @@
 <div class="lux-select-panel-filter" role="presentation" (click)="stopPanelEvent($event)" (mousedown)="stopPanelEvent($event)">
-  <lux-input-ac
+  <lux-input
     #filterInput
     class="lux-select-panel-filter-input-wrapper"
     [luxNoLabels]="true"
     [luxNoTopLabel]="true"
     [luxNoBottomLabel]="true"
     [luxHideCounterLabel]="true"
-    [luxPlaceholder]="placeholder"
+    [luxPlaceholder]="placeholder()"
+    [luxAriaLabel]="placeholder()"
     [luxValue]="currentFilterValue"
     luxAutocomplete="off"
     (luxValueChange)="onInput($event)"
     (keydown)="onKeydown($event)"
   >
     @if (currentFilterValue) {
-      <lux-input-ac-suffix>
+      <lux-input-suffix>
         <lux-button
           class="lux-select-panel-filter-clear-btn"
           [luxRounded]="true"
           luxIconName="lux-interface-delete-circle"
-          [luxLabel]="clearAriaLabel"
+          [luxLabel]="clearAriaLabel()"
           (mousedown)="onClearMouseDown($event)"
           (luxClicked)="onClear($event)"
-        ></lux-button>
-      </lux-input-ac-suffix>
+        />
+      </lux-input-suffix>
     }
-  </lux-input-ac>
+  </lux-input>
 </div>

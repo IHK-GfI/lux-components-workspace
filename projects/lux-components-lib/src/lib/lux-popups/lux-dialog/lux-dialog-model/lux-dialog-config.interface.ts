@@ -53,4 +53,3 @@ export function minWidth(width: number): string {
 
   return Math.min(width, window.innerWidth - 50) + 'px';
 }
-

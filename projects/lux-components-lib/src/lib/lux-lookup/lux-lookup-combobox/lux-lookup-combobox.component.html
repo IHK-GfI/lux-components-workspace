@@ -1,0 +1,69 @@
+<lux-form-control-wrapper
+  (mousedown)="onWrapperClick($event)"
+  [luxFormComponent]="this"
+  [luxNoLabels]="luxNoLabels()"
+  [luxNoBottomLabel]="luxNoBottomLabel()"
+  [luxNoTopLabel]="luxNoTopLabel()"
+  [luxLabelLongFormat]="luxLabelLongFormat()"
+  [ngClass]="matSelect() && matSelect()!.panelOpen ? 'lux-panel-opened' : ''"
+  luxTagId="luxLookupComboboxWrapper"
+>
+  <mat-select
+    luxSelectOptionHeight
+    [luxSelectFilter]="luxEnableFilter()"
+    [luxFilterLabelFn]="filterLabelFn"
+    (luxFilterActiveChange)="onFilterActiveChange($event)"
+    [placeholder]="luxPlaceholder()"
+    [multiple]="luxMultiple()"
+    [required]="isRequired()"
+    [disabled]="isDisabled()"
+    [value]="value()"
+    (selectionChange)="selected($event)"
+    luxTagIdHandler
+    [luxTagId]="luxTagId()"
+    [luxSelectVisibleOptionCount]="luxVisibleOptionCount()"
+    [panelClass]="[
+      luxMultiple() ? 'lux-select-panel-ac-multiple' : 'lux-select-panel-ac',
+      isReadonly() ? 'lux-display-none' : '',
+      luxEnableFilter() ? 'lux-select-panel-ac-filter' : ''
+    ]"
+    [disableRipple]="true"
+    [compareWith]="compareByKey"
+    (focusin)="onFocusIn($event)"
+    (focusout)="onFocusOut($event)"
+    [id]="uid()"
+    [luxAriaLabelledby]="labelledBy()"
+    [luxAriaLabel]="luxAriaLabel()"
+    [luxAriaDescribedby]="uid() + '-error ' + uid() + '-hint'"
+    [attr.aria-invalid]="isInvalid()"
+    [attr.aria-required]="isRequired()"
+    [attr.aria-readonly]="isReadonly()"
+    #selectFilter="luxSelectFilter"
+  >
+    @if (luxEnableFilter()) {
+      <lux-select-panel-filter
+        [placeholder]="luxFilterPlaceholder()"
+        [filterValue]="luxFilterValue()"
+        [clearAriaLabel]="luxFilterClearAriaLabel()"
+        [filterDirective]="selectFilter"
+      />
+    }
+    @if (luxWithEmptyEntry() && !luxMultiple()) {
+      <mat-option [value]="undefined" class="option-height" />
+    }
+    @for (entry of renderedEntries(); track entry) {
+      @if (!entry.isUngueltig || (entry.isUngueltig && showUngueltige())) {
+        <mat-option
+          class="option-height"
+          [value]="entry"
+          [ngClass]="{ invalid: entry.isUngueltig }"
+          [ngStyle]="getStyles(entry.isUngueltig)"
+          [disabled]="entry.isUngueltig && disableUngueltige()"
+          [style.display]="!luxEnableFilter() || selectFilter.isItemVisible(entry) ? '' : 'none'"
+        >
+          <span>{{ getLabel(entry) }}</span>
+        </mat-option>
+      }
+    }
+  </mat-select>
+</lux-form-control-wrapper>

@@ -1,12 +1,12 @@
 import { LuxSelectFilterUtils } from './lux-select-filter.utils';
 
 export class LuxSelectFilterState<T> {
-  private itemCache: T[] = [];
-  private normalizedLabelCache: string[] = [];
-
   readonly filteredItems = new Set<T>();
   readonly filteredIndexes = new Set<number>();
   filterValue = '';
+
+  private itemCache: T[] = [];
+  private normalizedLabelCache: string[] = [];
 
   constructor(
     private readonly isEnabled: () => boolean,

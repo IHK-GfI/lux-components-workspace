@@ -4,6 +4,7 @@
   - [DeepWiki/Support](#deepwikisupport)
   - [Demos](#demos)
   - [Versionen](#versionen)
+    - [v22](#v22)
     - [v21](#v21)
     - [v19](#v19)
 
@@ -35,6 +36,11 @@ Die Demo kann auch lokal ausgeführt werden:
 - Ausprobieren!
 
 ## Versionen
+
+### v22
+
+- [Dokumentation](Home-v22)
+- [Update Guide](Update-Guide-v22)
 
 ### v21
 

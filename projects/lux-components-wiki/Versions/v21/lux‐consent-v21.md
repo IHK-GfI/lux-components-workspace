@@ -1,6 +1,6 @@
 # LUX-Consent
 
-![Beispielbild LUX-Consent](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v21/lux‐consent-v21-img.png)
+![Beispielbild LUX-Consent](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v21/lux‐consent-v21-img.png)
 
 - [LUX-Consent](#lux-consent)
   - [Overview / API](#overview--api)

@@ -1,6 +1,5 @@
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, inject, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { MatCard, MatCardHeader, MatCardSubtitle, MatCardTitle } from '@angular/material/card';
-import { Subscription } from 'rxjs';
 import {
   LuxBadgeNotificationColor,
   LuxBadgeNotificationDirective,
@@ -8,91 +7,39 @@ import {
 } from '../../lux-directives/lux-badge-notification/lux-badge-notification.directive';
 import { LuxTagIdDirective } from '../../lux-directives/lux-tag-id/lux-tag-id.directive';
 import { LuxTooltipDirective } from '../../lux-directives/lux-tooltip/lux-tooltip.directive';
-import { LuxMediaQueryObserverService } from '../../lux-util/lux-media-query-observer.service';
 
 @Component({
   selector: 'lux-tile-ac',
   templateUrl: './lux-tile-ac.component.html',
   imports: [MatCard, LuxTagIdDirective, LuxBadgeNotificationDirective, MatCardTitle, MatCardSubtitle, LuxTooltipDirective, MatCardHeader],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'lux-flex' }
 })
-export class LuxTileAcComponent implements OnInit, OnChanges, OnDestroy {
-  private queryService = inject(LuxMediaQueryObserverService);
+export class LuxTileAcComponent {
+  readonly luxLabel = input<string | undefined>();
+  readonly luxLabelTruncateAfterOneLine = input(false);
+  readonly luxLabelTruncateAfterTwoLines = input(false);
+  readonly luxSubTitle = input<string | undefined>();
+  readonly luxSubTitleTruncateAfterOneLine = input(false);
+  readonly luxSubTitleTruncateAfterTwoLines = input(false);
+  readonly luxTagId = input<string | undefined>();
+  readonly luxShowNotification = input(false);
+  readonly luxCounter = input<number | undefined>();
+  readonly luxCounterCap = input(10);
+  readonly luxNotificationColor = input<LuxBadgeNotificationColor>('primary');
+  readonly luxNotificationSize = input<LuxBadgeNotificationSize>('medium');
 
-  @Input() luxLabel?: string;
-  @Input() luxLabelTruncateAfterOneLine = false;
-  @Input() luxLabelTruncateAfterTwoLines = false;
-  @Input() luxSubTitle?: string;
-  @Input() luxSubTitleTruncateAfterOneLine = false;
-  @Input() luxSubTitleTruncateAfterTwoLines = false;
-  @Input() luxTagId?: string;
+  readonly luxClicked = output<void>();
 
-  @Input() set luxShowNotification(value: boolean) {
-    this._showNotification = value;
-    this.updateBadgeContent();
-  }
-  get luxShowNotification() {
-    return this._showNotification;
-  }
-
-  @Input() set luxCounter(counter: number | undefined) {
-    this._counter = counter;
-    this.updateBadgeContent();
-  }
-  get luxCounter() {
-    return this._counter;
-  }
-
-  @Input() luxCounterCap = 10;
-  @Input() luxNotificationColor: LuxBadgeNotificationColor = 'primary';
-  @Input() luxNotificationSize: LuxBadgeNotificationSize = 'medium';
-
-  private _showNotification = false;
-  private _counter?: number;
-
-  luxBadgeContent = '';
-
-  @Output() luxClicked = new EventEmitter<Event>();
-
-  mobileView?: boolean;
-  subscription?: Subscription;
-
-  ngOnInit() {
-    this.subscription = this.queryService.getMediaQueryChangedAsObservable().subscribe((query) => {
-      this.mobileView = query === 'xs' || query === 'sm';
-    });
-    this.updateBadgeContent();
-  }
-
-  ngOnChanges() {
-    this.updateBadgeContent();
-  }
-
-  ngOnDestroy() {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
+  readonly luxBadgeContent = computed(() => {
+    const counter = this.luxCounter();
+    if (!counter) {
+      return this.luxShowNotification() ? ' ' : '';
     }
-  }
+    return '' + counter;
+  });
 
   clicked() {
     this.luxClicked.emit();
-  }
-
-  getBadgeContent() {
-    this.updateBadgeContent();
-    return this.luxBadgeContent;
-  }
-
-  private updateBadgeContent() {
-    if (!this.luxCounter) {
-      if (this.luxShowNotification) {
-        this.luxBadgeContent = ' ';
-      } else {
-        this.luxBadgeContent = '';
-      }
-    } else {
-      this.luxBadgeContent = '' + this.luxCounter;
-    }
   }
 }

@@ -21,7 +21,7 @@
     luxTagIdHandler
     [luxTagId]="luxTagId()"
   >
-    <ng-container *ngTemplateOutlet="luxLinkContent"></ng-container>
+    <ng-container *ngTemplateOutlet="luxLinkContent" />
   </a>
 } @else if (!luxRaised() && !luxRounded() && luxFlat() && !!luxColor() && !luxStroked()) {
   <a
@@ -46,7 +46,7 @@
     luxTagIdHandler
     [luxTagId]="luxTagId()"
   >
-    <ng-container *ngTemplateOutlet="luxLinkContent"></ng-container>
+    <ng-container *ngTemplateOutlet="luxLinkContent" />
   </a>
 } @else if (!luxRaised() && !luxRounded() && !luxFlat() && luxStroked()) {
   <a
@@ -71,7 +71,7 @@
     luxTagIdHandler
     [luxTagId]="luxTagId()"
   >
-    <ng-container *ngTemplateOutlet="luxLinkContent"></ng-container>
+    <ng-container *ngTemplateOutlet="luxLinkContent" />
   </a>
 } @else if (!luxRaised() && luxRounded() && !luxFlat() && !luxStroked()) {
   <a
@@ -96,7 +96,7 @@
     luxTagIdHandler
     [luxTagId]="luxTagId()"
   >
-    <ng-container *ngTemplateOutlet="luxLinkContent"></ng-container>
+    <ng-container *ngTemplateOutlet="luxLinkContent" />
   </a>
 } @else if (luxRounded() && luxStroked()) {
   <a
@@ -121,7 +121,7 @@
     luxTagIdHandler
     [luxTagId]="luxTagId()"
   >
-    <ng-container *ngTemplateOutlet="luxLinkContent"></ng-container>
+    <ng-container *ngTemplateOutlet="luxLinkContent" />
   </a>
 } @else {
   <a
@@ -146,14 +146,14 @@
     luxTagIdHandler
     [luxTagId]="luxTagId()"
   >
-    <ng-container *ngTemplateOutlet="luxLinkContent"></ng-container>
+    <ng-container *ngTemplateOutlet="luxLinkContent" />
   </a>
 }
 
 <ng-template #luxLinkContent>
   <div class="lux-button-content-container">
     @if (!luxIconShowRight() && luxIconName()) {
-      <lux-icon [luxIconName]="luxIconName()" class="lux-button-icon"></lux-icon>
+      <lux-icon [luxIconName]="luxIconName()" class="lux-button-icon" />
     }
     @if (luxLabel() && !luxRounded()) {
       <span class="lux-button-label">
@@ -161,7 +161,7 @@
       </span>
     }
     @if (luxIconShowRight() && luxIconName()) {
-      <lux-icon [luxIconName]="luxIconName()" class="lux-button-icon"></lux-icon>
+      <lux-icon [luxIconName]="luxIconName()" class="lux-button-icon" />
     }
   </div>
 </ng-template>

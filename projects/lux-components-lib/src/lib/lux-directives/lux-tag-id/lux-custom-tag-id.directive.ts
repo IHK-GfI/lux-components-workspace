@@ -1,4 +1,4 @@
-import { AfterViewInit, Directive, ElementRef, Input, OnDestroy, Renderer2, inject } from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, inject, input, OnDestroy, Renderer2 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { LuxComponentsConfigParameters } from '../../lux-components-config/lux-components-config-parameters.interface';
 import { LuxComponentsConfigService } from '../../lux-components-config/lux-components-config.service';
@@ -13,8 +13,8 @@ export class LuxCustomTagIdDirective implements AfterViewInit, OnDestroy {
   generateLuxTagIds = false;
   configSubscription: Subscription;
 
-  @Input() luxCustomTagId?: string;
-  @Input() luxCustomTagIdSelector?: string;
+  readonly luxCustomTagId = input<string>();
+  readonly luxCustomTagIdSelector = input<string>();
 
   constructor() {
     this.configSubscription = this.componentsConfigService.config.subscribe((newConfig: LuxComponentsConfigParameters) => {
@@ -25,14 +25,15 @@ export class LuxCustomTagIdDirective implements AfterViewInit, OnDestroy {
   ngAfterViewInit(): void {
     if (this.generateLuxTagIds) {
       let el;
-      if (this.luxCustomTagIdSelector) {
-        el = this.elementRef.nativeElement.querySelector(this.luxCustomTagIdSelector);
+      const luxCustomTagIdSelector = this.luxCustomTagIdSelector();
+      if (luxCustomTagIdSelector) {
+        el = this.elementRef.nativeElement.querySelector(luxCustomTagIdSelector);
       } else {
         el = this.elementRef.nativeElement;
       }
 
       if (el) {
-        this.renderer.setAttribute(el, LuxTagIdDirective.luxTagIdAttrName, this.luxCustomTagId ?? '');
+        this.renderer.setAttribute(el, LuxTagIdDirective.luxTagIdAttrName, this.luxCustomTagId() ?? '');
       }
     }
   }

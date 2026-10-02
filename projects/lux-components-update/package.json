@@ -14,7 +14,7 @@
     "pack": "npm run build && npm run pack-copy-base-files && npm run pack-copy-template-dirs",
     "security": "npm audit --registry=https://registry.npmjs.org --audit-level high",
     "smoketest": "npm run test && npm run pack",
-    "test": "npm run pack && tsc -p tsconfig.spec.json && jasmine ../../dist/updater/**/*.spec.js"
+    "test": "npm run pack && tsc -p tsconfig.spec.json && vitest run --config vitest.config.mts"
   },
   "keywords": [
     "schematics",
