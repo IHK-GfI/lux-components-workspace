@@ -2,6 +2,7 @@
 
 - [LUX-Components](#lux-components)
   - [Demo](#demo)
+  - [Visual Regression Tests](#visual-regression-tests)
   - [Dokumentation](#dokumentation)
   - [Aktualisierung](#aktualisierung)
   - [Autoren](#autoren)
@@ -36,6 +37,22 @@ Die Demo lokal starten:
 - `npm run start:demo` ausführen.
 - [http://localhost:4200/](http://localhost:4200/) im Browser öffnen.
 - Ausprobieren!
+
+## Visual Regression Tests
+
+Unter `e2e/` liegen [Playwright](https://playwright.dev)-Tests für die Demo:
+
+- `e2e/visual` (Projekt `chromium-authentic`): Screenshots jeder Beispielseite (`/components-overview/example/*`) und der Baseline-Seite (`/baseline`), inklusive der Zustände Fehler, Disabled, Readonly und Dense der Form-Controls (Baseline-Seite und je Form-Control auf dessen Beispielseite). Sie werden mit den eingecheckten Referenzbildern (`e2e/visual/__screenshots__`) verglichen. Neue Beispielseiten werden automatisch aus `components-overview.routes.ts` übernommen.
+- `e2e/form` (Projekt `form`): Verhaltenstests der Form-Controls (Werte, Required, Disabled, Readonly, Fehlermeldungen, Tastatur, axe-Scans nach WCAG 2.2 AA) auf deren Beispielseiten. Die Tests für Datepicker, Datetimepicker und Timepicker laufen zusätzlich in den Zeitzonen UTC-12 und UTC+14 (Projekte `form-tz-*`). Die Selektoren auf die Demo liegen gebündelt in `e2e/form/support/form-example.ts`, die erwarteten Fehlermeldungen kommen aus der Übersetzungsdatei der LUX-Components. Bekannte Fehler sind per `test.fail()` markiert und schlagen Alarm, sobald sie behoben sind.
+
+Da sich das Schriftrendering zwischen Betriebssystemen unterscheidet, laufen die Tests immer im offiziellen Playwright-Container – lokal über _podman_ (alternativ `VRT_CONTAINER_ENGINE=docker`), in der CI im Workflow _e2e (Playwright)_ (Pull Requests auf `develop` und manuell vor einem Release). Der Workflow baut die Demo einmal und verteilt die Tests auf vier parallele Jobs; schlägt ein Test fehl, steht der zusammengeführte HTML-Report (inkl. Diff-Bildern) als Artefakt _playwright-report_ am Workflow-Lauf.
+
+- `npm run vrt:build` – Theme, LUX-Components und Demo bauen.
+- `npm run vrt` – alle Tests ausführen (weitere Playwright-Argumente nach `--`, z. B. `npm run vrt -- -g datepicker` oder `npm run vrt -- --project=form`).
+- `npm run vrt:update` – Referenzbilder neu erzeugen. Die geänderten PNGs vor dem Commit bitte bewusst prüfen.
+- `npm run vrt:report` – HTML-Report mit den Abweichungen im Browser öffnen.
+
+Die Version von `@playwright/test` in `e2e/package.json` muss zum Image-Tag in `.github/workflows/visual-regression.yml` passen. Bei einem Playwright-Update müssen alle Referenzbilder neu erzeugt werden.
 
 ## Dokumentation
 

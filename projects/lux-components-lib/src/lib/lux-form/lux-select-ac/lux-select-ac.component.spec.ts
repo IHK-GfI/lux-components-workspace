@@ -300,6 +300,36 @@ describe('LuxSelectAcComponent', () => {
       expect(readonlySelect).not.toBeNull();
     }));
 
+    it('Sollte bei readonly weder per Tastatur noch per Klick änderbar sein', fakeAsync(() => {
+      // Bewusst nicht LuxTestHelper.createKeyboardEvent: Das Event hätte in Chrome metaKey gesetzt,
+      // und der KeyManager des mat-select ignoriert Pfeiltasten mit Modifier.
+      const pressKey = (keyCode: number, key: string) => {
+        select.dispatchEvent(new KeyboardEvent('keydown', { key, keyCode, bubbles: true, cancelable: true }));
+        LuxTestHelper.wait(fixture);
+      };
+
+      testComponent.readonly = true;
+      LuxTestHelper.wait(fixture);
+
+      // Im geschlossenen mat-select wählt ArrowDown sonst direkt die nächste Option.
+      pressKey(40, 'ArrowDown');
+      pressKey(13, 'Enter');
+      pressKey(32, ' ');
+      trigger.click();
+      LuxTestHelper.wait(fixture);
+
+      expect(testComponent.selectedOption).toBeNull();
+      expect(testComponent.select.matSelect!.panelOpen).toBe(false);
+
+      // Gegenprobe: Ohne readonly wirkt dieselbe Taste.
+      testComponent.readonly = false;
+      LuxTestHelper.wait(fixture);
+      pressKey(40, 'ArrowDown');
+
+      expect(testComponent.selectedOption).toEqual(testComponent.options[0]);
+      flush();
+    }));
+
     it('Sollte disabled sein', fakeAsync(() => {
       // Vorbedingungen testen
       let disabledSelect = fixture.debugElement.query(By.css('lux-select-ac .lux-form-control-disabled-authentic'));

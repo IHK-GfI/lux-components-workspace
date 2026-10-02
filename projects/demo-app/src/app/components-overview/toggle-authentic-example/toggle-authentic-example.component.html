@@ -118,4 +118,26 @@
     >
     </lux-toggle-ac>
   </example-base-simple-options>
+  <example-base-advanced-options class="lux-flex lux-flex-col lux-gap-4">
+    <lux-toggle-ac
+      luxLabel="luxErrorMessage verwenden"
+      luxHint="Wenn 'false', wird luxErrorCallback genutzt. Ist die Message leer, wird der normale Fehlertext genommen."
+      [(luxChecked)]="useErrorMessage"
+      [luxNoTopLabel]="true"
+    >
+    </lux-toggle-ac>
+    @if (useErrorMessage) {
+      <lux-input-ac
+        luxName="toggle_luxErrorMessage"
+        luxLabel="luxErrorMessage"
+        luxHint="Über diese Property lässt sich eine feste Fehlermeldung
+                 (unabhängig vom speziellen Validierungsfehler) einstellen."
+        [(luxValue)]="errorMessage"
+      >
+      </lux-input-ac>
+    }
+    @if (!useErrorMessage) {
+      <pre tabindex="0" class="lux-label">{{ errorCallbackString }}</pre>
+    }
+  </example-base-advanced-options>
 </example-base-structure>

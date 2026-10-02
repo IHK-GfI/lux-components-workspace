@@ -119,6 +119,11 @@ describe('LuxToggleAcComponent', () => {
         // Nachbedingungen testen
         errorElement = fixture.debugElement.query(By.css('mat-error'));
         expect(errorElement.nativeElement.innerText.trim()).toEqual('Das ist ein Pflichtfeld');
+
+        const switchEl: HTMLButtonElement = fixture.debugElement.query(By.css('button[role="switch"]')).nativeElement;
+        expect(switchEl.getAttribute('aria-describedby')).toEqual(errorElement.nativeElement.id);
+        expect(switchEl.getAttribute('aria-invalid')).toEqual('true');
+        expect(switchEl.getAttribute('aria-required')).toEqual('true');
       });
 
       it('Sollte einen Fehler bei Startwert "" anzeigen können', fakeAsync(() => {

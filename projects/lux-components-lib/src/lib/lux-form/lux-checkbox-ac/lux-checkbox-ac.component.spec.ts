@@ -116,6 +116,11 @@ describe('LuxCheckboxAcComponent', () => {
         // Nachbedingungen testen
         errorElement = fixture.debugElement.query(By.css('mat-error'));
         expect(errorElement.nativeElement.innerText.trim()).toEqual('Das ist ein Pflichtfeld');
+
+        const checkboxEl: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
+        expect(checkboxEl.getAttribute('aria-describedby')).toEqual(errorElement.nativeElement.id);
+        expect(checkboxEl.getAttribute('aria-invalid')).toEqual('true');
+        expect(checkboxEl.getAttribute('aria-required')).toEqual('true');
       });
 
       it('Sollte einen Fehler bei Startwert "" anzeigen können', fakeAsync(() => {

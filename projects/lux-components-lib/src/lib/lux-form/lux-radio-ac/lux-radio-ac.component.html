@@ -21,21 +21,20 @@
     (focusout)="onFocusOut($event)"
     [luxAriaLabelledby]="labelledBy()"
     [luxAriaLabel]="luxAriaLabel"
+    [luxAriaRequired]="luxRequired"
+    [luxAriaInvalid]="'' + formControl.invalid"
     [attr.aria-disabled]="luxDisabled ? 'true' : null"
     [id]="uid"
   >
+    <!-- aria-required/-invalid gehören an die radiogroup, an der Rolle radio sind sie laut ARIA nicht erlaubt. -->
     @for (option of luxOptions; track option; let i = $index) {
     <mat-radio-button
       [value]="luxPickValue ? _luxOptionsPickValue[i] : option"
       [disableRipple]="true"
       color="primary"
       [luxAriaDescribedby]="descripedBy()"
-      luxAriaDescribedbySelector=".mat-radio-input"
-      [luxAriaRequired]="luxRequired"
+      luxAriaDescribedbySelector="input"
       [disabled]="isDisabled(option)"
-      luxAriaRequiredSelector=".mat-radio-input"
-      [luxAriaInvalid]="'' + formControl.invalid"
-      luxAriaInvalidSelector=".mat-radio-input"
     >
       <ng-container
         *ngTemplateOutlet="tempRef && !luxOptionLabelProp ? tempRef : noTemplateRefTemplate; context: { $implicit: option }"

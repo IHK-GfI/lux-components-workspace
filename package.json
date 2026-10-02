@@ -35,6 +35,10 @@
     "util:clean-all": "npm run util:delete-dist && del-cli --force .angular && del-cli --force package-lock.json && del-cli --force node_modules",
     "util:delete-dist": "del-cli --force dist/",
     "util:wait-and-start-demo": "wait-on dist/lux-components-lib/types/ihk-gfi-lux-components.d.ts dist/theme/prebuilt-themes/luxtheme-authentic.css && npm run start",
+    "vrt": "node scripts/vrt.js",
+    "vrt:build": "npm run pack:theme && npm run pack:components && npm run pack:demo",
+    "vrt:update": "node scripts/vrt.js --update-snapshots",
+    "vrt:report": "npm install --prefix e2e --no-audit --no-fund && npm run report --prefix e2e",
     "watch:components": "npm run watch lux-components-lib",
     "watch:theme": "npm run watch --workspace=projects/lux-components-theme",
     "prepare": "husky"

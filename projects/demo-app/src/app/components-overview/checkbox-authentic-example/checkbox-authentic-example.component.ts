@@ -12,6 +12,7 @@ import {
 import { StatusMarkerComponent } from '../../base/status-marker/status-marker.component';
 import { DemoMarkerType } from '../../base/status-marker/status-marker.model';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
+import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
 import { ExampleBaseStructureComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-structure/example-base-structure.component';
 import { emptyErrorCallback, exampleErrorCallback } from '../../example-base/example-base-util/example-base-helper';
@@ -48,6 +49,7 @@ interface CheckboxAgbDummyForm {
     ExampleFormValueComponent,
     ExampleBaseSimpleOptionsComponent,
     ExampleFormDisableComponent,
+    ExampleBaseAdvancedOptionsComponent,
     StatusMarkerComponent
   ]
 })
@@ -73,6 +75,7 @@ export class CheckboxAuthenticExampleComponent {
   errorMessage = 'Das Feld enthält keinen gültigen Wert';
   errorCallback = exampleErrorCallback;
   emptyCallback = emptyErrorCallback;
+  errorCallbackString = this.errorCallback + '';
 
   constructor() {
     this.form = new FormGroup<CheckboxDummyForm>({
