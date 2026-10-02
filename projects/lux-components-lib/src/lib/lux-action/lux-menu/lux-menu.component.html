@@ -15,7 +15,8 @@
         [luxStroked]="menuItem.luxStroked"
         [luxIconName]="menuItem.luxIconName"
         [luxDisabled]="menuItem.luxDisabled"
-        [luxDisabledAria]="menuItem.luxDisabledAria()"
+        [luxDisabledAria]="menuItem.luxDisabledAria() || menuItem.luxLoading()"
+        [luxLoading]="menuItem.luxLoading()"
         [luxTagId]="menuItem.luxTagId"
         [luxRounded]="menuItem.luxRounded"
         [luxButtonBadge]="menuItem.luxButtonBadge"
@@ -61,7 +62,7 @@
           [class.with-badge]="menuItem.luxButtonBadge"
           [luxTooltip]="menuItem.luxMenuTooltip"
           [disabled]="menuItem.luxDisabled"
-          [luxAriaDisabled]="menuItem.luxDisabledAria() ? 'true' : undefined"
+          [luxAriaDisabled]="menuItem.luxDisabledAria() || menuItem.luxLoading() ? 'true' : undefined"
           luxTagIdHandler
           [luxTagIdStartElement]="elementRef.nativeElement"
           [luxTagIdTargetSelf]="true"
@@ -76,7 +77,9 @@
           "
           (click)="menuItemClicked(menuItem, $event)"
         >
-          @if (menuItem.luxIconName) {
+          @if (menuItem.luxLoading() && !menuItem.luxDisabled) {
+            <lux-progress inert luxType="Spinner" luxSize="small" class="lux-menu-item-icon lux-mr-4"></lux-progress>
+          } @else if (menuItem.luxIconName) {
             <lux-icon
               [luxIconName]="menuItem.luxIconName"
               luxPadding="0"
@@ -134,7 +137,7 @@
             [class.with-badge]="menuItem.luxButtonBadge"
             [luxTooltip]="menuItem.luxMenuTooltip"
             [disabled]="menuItem.luxDisabled"
-            [luxAriaDisabled]="menuItem.luxDisabledAria() ? 'true' : undefined"
+            [luxAriaDisabled]="menuItem.luxDisabledAria() || menuItem.luxLoading() ? 'true' : undefined"
             [ngClass]="
               (menuItem.luxClass ?? '') +
               (menuItem.luxMenuItemSelected() && !menuItem.luxDisabled ? ' lux-menu-item-selected' : '') +
@@ -147,7 +150,9 @@
             (click)="menuItemClicked(menuItem, $event)"
           >
             <span class="lux-menu-item-content">
-              @if (menuItem.luxIconName) {
+              @if (menuItem.luxLoading() && !menuItem.luxDisabled) {
+                <lux-progress inert luxType="Spinner" luxSize="small" class="lux-menu-item-icon lux-mr-4"></lux-progress>
+              } @else if (menuItem.luxIconName) {
                 <lux-icon
                   [luxIconName]="menuItem.luxIconName"
                   luxPadding="0"
@@ -199,7 +204,7 @@
             [class.with-badge]="menuItem.luxButtonBadge"
             [luxTooltip]="menuItem.luxMenuTooltip"
             [disabled]="menuItem.luxDisabled"
-            [luxAriaDisabled]="menuItem.luxDisabledAria() ? 'true' : undefined"
+            [luxAriaDisabled]="menuItem.luxDisabledAria() || menuItem.luxLoading() ? 'true' : undefined"
             luxTagIdHandler
             [luxTagIdStartElement]="elementRef.nativeElement"
             [luxTagIdTargetSelf]="true"
@@ -215,7 +220,9 @@
             "
             (click)="menuItemClicked(menuItem, $event)"
           >
-            @if (menuItem.luxIconName) {
+            @if (menuItem.luxLoading() && !menuItem.luxDisabled) {
+              <lux-progress inert luxType="Spinner" luxSize="small" class="lux-menu-item-icon lux-mr-4"></lux-progress>
+            } @else if (menuItem.luxIconName) {
               <lux-icon
                 [luxIconName]="menuItem.luxIconName"
                 luxPadding="0"

@@ -24,12 +24,13 @@
             [luxColor]="item.color"
             [luxDisabled]="item.disabled"
             [luxDisabledAria]="item.disabledAria ?? false"
+            [luxLoading]="item.loading ?? false"
             [luxLabel]="item.label"
             [luxButtonTooltip]="item.tooltip"
             [luxMenuTooltip]="item.tooltipMenu"
             [luxAlwaysVisible]="item.alwaysVisible"
             [luxTagId]="item.label"
-            (luxClicked)="log(showOutputEvents, 'Item clicked', $event)"
+            (luxClicked)="onMenuItemClicked(item, $event)"
             (luxClickNotAllowed)="log(showOutputEvents, 'Item click not allowed (aria-disabled)', $event)"
             [luxRounded]="item.round"
             [luxHideLabelIfExtended]="item.hideLabelIfExtended"
@@ -68,10 +69,12 @@
             [luxIconName]="item.iconName"
             [luxColor]="item.color"
             [luxDisabled]="item.disabled"
+            [luxLoading]="item.loading ?? false"
             [luxLabel]="item.label"
             [luxMenuTooltip]="item.tooltipMenu"
             [luxTagId]="item.label"
-            (luxClicked)="log(showOutputEvents, 'Item clicked', $event)"
+            (luxClicked)="onMenuItemClicked(item, $event)"
+            (luxClickNotAllowed)="log(showOutputEvents, 'Item click not allowed (loading)', $event)"
             [luxHidden]="item.hidden"
             [luxClass]="item.class"
             [luxButtonBadge]="item.buttonBadge"
@@ -89,10 +92,12 @@
             [luxIconName]="item.iconName"
             [luxColor]="item.color"
             [luxDisabled]="item.disabled"
+            [luxLoading]="item.loading ?? false"
             [luxLabel]="item.label"
             [luxMenuTooltip]="item.tooltipMenu"
             [luxTagId]="item.label"
-            (luxClicked)="log(showOutputEvents, 'Item clicked', $event)"
+            (luxClicked)="onMenuItemClicked(item, $event)"
+            (luxClickNotAllowed)="log(showOutputEvents, 'Item click not allowed (loading)', $event)"
             [luxHidden]="item.hidden"
             [luxClass]="item.class"
             [luxButtonBadge]="item.buttonBadge"
@@ -109,10 +114,12 @@
             [luxIconName]="item.iconName"
             [luxColor]="item.color"
             [luxDisabled]="item.disabled"
+            [luxLoading]="item.loading ?? false"
             [luxLabel]="item.label"
             [luxMenuTooltip]="item.tooltipMenu"
             [luxTagId]="item.label"
-            (luxClicked)="log(showOutputEvents, 'Item clicked', $event)"
+            (luxClicked)="onMenuItemClicked(item, $event)"
+            (luxClickNotAllowed)="log(showOutputEvents, 'Item click not allowed (loading)', $event)"
             [luxHidden]="item.hidden"
             [luxClass]="item.class"
             [luxButtonBadge]="item.buttonBadge"
@@ -143,11 +150,13 @@
             [luxIconName]="item.iconName"
             [luxColor]="item.color"
             [luxDisabled]="item.disabled"
+            [luxLoading]="item.loading ?? false"
             [luxLabel]="item.label"
             [luxMenuItemSubtitle]="item.subtitle"
             [luxMenuTooltip]="item.tooltipMenu"
             [luxTagId]="item.label"
-            (luxClicked)="log(showOutputEvents, 'Item clicked', $event)"
+            (luxClicked)="onMenuItemClicked(item, $event)"
+            (luxClickNotAllowed)="log(showOutputEvents, 'Item click not allowed (loading)', $event)"
             [luxHidden]="item.hidden"
             [luxClass]="item.class"
             [luxButtonBadge]="item.buttonBadge"
@@ -165,11 +174,13 @@
             [luxIconName]="item.iconName"
             [luxColor]="item.color"
             [luxDisabled]="item.disabled"
+            [luxLoading]="item.loading ?? false"
             [luxLabel]="item.label"
             [luxMenuItemSubtitle]="item.subtitle"
             [luxMenuTooltip]="item.tooltipMenu"
             [luxTagId]="item.label"
-            (luxClicked)="log(showOutputEvents, 'Item clicked', $event)"
+            (luxClicked)="onMenuItemClicked(item, $event)"
+            (luxClickNotAllowed)="log(showOutputEvents, 'Item click not allowed (loading)', $event)"
             [luxHidden]="item.hidden"
             [luxClass]="item.class"
             [luxButtonBadge]="item.buttonBadge"
@@ -238,6 +249,15 @@
       [luxDisabled]="!displayExtended"
     >
     </lux-input-ac>
+    <div class="lux-flex lux-items-center lux-gap-2">
+      <lux-toggle-ac
+        luxLabel="Deaktiviere LuxLoading"
+        luxHint="Verhindert das automatische Aktivieren von luxLoading für zwei Sekunden nach einem Klick auf ein Menü-Item."
+        [(luxChecked)]="disableLuxLoading"
+        [luxNoTopLabel]="true"
+      ></lux-toggle-ac>
+      <app-status-marker [markerType]="markerTypeNew"></app-status-marker>
+    </div>
   </example-base-simple-options>
   <example-base-advanced-options class="lux-flex lux-flex-col lux-gap-4">
     <h3>LuxMenuItemComponent</h3>
@@ -291,6 +311,12 @@
               [luxNoTopLabel]="true"
             >
             </lux-toggle-ac>
+            <div class="lux-flex lux-items-center lux-gap-2">
+              <lux-toggle-ac luxLabel="luxLoading" [(luxChecked)]="item.loading" [luxNoTopLabel]="true">
+                <lux-form-hint>Zeigt am erweiterten Button und im Menü-Panel einen Spinner und verhindert Klicks.</lux-form-hint>
+              </lux-toggle-ac>
+              <app-status-marker [markerType]="markerTypeNew"></app-status-marker>
+            </div>
             <div class="lux-flex lux-items-center lux-gap-2">
               <lux-toggle-ac class="lux-flex-auto" luxLabel="luxDisabledAria" [(luxChecked)]="item.disabledAria" [luxNoTopLabel]="true">
                 <lux-form-hint>

@@ -56,35 +56,37 @@
 
 #### @Input
 
-| Name                   | Typ             | Beschreibung                                                                                                                                                                                     |
-| ---------------------- | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| lux-menu-item          | Selector        | Selector                                                                                                                                                                                         |
-| luxAlwaysVisible       | boolean         | Bestimmt dass das Element unabhängig von Weight-Wert, maximal-erlaubten Elementen und Screen-Size in der horizontalen Navigation dargestellt werden soll.                                        |
-| luxHideLabelIfExtended | boolean         | Über dieses Flag ist es möglich das Label des MenuItems im "ausgeklappten" Zustand zu verstecken.                                                                                                |
-| luxLabel               | string          | Bestimmt das Label, welches in dieser Component angezeigt werden soll.                                                                                                                           |
-| luxColor               | LuxThemePalette | Diese Property definiert die Farben der Component. Die Farbe (`warn`, `accent`) wird sowohl für den Button in der erweiterten Ansicht als auch für den Eintrag im Menu-Panel übernommen.         |
-| luxRaised              | boolean         | Gibt an, ob der Button hervorgehoben wird.                                                                                                                                                       |
-| luxIconName            | string          | Ein LUX-Iconname.                                                                                                                                                                                |
-| luxTagId               | string          | [LUX-Tag-Id](luxTagId-v21#direkte-konfiguration) für die automatischen Tests.                                                                                                                    |
-| luxDisabled            | boolean         | Gibt an, ob das Element deaktiviert ist.                                                                                                                                                         |
-| luxRounded             | boolean         | Gibt an, ob ein runder Button verwendet werden soll.                                                                                                                                             |
-| luxIconAlignWithLabel  | boolean         | Entfernt die vertikale Zentrierung des Icons, so dass es mit dem Label ausgerichtet ist.                                                                                                         |
-| luxButtonTooltip       | string          | Tooltip für das Element. Der Tooltip wird aber nur angezeigt, wenn das Element als Button außerhalb des Menüs dargestellt wird.                                                                  |
-| luxMenuTooltip         | string          | Tooltip für das Element. Der Tooltip wird aber nur angezeigt, wenn das Element als Button innerhalb des Menüs dargestellt wird.                                                                  |
-| luxPrio                | number          | Über die Priorität kann die Anzeigereihenfolge beeinflusst werden.                                                                                                                               |
-| luxButtonBadge         | string          | Text der in einer Badge hinter dem Label in einem Lux-Button angezeigt werden kann. Die maximale Länge beträgt vier Zeichen und wird bei Überlänge automatisch mit Ellipsis '...' abgeschnitten. |
-| luxButtonBadgeColor    | LuxThemePalette | Farbe der ButtonBadge, die analog zur Button-Farbe gewählt werden kann. Mögliche Werte: "primary", "accent", "warn".                                                                             |
-| luxMenuItemSubtitle    | string          | Wenn im Menü die Properties luxMenuPanelLarge und luxShowSections auf true stehen, wird der Text in einer zweiten Zeile angezeigt.                                                               |
-| luxMenuItemSelected    | boolean         | Wenn im Menü die Property luxShowSections auf true steht, kann ein MenuItem als ausgewählt angezeigt werden.                                                                                     |
-| luxIconShowRight       | boolean         | Zeigt das Icon vom Button rechts vom Label an. Funktioniert nur für die erweiterte-Ansicht und nicht das Menü-Panel.                                                                             |
+| Name                   | Typ             | Beschreibung                                                                                                                                                                                         |
+| ---------------------- | --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| lux-menu-item          | Selector        | Selector                                                                                                                                                                                             |
+| luxAlwaysVisible       | boolean         | Bestimmt dass das Element unabhängig von Weight-Wert, maximal-erlaubten Elementen und Screen-Size in der horizontalen Navigation dargestellt werden soll.                                            |
+| luxHideLabelIfExtended | boolean         | Über dieses Flag ist es möglich das Label des MenuItems im "ausgeklappten" Zustand zu verstecken.                                                                                                    |
+| luxLabel               | string          | Bestimmt das Label, welches in dieser Component angezeigt werden soll.                                                                                                                               |
+| luxColor               | LuxThemePalette | Diese Property definiert die Farben der Component. Die Farbe (`warn`, `accent`) wird sowohl für den Button in der erweiterten Ansicht als auch für den Eintrag im Menu-Panel übernommen.             |
+| luxRaised              | boolean         | Gibt an, ob der Button hervorgehoben wird.                                                                                                                                                           |
+| luxIconName            | string          | Ein LUX-Iconname.                                                                                                                                                                                    |
+| luxTagId               | string          | [LUX-Tag-Id](luxTagId-v21#direkte-konfiguration) für die automatischen Tests.                                                                                                                        |
+| luxDisabled            | boolean         | Gibt an, ob das Element deaktiviert ist.                                                                                                                                                             |
+| luxLoading             | boolean         | Zeigt am erweiterten Button und im Menü-Panel statt des Icons einen Spinner an (Standard: false). Solange der Ladevorgang läuft, ist das Item als aria-disabled markiert und führt keine Aktion aus. |
+| luxRounded             | boolean         | Gibt an, ob ein runder Button verwendet werden soll.                                                                                                                                                 |
+| luxIconAlignWithLabel  | boolean         | Entfernt die vertikale Zentrierung des Icons, so dass es mit dem Label ausgerichtet ist.                                                                                                             |
+| luxButtonTooltip       | string          | Tooltip für das Element. Der Tooltip wird aber nur angezeigt, wenn das Element als Button außerhalb des Menüs dargestellt wird.                                                                      |
+| luxMenuTooltip         | string          | Tooltip für das Element. Der Tooltip wird aber nur angezeigt, wenn das Element als Button innerhalb des Menüs dargestellt wird.                                                                      |
+| luxPrio                | number          | Über die Priorität kann die Anzeigereihenfolge beeinflusst werden.                                                                                                                                   |
+| luxButtonBadge         | string          | Text der in einer Badge hinter dem Label in einem Lux-Button angezeigt werden kann. Die maximale Länge beträgt vier Zeichen und wird bei Überlänge automatisch mit Ellipsis '...' abgeschnitten.     |
+| luxButtonBadgeColor    | LuxThemePalette | Farbe der ButtonBadge, die analog zur Button-Farbe gewählt werden kann. Mögliche Werte: "primary", "accent", "warn".                                                                                 |
+| luxMenuItemSubtitle    | string          | Wenn im Menü die Properties luxMenuPanelLarge und luxShowSections auf true stehen, wird der Text in einer zweiten Zeile angezeigt.                                                                   |
+| luxMenuItemSelected    | boolean         | Wenn im Menü die Property luxShowSections auf true steht, kann ein MenuItem als ausgewählt angezeigt werden.                                                                                         |
+| luxIconShowRight       | boolean         | Zeigt das Icon vom Button rechts vom Label an. Funktioniert nur für die erweiterte-Ansicht und nicht das Menü-Panel.                                                                                 |
 
 Hinweis: SVG-Icons mit unterschiedlichen Seitenverhaeltnissen werden im Menu-Panel vollstaendig und proportional innerhalb der maximalen Icon-Breite/-Hoehe dargestellt.
 
 #### @Output
 
-| Name       | Typ                   | Beschreibung                                                                                          |
-| ---------- | --------------------- | ----------------------------------------------------------------------------------------------------- |
-| luxClicked | EventEmitter \<Event> | Event welches beim Klick auf den Button ausgelöst wird und einen Clicked-Event als Parameter enthält. |
+| Name               | Typ                      | Beschreibung                                                                                          |
+| ------------------ | ------------------------ | ----------------------------------------------------------------------------------------------------- |
+| luxClicked         | EventEmitter \<Event>    | Event welches beim Klick auf den Button ausgelöst wird und einen Clicked-Event als Parameter enthält. |
+| luxClickNotAllowed | OutputEmitterRef\<Event> | Event bei einem Klick auf ein mit luxDisabledAria oder luxLoading gesperrtes Item.                    |
 
 ### LuxMenuPanelHeaderComponent
 
