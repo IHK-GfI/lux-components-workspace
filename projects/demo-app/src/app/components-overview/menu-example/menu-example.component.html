@@ -463,6 +463,12 @@
               </lux-toggle-ac>
               <app-status-marker [markerType]="markerTypeNew"></app-status-marker>
             </div>
+            <div class="lux-flex lux-items-center lux-gap-2">
+              <lux-toggle-ac luxLabel="luxLoading" [(luxChecked)]="item.loading" [luxNoTopLabel]="true">
+                <lux-form-hint>Zeigt am erweiterten Button und im Menü-Panel einen Spinner und verhindert Klicks.</lux-form-hint>
+              </lux-toggle-ac>
+              <app-status-marker [markerType]="markerTypeNew"></app-status-marker>
+            </div>
           </lux-panel-content>
         </lux-panel>
       }
@@ -542,6 +548,12 @@
               [luxNoTopLabel]="true"
             >
             </lux-toggle-ac>
+            <div class="lux-flex lux-items-center lux-gap-2">
+              <lux-toggle-ac luxLabel="luxLoading" [(luxChecked)]="item.loading" [luxNoTopLabel]="true">
+                <lux-form-hint>Zeigt am erweiterten Button und im Menü-Panel einen Spinner und verhindert Klicks.</lux-form-hint>
+              </lux-toggle-ac>
+              <app-status-marker [markerType]="markerTypeNew"></app-status-marker>
+            </div>
           </lux-panel-content>
         </lux-panel>
       }
