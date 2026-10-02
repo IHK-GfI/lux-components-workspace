@@ -298,6 +298,139 @@ describe('LuxMenuComponent', () => {
     discardPeriodicTasks();
   }));
 
+  describe('Attribut "luxLoading"', () => {
+    it('Sollte am erweiterten Button einen Spinner anzeigen und Klicks unterdruecken', fakeAsync(() => {
+      const clickedSpy = spyOn(component, 'clicked');
+      const notAllowedSpy = spyOn(component, 'clickNotAllowed');
+      component.generateItems(1);
+      component.items[0].loading = true;
+      updateExtendedMenuItems();
+
+      const button = fixture.debugElement.query(By.css('lux-button.lux-menu-item:not([style*=none]) button'));
+      expect(button.nativeElement.querySelector('lux-progress')).not.toBeNull();
+      expect(button.nativeElement.getAttribute('aria-disabled')).toBe('true');
+      button.nativeElement.click();
+      LuxTestHelper.wait(fixture);
+
+      expect(clickedSpy).not.toHaveBeenCalled();
+      expect(notAllowedSpy).toHaveBeenCalledTimes(1);
+
+      component.items[0].loading = false;
+      LuxTestHelper.wait(fixture);
+      expect(button.nativeElement.querySelector('lux-progress')).toBeNull();
+      expect(button.nativeElement.getAttribute('aria-disabled')).toBeNull();
+    }));
+
+    it('Sollte im Panel waehrend des Ladens aria-disabled setzen und Klicks unterdruecken', fakeAsync(() => {
+      const clickedSpy = spyOn(component, 'clicked');
+      const notAllowedSpy = spyOn(component, 'clickNotAllowed');
+      component.generateItems(1);
+      component.displayExtended = false;
+      LuxTestHelper.wait(fixture);
+
+      menuComponent.menuTriggerElRef!.nativeElement.click();
+      LuxTestHelper.wait(fixture);
+
+      let button = overlayContainer.getContainerElement().querySelector('button.lux-menu-item') as HTMLButtonElement;
+      expect(button.getAttribute('aria-disabled')).toBeNull();
+      button.click();
+      LuxTestHelper.wait(fixture);
+      expect(clickedSpy).toHaveBeenCalledTimes(1);
+
+      component.items[0].loading = true;
+      LuxTestHelper.wait(fixture);
+      menuComponent.menuTriggerElRef!.nativeElement.click();
+      LuxTestHelper.wait(fixture);
+
+      button = overlayContainer.getContainerElement().querySelector('button.lux-menu-item') as HTMLButtonElement;
+      expect(button.getAttribute('aria-disabled')).toBe('true');
+      expect(button.disabled).toBeFalse();
+      expect(button.querySelector('lux-progress')).not.toBeNull();
+      button.click();
+      LuxTestHelper.wait(fixture);
+      expect(clickedSpy).toHaveBeenCalledTimes(1);
+      expect(notAllowedSpy).toHaveBeenCalledTimes(1);
+
+      flush();
+      discardPeriodicTasks();
+    }));
+
+    it('Sollte ein ladendes Panel-Item fokussierbar halten und beim Ende des Ladens den Fokus behalten', fakeAsync(() => {
+      component.generateItems(1);
+      component.displayExtended = false;
+      component.items[0].loading = true;
+      LuxTestHelper.wait(fixture);
+
+      menuComponent.menuTriggerElRef!.nativeElement.click();
+      LuxTestHelper.wait(fixture);
+
+      const button = overlayContainer.getContainerElement().querySelector('button.lux-menu-item') as HTMLButtonElement;
+      expect(button.disabled).toBeFalse();
+      expect(button.getAttribute('aria-disabled')).toBe('true');
+      button.focus();
+      expect(document.activeElement).toBe(button);
+
+      component.items[0].loading = false;
+      LuxTestHelper.wait(fixture);
+
+      expect(overlayContainer.getContainerElement().querySelector('button.lux-menu-item')).toBe(button);
+      expect(button.getAttribute('aria-disabled')).toBeNull();
+      expect(document.activeElement).toBe(button);
+
+      flush();
+      discardPeriodicTasks();
+    }));
+
+    it('Sollte einen ladenden erweiterten Button fokussierbar halten und beim Ende des Ladens den Fokus behalten', fakeAsync(() => {
+      component.generateItems(1);
+      component.displayExtended = true;
+      component.items[0].loading = true;
+      updateExtendedMenuItems();
+
+      const button = fixture.debugElement.query(By.css('lux-button.lux-menu-item:not([style*=none]) button'))
+        .nativeElement as HTMLButtonElement;
+      expect(button.disabled).toBeFalse();
+      expect(button.getAttribute('aria-disabled')).toBe('true');
+      button.focus();
+      expect(document.activeElement).toBe(button);
+
+      component.items[0].loading = false;
+      LuxTestHelper.wait(fixture);
+
+      expect(fixture.debugElement.query(By.css('lux-button.lux-menu-item:not([style*=none]) button')).nativeElement).toBe(button);
+      expect(button.getAttribute('aria-disabled')).toBeNull();
+      expect(document.activeElement).toBe(button);
+    }));
+
+    for (const large of [false, true]) {
+      it(`Sollte im ${large ? 'Large-' : 'Sektions-'}Panel das Icon durch einen Spinner ersetzen`, fakeAsync(() => {
+        component.generateItems(1);
+        component.displayExtended = false;
+        component.showSections = true;
+        component.largePanel = large;
+        component.items[0].iconName = 'lux-interface-setting-menu-1';
+        component.items[0].loading = true;
+        LuxTestHelper.wait(fixture);
+
+        menuComponent.menuTriggerElRef!.nativeElement.click();
+        LuxTestHelper.wait(fixture);
+
+        const button = overlayContainer.getContainerElement().querySelector('button.lux-menu-item') as HTMLButtonElement;
+        expect(button.querySelector('lux-progress')).not.toBeNull();
+        expect(button.querySelector('lux-icon')).toBeNull();
+        expect(button.getAttribute('aria-disabled')).toBe('true');
+
+        component.items[0].loading = false;
+        LuxTestHelper.wait(fixture);
+        expect(button.querySelector('lux-progress')).toBeNull();
+        expect(button.querySelector('lux-icon')).not.toBeNull();
+
+        flush();
+        discardPeriodicTasks();
+      }));
+    }
+  });
+
   describe('Attribut "luxDisabledAria"', () => {
     it('Sollte sichtbare Buttons als aria-disabled markieren (kein natives disabled)', fakeAsync(() => {
       // Vorbedingungen prüfen
@@ -476,6 +609,8 @@ describe('LuxMenuComponent', () => {
     [luxDisplayExtended]="displayExtended"
     [luxMaximumExtended]="maximumExtended"
     [luxClassName]="className"
+    [luxShowSections]="showSections"
+    [luxMenuPanelLarge]="largePanel"
     (luxMenuClosed)="closed()"
   >
     @for (item of items; track item.label) {
@@ -487,11 +622,13 @@ describe('LuxMenuComponent', () => {
         [luxAlwaysVisible]="item.alwaysVisible"
         [luxDisabled]="item.disabled"
         [luxDisabledAria]="item.disabledAria"
+        [luxLoading]="item.loading"
         [luxHidden]="item.hidden"
         [luxRaised]="item.raised"
         [luxColor]="item.color"
         (luxClicked)="clicked()"
         (luxClickNotAllowed)="clickNotAllowed()"
+        #menuSection
       >
       </lux-menu-item>
     }
@@ -508,6 +645,8 @@ class MockComponent {
   displayExtended = true;
   maximumExtended = 5;
   className = '';
+  showSections = false;
+  largePanel = false;
   showMockTrigger = false;
 
   items: {
@@ -519,6 +658,7 @@ class MockComponent {
     alwaysVisible: boolean;
     disabled: boolean;
     disabledAria: boolean;
+    loading: boolean;
     hidden: boolean;
     raised?: boolean;
     color: LuxThemePalette;
@@ -544,6 +684,7 @@ class MockComponent {
         alwaysVisible: false,
         disabled: false,
         disabledAria: false,
+        loading: false,
         hidden: false,
         color: 'primary'
       });
