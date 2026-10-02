@@ -221,7 +221,7 @@ s3 -- Event: luxStepperFinished --> ende
 | Name               | Typ                             | Beschreibung                                                    |
 | ------------------ | ------------------------------- | --------------------------------------------------------------- |
 | label              | string                          | Die Bezeichnung des Buttons.                                    |
-| color              | Siehe [lux-button](lux‐button). | Siehe [lux-button](lux‐button).                                 |
+| color              | Siehe [lux-button](lux‐button-v21). | Siehe [lux-button](lux‐button-v21).                                 |
 | iconName           | string                          | Der Iconname.                                                   |
 | iconShowRight      | boolean                         | Gibt an, ob das Icon rechts von der Bezeichnung angezeigt wird. |
 | alignIconWithLabel | boolean                         | Gibt an, ob das Icon anhand der Bezeichnung ausgerichtet wird.  |

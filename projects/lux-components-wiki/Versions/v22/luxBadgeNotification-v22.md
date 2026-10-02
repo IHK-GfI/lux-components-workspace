@@ -1,0 +1,48 @@
+# luxBadgeNotification
+
+![Beispielbild LUX-Badge-Notification](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v22/luxBadgeNotification-v22-img.png)
+
+- [luxBadgeNotification](#luxbadgenotification)
+  - [Overview / API](#overview--api)
+    - [Allgemein](#allgemein)
+    - [@Input](#input)
+  - [Beispiel](#beispiel)
+
+## Overview / API
+
+### Allgemein
+
+| Name     | Beschreibung                                 |
+| -------- | -------------------------------------------- |
+| selector | lux-badge-notification, luxBadgeNotification |
+
+### @Input
+
+| Name                 | Typ                          | Beschreibung                                                                                                                                                                                                                                                                                     |
+| -------------------- | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| luxBadgeNotification | string \| number             | Enthält die Bezeichnung, die in der Notification angezeigt werden soll. Diese sollte nicht mehr als 3 Zeichen beinhalten. Default: ''.                                                                                                                                                           |
+| luxBadgeColor        | LuxBadgeNotificationColor    | Stellt die Farbe der Notification ein. Default: 'default'.                                                                                                                                                                                                                                       |
+| luxBadgeSize         | LuxBadgeNotificationSize     | Stellt die Größe der Badge und ihrer Font ein. Default: 'medium'.                                                                                                                                                                                                                                |
+| luxBadgePosition     | LuxBadgeNotificationPosition | Bestimmt an welcher Stelle die Notification dargestellt werden soll. Default: 'above after'.                                                                                                                                                                                                     |
+| luxBadgeDisabled     | boolean                      | Dieses Flag deaktiviert die Notification.                                                                                                                                                                                                                                                        |
+| luxBadgeHidden       | boolean                      | Dieses Flag blendet die Notification aus.                                                                                                                                                                                                                                                        |
+| luxBadgeOverlap      | boolean                      | Dieses Flag legt fest, ob die Notification neben oder über dem Host-Element liegen soll. Default: true.                                                                                                                                                                                          |
+| luxBadgeCap          | number                       | Diese Property bestimmt, ob der eingegebene Wert ab einem bestimmten Zahlenwert mithilfe eines "+"-Zeichens abgekürzt werden soll. Voraussetzung dafür ist, dass luxBadgeNotification in eine Zahl konvertiert werden kann. Bsp.: luxBadgeCap = 10, luxBadgeNotification = "11", Ausgabe = "10+" |
+| luxBadgeNoBorder     | boolean                      | Diese Property bestimmt, ob die Border transparent dargestellt wird.                                                                                                                                                                                                                             |
+
+## Beispiel
+
+![Beispielbild 01](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v22/luxBadgeNotification-v22-img-01.png)
+
+Html
+
+```html
+<span
+  [luxBadgeOverlap]="false"
+  luxBadgeNotification="1"
+  luxBadgeColor="warn"
+  luxBadgeSize="large"
+>
+  Span
+</span>
+```
