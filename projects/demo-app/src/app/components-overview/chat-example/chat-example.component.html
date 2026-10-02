@@ -3,24 +3,24 @@
   exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/lux%E2%80%90chat-v21"
 >
   <example-base-content>
-    @if (!showChatPopup) {
+    @if (!showChatPopup()) {
       <div style="height: calc(100vh - 270px)">
-        <lux-chat [luxChatData]="chatData" [luxChatUserName]="exampleUsername" (luxChatOutput)="onMessageEntered($event)">
-          @if (showCustomHeader) {
+        <lux-chat [luxChatData]="chatData" [luxChatUserName]="exampleUsername()" (luxChatOutput)="onMessageEntered($event)">
+          @if (showCustomHeader()) {
             <lux-chat-header>
-              <ng-template>Custom Header {{ chatTitle }} </ng-template>
+              <ng-template>Custom Header {{ chatData.title }} </ng-template>
             </lux-chat-header>
           }
         </lux-chat>
       </div>
     }
 
-    @if (showChatPopup) {
+    @if (showChatPopup()) {
       <lux-chat-popup>
-        <lux-chat [luxChatData]="chatData" [luxChatUserName]="exampleUsername" (luxChatOutput)="onMessageEntered($event)">
-          @if (showCustomHeader) {
+        <lux-chat [luxChatData]="chatData" [luxChatUserName]="exampleUsername()" (luxChatOutput)="onMessageEntered($event)">
+          @if (showCustomHeader()) {
             <lux-chat-header>
-              <ng-template>Custom Header {{ chatTitle }} </ng-template>
+              <ng-template>Custom Header {{ chatData.title }} </ng-template>
             </lux-chat-header>
           }
         </lux-chat>
@@ -29,10 +29,10 @@
   </example-base-content>
 
   <example-base-simple-options>
-    <lux-input-ac luxLabel="Chat Titel" [(luxValue)]="chatTitle"></lux-input-ac>
-    <lux-input-ac luxLabel="Chat Username" [(luxValue)]="exampleUsername"></lux-input-ac>
+    <lux-input luxLabel="Chat Titel" [value]="chatData.title" (valueChange)="onChatTitleChange($event)" />
+    <lux-input luxLabel="Chat Username" [(value)]="exampleUsername" />
 
-    <lux-toggle-ac luxLabel="Zeige Chat in LuxChatPopup Komponente" [(luxChecked)]="showChatPopup"></lux-toggle-ac>
-    <lux-toggle-ac luxLabel="Custom Chat Header anzeigen" [(luxChecked)]="showCustomHeader"></lux-toggle-ac>
+    <lux-toggle luxLabel="Zeige Chat in LuxChatPopup Komponente" [(checked)]="showChatPopup" />
+    <lux-toggle luxLabel="Custom Chat Header anzeigen" [(checked)]="showCustomHeader" />
   </example-base-simple-options>
 </example-base-structure>

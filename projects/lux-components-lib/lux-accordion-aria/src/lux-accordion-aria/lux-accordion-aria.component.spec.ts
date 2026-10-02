@@ -1,17 +1,17 @@
-import { describe, it, beforeAll, beforeEach, expect } from 'vitest';
+import { beforeAll, beforeEach, describe, expect, it } from 'vitest';
 // noinspection DuplicatedCode
 
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
-import { LuxAccordionAriaComponent } from './lux-accordion-aria.component';
-import { LuxPanelAriaComponent } from '../lux-panel-aria/lux-panel-aria.component';
-import { LuxPanelAriaHeaderTitleComponent } from '../lux-panel-aria/lux-panel-aria-subcomponents/lux-panel-aria-header-title.component';
-import { LuxPanelAriaHeaderCustomComponent } from '../lux-panel-aria/lux-panel-aria-subcomponents/lux-panel-aria-header-custom.component';
-import { LuxPanelAriaContentComponent } from '../lux-panel-aria/lux-panel-aria-subcomponents/lux-panel-aria-content.component';
-import { LuxTestHelper } from '../../../test-utils/src/test-utils/lux-test-helper';
 import { LuxA11yTestHelper } from '../../../test-utils/src/test-utils/lux-a11y-test-helper';
+import { LuxTestHelper } from '../../../test-utils/src/test-utils/lux-test-helper';
+import { LuxPanelAriaContentComponent } from '../lux-panel-aria/lux-panel-aria-subcomponents/lux-panel-aria-content.component';
+import { LuxPanelAriaHeaderCustomComponent } from '../lux-panel-aria/lux-panel-aria-subcomponents/lux-panel-aria-header-custom.component';
+import { LuxPanelAriaHeaderTitleComponent } from '../lux-panel-aria/lux-panel-aria-subcomponents/lux-panel-aria-header-title.component';
+import { LuxPanelAriaComponent } from '../lux-panel-aria/lux-panel-aria.component';
+import { LuxAccordionAriaComponent } from './lux-accordion-aria.component';
 
 describe('LuxAccordionAriaComponent', () => {
   describe('Basis-Funktionalität', () => {
@@ -48,7 +48,7 @@ describe('LuxAccordionAriaComponent', () => {
         expect(headerButton.query(By.css('.lux-expansion-indicator-after'))).toBeTruthy();
       });
 
-      testComponent.togglePosition = 'before';
+      testComponent.togglePosition.set('before');
       await LuxTestHelper.wait(fixture);
 
       fixture.debugElement.queryAll(By.css('.lux-expansion-panel-header-toggle')).forEach((headerButton) => {
@@ -59,13 +59,13 @@ describe('LuxAccordionAriaComponent', () => {
     });
 
     it('sollte die luxMulti-Eigenschaft respektieren', async () => {
-      testComponent.multi = false;
+      testComponent.multi.set(false);
       await LuxTestHelper.wait(fixture);
 
       const accordionComponent = fixture.debugElement.query(By.directive(LuxAccordionAriaComponent)).componentInstance;
       expect(accordionComponent.luxMulti()).toBe(false);
 
-      testComponent.multi = true;
+      testComponent.multi.set(true);
       fixture.detectChanges();
       await LuxTestHelper.wait(fixture);
       fixture.detectChanges();
@@ -116,7 +116,7 @@ describe('LuxAccordionAriaComponent', () => {
       const accordionComponent = fixture.debugElement.query(By.directive(LuxAccordionAriaComponent)).componentInstance;
       expect(accordionComponent.luxDisabled()).toBeFalsy();
 
-      testComponent.disabled = true;
+      testComponent.disabled.set(true);
       await LuxTestHelper.wait(fixture);
 
       expect(accordionComponent.luxDisabled()).toBe(true);
@@ -125,19 +125,19 @@ describe('LuxAccordionAriaComponent', () => {
     it('sollte Farben-CSS-Klassen anwenden', async () => {
       const accordion = fixture.debugElement.query(By.css('lux-accordion-aria > div'));
 
-      testComponent.color = 'primary';
+      testComponent.color.set('primary');
       await LuxTestHelper.wait(fixture);
       expect(accordion.nativeElement.classList.contains('lux-primary')).toBe(true);
 
-      testComponent.color = 'accent';
+      testComponent.color.set('accent');
       await LuxTestHelper.wait(fixture);
       expect(accordion.nativeElement.classList.contains('lux-accent')).toBe(true);
 
-      testComponent.color = 'warn';
+      testComponent.color.set('warn');
       await LuxTestHelper.wait(fixture);
       expect(accordion.nativeElement.classList.contains('lux-warn')).toBe(true);
 
-      testComponent.color = 'neutral';
+      testComponent.color.set('neutral');
       await LuxTestHelper.wait(fixture);
       expect(accordion.nativeElement.classList.contains('lux-neutral')).toBe(true);
     });
@@ -148,7 +148,7 @@ describe('LuxAccordionAriaComponent', () => {
       expect(accordion.nativeElement.classList.contains('lux-default')).toBe(true);
       expect(accordion.nativeElement.classList.contains('lux-flat')).toBe(false);
 
-      testComponent.mode = 'flat';
+      testComponent.mode.set('flat');
       await LuxTestHelper.wait(fixture);
 
       expect(accordion.nativeElement.classList.contains('lux-default')).toBe(false);
@@ -203,7 +203,7 @@ describe('LuxAccordionAriaComponent', () => {
     });
 
     it('Accordion (disabled) hat keine Barrierefreiheitsverletzungen', async () => {
-      testComponent.disabled = true;
+      testComponent.disabled.set(true);
       await LuxTestHelper.wait(fixture);
 
       await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
@@ -215,11 +215,11 @@ describe('LuxAccordionAriaComponent', () => {
   selector: 'lux-test-accordion-aria',
   template: `
     <lux-accordion-aria
-      [luxMulti]="multi"
-      [luxMode]="mode"
-      [luxDisabled]="disabled"
-      [luxColor]="color"
-      [luxTogglePosition]="togglePosition"
+      [luxMulti]="multi()"
+      [luxMode]="mode()"
+      [luxDisabled]="disabled()"
+      [luxColor]="color()"
+      [luxTogglePosition]="togglePosition()"
     >
       <lux-panel-aria>
         <lux-panel-aria-header-title luxTagId="test-panel-1"> Test Panel 1 </lux-panel-aria-header-title>
@@ -232,16 +232,15 @@ describe('LuxAccordionAriaComponent', () => {
     </lux-accordion-aria>
   `,
   standalone: true,
-  // eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection -- TODO: Test-Host der aus develop übernommenen Komponente, Umstellung auf OnPush folgt separat
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxAccordionAriaComponent, LuxPanelAriaComponent, LuxPanelAriaHeaderTitleComponent, LuxPanelAriaContentComponent]
 })
 class LuxAccordionAriaTestComponent {
-  multi = false;
-  mode: 'default' | 'flat' = 'default';
-  disabled = false;
-  color: 'primary' | 'accent' | 'warn' | 'neutral' | undefined = 'primary';
-  togglePosition: 'before' | 'after' = 'after';
+  multi = signal(false);
+  mode = signal<'default' | 'flat'>('default');
+  disabled = signal(false);
+  color = signal<'primary' | 'accent' | 'warn' | 'neutral' | undefined>('primary');
+  togglePosition = signal<'before' | 'after'>('after');
 }
 
 @Component({
@@ -254,8 +253,7 @@ class LuxAccordionAriaTestComponent {
     LuxPanelAriaHeaderCustomComponent,
     LuxPanelAriaContentComponent
   ],
-  // eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection -- TODO: Test-Host der aus develop übernommenen Komponente, Umstellung auf OnPush folgt separat
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <lux-accordion-aria [luxTogglePosition]="'after'">
       <lux-panel-aria>
@@ -272,8 +270,7 @@ class LuxAccordionAriaCustomHeaderTestComponent {}
   selector: 'lux-nested-accordion-aria-test',
   standalone: true,
   imports: [LuxAccordionAriaComponent, LuxPanelAriaComponent, LuxPanelAriaHeaderTitleComponent, LuxPanelAriaContentComponent],
-  // eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection -- TODO: Test-Host der aus develop übernommenen Komponente, Umstellung auf OnPush folgt separat
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <lux-accordion-aria>
       <lux-panel-aria>

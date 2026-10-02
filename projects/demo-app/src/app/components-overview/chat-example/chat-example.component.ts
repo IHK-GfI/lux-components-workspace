@@ -1,10 +1,9 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { ExampleBaseStructureComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-structure/example-base-structure.component';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { LuxInputComponent, LuxToggleComponent } from '@ihk-gfi/lux-components';
+import { LuxChatComponent, LuxChatData, LuxChatHeaderComponent, LuxChatPopupComponent } from '@ihk-gfi/lux-components/lux-chat';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
-import { LuxChatComponent, LuxChatData, LuxChatPopupComponent, LuxChatHeaderComponent } from '@ihk-gfi/lux-components/lux-chat';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
-import { LuxInputAcComponent, LuxToggleAcComponent } from '@ihk-gfi/lux-components';
-import { CommonModule } from '@angular/common';
+import { ExampleBaseStructureComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-structure/example-base-structure.component';
 
 const SECOND = 1000;
 const MINUTE = 60 * SECOND;
@@ -25,31 +24,20 @@ const endOfLastYear = startOfThisYear - DAY_IN_MILLIS;
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,
     ExampleBaseSimpleOptionsComponent,
-    LuxInputAcComponent,
-    LuxToggleAcComponent,
-    CommonModule,
-    LuxInputAcComponent
+    LuxInputComponent,
+    LuxToggleComponent
   ],
   templateUrl: './chat-example.component.html',
-  // eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection -- TODO: aus develop übernommen, Umstellung auf OnPush folgt separat
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './chat-example.component.scss'
 })
 export class ChatExampleComponent {
-  public exampleUsername = 'Nutzer C';
-  public showChatPopup = false;
-  public showCustomHeader = false;
-
-  public set chatTitle(chatTitle: string) {
-    this.chatData.title = chatTitle;
-  }
-
-  public get chatTitle(): string {
-    return this.chatData.title;
-  }
+  readonly exampleUsername = signal('Nutzer C');
+  readonly showChatPopup = signal(false);
+  readonly showCustomHeader = signal(false);
 
   // prettier-ignore
-  public chatData: LuxChatData = new LuxChatData("Neuer Chat", new Date(), [
+  readonly chatData: LuxChatData = new LuxChatData("Neuer Chat", new Date(), [
     {user: "Nutzer A", content: "Erster Eintrag!", time: new Date("2024-11-05T10:30:00Z"), metadata: {}},
     {user: "Nutzer B", content: "Hey, ich bin Nutzer B.", time: new Date("2024-11-05T10:32:00Z"), metadata: {}},
     {user: "Nutzer B", content: "Wenn ich innerhalb von 10 Minuten schreibe, dann wird die Zeitangabe zusammengefasst.", time: new Date("2024-11-05T10:34:00Z"), metadata: {}},
@@ -72,7 +60,12 @@ export class ChatExampleComponent {
     {user: "Nutzer B", content: "Schreib du doch auch mal was, damit Nutzer A weiß, wen ich meine.", time: new Date(nowTime - 6 * MINUTE), metadata: {}},
   ]);
 
-  public onMessageEntered(input: string) {
-    this.chatData.addMessage({ user: this.exampleUsername, content: input, time: new Date(), metadata: {} });
+  onChatTitleChange(title: string) {
+    // LuxChatData ist signalbasiert, die Zuweisung erreicht den Chat daher auch unter OnPush.
+    this.chatData.title = title;
+  }
+
+  onMessageEntered(input: string) {
+    this.chatData.addMessage({ user: this.exampleUsername(), content: input, time: new Date(), metadata: {} });
   }
 }

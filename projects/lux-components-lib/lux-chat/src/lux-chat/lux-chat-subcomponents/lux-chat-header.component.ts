@@ -1,12 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { AfterContentInit, Component, contentChild, TemplateRef, viewChild, ChangeDetectionStrategy } from '@angular/core';
+import { AfterContentInit, ChangeDetectionStrategy, Component, contentChild, TemplateRef, viewChild } from '@angular/core';
 import { LuxUtil } from '@ihk-gfi/lux-components';
 
 @Component({
   selector: 'lux-chat-header',
   imports: [CommonModule],
-  // eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection -- TODO: aus develop übernommen, Umstellung auf OnPush folgt separat
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template:
     '<ng-template let-item #core><ng-container *ngTemplateOutlet="entryTemplateRef() ?? null; context: { $implicit: item }"></ng-container></ng-template>'
 })

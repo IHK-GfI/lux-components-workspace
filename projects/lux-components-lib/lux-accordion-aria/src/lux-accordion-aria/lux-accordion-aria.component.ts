@@ -1,8 +1,7 @@
-import { NgClass } from '@angular/common';
 import { AccordionGroup } from '@angular/aria/accordion';
-import { Component, DestroyRef, OnDestroy, Signal, computed, contentChildren, inject, input, ChangeDetectionStrategy } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { ChangeDetectionStrategy, Component, DestroyRef, Signal, computed, contentChildren, inject, input } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
-import { Subject } from 'rxjs';
 import { LuxAccordionColor, LuxAccordionColors, LuxModeType } from '@ihk-gfi/lux-components';
 import { LuxPanelAriaHeaderCustomComponent } from '../lux-panel-aria/lux-panel-aria-subcomponents/lux-panel-aria-header-custom.component';
 import { LuxAccordionAriaBase, LuxAccordionAriaPanel, LuxAccordionAriaTogglePosition } from './lux-accordion-aria-base';
@@ -24,8 +23,7 @@ export type LuxAriaTogglePosition = LuxAccordionAriaTogglePosition;
   // 'disabled' is forwarded under the luxDisabled name so the group's own state stays the single source of truth
   hostDirectives: [{ directive: AccordionGroup, inputs: ['disabled: luxDisabled'] }],
   providers: [{ provide: LuxAccordionAriaBase, useExisting: LuxAccordionAriaComponent }],
-  // eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection -- TODO: aus develop übernommen, Umstellung auf OnPush folgt separat
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'lux-flex lux-flex-auto',
     '[class.lux-default]': "luxMode() === 'default'",

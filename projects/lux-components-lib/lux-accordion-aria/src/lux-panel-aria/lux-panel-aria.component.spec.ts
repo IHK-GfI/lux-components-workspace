@@ -1,19 +1,22 @@
-import { describe, it, beforeAll, beforeEach, expect } from 'vitest';
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { LuxPanelAriaComponent } from './lux-panel-aria.component';
-import { LuxPanelAriaHeaderTitleComponent } from './lux-panel-aria-subcomponents/lux-panel-aria-header-title.component';
+import { LuxMediaQueryObserverService } from '@ihk-gfi/lux-components';
+import { beforeAll, beforeEach, describe, expect, it } from 'vitest';
+import { LuxA11yTestHelper } from '../../../test-utils/src/test-utils/lux-a11y-test-helper';
+import { LuxTestHelper } from '../../../test-utils/src/test-utils/lux-test-helper';
+import { LuxAccordionAriaComponent } from '../lux-accordion-aria/lux-accordion-aria.component';
 import { LuxPanelAriaContentComponent } from './lux-panel-aria-subcomponents/lux-panel-aria-content.component';
 import { LuxPanelAriaHeaderCustomComponent } from './lux-panel-aria-subcomponents/lux-panel-aria-header-custom.component';
-import { LuxA11yTestHelper } from '../../../test-utils/src/test-utils/lux-a11y-test-helper';
-import { LuxAccordionAriaComponent } from '../lux-accordion-aria/lux-accordion-aria.component';
 import { LuxPanelAriaHeaderDescriptionComponent } from './lux-panel-aria-subcomponents/lux-panel-aria-header-description.component';
-import { LuxTestHelper } from '../../../test-utils/src/test-utils/lux-test-helper';
+import { LuxPanelAriaHeaderTitleComponent } from './lux-panel-aria-subcomponents/lux-panel-aria-header-title.component';
+import { LuxPanelAriaComponent } from './lux-panel-aria.component';
+import { MockMediaObserverService } from '../../../src/lib/lux-util/testing/mock-media-observer.service';
 
 describe('LuxPanelAriaComponent', () => {
   let fixture: ComponentFixture<LuxPanelAriaTestComponent>;
   let testComponent: LuxPanelAriaTestComponent;
+  let mediaQueryService: MockMediaObserverService;
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
@@ -23,12 +26,14 @@ describe('LuxPanelAriaComponent', () => {
         LuxPanelAriaContentComponent,
         LuxPanelAriaHeaderCustomComponent,
         LuxPanelAriaTestComponent
-      ]
+      ],
+      providers: [{ provide: LuxMediaQueryObserverService, useClass: MockMediaObserverService }]
     });
 
     fixture = TestBed.createComponent(LuxPanelAriaTestComponent);
     fixture.detectChanges();
     testComponent = fixture.componentInstance;
+    mediaQueryService = TestBed.inject(LuxMediaQueryObserverService) as unknown as MockMediaObserverService;
     await LuxTestHelper.wait(fixture);
     fixture.detectChanges();
   });
@@ -109,7 +114,7 @@ describe('LuxPanelAriaComponent', () => {
   });
 
   it('sollte Toggle-Position before rendern', async () => {
-    testComponent.togglePosition = 'before';
+    testComponent.togglePosition.set('before');
     fixture.detectChanges();
     await LuxTestHelper.wait(fixture);
 
@@ -118,7 +123,7 @@ describe('LuxPanelAriaComponent', () => {
   });
 
   it('sollte den Indikator bei luxHideToggle ausblenden', async () => {
-    testComponent.hideToggle = true;
+    testComponent.hideToggle.set(true);
     fixture.detectChanges();
     await LuxTestHelper.wait(fixture);
 
@@ -127,7 +132,7 @@ describe('LuxPanelAriaComponent', () => {
   });
 
   it('sollte den Indikator bei einem deaktivierten Panel ausblenden', async () => {
-    testComponent.disabled = true;
+    testComponent.disabled.set(true);
     fixture.detectChanges();
     await LuxTestHelper.wait(fixture);
 
@@ -136,7 +141,7 @@ describe('LuxPanelAriaComponent', () => {
   });
 
   it('sollte bei luxDynamicHeaderHeight keine feste Header-Hoehe setzen', async () => {
-    testComponent.dynamicHeaderHeight = true;
+    testComponent.dynamicHeaderHeight.set(true);
     fixture.detectChanges();
     await LuxTestHelper.wait(fixture);
 
@@ -145,8 +150,8 @@ describe('LuxPanelAriaComponent', () => {
   });
 
   it('sollte den Header bei luxStickyHeader als sticky markieren', async () => {
-    testComponent.stickyHeader = true;
-    testComponent.stickyHeaderOffset = '48px';
+    testComponent.stickyHeader.set(true);
+    testComponent.stickyHeaderOffset.set('48px');
     fixture.detectChanges();
     await LuxTestHelper.wait(fixture);
 
@@ -156,8 +161,8 @@ describe('LuxPanelAriaComponent', () => {
   });
 
   it('sollte ein sticky Panel beim Scrollen geöffnet lassen', async () => {
-    testComponent.stickyHeader = true;
-    testComponent.expanded = true;
+    testComponent.stickyHeader.set(true);
+    testComponent.expanded.set(true);
     fixture.detectChanges();
     await LuxTestHelper.wait(fixture);
     fixture.detectChanges();
@@ -181,7 +186,7 @@ describe('LuxPanelAriaComponent', () => {
   });
 
   it('sollte bei luxTruncated Titel und Beschreibung abschneiden', async () => {
-    testComponent.truncated = true;
+    testComponent.truncated.set(true);
     fixture.detectChanges();
     await LuxTestHelper.wait(fixture);
 
@@ -200,7 +205,7 @@ describe('LuxPanelAriaComponent', () => {
   });
 
   it('sollte deaktiviertes Panel nicht öffnen', async () => {
-    testComponent.disabled = true;
+    testComponent.disabled.set(true);
     fixture.detectChanges();
     await LuxTestHelper.wait(fixture);
 
@@ -215,7 +220,7 @@ describe('LuxPanelAriaComponent', () => {
   });
 
   it('sollte luxClickNotAllowed bei Klick auf ein deaktiviertes Panel emittieren', async () => {
-    testComponent.disabled = true;
+    testComponent.disabled.set(true);
     fixture.detectChanges();
     await LuxTestHelper.wait(fixture);
 
@@ -229,7 +234,7 @@ describe('LuxPanelAriaComponent', () => {
   });
 
   it('sollte luxClickNotAllowed bei Tastatureingabe auf ein deaktiviertes Panel emittieren', async () => {
-    testComponent.disabled = true;
+    testComponent.disabled.set(true);
     fixture.detectChanges();
     await LuxTestHelper.wait(fixture);
 
@@ -256,13 +261,13 @@ describe('LuxPanelAriaComponent', () => {
     const actions = fixture.debugElement.query(By.css('.lux-expansion-panel-header-custom'));
     expect(actions.nativeElement.style.display).toBe('');
 
-    testComponent.disabled = true;
+    testComponent.disabled.set(true);
     fixture.detectChanges();
     await LuxTestHelper.wait(fixture);
 
     expect(actions.nativeElement.style.display).toBe('none');
 
-    testComponent.disabled = false;
+    testComponent.disabled.set(false);
     fixture.detectChanges();
     await LuxTestHelper.wait(fixture);
 
@@ -273,13 +278,26 @@ describe('LuxPanelAriaComponent', () => {
     const panel = fixture.debugElement.query(By.css('.lux-panel'));
     const panelComponent = panel.componentInstance as LuxPanelAriaComponent;
 
-    testComponent.secondRowForMobile = true;
-    panelComponent.mobile = false;
+    testComponent.secondRowForMobile.set(true);
+    panelComponent.mobile.set(false);
     fixture.detectChanges();
     expect(panel.nativeElement.classList).not.toContain('lux-panel-second-row-for-mobile');
 
-    panelComponent.mobile = true;
+    panelComponent.mobile.set(true);
     fixture.detectChanges();
+    expect(panel.nativeElement.classList).toContain('lux-panel-second-row-for-mobile');
+  });
+
+  it('sollte die Mobile-Klasse nach einer Media-Query-Aenderung von aussen aktualisieren (OnPush-Regression)', async () => {
+    const panel = fixture.debugElement.query(By.css('.lux-panel'));
+    testComponent.secondRowForMobile.set(true);
+    fixture.detectChanges();
+    expect(panel.nativeElement.classList).not.toContain('lux-panel-mobile');
+
+    mediaQueryService.emitMediaQuery('xs');
+    await LuxTestHelper.wait(fixture);
+
+    expect(panel.nativeElement.classList).toContain('lux-panel-mobile');
     expect(panel.nativeElement.classList).toContain('lux-panel-second-row-for-mobile');
   });
 
@@ -355,7 +373,7 @@ describe('LuxPanelAriaComponent A11y', () => {
   });
 
   it('Panel (disabled) hat keine Barrierefreiheitsverletzungen', async () => {
-    testComponent.disabled = true;
+    testComponent.disabled.set(true);
     fixture.detectChanges();
     await LuxTestHelper.wait(fixture);
 
@@ -374,24 +392,25 @@ describe('LuxPanelAriaComponent A11y', () => {
     LuxPanelAriaHeaderCustomComponent,
     LuxPanelAriaContentComponent
   ],
-  // eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection -- TODO: Test-Host der aus develop übernommenen Komponente, Umstellung auf OnPush folgt separat
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <lux-accordion-aria luxTogglePosition="before">
       <lux-panel-aria
-        [luxExpanded]="expanded"
-        [luxDisabled]="disabled"
-        [luxHideToggle]="hideToggle"
-        [luxDynamicHeaderHeight]="dynamicHeaderHeight"
-        [luxSecondRowForMobile]="secondRowForMobile"
-        [luxTogglePosition]="togglePosition"
-        [luxStickyHeader]="stickyHeader"
-        [luxStickyHeaderOffset]="stickyHeaderOffset"
+        [luxExpanded]="expanded()"
+        [luxDisabled]="disabled()"
+        [luxHideToggle]="hideToggle()"
+        [luxDynamicHeaderHeight]="dynamicHeaderHeight()"
+        [luxSecondRowForMobile]="secondRowForMobile()"
+        [luxTogglePosition]="togglePosition()"
+        [luxStickyHeader]="stickyHeader()"
+        [luxStickyHeaderOffset]="stickyHeaderOffset()"
         (luxExpandedChange)="expandedEvents.push($event)"
         (luxClickNotAllowed)="clickNotAllowedEvents.push($event)"
       >
-        <lux-panel-aria-header-title [luxTruncated]="truncated" [luxTruncatedTooltip]="truncatedTooltip">Titel</lux-panel-aria-header-title>
-        <lux-panel-aria-header-description [luxTruncated]="truncated" [luxTruncatedTooltip]="truncatedTooltip"
+        <lux-panel-aria-header-title [luxTruncated]="truncated()" [luxTruncatedTooltip]="truncatedTooltip"
+          >Titel</lux-panel-aria-header-title
+        >
+        <lux-panel-aria-header-description [luxTruncated]="truncated()" [luxTruncatedTooltip]="truncatedTooltip"
           >Beschreibung</lux-panel-aria-header-description
         >
         <lux-panel-aria-header-custom>
@@ -403,16 +422,16 @@ describe('LuxPanelAriaComponent A11y', () => {
   `
 })
 class LuxPanelAriaTestComponent {
-  expanded = false;
-  disabled = false;
-  hideToggle = false;
-  dynamicHeaderHeight = false;
-  secondRowForMobile = false;
-  stickyHeader = false;
-  stickyHeaderOffset?: string;
-  truncated = false;
+  expanded = signal(false);
+  disabled = signal(false);
+  hideToggle = signal(false);
+  dynamicHeaderHeight = signal(false);
+  secondRowForMobile = signal(false);
+  stickyHeader = signal(false);
+  stickyHeaderOffset = signal<string | undefined>(undefined);
+  truncated = signal(false);
   truncatedTooltip = 'Tooltip';
-  togglePosition: 'before' | 'after' = 'after';
+  togglePosition = signal<'before' | 'after'>('after');
   expandedEvents: boolean[] = [];
   clickNotAllowedEvents: Event[] = [];
 }
@@ -421,8 +440,7 @@ class LuxPanelAriaTestComponent {
   selector: 'lux-panel-aria-plain-content-test',
   standalone: true,
   imports: [LuxAccordionAriaComponent, LuxPanelAriaComponent, LuxPanelAriaHeaderTitleComponent],
-  // eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection -- TODO: Test-Host der aus develop übernommenen Komponente, Umstellung auf OnPush folgt separat
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <lux-accordion-aria>
       <lux-panel-aria>
@@ -438,8 +456,7 @@ class LuxPanelAriaPlainContentTestComponent {}
   selector: 'lux-panel-aria-standalone-test',
   standalone: true,
   imports: [LuxPanelAriaComponent, LuxPanelAriaHeaderTitleComponent],
-  // eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection -- TODO: Test-Host der aus develop übernommenen Komponente, Umstellung auf OnPush folgt separat
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <lux-panel-aria luxColor="warn">
       <lux-panel-aria-header-title>Titel</lux-panel-aria-header-title>
@@ -458,8 +475,7 @@ class LuxPanelAriaStandaloneTestComponent {}
     LuxPanelAriaHeaderCustomComponent,
     LuxPanelAriaContentComponent
   ],
-  // eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection -- TODO: Test-Host der aus develop übernommenen Komponente, Umstellung auf OnPush folgt separat
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <lux-accordion-aria>
       <lux-panel-aria [luxTogglePosition]="'after'">

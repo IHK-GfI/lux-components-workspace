@@ -1,19 +1,18 @@
-import { describe, it, beforeAll, beforeEach, afterEach, expect, vi } from 'vitest';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { DOWN_ARROW, END, ESCAPE, HOME, SPACE, UP_ARROW } from '@angular/cdk/keycodes';
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
+import { LuxButtonComponent, LuxInfiniteScrollDirective } from '@ihk-gfi/lux-components';
 import { LuxPageEvent } from '@ihk-gfi/lux-components/lux-paginator';
 import { LuxA11yTestHelper, LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
+import { TranslocoService } from '@jsverse/transloco';
 import { Observable, of, throwError } from 'rxjs';
 import { delay } from 'rxjs/operators';
-import { LuxButtonComponent, LuxInfiniteScrollDirective } from '@ihk-gfi/lux-components';
-import { TranslocoService } from '@jsverse/transloco';
+import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { provideLuxTranslocoTesting } from '../../../src/testing/transloco-test.provider';
-import { LuxListSelectComponent } from './lux-list-select.component';
 import {
   ILuxListSelectHttpDao,
   ILuxListSelectHttpDaoConf,
@@ -21,6 +20,7 @@ import {
 } from './lux-list-select-model/lux-list-select-http-dao.interface';
 import { LuxListSelectActionPosition, LuxListSelectMode, LuxListSelectSize } from './lux-list-select-model/lux-list-select-types';
 import { LuxListSelectActionDirective, LuxListSelectContentDirective } from './lux-list-select-templates.directive';
+import { LuxListSelectComponent } from './lux-list-select.component';
 
 interface TestAdresse {
   title: string;
@@ -118,7 +118,7 @@ describe('LuxListSelectComponent', () => {
       expect(fixture.debugElement.queryAll(By.css('.lux-list-select-card mat-radio-button')).length).toBe(0);
 
       // Änderungen durchführen
-      host.mode = 'single';
+      host.mode.set('single');
       fixture.detectChanges();
 
       // Nachbedingungen prüfen
@@ -130,7 +130,7 @@ describe('LuxListSelectComponent', () => {
   describe('Selektion', () => {
     it('Sollte im Multi-Modus mehrere Items selektieren und wieder deselektieren', () => {
       // Vorbedingungen testen
-      expect(host.selected).toEqual([]);
+      expect(host.selected()).toEqual([]);
 
       // Änderungen durchführen
       listSelect.toggleItem(TEST_ITEMS[0]);
@@ -138,16 +138,16 @@ describe('LuxListSelectComponent', () => {
       fixture.detectChanges();
 
       // Nachbedingungen prüfen
-      expect(host.selected).toEqual([TEST_ITEMS[0], TEST_ITEMS[1]]);
+      expect(host.selected()).toEqual([TEST_ITEMS[0], TEST_ITEMS[1]]);
 
       listSelect.toggleItem(TEST_ITEMS[0]);
       fixture.detectChanges();
-      expect(host.selected).toEqual([TEST_ITEMS[1]]);
+      expect(host.selected()).toEqual([TEST_ITEMS[1]]);
     });
 
     it('Sollte im Single-Modus immer nur ein Item selektieren', () => {
       // Vorbedingungen testen
-      host.mode = 'single';
+      host.mode.set('single');
       fixture.detectChanges();
 
       // Änderungen durchführen
@@ -156,7 +156,7 @@ describe('LuxListSelectComponent', () => {
       fixture.detectChanges();
 
       // Nachbedingungen prüfen
-      expect(host.selected).toEqual([TEST_ITEMS[1]]);
+      expect(host.selected()).toEqual([TEST_ITEMS[1]]);
     });
 
     it('Sollte ein Klick auf die Karte das Item selektieren', () => {
@@ -166,7 +166,7 @@ describe('LuxListSelectComponent', () => {
       fixture.detectChanges();
 
       // Nachbedingungen prüfen
-      expect(host.selected).toEqual([TEST_ITEMS[1]]);
+      expect(host.selected()).toEqual([TEST_ITEMS[1]]);
     });
 
     it('Sollte disabled-Items nicht selektieren', () => {
@@ -180,7 +180,7 @@ describe('LuxListSelectComponent', () => {
       fixture.detectChanges();
 
       // Nachbedingungen prüfen
-      expect(host.selected).toEqual([]);
+      expect(host.selected()).toEqual([]);
     });
 
     it('Sollte beim Wechsel von Multi auf Single die Selektion auf ein Item kappen und onChange melden', () => {
@@ -188,17 +188,17 @@ describe('LuxListSelectComponent', () => {
       listSelect.toggleItem(TEST_ITEMS[0]);
       listSelect.toggleItem(TEST_ITEMS[1]);
       fixture.detectChanges();
-      expect(host.selected.length).toBe(2);
+      expect(host.selected().length).toBe(2);
 
       const changeSpy = vi.fn();
       listSelect.registerOnChange(changeSpy);
 
       // Änderungen durchführen
-      host.mode = 'single';
+      host.mode.set('single');
       fixture.detectChanges();
 
       // Nachbedingungen prüfen
-      expect(host.selected).toEqual([TEST_ITEMS[0]]);
+      expect(host.selected()).toEqual([TEST_ITEMS[0]]);
       expect(changeSpy).toHaveBeenCalledWith([TEST_ITEMS[0]]);
     });
 
@@ -207,20 +207,20 @@ describe('LuxListSelectComponent', () => {
       listSelect.toggleItem(TEST_ITEMS[0]);
       listSelect.toggleItem(TEST_ITEMS[1]);
       fixture.detectChanges();
-      expect(host.selected.length).toBe(2);
+      expect(host.selected().length).toBe(2);
 
       const changeSpy = vi.fn();
       listSelect.registerOnChange(changeSpy);
 
       // Änderungen durchführen: der Parent setzt Modus UND Selektion in EINEM Zyklus - die Kappung
       // darf dabei kein Zwischenpaar aus neuem Modus und alter Selektion zu sehen bekommen
-      host.mode = 'single';
-      host.selected = [TEST_ITEMS[3]];
+      host.mode.set('single');
+      host.selected.set([TEST_ITEMS[3]]);
       fixture.detectChanges();
 
       // Nachbedingungen prüfen: die neue Selektion bleibt unangetastet, es wird nichts gekappt
       expect(listSelect.luxSelected()).toEqual([TEST_ITEMS[3]]);
-      expect(host.selected).toEqual([TEST_ITEMS[3]]);
+      expect(host.selected()).toEqual([TEST_ITEMS[3]]);
       expect(changeSpy).not.toHaveBeenCalled();
     });
 
@@ -228,8 +228,8 @@ describe('LuxListSelectComponent', () => {
       // Vorbedingungen testen: luxSelected enthält eine neue Objekt-Instanz mit gleichem Label,
       // nicht die Referenz aus TEST_ITEMS - ohne luxCompareWith würde die Default-Prüfung (===)
       // das Item fälschlich als nicht ausgewählt behandeln
-      host.compareWith = (a, b) => a.title === b.title;
-      host.selected = [{ ...TEST_ITEMS[1] }];
+      host.compareWith.set((a, b) => a.title === b.title);
+      host.selected.set([{ ...TEST_ITEMS[1] }]);
 
       // Änderungen durchführen
       fixture.detectChanges();
@@ -248,14 +248,14 @@ describe('LuxListSelectComponent', () => {
       expect(card().classList).not.toContain('lux-list-select-size-xsmall');
 
       // Änderungen durchführen
-      host.size = 'small';
+      host.size.set('small');
       fixture.detectChanges();
 
       // Nachbedingungen prüfen
       expect(card().classList).toContain('lux-list-select-size-small');
 
       // Änderungen durchführen
-      host.size = 'xsmall';
+      host.size.set('xsmall');
       fixture.detectChanges();
 
       // Nachbedingungen prüfen
@@ -270,7 +270,7 @@ describe('LuxListSelectComponent', () => {
       expect(fixture.debugElement.query(By.css('.lux-list-select-action-cell'))).toBeNull();
 
       // Änderungen durchführen
-      host.showAction = true;
+      host.showAction.set(true);
       fixture.detectChanges();
 
       // Nachbedingungen prüfen
@@ -278,12 +278,12 @@ describe('LuxListSelectComponent', () => {
       expect(actionButtons.length).toBe(4);
       actionButtons[1].nativeElement.click();
       expect(host.lastDetail).toBe(TEST_ITEMS[1]);
-      expect(host.selected).toEqual([]);
+      expect(host.selected()).toEqual([]);
     });
 
     it('Sollte die Aktionszelle über luxActionPosition links oder rechts vom Titel platzieren', () => {
       // Vorbedingungen testen: Standard ist rechts
-      host.showAction = true;
+      host.showAction.set(true);
       fixture.detectChanges();
       const cells = () => Array.from((fixture.debugElement.query(By.css('.lux-list-select-card')).nativeElement as HTMLElement).children);
       expect(cells().map((cell) => cell.className.split(' ')[0])).toEqual([
@@ -293,7 +293,7 @@ describe('LuxListSelectComponent', () => {
       ]);
 
       // Änderungen durchführen
-      host.actionPosition = 'left';
+      host.actionPosition.set('left');
       fixture.detectChanges();
 
       // Nachbedingungen prüfen
@@ -313,7 +313,7 @@ describe('LuxListSelectComponent', () => {
 
       // Änderungen durchführen
       listSelect.toggleItem(TEST_ITEMS[0]);
-      host.totalItems = 100;
+      host.totalItems.set(100);
       fixture.detectChanges();
 
       // Nachbedingungen prüfen
@@ -325,7 +325,7 @@ describe('LuxListSelectComponent', () => {
       expect(fixture.debugElement.query(By.css('.lux-list-select-select-all'))).not.toBeNull();
 
       // Änderungen durchführen
-      host.mode = 'single';
+      host.mode.set('single');
       fixture.detectChanges();
 
       // Nachbedingungen prüfen
@@ -338,7 +338,7 @@ describe('LuxListSelectComponent', () => {
       expect(fixture.debugElement.query(By.css('lux-badge'))).not.toBeNull();
 
       // Änderungen durchführen
-      host.mode = 'single';
+      host.mode.set('single');
       fixture.detectChanges();
 
       // Nachbedingungen prüfen: die Header-Zeile (und damit auch der Zähler) entfällt im Single-Modus komplett
@@ -352,16 +352,16 @@ describe('LuxListSelectComponent', () => {
       fixture.detectChanges();
 
       // Nachbedingungen prüfen (TEST_ITEMS[2] ist disabled)
-      expect(host.selected).toEqual([TEST_ITEMS[0], TEST_ITEMS[1], TEST_ITEMS[3]]);
+      expect(host.selected()).toEqual([TEST_ITEMS[0], TEST_ITEMS[1], TEST_ITEMS[3]]);
 
       listSelect.onSelectAllChange(false);
       fixture.detectChanges();
-      expect(host.selected).toEqual([]);
+      expect(host.selected()).toEqual([]);
     });
 
     it('Sollte beim Alle-auswählen die Selektion anderer Seiten erhalten', () => {
       // Vorbedingungen testen: Item einer anderen Seite ist bereits selektiert
-      host.selected = [OTHER_PAGE_ITEM];
+      host.selected.set([OTHER_PAGE_ITEM]);
       fixture.detectChanges();
 
       // Änderungen durchführen: aktuelle Seite komplett auswählen
@@ -369,14 +369,14 @@ describe('LuxListSelectComponent', () => {
       fixture.detectChanges();
 
       // Nachbedingungen prüfen: Item der anderen Seite bleibt erhalten, Seiten-Items kommen hinzu
-      expect(host.selected).toEqual([OTHER_PAGE_ITEM, TEST_ITEMS[0], TEST_ITEMS[1], TEST_ITEMS[3]]);
+      expect(host.selected()).toEqual([OTHER_PAGE_ITEM, TEST_ITEMS[0], TEST_ITEMS[1], TEST_ITEMS[3]]);
 
       // Änderungen durchführen: aktuelle Seite wieder abwählen
       listSelect.onSelectAllChange(false);
       fixture.detectChanges();
 
       // Nachbedingungen prüfen: nur die Seiten-Items werden entfernt, Item der anderen Seite bleibt erhalten
-      expect(host.selected).toEqual([OTHER_PAGE_ITEM]);
+      expect(host.selected()).toEqual([OTHER_PAGE_ITEM]);
     });
 
     it('Sollte bei Teilauswahl den Indeterminate-State setzen', () => {
@@ -404,8 +404,8 @@ describe('LuxListSelectComponent', () => {
       expect(fixture.debugElement.query(By.css('lux-paginator'))).toBeNull();
 
       // Änderungen durchführen
-      host.showPagination = true;
-      host.pageSize = 2;
+      host.showPagination.set(true);
+      host.pageSize.set(2);
       fixture.detectChanges();
 
       // Nachbedingungen prüfen: Paginator sichtbar, erste Seite zeigt die ersten zwei Items
@@ -422,7 +422,7 @@ describe('LuxListSelectComponent', () => {
 
       // Nachbedingungen prüfen: Seitenwechsel emittiert, zweite Seite zeigt die nächsten zwei Items
       expect(host.lastPageEvent?.pageIndex).toBe(1);
-      expect(host.pageIndex).toBe(1);
+      expect(host.pageIndex()).toBe(1);
       cards = fixture.debugElement.queryAll(By.css('.lux-list-select-card'));
       expect(cards.length).toBe(2);
       expect(cards[0].nativeElement.textContent).toContain('Laura Weber');
@@ -431,17 +431,17 @@ describe('LuxListSelectComponent', () => {
 
     it('Sollte bei luxPageSize-Wechsel den luxPageIndex zurücksetzen (Client-Modus)', () => {
       // Vorbedingungen testen
-      host.showPagination = true;
-      host.pageSize = 2;
-      host.pageIndex = 2;
+      host.showPagination.set(true);
+      host.pageSize.set(2);
+      host.pageIndex.set(2);
       fixture.detectChanges();
 
       // Änderungen durchführen
-      host.pageSize = 4;
+      host.pageSize.set(4);
       fixture.detectChanges();
 
       // Nachbedingungen prüfen: Seite zurückgesetzt, alle 4 Items passen jetzt auf eine Seite
-      expect(host.pageIndex).toBe(0);
+      expect(host.pageIndex()).toBe(0);
       expect(fixture.debugElement.queryAll(By.css('lux-list-select-item')).length).toBe(4);
     });
 
@@ -450,8 +450,8 @@ describe('LuxListSelectComponent', () => {
       const errorSpy = vi.spyOn(console, 'error');
 
       // Änderungen durchführen
-      host.showPagination = true;
-      host.infiniteScroll = true;
+      host.showPagination.set(true);
+      host.infiniteScroll.set(true);
       fixture.detectChanges();
 
       // Nachbedingungen prüfen
@@ -466,7 +466,7 @@ describe('LuxListSelectComponent', () => {
       expect(container.nativeElement.style.maxHeight).toBe('');
 
       // Änderungen durchführen
-      host.maxHeight = '120px';
+      host.maxHeight.set('120px');
       fixture.detectChanges();
 
       // Nachbedingungen prüfen: max-height sitzt am Container, nicht mehr am Viewport.
@@ -482,7 +482,7 @@ describe('LuxListSelectComponent', () => {
       expect(fixture.debugElement.query(By.directive(LuxInfiniteScrollDirective))).toBeNull();
 
       // Änderungen durchführen
-      host.infiniteScroll = true;
+      host.infiniteScroll.set(true);
       fixture.detectChanges();
 
       // Nachbedingungen prüfen
@@ -494,7 +494,7 @@ describe('LuxListSelectComponent', () => {
       // auch die Utility-Klasse lux-overflow-y-auto nicht an (siehe Kommentar bei der
       // 'Message-Box bei luxMaxHeight'-Testgruppe oben) - overflow-y und Höhe werden hier daher
       // per Inline-Style am Viewport nachgebildet, damit dieser tatsächlich scrollbar wird
-      host.infiniteScroll = true;
+      host.infiniteScroll.set(true);
       fixture.detectChanges();
       const viewport = fixture.debugElement.query(By.css('.lux-list-select-viewport')).nativeElement as HTMLElement;
       viewport.style.overflowY = 'auto';
@@ -536,7 +536,7 @@ describe('LuxListSelectComponent', () => {
       expect(fixture.debugElement.query(By.css('.lux-list-select-search'))).toBeNull();
 
       // Änderungen durchführen
-      host.showSearch = true;
+      host.showSearch.set(true);
       fixture.detectChanges();
 
       // Nachbedingungen prüfen
@@ -546,7 +546,7 @@ describe('LuxListSelectComponent', () => {
 
     it('Sollte nach Ablauf der Debounce case-insensitive über Titel und Untertitel filtern', async () => {
       // Vorbedingungen testen
-      host.showSearch = true;
+      host.showSearch.set(true);
       fixture.detectChanges();
 
       // Änderungen durchführen: Großschreibung prüft die Case-Insensitivität, 'MÜLLER' passt nur auf den Titel von Anna Müller
@@ -575,7 +575,7 @@ describe('LuxListSelectComponent', () => {
     it('Sollte die Trefferzahl nach einer Suche über den LiveAnnouncer ansagen', async () => {
       const liveAnnouncer = TestBed.inject(LiveAnnouncer);
       const announceSpy = vi.spyOn(liveAnnouncer, 'announce');
-      host.showSearch = true;
+      host.showSearch.set(true);
       fixture.detectChanges();
       typeSearch('Anna');
       await LuxTestHelper.wait(fixture, 300);
@@ -589,7 +589,7 @@ describe('LuxListSelectComponent', () => {
       // reiner Message-Dedup würde die zweite Ansage fälschlich unterdrücken
       const liveAnnouncer = TestBed.inject(LiveAnnouncer);
       const announceSpy = vi.spyOn(liveAnnouncer, 'announce');
-      host.showSearch = true;
+      host.showSearch.set(true);
       fixture.detectChanges();
 
       // Änderungen durchführen: erste Suche
@@ -617,8 +617,8 @@ describe('LuxListSelectComponent', () => {
       // angezeigte Suchergebnis beziehen, nicht auf luxTotalItems
       const liveAnnouncer = TestBed.inject(LiveAnnouncer);
       const announceSpy = vi.spyOn(liveAnnouncer, 'announce');
-      host.showSearch = true;
-      host.totalItems = 100;
+      host.showSearch.set(true);
+      host.totalItems.set(100);
       fixture.detectChanges();
 
       // Änderungen durchführen
@@ -632,10 +632,10 @@ describe('LuxListSelectComponent', () => {
 
     it('Sollte bei aktiver Paginierung die gefilterte Liste selbst slicen und bei Suchänderung auf Seite 0 springen', async () => {
       // Vorbedingungen testen: Seite 1 (Index 1) ist aktiv, pageSize 2, keine Suche
-      host.showSearch = true;
-      host.showPagination = true;
-      host.pageSize = 2;
-      host.pageIndex = 1;
+      host.showSearch.set(true);
+      host.showPagination.set(true);
+      host.pageSize.set(2);
+      host.pageIndex.set(1);
       fixture.detectChanges();
       let cards = fixture.debugElement.queryAll(By.css('.lux-list-select-card'));
       expect(cards.length).toBe(2);
@@ -648,7 +648,7 @@ describe('LuxListSelectComponent', () => {
       fixture.detectChanges();
 
       // Nachbedingungen prüfen: Seite auf 0 zurückgesprungen, gefilterte Liste selbst geslict
-      expect(host.pageIndex).toBe(0);
+      expect(host.pageIndex()).toBe(0);
       cards = fixture.debugElement.queryAll(By.css('.lux-list-select-card'));
       expect(cards.length).toBe(2);
       expect(cards[0].nativeElement.textContent).toContain('Anna Müller');
@@ -657,7 +657,7 @@ describe('LuxListSelectComponent', () => {
 
     it('Sollte der Löschen-Button die Suche zurücksetzen', async () => {
       // Vorbedingungen testen
-      host.showSearch = true;
+      host.showSearch.set(true);
       fixture.detectChanges();
       typeSearch('Anna');
       await LuxTestHelper.wait(fixture, 300);
@@ -672,14 +672,14 @@ describe('LuxListSelectComponent', () => {
       fixture.detectChanges();
 
       // Nachbedingungen prüfen
-      expect(host.searchValue).toBe('');
+      expect(host.searchValue()).toBe('');
       expect(fixture.debugElement.query(By.css('.lux-list-select-search .lux-input-clear-btn button'))).toBeNull();
       expect(fixture.debugElement.queryAll(By.css('.lux-list-select-card')).length).toBe(4);
     });
 
     it('Sollte das Suchfeld bei deaktivierter Komponente deaktivieren', async () => {
       // Vorbedingungen testen
-      host.showSearch = true;
+      host.showSearch.set(true);
       fixture.detectChanges();
       typeSearch('Anna');
       await LuxTestHelper.wait(fixture, 300);
@@ -689,7 +689,7 @@ describe('LuxListSelectComponent', () => {
       expect(fixture.debugElement.query(By.css('.lux-list-select-search .lux-input-clear-btn button'))).not.toBeNull();
 
       // Änderungen durchführen
-      host.disabled = true;
+      host.disabled.set(true);
       fixture.detectChanges();
 
       // Nachbedingungen prüfen
@@ -703,16 +703,14 @@ describe('LuxListSelectComponent', () => {
       // Change-Detection mit leerem Suchwert schon hinter sich)
       const fixture2 = TestBed.createComponent(MockHostComponent);
       const host2 = fixture2.componentInstance;
-      host2.showSearch = true;
-      host2.showPagination = true;
-      host2.searchValue = 'Anna';
-      host2.pageIndex = 1;
-      fixture2.detectChanges();
-      await LuxTestHelper.wait(fixture, 300);
-      fixture2.detectChanges();
+      host2.showSearch.set(true);
+      host2.showPagination.set(true);
+      host2.searchValue.set('Anna');
+      host2.pageIndex.set(1);
+      await LuxTestHelper.wait(fixture2, 300);
 
       // Nachbedingungen prüfen: der nachträglich feuernde vorbelegte Suchwert darf die Seite nicht zurücksetzen
-      expect(host2.pageIndex).toBe(1);
+      expect(host2.pageIndex()).toBe(1);
 
       fixture2.destroy();
     });
@@ -724,7 +722,7 @@ describe('LuxListSelectComponent', () => {
       expect(fixture.debugElement.query(By.css('lux-message-box'))).toBeNull();
 
       // Änderungen durchführen
-      host.errorMessage = 'Bitte wähle eine Adresse aus, die du übernehmen möchtest.';
+      host.errorMessage.set('Bitte wähle eine Adresse aus, die du übernehmen möchtest.');
       fixture.detectChanges();
 
       // Nachbedingungen prüfen
@@ -733,66 +731,11 @@ describe('LuxListSelectComponent', () => {
       expect(messageBox.nativeElement.textContent).toContain('Bitte wähle eine Adresse aus');
 
       // Änderungen durchführen
-      host.errorMessage = null;
+      host.errorMessage.set(null);
       fixture.detectChanges();
 
       // Nachbedingungen prüfen
       expect(fixture.debugElement.query(By.css('lux-message-box'))).toBeNull();
-    });
-
-    // Echter Layout-Test (Flexbox, offsetHeight): Unter Vitest/jsdom gibt es keine Layout-Engine, alle
-    // Höhen sind 0. Der Test lief unter Karma im Browser und bleibt als Dokumentation erhalten.
-    describe.skip('Message-Box bei luxMaxHeight', () => {
-      // Die Karma-Testumgebung dieser Bibliothek lädt das kompilierte Theme-CSS nicht (der
-      // esbuild-basierte @angular/build:karma-Builder verwirft die in karma.conf.js konfigurierten
-      // "files" beim Zusammenführen mit den generierten Test-Bundles - ein von diesem Fix
-      // unabhängiges Infrastruktur-Thema). Für einen echten Layout-Test werden hier exakt die
-      // produktiven Regeln aus dem Theme-Partial (_luxListSelect.scss) und dem Utility-Katalog
-      // (_luxlayout.scss) nachgebildet, die für das Container/Viewport-Schrumpfverhalten relevant sind.
-      let styleEl: HTMLStyleElement;
-
-      beforeEach(() => {
-        styleEl = document.createElement('style');
-        styleEl.textContent = `
-          .lux-list-select-container { display: flex; flex-direction: column; }
-          .lux-list-select-viewport { min-height: 0; }
-          .lux-flex-auto { flex: 1 1 auto; }
-          .lux-flex-shrink-0 { flex-shrink: 0; }
-          lux-message-box { overflow: hidden; }
-        `;
-        document.head.appendChild(styleEl);
-      });
-
-      afterEach(() => {
-        styleEl.remove();
-      });
-
-      it('Sollte die Message-Box bei luxMaxHeight nicht abschneiden', () => {
-        // Vorbedingungen testen: Fehlermeldung ohne Höhenbegrenzung rendern, um den tatsächlichen
-        // Platzbedarf von Header und Message-Box zu ermitteln (Pixelwerte hängen vom geladenen Theme
-        // ab, daher keine hartkodierten Werte)
-        host.errorMessage = 'Bitte wähle eine Adresse aus, die du übernehmen möchtest.';
-        fixture.detectChanges();
-        const header = fixture.debugElement.query(By.css('.lux-list-select-header')).nativeElement as HTMLElement;
-        const messageBox = fixture.debugElement.query(By.css('.lux-list-select-error')).nativeElement as HTMLElement;
-        const messageBoxNaturalHeight = messageBox.offsetHeight;
-        expect(messageBoxNaturalHeight).toBeGreaterThan(0);
-
-        // Änderungen durchführen: luxMaxHeight knapp über dem Platzbedarf von Header + Message-Box
-        // setzen, sodass nur die Item-Liste im Viewport schrumpfen muss (keine aktive Paginierung)
-        host.maxHeight = `${header.offsetHeight + messageBoxNaturalHeight + 40}px`;
-        fixture.detectChanges();
-
-        // Nachbedingungen prüfen: Message-Box behält ihre volle natürliche Höhe und liegt vollständig im Container
-        const container = fixture.debugElement.query(By.css('.lux-list-select-container')).nativeElement as HTMLElement;
-        expect(messageBox.offsetHeight).toBe(messageBoxNaturalHeight);
-        expect(messageBox.clientHeight).not.toBeLessThan(messageBox.scrollHeight);
-
-        const containerRect = container.getBoundingClientRect();
-        const messageBoxRect = messageBox.getBoundingClientRect();
-        expect(messageBoxRect.top).toBeGreaterThanOrEqual(containerRect.top);
-        expect(messageBoxRect.bottom).toBeLessThanOrEqual(containerRect.bottom);
-      });
     });
   });
 
@@ -807,10 +750,10 @@ describe('LuxListSelectComponent', () => {
     it('Sollte im DAO-Modus beim Init Seite 0 laden und luxItems ignorieren', async () => {
       // Vorbedingungen testen
       const dao = new TestListSelectHttpDao();
-      host.pageSize = 2;
+      host.pageSize.set(2);
 
       // Änderungen durchführen
-      host.httpDao = dao;
+      host.httpDao.set(dao);
       fixture.detectChanges();
       await LuxTestHelper.wait(fixture, 50);
       fixture.detectChanges();
@@ -826,9 +769,9 @@ describe('LuxListSelectComponent', () => {
     it('Sollte im DAO-Modus beim Seitenwechsel die neue Seite ersetzen', async () => {
       // Vorbedingungen testen
       const dao = new TestListSelectHttpDao();
-      host.pageSize = 2;
-      host.showPagination = true;
-      host.httpDao = dao;
+      host.pageSize.set(2);
+      host.showPagination.set(true);
+      host.httpDao.set(dao);
       fixture.detectChanges();
       await LuxTestHelper.wait(fixture, 50);
       fixture.detectChanges();
@@ -854,8 +797,8 @@ describe('LuxListSelectComponent', () => {
     it('Sollte im DAO-Modus bei programmatischer luxPageIndex-Änderung (nicht per Paginator-Klick) nachladen (Review-Finding)', async () => {
       // Vorbedingungen testen: initialer Load auf Seite 0 ist abgeschlossen
       const dao = new TestListSelectHttpDao();
-      host.pageSize = 2;
-      host.httpDao = dao;
+      host.pageSize.set(2);
+      host.httpDao.set(dao);
       fixture.detectChanges();
       await LuxTestHelper.wait(fixture, 50);
       fixture.detectChanges();
@@ -863,7 +806,7 @@ describe('LuxListSelectComponent', () => {
 
       // Änderungen durchführen: luxPageIndex wird programmatisch vom Host gesetzt, nicht per Klick
       // auf den (hier gar nicht angezeigten) Paginator
-      host.pageIndex = 1;
+      host.pageIndex.set(1);
       fixture.detectChanges();
       await LuxTestHelper.wait(fixture, 50);
       fixture.detectChanges();
@@ -880,15 +823,15 @@ describe('LuxListSelectComponent', () => {
     it('Sollte bei luxPageSize-Wechsel im DAO-Modus Seite 0 mit neuer Größe laden', async () => {
       // Vorbedingungen testen: initialer Load auf Seite 0 ist abgeschlossen
       const dao = new TestListSelectHttpDao();
-      host.pageSize = 2;
-      host.httpDao = dao;
+      host.pageSize.set(2);
+      host.httpDao.set(dao);
       fixture.detectChanges();
       await LuxTestHelper.wait(fixture, 50);
       fixture.detectChanges();
       dao.loadDataSpy.mockClear();
 
       // Änderungen durchführen
-      host.pageSize = 10;
+      host.pageSize.set(10);
       fixture.detectChanges();
       await LuxTestHelper.wait(fixture, 50);
       fixture.detectChanges();
@@ -901,15 +844,15 @@ describe('LuxListSelectComponent', () => {
     it('Sollte bei gleichzeitigem Setzen des DAO und Ändern von luxPageSize im selben Zyklus nur einmal laden (Review-Finding)', async () => {
       // Vorbedingungen testen: Paginierung ist bereits aktiv, damit die luxPageSize-Baseline des
       // luxPageSize-Effects bereits gesetzt ist (Seitengröße 5, noch ohne DAO)
-      host.showPagination = true;
+      host.showPagination.set(true);
       fixture.detectChanges();
 
       // Änderungen durchführen: DAO wird erstmals gesetzt UND luxPageSize im selben Zyklus geändert -
       // sowohl der luxPageSize-Effect als auch der DAO-Init-Effect würden ohne Koordination je einen
       // eigenen Load auf Seite 0 auslösen
       const dao = new TestListSelectHttpDao();
-      host.httpDao = dao;
-      host.pageSize = 10;
+      host.httpDao.set(dao);
+      host.pageSize.set(10);
       fixture.detectChanges();
       await LuxTestHelper.wait(fixture, 50);
       fixture.detectChanges();
@@ -922,9 +865,9 @@ describe('LuxListSelectComponent', () => {
     it('Sollte im DAO-Modus beim Infinite Scroll anhängen und bei vollständig geladener Menge keine weiteren Requests machen', async () => {
       // Vorbedingungen testen: 5 DAO-Items, pageSize 2 -> 3 Seiten (2, 2, 1)
       const dao = new TestListSelectHttpDao();
-      host.pageSize = 2;
-      host.infiniteScroll = true;
-      host.httpDao = dao;
+      host.pageSize.set(2);
+      host.infiniteScroll.set(true);
+      host.httpDao.set(dao);
       fixture.detectChanges();
       await LuxTestHelper.wait(fixture, 50);
       fixture.detectChanges();
@@ -958,11 +901,11 @@ describe('LuxListSelectComponent', () => {
     it('Sollte im DAO-Modus bei Suchänderung mit Filter neu ab Seite 0 laden', async () => {
       // Vorbedingungen testen
       const dao = new TestListSelectHttpDao();
-      host.pageSize = 2;
-      host.showSearch = true;
-      host.showPagination = true;
-      host.pageIndex = 1;
-      host.httpDao = dao;
+      host.pageSize.set(2);
+      host.showSearch.set(true);
+      host.showPagination.set(true);
+      host.pageIndex.set(1);
+      host.httpDao.set(dao);
       fixture.detectChanges();
       await LuxTestHelper.wait(fixture, 50);
       fixture.detectChanges();
@@ -976,7 +919,7 @@ describe('LuxListSelectComponent', () => {
 
       // Nachbedingungen prüfen: Suche löst einen Reload ab Seite 0 mit dem Filter aus
       expect(dao.loadDataSpy).toHaveBeenCalledWith({ page: 0, pageSize: 2, filter: 'mü' });
-      expect(host.pageIndex).toBe(0);
+      expect(host.pageIndex()).toBe(0);
       const cards = fixture.debugElement.queryAll(By.css('.lux-list-select-card'));
       expect(cards.length).toBe(1);
       expect(cards[0].nativeElement.textContent).toContain('Anna Müller');
@@ -987,9 +930,9 @@ describe('LuxListSelectComponent', () => {
       const dao = new TestListSelectHttpDao();
       const liveAnnouncer = TestBed.inject(LiveAnnouncer);
       const announceSpy = vi.spyOn(liveAnnouncer, 'announce');
-      host.pageSize = 2;
-      host.showSearch = true;
-      host.httpDao = dao;
+      host.pageSize.set(2);
+      host.showSearch.set(true);
+      host.httpDao.set(dao);
       fixture.detectChanges();
       await LuxTestHelper.wait(fixture, 50);
       fixture.detectChanges();
@@ -1018,9 +961,9 @@ describe('LuxListSelectComponent', () => {
       const dao = new TestListSelectHttpDao();
       const liveAnnouncer = TestBed.inject(LiveAnnouncer);
       const announceSpy = vi.spyOn(liveAnnouncer, 'announce');
-      host.pageSize = 2;
-      host.showSearch = true;
-      host.httpDao = dao;
+      host.pageSize.set(2);
+      host.showSearch.set(true);
+      host.httpDao.set(dao);
       fixture.detectChanges();
       await LuxTestHelper.wait(fixture, 50);
       fixture.detectChanges();
@@ -1036,7 +979,7 @@ describe('LuxListSelectComponent', () => {
 
       // Änderungen durchführen: Seitenwechsel bei unverändertem Suchterm (der Server liefert
       // dieselbe Trefferzahl erneut) - während des Ladens greift das Server-Gate zwischenzeitlich
-      host.pageIndex = 1;
+      host.pageIndex.set(1);
       fixture.detectChanges();
       await LuxTestHelper.wait(fixture, 50);
       fixture.detectChanges();
@@ -1049,11 +992,11 @@ describe('LuxListSelectComponent', () => {
     it('Sollte während des Ladens den Ladezustand setzen', async () => {
       // Vorbedingungen testen
       const dao = new TestListSelectHttpDao();
-      host.pageSize = 2;
-      host.infiniteScroll = true;
+      host.pageSize.set(2);
+      host.infiniteScroll.set(true);
 
       // Änderungen durchführen
-      host.httpDao = dao;
+      host.httpDao.set(dao);
       fixture.detectChanges();
 
       // Nachbedingungen prüfen: während des laufenden Requests ist aria-busy gesetzt
@@ -1074,8 +1017,8 @@ describe('LuxListSelectComponent', () => {
       // Vorbedingungen testen
       const dao = new FailingListSelectHttpDao();
       const consoleErrorSpy = vi.spyOn(console, 'error');
-      host.pageSize = 2;
-      host.httpDao = dao;
+      host.pageSize.set(2);
+      host.httpDao.set(dao);
 
       // Änderungen durchführen: der initiale Load schlägt fehl
       fixture.detectChanges();
@@ -1109,17 +1052,14 @@ describe('LuxListSelectComponent', () => {
       const dao = new TestListSelectHttpDao();
       const fixture2 = TestBed.createComponent(MockHostComponent);
       const host2 = fixture2.componentInstance;
-      host2.pageSize = 2;
-      host2.showSearch = true;
-      host2.searchValue = 'Anna';
-      host2.httpDao = dao;
+      host2.pageSize.set(2);
+      host2.showSearch.set(true);
+      host2.searchValue.set('Anna');
+      host2.httpDao.set(dao);
 
       // Änderungen durchführen
-      fixture2.detectChanges();
-      await LuxTestHelper.wait(fixture, 300);
-      fixture2.detectChanges();
-      await LuxTestHelper.wait(fixture, 50);
-      fixture2.detectChanges();
+      await LuxTestHelper.wait(fixture2, 300);
+      await LuxTestHelper.wait(fixture2, 50);
 
       // Nachbedingungen prüfen: genau ein Load, direkt mit dem vorbelegten Suchterm
       expect(dao.loadDataSpy).toHaveBeenCalledTimes(1);
@@ -1145,7 +1085,7 @@ describe('LuxListSelectComponent', () => {
 
     it('Sollte writeValue im Single-Modus auf ein Element kappen, ohne onChange zu rufen', () => {
       // Vorbedingungen testen
-      host.mode = 'single';
+      host.mode.set('single');
       fixture.detectChanges();
       const changeSpy = vi.fn();
       listSelect.registerOnChange(changeSpy);
@@ -1188,20 +1128,18 @@ describe('LuxListSelectComponent', () => {
       const dao = new TestListSelectHttpDao();
       const fixture2 = TestBed.createComponent(MockHostComponent);
       const host2 = fixture2.componentInstance;
-      host2.pageSize = 2;
-      host2.showPagination = true;
-      host2.pageIndex = 1;
-      host2.httpDao = dao;
+      host2.pageSize.set(2);
+      host2.showPagination.set(true);
+      host2.pageIndex.set(1);
+      host2.httpDao.set(dao);
 
       // Änderungen durchführen
-      fixture2.detectChanges();
-      await LuxTestHelper.wait(fixture, 50);
-      fixture2.detectChanges();
+      await LuxTestHelper.wait(fixture2, 50);
 
       // Nachbedingungen prüfen: genau ein Load, und zwar für Seite 1; der Seitenindex bleibt erhalten
       expect(dao.loadDataSpy).toHaveBeenCalledTimes(1);
       expect(dao.loadDataSpy).toHaveBeenCalledWith(expect.objectContaining({ page: 1, pageSize: 2 }));
-      expect(host2.pageIndex).toBe(1);
+      expect(host2.pageIndex()).toBe(1);
 
       fixture2.destroy();
     });
@@ -1218,7 +1156,7 @@ describe('LuxListSelectComponent', () => {
 
     it('Sollte die Liste als grid mit einem Tab-Stopp rendern und Items als row', async () => {
       // Vorbedingungen testen
-      host.showAction = true;
+      host.showAction.set(true);
       await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen: Container ist der einzige Tab-Stopp des Grids
@@ -1244,7 +1182,7 @@ describe('LuxListSelectComponent', () => {
 
     it('Sollte im Single-Modus die Radio-Buttons ohne eigenen Tab-Stopp rendern', () => {
       // Änderungen durchführen
-      host.mode = 'single';
+      host.mode.set('single');
       fixture.detectChanges();
 
       // Nachbedingungen prüfen
@@ -1304,14 +1242,14 @@ describe('LuxListSelectComponent', () => {
       fixture.detectChanges();
 
       // Nachbedingungen prüfen
-      expect(host.selected).toEqual([TEST_ITEMS[0]]);
+      expect(host.selected()).toEqual([TEST_ITEMS[0]]);
 
       // Änderungen durchführen: erneutes Space deselektiert wieder
       LuxTestHelper.dispatchKeyboardEvent(gridContainer(), 'keydown', SPACE);
       fixture.detectChanges();
 
       // Nachbedingungen prüfen
-      expect(host.selected).toEqual([]);
+      expect(host.selected()).toEqual([]);
     });
 
     it('Sollte ein nachträglich eingeblendetes Aktions-Template aus der Tab-Reihenfolge nehmen', async () => {
@@ -1319,7 +1257,7 @@ describe('LuxListSelectComponent', () => {
       expect(fixture.debugElement.query(By.css('.mock-action button'))).toBeNull();
 
       // Änderungen durchführen
-      host.showAction = true;
+      host.showAction.set(true);
       await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen: außerhalb der Innennavigation ist kein Detail-Button ein Tab-Stopp
@@ -1330,7 +1268,7 @@ describe('LuxListSelectComponent', () => {
 
     it('Sollte auch den Aktions-Button eines disabled-Items aus der Tab-Reihenfolge nehmen', async () => {
       // Änderungen durchführen (TEST_ITEMS[2] ist disabled)
-      host.showAction = true;
+      host.showAction.set(true);
       await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
@@ -1341,7 +1279,7 @@ describe('LuxListSelectComponent', () => {
 
     it('Sollte mit F2 in den Aktions-Button und mit Escape zurück auf die Karte wechseln', () => {
       // Vorbedingungen testen
-      host.showAction = true;
+      host.showAction.set(true);
       fixture.detectChanges();
       LuxTestHelper.dispatchFakeEvent(gridContainer(), 'focus', true);
       fixture.detectChanges();
@@ -1380,7 +1318,7 @@ describe('LuxListSelectComponent', () => {
 
     it('Sollte nach einer Listenänderung nicht auf ein Item mit anderen Daten zeigen (Review-Finding)', async () => {
       // Vorbedingungen testen: Suche aktivieren, erstes Item (Anna Müller) fokussieren
-      host.showSearch = true;
+      host.showSearch.set(true);
       fixture.detectChanges();
       LuxTestHelper.dispatchFakeEvent(gridContainer(), 'focus', true);
       fixture.detectChanges();
@@ -1412,7 +1350,7 @@ describe('LuxListSelectComponent', () => {
       fixture.detectChanges();
 
       // Nachbedingungen prüfen
-      expect(host.selected).toEqual([TEST_ITEMS[1]]);
+      expect(host.selected()).toEqual([TEST_ITEMS[1]]);
     });
 
     it('Sollte nach einer Datenänderung am aktiven Index nicht auf das falsche (neue) Item zeigen (Stale-Guard, Review-Finding)', () => {
@@ -1432,7 +1370,7 @@ describe('LuxListSelectComponent', () => {
       // aber an Index 1 steht jetzt ein anderes Datenobjekt. Mit track $index wird die
       // Komponenteninstanz an Index 1 wiederverwendet statt zerstört, der alte (instanzbasierte)
       // Stale-Guard würde das nicht bemerken.
-      host.items = [TEST_ITEMS[0], OTHER_PAGE_ITEM, TEST_ITEMS[2], TEST_ITEMS[3]];
+      host.items.set([TEST_ITEMS[0], OTHER_PAGE_ITEM, TEST_ITEMS[2], TEST_ITEMS[3]]);
       fixture.detectChanges();
 
       // Änderungen durchführen: Grid erneut fokussieren
@@ -1458,7 +1396,7 @@ describe('LuxListSelectComponent', () => {
 
       // Änderungen durchführen: die Liste wächst am Ende (Infinite-Scroll-Append) - die vorderen
       // Einträge behalten ihre Objektreferenzen, nur hinten kommt ein neues Item hinzu
-      host.items = [...TEST_ITEMS, OTHER_PAGE_ITEM];
+      host.items.set([...TEST_ITEMS, OTHER_PAGE_ITEM]);
       fixture.detectChanges();
 
       // Änderungen durchführen: Grid erneut fokussieren
@@ -1472,7 +1410,7 @@ describe('LuxListSelectComponent', () => {
 
     it('Sollte Pfeiltasten und Space nutzen können, wenn in der Innennavigation der Fokus per Tab auf die Karte zurückkehrt (Review-Finding)', () => {
       // Vorbedingungen testen: Innennavigation auf Item 0 betreten (Fokus auf Detail-Button)
-      host.showAction = true;
+      host.showAction.set(true);
       fixture.detectChanges();
       LuxTestHelper.dispatchFakeEvent(gridContainer(), 'focus', true);
       fixture.detectChanges();
@@ -1504,7 +1442,7 @@ describe('LuxListSelectComponent', () => {
       // Änderungen durchführen: Space muss das jetzt aktive Item (Index 1) toggeln
       LuxTestHelper.dispatchKeyboardEvent(gridContainer(), 'keydown', SPACE);
       fixture.detectChanges();
-      expect(host.selected).toEqual([TEST_ITEMS[1]]);
+      expect(host.selected()).toEqual([TEST_ITEMS[1]]);
     });
 
     it('Sollte im Normal-Modus beim Fokus-Rücksprung aus dem Grid selbst nichts tun (Shift+Tab-Falle, Review-Finding)', () => {
@@ -1549,10 +1487,10 @@ describe('LuxListSelectComponent', () => {
 
     it('Sollte im Single-Modus jeder Instanz einen eindeutigen Radio-Group-Namen zuweisen (Review-Finding: UniqueSelectionDispatcher)', () => {
       // Vorbedingungen testen: zweite, unabhängige Instanz erzeugen
-      host.mode = 'single';
+      host.mode.set('single');
       fixture.detectChanges();
       const fixture2 = TestBed.createComponent(MockHostComponent);
-      fixture2.componentInstance.mode = 'single';
+      fixture2.componentInstance.mode.set('single');
       fixture2.detectChanges();
 
       // Nachbedingungen prüfen: beide Instanzen vergeben ein name-Attribut, aber unterschiedliche
@@ -1614,7 +1552,7 @@ describe('LuxListSelectComponent', () => {
     it('Sollte Item-DOM bei neuen Objekt-Identitäten wiederverwenden statt neu aufzubauen', () => {
       fixture.detectChanges();
       const firstItemBefore = fixture.debugElement.query(By.css('lux-list-select-item')).nativeElement;
-      host.items = host.items.map((item) => ({ ...item }));
+      host.items.set(host.items().map((item) => ({ ...item })));
       fixture.detectChanges();
       const firstItemAfter = fixture.debugElement.query(By.css('lux-list-select-item')).nativeElement;
       expect(firstItemAfter).toBe(firstItemBefore);
@@ -1646,7 +1584,7 @@ describe('LuxListSelectComponent', () => {
       // Vorbedingungen testen: eigene Fixture des Content-Template-Hosts mit einem Item ohne auflösbares Label
       const fixtureCT = TestBed.createComponent(MockHostWithContentTemplateComponent);
       const hostCT = fixtureCT.componentInstance;
-      hostCT.items = [{ title: '' }, ...TEST_ITEMS.slice(1)];
+      hostCT.items.set([{ title: '' }, ...TEST_ITEMS.slice(1)]);
       fixtureCT.detectChanges();
 
       // Nachbedingungen prüfen
@@ -1693,17 +1631,17 @@ describe('LuxListSelectComponent', () => {
     });
 
     it('Sollte im Multi-Modus keine Barrierefreiheitsverletzungen haben', async () => {
-      host.mode = 'multi';
-      host.showPagination = true;
-      host.errorMessage = 'Bitte eine Auswahl treffen.';
-      host.showAction = true;
+      host.mode.set('multi');
+      host.showPagination.set(true);
+      host.errorMessage.set('Bitte eine Auswahl treffen.');
+      host.showAction.set(true);
       fixture.detectChanges();
 
       await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
     });
 
     it('Sollte im Single-Modus keine Barrierefreiheitsverletzungen haben', async () => {
-      host.mode = 'single';
+      host.mode.set('single');
       fixture.detectChanges();
 
       await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
@@ -1713,32 +1651,31 @@ describe('LuxListSelectComponent', () => {
 
 @Component({
   selector: 'lux-mock-host',
-  imports: [LuxListSelectComponent, LuxListSelectContentDirective, LuxListSelectActionDirective, LuxButtonComponent],
-  // eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection -- TODO: Test-Host der aus develop übernommenen Komponente, Umstellung auf OnPush folgt separat
-  changeDetection: ChangeDetectionStrategy.Eager,
+  imports: [LuxListSelectComponent, LuxListSelectActionDirective, LuxButtonComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <lux-list-select
-      [luxMode]="mode"
-      [luxSize]="size"
-      [luxItems]="items"
+      [luxMode]="mode()"
+      [luxSize]="size()"
+      [luxItems]="items()"
       [(luxSelected)]="selected"
-      [luxActionPosition]="actionPosition"
-      [luxTotalItems]="totalItems"
-      [luxShowPagination]="showPagination"
-      [luxPageSize]="pageSize"
-      [luxInfiniteScroll]="infiniteScroll"
-      [luxMaxHeight]="maxHeight"
+      [luxActionPosition]="actionPosition()"
+      [luxTotalItems]="totalItems()"
+      [luxShowPagination]="showPagination()"
+      [luxPageSize]="pageSize()"
+      [luxInfiniteScroll]="infiniteScroll()"
+      [luxMaxHeight]="maxHeight()"
       [(luxPageIndex)]="pageIndex"
-      [luxErrorMessage]="errorMessage"
-      [luxDisabled]="disabled"
-      [luxShowSearch]="showSearch"
+      [luxErrorMessage]="errorMessage()"
+      [luxDisabled]="disabled()"
+      [luxShowSearch]="showSearch()"
       [(luxSearchValue)]="searchValue"
-      [luxHttpDao]="httpDao"
-      [luxCompareWith]="compareWith"
+      [luxHttpDao]="httpDao()"
+      [luxCompareWith]="compareWith()"
       (luxPageChange)="lastPageEvent = $event"
       (luxScrolled)="scrolledCount = scrolledCount + 1"
     >
-      @if (showAction) {
+      @if (showAction()) {
         <ng-template luxListSelectAction let-item>
           <lux-button
             class="mock-action"
@@ -1754,36 +1691,35 @@ describe('LuxListSelectComponent', () => {
   `
 })
 class MockHostComponent {
-  mode: LuxListSelectMode = 'multi';
-  size: LuxListSelectSize = 'default';
-  items = TEST_ITEMS;
-  selected: TestAdresse[] = [];
-  showAction = false;
-  actionPosition: LuxListSelectActionPosition = 'right';
+  mode = signal<LuxListSelectMode>('multi');
+  size = signal<LuxListSelectSize>('default');
+  items = signal<TestAdresse[]>(TEST_ITEMS);
+  selected = signal<TestAdresse[]>([]);
+  showAction = signal(false);
+  actionPosition = signal<LuxListSelectActionPosition>('right');
   lastDetail: TestAdresse | null = null;
-  totalItems: number | null = null;
-  showPagination = false;
-  pageSize = 5;
-  infiniteScroll = false;
-  maxHeight: string | null = null;
-  pageIndex = 0;
+  totalItems = signal<number | null>(null);
+  showPagination = signal(false);
+  pageSize = signal(5);
+  infiniteScroll = signal(false);
+  maxHeight = signal<string | null>(null);
+  pageIndex = signal(0);
   lastPageEvent: LuxPageEvent | null = null;
-  errorMessage: string | null = null;
-  disabled = false;
-  showSearch = false;
-  searchValue = '';
-  httpDao: ILuxListSelectHttpDao<TestAdresse> | undefined = undefined;
-  compareWith: (a: TestAdresse, b: TestAdresse) => boolean = (a, b) => a === b;
+  errorMessage = signal<string | null>(null);
+  disabled = signal(false);
+  showSearch = signal(false);
+  searchValue = signal('');
+  httpDao = signal<ILuxListSelectHttpDao<TestAdresse> | undefined>(undefined);
+  compareWith = signal<(a: TestAdresse, b: TestAdresse) => boolean>((a, b) => a === b);
   scrolledCount = 0;
 }
 
 @Component({
   selector: 'lux-mock-host-content-template',
   imports: [LuxListSelectComponent, LuxListSelectContentDirective, LuxListSelectActionDirective, LuxButtonComponent],
-  // eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection -- TODO: Test-Host der aus develop übernommenen Komponente, Umstellung auf OnPush folgt separat
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <lux-list-select [luxMode]="'multi'" [luxItems]="items" [(luxSelected)]="selected">
+    <lux-list-select [luxMode]="'multi'" [luxItems]="items()" [(luxSelected)]="selected">
       <ng-template luxListSelectContent let-item let-selected="selected">
         <a href="#" class="mock-content-link">{{ item.title }} ({{ selected }})</a>
       </ng-template>
@@ -1799,6 +1735,6 @@ class MockHostComponent {
   `
 })
 class MockHostWithContentTemplateComponent {
-  items = TEST_ITEMS;
+  items = signal<TestAdresse[]>(TEST_ITEMS);
   selected: TestAdresse[] = [];
 }

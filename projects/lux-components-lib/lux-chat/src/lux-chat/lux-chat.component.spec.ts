@@ -1,12 +1,12 @@
-import { describe, it, beforeEach, expect, vi } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { TranslocoService } from '@jsverse/transloco';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { provideLuxTranslocoTesting } from '../../../src/testing/transloco-test.provider';
-import { LuxChatComponent } from './lux-chat.component';
+import { LuxTestHelper } from '../../../test-utils/src/test-utils/lux-test-helper';
 import { LuxChatData } from './lux-chat-data';
 import { LuxChatMessageData } from './lux-chat-message-data';
-import { LuxTestHelper } from '../../../test-utils/src/test-utils/lux-test-helper';
+import { LuxChatComponent } from './lux-chat.component';
 
 function createMessage(user: string, content: string, time: Date): LuxChatMessageData {
   return new LuxChatMessageData(user, content, time);
@@ -120,6 +120,71 @@ describe('LuxChatComponent', () => {
       expect(msg.metadata['_isUser']).toBe(true);
     });
 
+    it('sollte eine über addMessage hinzugefügte Nachricht im DOM rendern (OnPush-Regression)', async () => {
+      const now = new Date();
+      const luxChatData = new LuxChatData('Test', now);
+      luxChatData.messages.push(createMessage('User1', 'Erste Nachricht', now));
+
+      fixture.componentRef.setInput('luxChatUserName', 'User1');
+      fixture.componentRef.setInput('luxChatData', luxChatData);
+      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
+
+      luxChatData.addMessage(createMessage('User2', 'Nachricht von aussen', addMinutes(now, 1)));
+      fixture.detectChanges();
+
+      const entries = fixture.debugElement.queryAll(By.css('.lux-chat-entry-card p'));
+      expect(entries.length).toBe(2);
+      expect(entries[1].nativeElement.textContent.trim()).toBe('Nachricht von aussen');
+    });
+
+    it('sollte einen geänderten Titel derselben LuxChatData-Instanz im Header rendern (OnPush)', async () => {
+      const luxChatData = new LuxChatData('Alt', new Date());
+
+      fixture.componentRef.setInput('luxChatData', luxChatData);
+      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
+
+      luxChatData.title = 'Neu';
+      await LuxTestHelper.wait(fixture);
+
+      const title = fixture.debugElement.query(By.css('.lux-chat-header-title-text'));
+      expect(title.nativeElement.textContent.trim()).toBe('Neu');
+    });
+
+    it('sollte ein neu zugewiesenes messages-Array derselben LuxChatData-Instanz rendern (OnPush)', async () => {
+      const now = new Date();
+      const luxChatData = new LuxChatData('Test', now);
+
+      fixture.componentRef.setInput('luxChatUserName', 'User1');
+      fixture.componentRef.setInput('luxChatData', luxChatData);
+      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
+
+      const msg = createMessage('User1', 'Zugewiesen', now);
+      luxChatData.messages = [msg];
+      await LuxTestHelper.wait(fixture);
+
+      const entries = fixture.debugElement.queryAll(By.css('.lux-chat-entry-card p'));
+      expect(entries.length).toBe(1);
+      expect(entries[0].nativeElement.textContent.trim()).toBe('Zugewiesen');
+      expect(msg.metadata['_isUser']).toBe(true);
+    });
+
+    it('sollte bei JSON.stringify title, createdAt, messages und metadata ausgeben', () => {
+      const createdAt = new Date('2026-01-01T10:00:00.000Z');
+      const luxChatData = new LuxChatData('Test', createdAt, [createMessage('User1', 'Hallo', createdAt)]);
+      luxChatData.metadata = { id: 4711 };
+
+      const json = JSON.parse(JSON.stringify(luxChatData));
+
+      expect(json.title).toBe('Test');
+      expect(json.createdAt).toBe('2026-01-01T10:00:00.000Z');
+      expect(json.messages.length).toBe(1);
+      expect(json.messages[0].content).toBe('Hallo');
+      expect(json.metadata).toEqual({ id: 4711 });
+    });
+
     it('sollte eigene Nachrichten auf der rechten Seite rendern', async () => {
       const now = new Date();
       const luxChatData = new LuxChatData('Test', now);
@@ -210,15 +275,15 @@ describe('LuxChatComponent', () => {
   // ---------------------------------------------------------------------------
   describe('onFullscreenChatClicked', () => {
     it('sollte _chatFullscreen von false auf true umschalten', () => {
-      expect(component._chatFullscreen).toBe(false);
+      expect(component._chatFullscreen()).toBe(false);
       component.onFullscreenChatClicked();
-      expect(component._chatFullscreen).toBe(true);
+      expect(component._chatFullscreen()).toBe(true);
     });
 
     it('sollte _chatFullscreen beim zweiten Aufruf wieder auf false setzen', () => {
       component.onFullscreenChatClicked();
       component.onFullscreenChatClicked();
-      expect(component._chatFullscreen).toBe(false);
+      expect(component._chatFullscreen()).toBe(false);
     });
 
     it('sollte chatFullscreen mit dem neuen Wert emittieren', () => {
@@ -281,6 +346,18 @@ describe('LuxChatComponent', () => {
       await LuxTestHelper.wait(fixture, 2);
 
       expect(component.chatInput).toBe('');
+    });
+
+    it('sollte bei leerer Eingabe nichts emittieren', async () => {
+      const emitSpy = vi.spyOn(component.luxChatOutput, 'emit');
+      component.chatInput = '';
+      const mockEvent = { preventDefault: vi.fn() } as unknown as Event;
+
+      component.onChatEntered(mockEvent);
+      await LuxTestHelper.wait(fixture, 2);
+
+      expect(mockEvent.preventDefault).toHaveBeenCalled();
+      expect(emitSpy).not.toHaveBeenCalled();
     });
   });
 
@@ -400,7 +477,7 @@ describe('LuxChatComponent', () => {
       translocoService.setActiveLang('en');
       await LuxTestHelper.wait(fixture);
 
-      expect(component.locale).toBe('en-US');
+      expect(component.locale()).toBe('en-US');
     });
 
     it('sollte locale auf "fr-FR" aktualisieren, wenn die Sprache auf "fr" wechselt', async () => {
@@ -408,7 +485,7 @@ describe('LuxChatComponent', () => {
       translocoService.setActiveLang('fr');
       await LuxTestHelper.wait(fixture);
 
-      expect(component.locale).toBe('fr-FR');
+      expect(component.locale()).toBe('fr-FR');
     });
   });
 });

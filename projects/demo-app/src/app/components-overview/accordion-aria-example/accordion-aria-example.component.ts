@@ -1,20 +1,20 @@
-import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import {
   LuxAccordionColor,
+  LuxAriaLabelDirective,
+  LuxButtonComponent,
   LuxCardComponent,
   LuxCardContentComponent,
-  LuxSelectAcComponent,
-  LuxToggleAcComponent,
-  LuxButtonComponent,
+  LuxDatepickerComponent,
   LuxFormHintComponent,
-  LuxRadioAcComponent,
-  LuxInputAcComponent,
-  LuxModeType,
-  LuxDatepickerAcComponent,
-  LuxAriaLabelDirective,
+  LuxInputComponent,
   LuxMenuComponent,
   LuxMenuItemComponent,
-  LuxSnackbarService
+  LuxModeType,
+  LuxRadioComponent,
+  LuxSelectComponent,
+  LuxSnackbarService,
+  LuxToggleComponent
 } from '@ihk-gfi/lux-components';
 import {
   LuxAccordionAriaComponent,
@@ -35,9 +35,7 @@ import { logResult } from '../../example-base/example-base-util/example-base-hel
   selector: 'app-accordion-aria-example',
   templateUrl: './accordion-aria-example.component.html',
   styleUrls: ['./accordion-aria-example.component.scss'],
-  standalone: true,
-  // eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection -- TODO: aus develop übernommen, Umstellung auf OnPush folgt separat
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxAccordionAriaComponent,
     LuxPanelAriaHeaderDescriptionComponent,
@@ -48,94 +46,72 @@ import { logResult } from '../../example-base/example-base-util/example-base-hel
     ExampleBaseContentComponent,
     ExampleBaseSimpleOptionsComponent,
     ExampleBaseAdvancedOptionsComponent,
-    LuxToggleAcComponent,
-    LuxSelectAcComponent,
+    LuxToggleComponent,
+    LuxSelectComponent,
     LuxCardComponent,
     LuxCardContentComponent,
     LuxPanelAriaHeaderCustomComponent,
     LuxButtonComponent,
     LuxFormHintComponent,
-    LuxRadioAcComponent,
-    LuxInputAcComponent,
-    LuxDatepickerAcComponent,
+    LuxRadioComponent,
+    LuxInputComponent,
+    LuxDatepickerComponent,
     LuxAriaLabelDirective,
     LuxMenuComponent,
     LuxMenuItemComponent
   ]
 })
 export class AccordionAriaExampleComponent {
-  showOutputEvents = false;
-  log = logResult;
-  displayModes = ['flat', 'default'];
-  disabled = false;
-  disabled1Panel = false;
-  disabled2Panel = false;
-  disabled3Panel = false;
-  hideToggle = false;
-  hideToggle1Panel = false;
-  hideToggle2Panel = false;
-  hideToggle3Panel = false;
-  hideLabelIfExtended3Panel = false;
-  showHeaderMenu4Panel = true;
-  hideAllCustomHeaders = false;
-  expanded = true;
-  expandedHeaderHeight = '4em';
-  collapsedHeaderHeight = '4em';
-  dynamicHeaderHeight = false;
-  expandedHeaderHeight1Panel: string | undefined = undefined;
-  collapsedHeaderHeight1Panel: string | undefined = undefined;
-  dynamicHeaderHeight1Panel = false;
-  secondRowForMobile1Panel = false;
-  expandedHeaderHeight2Panel: string | undefined = undefined;
-  collapsedHeaderHeight2Panel: string | undefined = undefined;
-  dynamicHeaderHeight2Panel = false;
-  secondRowForMobile2Panel = false;
-  dynamicHeaderHeight3Panel = false;
-  secondRowForMobile3Panel = false;
-  _displayMode: LuxModeType = 'default';
-  colorOptions = ['primary', 'accent', 'warn', 'neutral'];
-  color: LuxAccordionColor = 'primary';
-  togglePositions = ['after', 'before'];
-  _togglePosition: LuxAriaTogglePosition = 'after';
-  truncated = false;
-  borderCheck = false;
-  showHeaderButtons1Panel = true;
-  showHeaderDatepicker2Panel = true;
-  headerDate2Panel: Date | undefined = new Date();
-  stickyHeader = false;
-  stickyHeaderOffset = '';
-  stickyLongContent = false;
-  longContentArr = Array.from({ length: 15 }, (_, index) => index);
+  private readonly snackbar = inject(LuxSnackbarService);
 
-  set displayMode(mode: LuxModeType) {
-    // Der Multimode muss auf true gesetzt werden damit immer alle Panels aufgeklappt werden. Sonst wird nur das Custom Panel aufgeklappt wenn der Multimode vorher deaktiviert wurde.
-    this.multiMode = true;
-    this.expanded = false;
-    this._displayMode = mode;
-    setTimeout(() => (this.expanded = true));
-  }
+  readonly showOutputEvents = signal(false);
+  readonly log = logResult;
+  readonly displayModes = ['flat', 'default'];
+  readonly disabled = signal(false);
+  readonly disabled1Panel = signal(false);
+  readonly disabled2Panel = signal(false);
+  readonly disabled3Panel = signal(false);
+  readonly hideToggle = signal(false);
+  readonly hideToggle1Panel = signal(false);
+  readonly hideToggle2Panel = signal(false);
+  readonly hideToggle3Panel = signal(false);
+  readonly hideLabelIfExtended3Panel = signal(false);
+  readonly showHeaderMenu4Panel = signal(true);
+  readonly hideAllCustomHeaders = signal(false);
+  readonly expanded = signal(true);
+  readonly expandedHeaderHeight = signal('4em');
+  readonly collapsedHeaderHeight = signal('4em');
+  readonly dynamicHeaderHeight = signal(false);
+  readonly expandedHeaderHeight1Panel = signal<string | undefined>(undefined);
+  readonly collapsedHeaderHeight1Panel = signal<string | undefined>(undefined);
+  readonly dynamicHeaderHeight1Panel = signal(false);
+  readonly secondRowForMobile1Panel = signal(false);
+  readonly expandedHeaderHeight2Panel = signal<string | undefined>(undefined);
+  readonly collapsedHeaderHeight2Panel = signal<string | undefined>(undefined);
+  readonly dynamicHeaderHeight2Panel = signal(false);
+  readonly secondRowForMobile2Panel = signal(false);
+  readonly dynamicHeaderHeight3Panel = signal(false);
+  readonly secondRowForMobile3Panel = signal(false);
+  readonly displayMode = signal<LuxModeType>('default');
+  readonly colorOptions = ['primary', 'accent', 'warn', 'neutral'];
+  readonly color = signal<LuxAccordionColor>('primary');
+  readonly togglePositions = ['after', 'before'];
+  readonly togglePosition = signal<LuxAriaTogglePosition>('after');
+  readonly truncated = signal(false);
+  readonly borderCheck = signal(false);
+  readonly showHeaderButtons1Panel = signal(true);
+  readonly showHeaderDatepicker2Panel = signal(true);
+  readonly headerDate2Panel = signal<string | null>(new Date().toISOString());
+  readonly stickyHeader = signal(false);
+  readonly stickyHeaderOffset = signal('');
+  readonly stickyLongContent = signal(false);
+  readonly longContentArr = Array.from({ length: 15 }, (_, index) => index);
 
-  get displayMode() {
-    return this._displayMode;
-  }
-
-  set togglePosition(position: 'after' | 'before') {
-    this._togglePosition = position;
-  }
-
-  get togglePosition() {
-    return this._togglePosition ?? 'after';
-  }
-
-  onColorChanged(_color: LuxAccordionColor) {
-    this.color = _color;
-  }
-
-  panelConfigShortLabelArr: { title: string; description: string }[] = [
+  readonly panelConfigShortLabelArr: { title: string; description: string }[] = [
     { title: 'Panel #1 - Hauptüberschrift im Panel', description: 'Optionale zusätzliche Beschreibung' },
     { title: 'Panel #2', description: 'Beschreibung Panel #2' }
   ];
-  panelConfigLongLabelArr: { title: string; description: string }[] = [
+  readonly panelConfigLongLabelArr: { title: string; description: string }[] = [
     {
       title:
         'Panel #1 - Lorem ipsum, dolor sit amet consectetur adipisicing elit. Excepturi distinctio libero, ratione animi dolore esse porro mollitia nulla magnam et, modi doloribus',
@@ -150,29 +126,26 @@ export class AccordionAriaExampleComponent {
     }
   ];
 
-  panelConfigArr: { title: string; description: string }[] = this.panelConfigShortLabelArr;
+  readonly panelConfigArr = signal(this.panelConfigShortLabelArr);
 
-  _multiMode = true;
+  readonly multiMode = signal(true);
+  readonly isLongLabels = computed(() => this.panelConfigArr() === this.panelConfigLongLabelArr);
 
-  get multiMode() {
-    return this._multiMode;
+  onDisplayModeChange(mode: LuxModeType) {
+    // Der Multimode muss auf true gesetzt werden damit immer alle Panels aufgeklappt werden. Sonst wird nur das Custom Panel aufgeklappt wenn der Multimode vorher deaktiviert wurde.
+    this.multiMode.set(true);
+    this.expanded.set(false);
+    this.displayMode.set(mode);
+    setTimeout(() => this.expanded.set(true));
   }
 
-  set multiMode(multiMode: boolean) {
-    this._multiMode = multiMode;
+  onMultiModeChange(multiMode: boolean) {
+    this.multiMode.set(multiMode);
 
     if (!multiMode) {
-      this.expanded = false;
+      this.expanded.set(false);
     }
   }
-
-  get isLongLabels() {
-    return this.panelConfigArr === this.panelConfigLongLabelArr;
-  }
-
-  private snackbar = inject(LuxSnackbarService);
-
-  constructor() {}
 
   onPanelClickNotAllowed() {
     this.snackbar.open(3000, {
@@ -182,19 +155,19 @@ export class AccordionAriaExampleComponent {
   }
 
   onChangeLabels(longLabels: boolean) {
-    this.panelConfigArr = longLabels ? this.panelConfigLongLabelArr : this.panelConfigShortLabelArr;
+    this.panelConfigArr.set(longLabels ? this.panelConfigLongLabelArr : this.panelConfigShortLabelArr);
 
     if (longLabels) {
-      this.dynamicHeaderHeight = true;
-      this.dynamicHeaderHeight1Panel = true;
-      this.dynamicHeaderHeight2Panel = true;
-      this.dynamicHeaderHeight3Panel = true;
+      this.dynamicHeaderHeight.set(true);
+      this.dynamicHeaderHeight1Panel.set(true);
+      this.dynamicHeaderHeight2Panel.set(true);
+      this.dynamicHeaderHeight3Panel.set(true);
     }
   }
 
   onChangeDynamicHeaderHeight(value: boolean) {
-    this.dynamicHeaderHeight1Panel = value;
-    this.dynamicHeaderHeight2Panel = value;
-    this.dynamicHeaderHeight3Panel = value;
+    this.dynamicHeaderHeight1Panel.set(value);
+    this.dynamicHeaderHeight2Panel.set(value);
+    this.dynamicHeaderHeight3Panel.set(value);
   }
 }

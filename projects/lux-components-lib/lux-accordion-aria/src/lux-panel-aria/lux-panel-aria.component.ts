@@ -1,18 +1,18 @@
-import { AccordionGroup, AccordionPanel, AccordionTrigger, AccordionContent } from '@angular/aria/accordion';
+import { AccordionContent, AccordionGroup, AccordionPanel, AccordionTrigger } from '@angular/aria/accordion';
 import { ScrollDispatcher } from '@angular/cdk/scrolling';
 import {
   afterRenderEffect,
+  ChangeDetectionStrategy,
   Component,
-  DestroyRef,
   computed,
+  DestroyRef,
   effect,
+  inject,
   input,
   output,
-  inject,
   signal,
   untracked,
-  viewChild,
-  ChangeDetectionStrategy
+  viewChild
 } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { LuxAccordionColor, LuxIconComponent, LuxMediaQueryObserverService, LuxThemeService } from '@ihk-gfi/lux-components';
@@ -24,8 +24,7 @@ import { LuxAccordionAriaBase, LuxAccordionAriaTogglePosition } from '../lux-acc
   styleUrls: ['./lux-panel-aria.component.scss'],
   standalone: true,
   imports: [AccordionPanel, AccordionTrigger, LuxIconComponent, AccordionContent],
-  // eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection -- TODO: aus develop übernommen, Umstellung auf OnPush folgt separat
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   hostDirectives: [AccordionGroup]
 })
 export class LuxPanelAriaComponent {
@@ -78,22 +77,16 @@ export class LuxPanelAriaComponent {
   protected stickyHeaderOffset = computed(() => this.luxStickyHeaderOffset() ?? this.parent?.luxStickyHeaderOffset());
   protected readonly hasScrolled = signal(false);
 
-  headerHeightCacheActive = false;
-  expandedHeaderHeightCache?: string;
-  collapsedHeaderHeightCache?: string;
-
   luxOpened = output<void>();
   luxClosed = output<void>();
   luxExpandedChange = output<boolean>();
   luxClickNotAllowed = output<Event>();
 
-  mobile = false;
+  mobile = signal(this.mediaQuery.isSmallerOrEqual('sm'));
 
   constructor() {
     this.parent?.registerPanel(this);
     this.destroyRef.onDestroy(() => this.parent?.unregisterPanel(this));
-
-    this.mobile = this.mediaQuery.isSmallerOrEqual('sm');
 
     this.scrollDispatcher
       .scrolled(0)
@@ -105,22 +98,7 @@ export class LuxPanelAriaComponent {
     this.mediaQuery
       .getMediaQueryChangedAsObservable()
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        this.mobile = this.mediaQuery.isSmallerOrEqual('sm');
-      });
-
-    // Handle luxDynamicHeaderHeight caching logic
-    effect(() => {
-      const isDynamic = this.effectiveDynamicHeaderHeight();
-      if (isDynamic) {
-        this.headerHeightCacheActive = true;
-        this.expandedHeaderHeightCache = this.getExpandedHeaderHeight();
-        this.collapsedHeaderHeightCache = this.getCollapsedHeaderHeight();
-      } else if (this.headerHeightCacheActive) {
-        // Reset to cached values
-        this.headerHeightCacheActive = false;
-      }
-    });
+      .subscribe(() => this.mobile.set(this.mediaQuery.isSmallerOrEqual('sm')));
 
     let previousExpanded: boolean | undefined;
     effect(() => {
