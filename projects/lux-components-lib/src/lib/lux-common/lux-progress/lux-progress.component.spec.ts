@@ -54,6 +54,16 @@ describe('LuxProgressComponent', () => {
       expect(purple).toBeDefined();
     });
 
+    it('Sollte die Muted-Klasse nur bei luxMuted setzen', () => {
+      const progressbar = fixture.debugElement.query(By.css('mat-progress-bar'));
+      expect(progressbar.nativeElement.classList).not.toContain('lux-progress-muted');
+
+      component.muted = true;
+      fixture.detectChanges();
+
+      expect(progressbar.nativeElement.classList).toContain('lux-progress-muted');
+    });
+
     it('Sollte den Wert ändern (mode = determinate)', fakeAsync(() => {
       // Vorbedingungen testen
       component.mode = 'determinate';
@@ -126,7 +136,14 @@ describe('LuxProgressComponent', () => {
 
 @Component({
   selector: 'lux-mock-progress-bar',
-  template: `<lux-progress [luxType]="type" [luxMode]="mode" [luxColor]="color" [luxSize]="size" [luxValue]="value"></lux-progress>`,
+  template: `<lux-progress
+    [luxType]="type"
+    [luxMode]="mode"
+    [luxColor]="color"
+    [luxSize]="size"
+    [luxValue]="value"
+    [luxMuted]="muted"
+  ></lux-progress>`,
   imports: [LuxProgressComponent]
 })
 class LuxMockProgressBarComponent {
@@ -135,6 +152,7 @@ class LuxMockProgressBarComponent {
   color?: LuxProgressColor;
   size?: LuxProgressSizeType;
   value = 0;
+  muted = false;
 
   constructor() {}
 }

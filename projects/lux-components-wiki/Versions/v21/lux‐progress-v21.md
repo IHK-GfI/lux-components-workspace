@@ -17,21 +17,22 @@
 
 ### Allgemein
 
-| Name     | Beschreibung    |
-| -------- | --------------- |
-| selector | lux-progress    |
+| Name     | Beschreibung |
+| -------- | ------------ |
+| selector | lux-progress |
 
 ### @Input
 
-| Name         | Typ                 | Beschreibung                                                                                                                                                                                   |
-| ------------ | ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| luxMode      | LuxProgressModeType | Bestimmt in welchem Modus diese Komponente läuft. Mögliche Werte: 'determinate' = Zeigt den luxValue-Wert als Fortschritt an bis dieser 100 erreicht hat 'indeterminate' = Läuft endlos weiter |
-| luxType      | LuxProgressType     | Bestimmt den Typ dieser Komponente. Mögliche Werte: 'Progressbar' 'Spinner'                                                                                                                    |
-| luxValue     | number              | Bestimmt den aktuellen Wert und somit den Fortschritt der Progress-Komponente (nur bei Mode = 'determinate' oder 'buffer').                                                                    |
-| luxSize      | LuxProgressSizeType | Bestimmt die Größe des ProgressBars/-Spinners (siehe Werte - luxSize).                                                                                                                         |
-| luxColor     | LuxProgressColor    | Bestimmt die Farbe des ProgressBars/-Spinners.                                                                                                                                                 |
-| luxTagId     | string              | [LUX-Tag-Id](luxTagId-v21#direkte-konfiguration) für die automatischen Tests.                                                                                                                  |
-| luxAriaLabel | string              | Die Bezeichnung für Screenreader.                                                                                                                                                              |
+| Name         | Typ                 | Beschreibung                                                                                                                                                                                                  |
+| ------------ | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| luxMode      | LuxProgressModeType | Bestimmt in welchem Modus diese Komponente läuft. Mögliche Werte: 'determinate' = Zeigt den luxValue-Wert als Fortschritt an bis dieser 100 erreicht hat 'indeterminate' = Läuft endlos weiter                |
+| luxType      | LuxProgressType     | Bestimmt den Typ dieser Komponente. Mögliche Werte: 'Progressbar' 'Spinner'                                                                                                                                   |
+| luxValue     | number              | Bestimmt den aktuellen Wert und somit den Fortschritt der Progress-Komponente (nur bei Mode = 'determinate' oder 'buffer').                                                                                   |
+| luxSize      | LuxProgressSizeType | Bestimmt die Größe des ProgressBars/-Spinners (siehe Werte - luxSize).                                                                                                                                        |
+| luxColor     | LuxProgressColor    | Bestimmt die Farbe des ProgressBars/-Spinners.                                                                                                                                                                |
+| luxMuted     | boolean             | Aktiviert einen helleren Indikator, der Track behält die Standardfarbe (nur ProgressBar). Nur für rein dekorative Verwendung, z. B. wenn der Fortschritt zusätzlich als Text angezeigt wird. Standard: false. |
+| luxTagId     | string              | [LUX-Tag-Id](luxTagId-v21#direkte-konfiguration) für die automatischen Tests.                                                                                                                                 |
+| luxAriaLabel | string              | Die Bezeichnung für Screenreader.                                                                                                                                                                             |
 
 ### Werte - luxSize
 
