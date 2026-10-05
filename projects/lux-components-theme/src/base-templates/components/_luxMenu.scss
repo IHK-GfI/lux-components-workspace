@@ -46,6 +46,21 @@ lux-menu {
       font-weight: 400;
       letter-spacing: 1px;
     }
+
+    // Buttons mit Spinner behalten die Breite von Buttons mit Icon.
+    &.lux-menu-item button.mat-mdc-button.lux-icon-button:has(lux-progress.lux-button-spinner) {
+      padding-inline: var(--mat-button-text-horizontal-padding, 16px);
+    }
+    &.lux-menu-item button.lux-icon-button .lux-button-content-container > lux-progress.lux-button-spinner {
+      display: inline-flex;
+      flex: 0 0 var(--lux-theme-button-text-text-size);
+      justify-content: center;
+
+      .lux-progress-small mat-progress-spinner {
+        width: var(--lux-theme-button-text-text-size) !important;
+        height: var(--lux-theme-button-text-text-size) !important;
+      }
+    }
   }
 }
 
@@ -155,6 +170,7 @@ lux-menu {
     justify-content: center;
     align-self: center;
     vertical-align: middle;
+    flex-shrink: 0;
     width: var(--lux-theme-menu-item-icon-size);
     height: var(--lux-theme-menu-item-icon-size);
 
@@ -204,8 +220,11 @@ lux-menu {
   }
 
   .lux-menu-item-icon {
-    margin-right: 8px;
     flex-shrink: 0;
+
+    &:not(lux-progress) {
+      margin-right: 8px;
+    }
   }
 
   .lux-button-label {

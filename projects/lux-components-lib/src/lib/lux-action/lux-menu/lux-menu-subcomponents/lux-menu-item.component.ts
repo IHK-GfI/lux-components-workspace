@@ -14,6 +14,7 @@ export class LuxMenuItemComponent extends LuxActionComponentBaseClass {
   @Input() luxButtonBadgeColor: LuxThemePalette = 'primary';
   luxMenuItemSubtitle = input<string>('');
   luxMenuItemSelected = input<boolean>(false);
+  luxLoading = input<boolean>(false);
 
   luxClickNotAllowed = output<Event>();
   @Output() luxHiddenChange = new EventEmitter<boolean>();

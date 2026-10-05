@@ -1,4 +1,6 @@
-import { Component, inject } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { timer } from 'rxjs';
 import {
   LuxAccordionComponent,
   LuxDividerComponent,
@@ -50,8 +52,10 @@ import { logResult } from '../../example-base/example-base-util/example-base-hel
 })
 export class MenuExampleComponent {
   private iconService = inject(LuxIconRegistryService);
+  private destroyRef = inject(DestroyRef);
 
   showOutputEvents = false;
+  disableLuxLoading = false;
   log = logResult;
   readonly markerTypeNew = DemoMarkerType.New;
   readonly markerTypeUpdated = DemoMarkerType.Updated;
@@ -363,6 +367,17 @@ export class MenuExampleComponent {
     { value: 'accent', label: 'accent' }
   ];
 
+  onMenuItemClicked(item: ExampleMenuItem | ExampleLargeMenuItem, event: Event) {
+    this.log(this.showOutputEvents, 'Item clicked', event);
+    if (this.disableLuxLoading) {
+      return;
+    }
+    item.loading = true;
+    timer(2000)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => (item.loading = false));
+  }
+
   constructor() {
     this.registerIcon('app-box', '/', '/assets/svg/box.svg');
     this.registerIcon('app-android', '/', '/assets/svg/android.svg');
@@ -383,6 +398,7 @@ interface ExampleMenuItem {
   color: LuxThemePalette;
   disabled: boolean;
   disabledAria?: boolean;
+  loading?: boolean;
   hidden: boolean;
   label: string;
   tooltip: string;
@@ -401,6 +417,7 @@ interface ExampleLargeMenuItem {
   iconName: string;
   color: LuxThemePalette;
   disabled: boolean;
+  loading?: boolean;
   hidden: boolean;
   label: string;
   subtitle: string;

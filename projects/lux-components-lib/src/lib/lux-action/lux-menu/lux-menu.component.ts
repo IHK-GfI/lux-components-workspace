@@ -29,6 +29,7 @@ import { LuxTabIndexDirective } from '../../lux-directives/lux-tabindex/lux-tab-
 import { LuxTagIdDirective } from '../../lux-directives/lux-tag-id/lux-tag-id.directive';
 import { LuxTooltipDirective } from '../../lux-directives/lux-tooltip/lux-tooltip.directive';
 import { LuxIconComponent } from '../../lux-icon/lux-icon/lux-icon.component';
+import { LuxProgressComponent } from '../../lux-common/lux-progress/lux-progress.component';
 import { LuxDividerComponent } from '../../lux-layout/lux-divider/lux-divider.component';
 import { LuxThemeService } from '../../lux-theme/lux-theme.service';
 import { LuxUtil } from '../../lux-util/lux-util';
@@ -55,6 +56,7 @@ import { LuxMenuTriggerComponent } from './lux-menu-subcomponents/lux-menu-trigg
     LuxTagIdDirective,
     MatMenuTrigger,
     LuxIconComponent,
+    LuxProgressComponent,
     MatDivider,
     TranslocoPipe
   ]
@@ -291,7 +293,7 @@ export class LuxMenuComponent implements AfterViewInit, AfterContentInit, AfterV
   menuItemClicked(menuItem: LuxMenuItemComponent, event: Event) {
     // aria-disabled Items führen die Aktion nicht aus, bleiben aber sichtbar und
     // fokussierbar. Analog zum LuxButton wird stattdessen luxClickNotAllowed emittiert.
-    if (menuItem.luxDisabledAria() && !menuItem.luxDisabled) {
+    if ((menuItem.luxDisabledAria() || menuItem.luxLoading()) && !menuItem.luxDisabled) {
       event.preventDefault();
       event.stopImmediatePropagation();
       menuItem.clickNotAllowed(event);
@@ -308,9 +310,7 @@ export class LuxMenuComponent implements AfterViewInit, AfterContentInit, AfterV
     this.luxMenuClosed.emit();
     if (this.luxMenuTriggerComponent) {
       const triggerEl = (this.elementRef.nativeElement as HTMLElement).querySelector('lux-menu-trigger');
-      const focusableEl = triggerEl?.querySelector<HTMLElement>(
-        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-      );
+      const focusableEl = triggerEl?.querySelector<HTMLElement>('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
       focusableEl?.focus();
     } else if (this.defaultTriggerElRef) {
       (this.defaultTriggerElRef.nativeElement.children.item(0) as HTMLElement | null)?.focus();
