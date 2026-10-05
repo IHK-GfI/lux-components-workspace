@@ -8,8 +8,7 @@ import {
   LuxProgressComponent,
   LuxProgressModeType,
   LuxProgressSizeType,
-  LuxSelectAcComponent,
-  LuxToggleAcComponent
+  LuxSelectAcComponent
 } from '@ihk-gfi/lux-components';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
@@ -22,7 +21,6 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
     LuxProgressComponent,
     LuxButtonComponent,
     LuxSelectAcComponent,
-    LuxToggleAcComponent,
     LuxInputAcComponent,
     LuxFormHintComponent,
     ExampleBaseStructureComponent,
@@ -38,7 +36,6 @@ export class ProgressBarExampleComponent {
   modes = ['determinate', 'indeterminate'];
 
   size: LuxProgressSizeType = 'medium';
-  muted = false;
   mode: LuxProgressModeType = 'determinate';
   value = 70;
 

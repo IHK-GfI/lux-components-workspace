@@ -28,11 +28,9 @@ export class LuxProgressComponent {
   typeCSS = '';
 
   @Input() luxValue = 0;
-  @Input() luxAriaLabel = '';
+  @Input() luxAriaLabel = ''
   // Nur für ProgressBar
   @Input() luxSize: LuxProgressSizeType = 'medium';
-  // Nur für ProgressBar: hellere Farben für rein dekorative Verwendung
-  @Input() luxMuted = false;
   @Input() luxTagId?: string;
 
   @Input()
