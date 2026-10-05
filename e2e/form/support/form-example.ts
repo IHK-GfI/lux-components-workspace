@@ -80,6 +80,8 @@ export class ExampleSection {
   }
 }
 
+type TabTitle = 'Allgemein' | 'Erweitert';
+
 /** Das Konfigurations-Panel ("Konfiguration") rechts neben den Beispielen. */
 export class ExampleOptions {
   readonly card: Locator;
@@ -92,8 +94,10 @@ export class ExampleOptions {
     return this.card.getByRole('switch', { name, exact: true });
   }
 
+  /** Setzt einen Schalter im Panel. Liegt er nicht auf dem aktuellen Tab, wird der Tab gewechselt. */
   async setSwitch(name: string, checked = true) {
     const toggle = this.switch(name);
+    await this.reveal(toggle);
     if ((await toggle.isChecked()) !== checked) {
       await toggle.click();
     }
@@ -102,25 +106,64 @@ export class ExampleOptions {
 
   /**
    * Setzt den Text eines Eingabefelds im Panel (Label = Property-Name, z. B. "luxMaxLength").
-   * Liegt das Feld nicht auf dem aktuellen Tab, wird auf "Erweitert" gewechselt.
+   * Liegt das Feld nicht auf dem aktuellen Tab, wird der Tab gewechselt.
    */
   async setText(label: string, value: string) {
     const field = this.card.getByLabel(label, { exact: true });
-    if (!(await field.isVisible()) && (await this.card.getByRole('tab', { name: 'Erweitert', exact: true }).count()) > 0) {
-      await this.openTab('Erweitert');
-    }
+    await this.reveal(field);
     await field.fill(value);
     await field.blur();
+  }
+
+  /** Wählt in einem lux-select-ac des Panels die Option mit dem angezeigten Text `option`. */
+  async select(label: string, option: string) {
+    const field = this.card.getByRole('combobox', { name: label, exact: true });
+    await this.reveal(field);
+    await field.click();
+    await this.card.page().getByRole('option', { name: option, exact: true }).click();
+    await expect(field).toContainText(option);
+  }
+
+  /** Wählt einen Radio-Button (lux-radio-ac) im Panel. */
+  async radio(name: string) {
+    const radio = this.card.getByRole('radio', { name, exact: true });
+    await this.reveal(radio);
+    await radio.click();
+    await expect(radio).toBeChecked();
+  }
+
+  /**
+   * Wechselt bei Bedarf auf den Tab ("Allgemein" bzw. "Erweitert"), auf dem `field` liegt.
+   * Der Inhalt des inaktiven Tabs ist nicht im DOM und erscheint nach einem Wechsel erst verzögert.
+   * Deshalb wird zuerst auf den Inhalt des aktiven Tabs gewartet und erst dann entschieden.
+   */
+  private async reveal(field: Locator) {
+    if ((await this.card.getByRole('tab').count()) === 0) {
+      return;
+    }
+    const active = (await this.card.getByRole('tab', { selected: true }).innerText()).trim() as TabTitle;
+    await expect(this.tabContent(active)).toBeVisible();
+    if (await field.isVisible()) {
+      return;
+    }
+    await this.openTab(active === 'Allgemein' ? 'Erweitert' : 'Allgemein');
+    await expect(field).toBeVisible();
   }
 
   button(name: string) {
     return this.card.getByRole('button', { name, exact: true });
   }
 
-  async openTab(title: 'Allgemein' | 'Erweitert') {
+  /** Wechselt den Tab und wartet, bis dessen (erst dann eingehängter) Inhalt sichtbar ist. */
+  async openTab(title: TabTitle) {
     const tab = this.card.getByRole('tab', { name: title, exact: true });
     await tab.click();
     await expect(tab).toHaveAttribute('aria-selected', 'true');
+    await expect(this.tabContent(title)).toBeVisible();
+  }
+
+  private tabContent(title: TabTitle) {
+    return this.card.locator(title === 'Allgemein' ? 'example-base-simple-options' : 'example-base-advanced-options');
   }
 
   /**

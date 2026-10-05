@@ -1,7 +1,7 @@
 import { expect, Page, test } from '@playwright/test';
 import { FORM_CONTROLS, FormControlSpec } from '../form/support/form-controls';
 import { EXAMPLE_IN_FORM, EXAMPLE_WITHOUT_FORM, FormExamplePage } from '../form/support/form-example';
-import { fitViewportToContent, openStable } from './vrt-helper';
+import { openStable, screenshotExampleCard } from './vrt-helper';
 
 /**
  * Screenshots der Beispielkarte jedes Form-Controls in den Zuständen
@@ -63,15 +63,6 @@ const OTHER_CONTROLS: { id: string; route: string; states: Record<string, StateF
     states: { fehler: fileTooLarge(tag), disabled: switchOn('luxDisabled'), readonly: switchOn('luxReadonly') }
   }))
 ];
-
-async function screenshotExampleCard(page: Page, name: string) {
-  // Fokus und Maus aus der Beispielkarte nehmen, damit kein Hover-/Fokuszustand im Bild landet.
-  await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
-  await page.mouse.move(0, 0);
-  await page.waitForLoadState('networkidle');
-  await fitViewportToContent(page);
-  await expect(page.locator('lux-card.example-base-container')).toHaveScreenshot(name);
-}
 
 for (const control of OTHER_CONTROLS) {
   for (const [state, apply] of Object.entries(control.states)) {
