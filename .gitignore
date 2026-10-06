@@ -46,6 +46,13 @@ ToDos.md
 .github/skills
 skills-lock.json
 
+# Visual Regression Tests (Playwright)
+/e2e/playwright-report
+/e2e/test-results
+/e2e/blob-report
+/e2e/all-blob-reports
+/e2e/.auth
+
 # System files
 .DS_Store
 Thumbs.db

@@ -464,6 +464,13 @@ describe('LuxRadioAcComponent', () => {
       // Nachbedingungen prüfen
       errorMessage = fixture.debugElement.query(By.css('mat-error'));
       expect(errorMessage.nativeElement.innerText.trim()).toEqual('* Pflichtfeld');
+
+      // Die Fehlermeldung hängt an jedem Radio, aria-invalid an der radiogroup.
+      const radioInputs = fixture.debugElement.queryAll(By.css('mat-radio-button input'));
+      expect(radioInputs.length).toBeGreaterThan(0);
+      radioInputs.forEach((input) => expect(input.nativeElement.getAttribute('aria-describedby')).toEqual(errorMessage.nativeElement.id));
+      const radioGroup: HTMLElement = fixture.debugElement.query(By.css('mat-radio-group')).nativeElement;
+      expect(radioGroup.getAttribute('aria-invalid')).toEqual('true');
     }));
   });
 

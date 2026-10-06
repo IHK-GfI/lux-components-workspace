@@ -34,6 +34,9 @@ $checkmark: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width=
   min-width: 100%;
 
   .example-base-components-list {
+    // Containing Block für den absolut positionierten sr-only-Link "Nach oben" – sonst entkommt
+    // er dem overflow und verlängert die Seite um die volle Listenhöhe.
+    position: relative;
     overflow-y: auto;
     border-right: 1px solid var(--lux-theme-light-dividers);
     min-width: 253px;

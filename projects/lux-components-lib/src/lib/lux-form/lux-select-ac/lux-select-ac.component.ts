@@ -1,6 +1,20 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { NgClass, NgTemplateOutlet } from '@angular/common';
-import { Component, ContentChild, Input, OnChanges, OnInit, QueryList, SimpleChanges, TemplateRef, ViewChild, ViewChildren, inject } from '@angular/core';
+import {
+  Component,
+  ContentChild,
+  DestroyRef,
+  ElementRef,
+  Input,
+  OnChanges,
+  OnInit,
+  QueryList,
+  SimpleChanges,
+  TemplateRef,
+  ViewChild,
+  ViewChildren,
+  inject
+} from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatOption } from '@angular/material/core';
 import { MatSelect } from '@angular/material/select';
@@ -44,6 +58,7 @@ import { LuxFormSelectableBase } from '../lux-form-model/lux-form-selectable-bas
 })
 export class LuxSelectAcComponent<O = any, V = any, P = any> extends LuxFormSelectableBase<O, V, P> implements OnInit, OnChanges {
   private liveAnnouncer = inject(LiveAnnouncer);
+  private hostElement: HTMLElement = inject(ElementRef).nativeElement;
 
   // Potenziell eingebettetes Template für Darstellung der Labels
   @ContentChild(TemplateRef) tempRef?: TemplateRef<any>;
@@ -120,6 +135,32 @@ export class LuxSelectAcComponent<O = any, V = any, P = any> extends LuxFormSele
 
     return '' + option;
   };
+
+  /**
+   * Bei luxReadonly wird nur das Panel ausgeblendet. Das mat-select verarbeitet Tastatur und Klicks
+   * aber weiterhin (z. B. wählt ArrowDown im geschlossenen Zustand direkt die nächste Option).
+   * Deshalb werden diese Events in der Capture-Phase abgefangen, bevor sie das mat-select erreichen.
+   * Tab bleibt erlaubt, damit der Fokus weiterhin wechseln kann.
+   */
+  private readonly readonlyEventBlocker = (event: Event) => {
+    if (!this.luxReadonly || !(event.target as HTMLElement | null)?.closest('mat-select')) {
+      return;
+    }
+    if (event instanceof KeyboardEvent && event.key === 'Tab') {
+      return;
+    }
+    event.stopPropagation();
+  };
+
+  constructor() {
+    super();
+    this.hostElement.addEventListener('keydown', this.readonlyEventBlocker, true);
+    this.hostElement.addEventListener('click', this.readonlyEventBlocker, true);
+    inject(DestroyRef).onDestroy(() => {
+      this.hostElement.removeEventListener('keydown', this.readonlyEventBlocker, true);
+      this.hostElement.removeEventListener('click', this.readonlyEventBlocker, true);
+    });
+  }
 
   override ngOnInit() {
     super.ngOnInit();
