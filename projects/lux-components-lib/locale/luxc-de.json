@@ -231,6 +231,19 @@
     "lang-select": {
       "aria.langmenu.btn": "Sprachmenü"
     },
+    "leave-guard": {
+      "busy": {
+        "close": "Schließen",
+        "content": "Eine Aktion wird noch verarbeitet. Die Seite kann verlassen werden, sobald der Vorgang abgeschlossen ist.",
+        "title": "Aktion wird verarbeitet"
+      },
+      "unsaved": {
+        "confirm": "Verwerfen und fortfahren",
+        "content": "Es liegen ungespeicherte Änderungen vor. Beim Fortfahren gehen diese Änderungen verloren.",
+        "decline": "Abbrechen",
+        "title": "Ungespeicherte Änderungen"
+      }
+    },
     "list": {
       "arialabel": "Liste",
       "empty_label": "Keine Einträge vorhanden"
@@ -241,6 +254,10 @@
       "search_arialabel": "Suche",
       "search_results": "{{count}} Treffer",
       "select_all": "Alle auswählen"
+    },
+    "loading": {
+      "busy": "Verarbeitung läuft.",
+      "done": "Verarbeitung abgeschlossen."
     },
     "lookup": {
       "error_message.invalid": "Der ausgewählte Wert ist ungültig."

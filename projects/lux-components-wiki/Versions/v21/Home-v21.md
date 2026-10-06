@@ -102,6 +102,8 @@ Es wird empfohlen, das Layout mit den Komponenten aus dem [Layout](#layout) zu e
 - [lux-icon](lux‐icon-v21)
 - [lux-image](lux‐image-v21)
 - [lux-label](lux‐label-v21)
+- [lux-leave-guard](lux‐leave‐guard-v21)
+- [lux-loading](lux‐loading-v21)
 - [lux-lookup-autocomplete](lux‐lookup‐autocomplete-v21)
 - [lux-lookup-combobox](lux‐lookup‐combobox-v21)
 - [lux-lookup-label](lux‐lookup‐label-v21)

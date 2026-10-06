@@ -25,7 +25,6 @@ import {
     LuxTimepickerComponent,
     LuxToggleAcComponent
 } from '@ihk-gfi/lux-components';
-import { FormBase } from '../model/form-base.class';
 
 interface FormCommonOption {
   label: string;
@@ -84,7 +83,7 @@ interface FormCommonUser {
     JsonPipe
   ]
 })
-export class FormCommonComponent extends FormBase implements OnInit {
+export class FormCommonComponent implements OnInit {
   private logger = inject(LuxConsoleService);
 
   myGroup!: FormGroup<FormCommonDummy>;
@@ -102,8 +101,6 @@ export class FormCommonComponent extends FormBase implements OnInit {
   showA11yLabels = false;
 
   constructor() {
-    super();
-
     this.chipItems = ['Chip #1', 'Chip #2'];
     this.chipItems2 = ['Chip #3', 'Chip #4'];
   }
@@ -131,10 +128,6 @@ export class FormCommonComponent extends FormBase implements OnInit {
       autocomplete: new FormControl<string>(this.chipItems2[1], { validators: Validators.required, nonNullable: true })
     });
     this.myGroup.get('description')?.disable();
-  }
-
-  hasUnsavedData(): boolean {
-    return this.myGroup.dirty;
   }
 
   show() {

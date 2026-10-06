@@ -9,12 +9,12 @@ import {
   LuxTabsComponent,
   LuxUtil
 } from '@ihk-gfi/lux-components';
+import { LuxLeaveGuardBase } from '@ihk-gfi/lux-components/lux-leave-guard';
 import { FormCommonComponent } from './form-common/form-common.component';
 import { FormDualColComponent } from './form-dual-col/form-dual-col.component';
 import { FormSingleColComponent } from './form-single-col/form-single-col.component';
 import { FormThreeColComponent } from './form-three-col/form-three-col.component';
 import { TableExampleDataProviderService } from './table-example-data-provider.service';
-import { IUnsavedDataCheck } from './unsaved-data-guard/unsaved-data-check.interface';
 import { WebFontDemoComponent } from './web-font-demo/web-font-demo.component';
 
 @Component({
@@ -32,7 +32,7 @@ import { WebFontDemoComponent } from './web-font-demo/web-font-demo.component';
   ],
   providers: [TableExampleDataProviderService]
 })
-export class FormExampleComponent implements IUnsavedDataCheck, OnInit, AfterViewInit, OnDestroy {
+export class FormExampleComponent extends LuxLeaveGuardBase implements OnInit, AfterViewInit, OnDestroy {
   private router = inject(Router);
   private buttonService = inject(LuxAppFooterButtonService);
   private snackbar = inject(LuxSnackbarService);

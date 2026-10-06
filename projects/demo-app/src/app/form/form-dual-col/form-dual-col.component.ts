@@ -10,7 +10,6 @@ import {
     LuxInputAcComponent
 } from '@ihk-gfi/lux-components';
 import { ICountry } from '../model/country.interface';
-import { FormBase } from '../model/form-base.class';
 import { TableExampleDataProviderService } from '../table-example-data-provider.service';
 
 interface FormDualDummyForm {
@@ -52,7 +51,7 @@ interface FormDualStreetForm {
     JsonPipe
   ]
 })
-export class FormDualColComponent extends FormBase {
+export class FormDualColComponent {
   private dataProvider = inject(TableExampleDataProviderService);
 
   myGroup: FormGroup<FormDualDummyForm>;
@@ -60,8 +59,6 @@ export class FormDualColComponent extends FormBase {
   countries: ICountry[] = [];
 
   constructor() {
-    super();
-
     this.myGroup = new FormGroup<FormDualDummyForm>({
       customerDetails: new FormGroup<FormDualCustomerForm>({
         name: new FormControl<string>('', { validators: Validators.required, nonNullable: true }),
@@ -80,10 +77,6 @@ export class FormDualColComponent extends FormBase {
     this.streetsFormArray = (this.myGroup.get('customerDetails') as FormGroup).get('streets') as FormArray<FormGroup<FormDualStreetForm>>;
 
     this.countries = this.dataProvider.countries;
-  }
-
-  hasUnsavedData(): boolean {
-    return this.myGroup.dirty;
   }
 
   addStreet() {
