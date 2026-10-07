@@ -10,14 +10,13 @@
     </div>
 
     <div class="lux-highlight-section lux-flex lux-flex-col lux-gap-2">
-      <h3>Formular speichern (blockierend)</h3>
+      <h3>Daten speichern (blockierend)</h3>
       <lux-input-ac
         luxLabel="Name"
         luxHint="Eine Eingabe erzeugt ungespeicherte Änderungen."
         luxAutocomplete="off"
-        [luxValue]="name()"
+        [(luxValue)]="name"
         [luxDisabled]="loading.isLoading()"
-        (luxValueChange)="onNameChange($event)"
       >
       </lux-input-ac>
       <div class="lux-flex lux-gap-2 lux-flex-wrap">
@@ -75,7 +74,9 @@
       </div>
       <ol reversed aria-label="Protokoll" aria-live="polite">
         @for (entry of log(); track $index) {
-          <li><span class="example-log-time">{{ entry.time }}: </span>{{ entry.text }}</li>
+          <li>
+            <span class="example-log-time">{{ entry.time }}: </span>{{ entry.text }}
+          </li>
         }
       </ol>
     </div>

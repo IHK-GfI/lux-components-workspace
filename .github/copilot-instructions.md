@@ -22,6 +22,7 @@ applyTo: '**'
 - Update Wiki-Doku of the lux-components-lib in folder projects\lux-components-wiki\Versions\<version>. Check if all Inputs and Outputs are documented.
 - Update the demo page of the component in the folder projects\demo-app\src\app\components-overview\<component-name>.
 - Make a spell check for changed .md files (e.g. README, Wiki-Doku).
+- If the Figma MCP server is available, use it (e.g. get_design_context) to read the Figma design before implementing or changing UI, and reuse existing library components and theme variables instead of copying generated code.
 
 ## Key workflows (Windows-friendly)
 

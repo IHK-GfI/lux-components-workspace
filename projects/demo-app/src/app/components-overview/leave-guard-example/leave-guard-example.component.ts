@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   LuxButtonComponent,
@@ -38,8 +38,9 @@ export class LeaveGuardExampleComponent extends LuxLeaveGuardBase {
   protected readonly loading = inject(LuxLoadingService);
   protected readonly saveDurationSeconds = SAVE_DURATION_MS / 1000;
 
-  protected readonly name = signal('');
-  protected readonly dirty = signal(false);
+  protected readonly name = signal<string | null>('');
+  private readonly savedName = signal('');
+  protected readonly dirty = computed(() => (this.name() ?? '') !== this.savedName());
   protected readonly filterTerm = signal('');
   protected readonly log = signal<{ time: string; text: string }[]>([]);
   protected readonly permanentlyBlocked = signal(false);
@@ -84,24 +85,18 @@ export class LeaveGuardExampleComponent extends LuxLeaveGuardBase {
     return this.dirty();
   }
 
-  onNameChange(value: string | null) {
-    this.name.set(value ?? '');
-    this.dirty.set(true);
-  }
-
   save() {
     this.appendLog('Speichern gestartet');
     timer(SAVE_DURATION_MS)
       .pipe(this.loading.trackBlocking())
       .subscribe(() => {
-        this.dirty.set(false);
+        this.savedName.set(this.name() ?? '');
         this.appendLog('Speichern abgeschlossen');
       });
   }
 
   discard() {
-    this.name.set('');
-    this.dirty.set(false);
+    this.name.set(this.savedName());
   }
 
   onFilterChange(value: string | null) {
