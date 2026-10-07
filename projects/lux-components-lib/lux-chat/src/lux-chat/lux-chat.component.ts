@@ -160,7 +160,7 @@ export class LuxChatComponent extends LuxChatController {
     this.chatFullscreen.emit(this._chatFullscreen);
   }
 
-  private scrollToBottom(): void {
+  public scrollToBottom(): void {
     setTimeout(() => {
       const el = this.chatBase()?.nativeElement;
       el.scrollTo({

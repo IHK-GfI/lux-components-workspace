@@ -17,19 +17,17 @@ import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-ba
     LuxChatAiComponent,
     LuxToggleAcComponent,
     CommonModule
-],
+  ],
   templateUrl: './chat-ai-example.component.html'
 })
 export class ChatAiExampleComponent {
-
-  public showChatPopup = true;
+  public showChatPopup = false;
   public loadedChatId?: string;
   public luxChatShowMetadata = false;
 
-  public chatData = new LuxChatData("Neuer Chat", new Date(), []);
+  public chatData = new LuxChatData('Neuer Chat', new Date(), []);
 
-  public onChatIdChange(chatId?: string){
+  public onChatIdChange(chatId?: string) {
     this.loadedChatId = chatId;
   }
-
 }
