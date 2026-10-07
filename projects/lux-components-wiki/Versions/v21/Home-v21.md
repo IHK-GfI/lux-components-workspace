@@ -43,6 +43,7 @@ Es wird empfohlen, das Layout mit den Komponenten aus dem [Layout](#layout) zu e
 ### Action
 
 - [lux-button](lux‐button-v21)
+- [lux-button-toggle](lux-button-toggle-v21)
 - [lux-link](lux‐link-v21)
 - [lux-link-plain](lux‐link‐plain-v21)
 - [lux-menu](lux‐menu-v21)

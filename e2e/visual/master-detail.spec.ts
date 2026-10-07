@@ -1,6 +1,8 @@
 import { expect, Locator, Page, test } from '@playwright/test';
 import { openStable, screenshotSoft } from './vrt-helper';
 
+const BUTTON_THROTTLE_WAIT_MS = 650;
+
 /**
  * Zustände des Master-Detail-Beispiels (/components-overview/master-detail-ac).
  * Jeder Test startet auf einer frisch geladenen Seite und nimmt die komplette
@@ -33,23 +35,30 @@ function row(masterDetail: Locator, nr: number) {
 
 /** Selektiert einen Eintrag per Klick. Geklickt wird auf den Inhalt, nicht auf das Eingabefeld im Header. */
 async function selectEntry(masterDetail: Locator, nr: number) {
-  await row(masterDetail, nr).getByText(/^\s*Fällig/).click();
+  await row(masterDetail, nr)
+    .getByText(/^\s*Fällig/)
+    .click();
   await expect(row(masterDetail, nr)).toHaveAttribute('aria-selected', 'true');
-  await expect(masterDetail.locator('.lux-detail-view-container').getByRole('heading', { name: `Eintrag #${nr}`, exact: true })).toBeVisible();
+  await expect(
+    masterDetail.locator('.lux-detail-view-container').getByRole('heading', { name: `Eintrag #${nr}`, exact: true })
+  ).toBeVisible();
 }
 
 /** Führt einen Eintrag des Menüs im Master-Footer aus. */
 async function footerMenu(page: Page, masterDetail: Locator, item: string) {
   // lux-menu rendert neben dem sichtbaren Default-Trigger ein leeres div mit role="button" und gleichem Namen.
   await masterDetail.locator('lux-master-footer-ac .lux-menu-trigger-default').getByRole('button', { name: 'Menü', exact: true }).click();
+  await expect(page.getByRole('menu')).toBeVisible();
   await page.getByRole('menuitem', { name: item, exact: true }).click();
   await expect(page.getByRole('menu')).toBeHidden();
+  await page.clock.runFor(BUTTON_THROTTLE_WAIT_MS);
 }
 
-async function toggleMaster(masterDetail: Locator, action: 'zuklappen' | 'aufklappen') {
+async function toggleMaster(page: Page, masterDetail: Locator, action: 'zuklappen' | 'aufklappen') {
   await masterDetail.getByRole('button', { name: `Masterliste ${action}`, exact: true }).click();
   const other = action === 'zuklappen' ? 'aufklappen' : 'zuklappen';
   await expect(masterDetail.getByRole('button', { name: `Masterliste ${other}`, exact: true })).toBeVisible();
+  await page.clock.runFor(BUTTON_THROTTLE_WAIT_MS);
 }
 
 function screenshot(page: Page, masterDetail: Locator, name: string) {
@@ -86,11 +95,11 @@ test.describe('Desktop', () => {
   test('master-detail/liste-zu-aufklappen', async ({ page }) => {
     const masterDetail = await openMasterDetail(page);
 
-    await toggleMaster(masterDetail, 'zuklappen');
+    await toggleMaster(page, masterDetail, 'zuklappen');
     await expect(masterDetail.getByRole('grid')).toBeHidden();
     await screenshot(page, masterDetail, 'liste-zugeklappt');
 
-    await toggleMaster(masterDetail, 'aufklappen');
+    await toggleMaster(page, masterDetail, 'aufklappen');
     await expect(masterDetail.getByRole('grid')).toBeVisible();
     await screenshot(page, masterDetail, 'liste-aufgeklappt');
   });
