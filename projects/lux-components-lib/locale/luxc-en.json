@@ -231,6 +231,19 @@
     "lang-select": {
       "aria.langmenu.btn": "Language menu"
     },
+    "leave-guard": {
+      "busy": {
+        "close": "Close",
+        "content": "An action is still being processed. The page can be left as soon as the process has finished.",
+        "title": "Action in progress"
+      },
+      "unsaved": {
+        "confirm": "Discard and continue",
+        "content": "There are unsaved changes. Continuing will discard these changes.",
+        "decline": "Cancel",
+        "title": "Unsaved changes"
+      }
+    },
     "list": {
       "arialabel": "List",
       "empty_label": "No entries available"
@@ -241,6 +254,10 @@
       "search_arialabel": "Search",
       "search_results": "Results: {{count}}",
       "select_all": "Select all"
+    },
+    "loading": {
+      "busy": "Processing in progress.",
+      "done": "Processing finished."
     },
     "lookup": {
       "error_message.invalid": "The selected value is invalid."

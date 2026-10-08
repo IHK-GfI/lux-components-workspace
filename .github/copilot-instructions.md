@@ -12,6 +12,7 @@ applyTo: '**'
 - Use Signal-based APIs for reactive state management in components/services; see Angular docs for best practices.
 - Use inject-Function instead of constructor injection where possible for better tree-shaking and simpler code.
 - Use ChangeDetectionStrategy.OnPush change detection for all new components for better performance; use ChangeDetectorRef.markForCheck() when manual checks are needed.
+- Use new Entrypoint files for all new components/services, ensuring they are properly exported in the library's public API.
 - Add unit tests for all new components/services using Jasmine/Karma; place tests alongside implementation files with .spec.ts suffix.
 - Add visual regression tests for components using Playwright and the prepareScreenshot/expect.soft pattern as demonstrated in e2e/visual/stepper-steps.spec.ts.
 - **Accessibility testing**: Add axe-core tests to all components for automated accessibility checks. Use the `LuxA11yTestHelper` from `@ihk-gfi/lux-components/test-utils` in spec files (do not call `jasmine-axe`/`axe-core` directly). Example: call `LuxA11yTestHelper.addA11yMatchers()` once per spec file (e.g. in `beforeAll`), then `await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement)` in each test. See LuxButtonComponent.spec.ts for reference implementation.
@@ -21,6 +22,7 @@ applyTo: '**'
 - Update Wiki-Doku of the lux-components-lib in folder projects\lux-components-wiki\Versions\<version>. Check if all Inputs and Outputs are documented.
 - Update the demo page of the component in the folder projects\demo-app\src\app\components-overview\<component-name>.
 - Make a spell check for changed .md files (e.g. README, Wiki-Doku).
+- If the Figma MCP server is available, use it (e.g. get_design_context) to read the Figma design before implementing or changing UI, and reuse existing library components and theme variables instead of copying generated code.
 
 ## Key workflows (Windows-friendly)
 

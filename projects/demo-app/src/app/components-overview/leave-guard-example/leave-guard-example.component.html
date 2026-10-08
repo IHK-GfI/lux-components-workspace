@@ -1,0 +1,112 @@
+<example-base-structure
+  exampleTitle="Leave-Guard"
+  exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/lux%E2%80%90leave%E2%80%90guard-v21"
+>
+  <example-base-content class="lux-flex lux-flex-col lux-gap-4">
+    <div class="example-progress-slot">
+      @if (loading.isBusy()) {
+        <lux-progress luxMode="indeterminate" luxAriaLabel="Vorgang läuft"></lux-progress>
+      }
+    </div>
+
+    <div class="lux-highlight-section lux-flex lux-flex-col lux-gap-2">
+      <h3>Daten speichern (blockierend)</h3>
+      <lux-input-ac
+        luxLabel="Name"
+        luxHint="Eine Eingabe erzeugt ungespeicherte Änderungen."
+        luxAutocomplete="off"
+        [(luxValue)]="name"
+        [luxDisabled]="loading.isLoading()"
+      >
+      </lux-input-ac>
+      <div class="lux-flex lux-gap-2 lux-flex-wrap">
+        <lux-button
+          luxLabel="Speichern"
+          luxColor="primary"
+          luxTagId="leave-guard-save-btn"
+          [luxFlat]="true"
+          [luxLoading]="loading.isLoading()"
+          [luxDisabled]="!dirty()"
+          (luxClicked)="save()"
+        >
+        </lux-button>
+        <lux-button
+          luxLabel="Änderungen verwerfen"
+          luxColor="primary"
+          luxTagId="leave-guard-discard-btn"
+          [luxStroked]="true"
+          [luxDisabled]="!dirty() || loading.isLoading()"
+          (luxClicked)="discard()"
+        >
+        </lux-button>
+      </div>
+    </div>
+
+    <div class="lux-highlight-section lux-flex lux-flex-col lux-gap-2">
+      <h3>Liste filtern (anzeigend)</h3>
+      <lux-input-ac
+        luxLabel="Filterbegriff"
+        luxHint="Filtert nach 600 ms Eingabepause; ein neuer Request überschreibt den laufenden."
+        luxAutocomplete="off"
+        [luxValue]="filterTerm()"
+        (luxValueChange)="onFilterChange($event)"
+      >
+      </lux-input-ac>
+    </div>
+
+    <div class="lux-highlight-section lux-flex lux-flex-col lux-gap-2">
+      <h3>Zustand</h3>
+      <dl class="example-state">
+        <dt>hasUnsavedData()</dt>
+        <dd>{{ dirty() }}</dd>
+        <dt>LuxLoadingService.isLoading()</dt>
+        <dd>{{ loading.isLoading() }}</dd>
+        <dt>LuxLoadingService.isBusy()</dt>
+        <dd>{{ loading.isBusy() }}</dd>
+      </dl>
+    </div>
+
+    <div class="lux-highlight-section lux-flex lux-flex-col lux-gap-2">
+      <div class="lux-flex lux-items-center lux-justify-between">
+        <h3>Protokoll</h3>
+        <lux-button luxLabel="Leeren" luxColor="primary" [luxStroked]="true" [luxDisabled]="log().length === 0" (luxClicked)="clearLog()">
+        </lux-button>
+      </div>
+      <ol reversed aria-label="Protokoll" aria-live="polite">
+        @for (entry of log(); track $index) {
+          <li>
+            <span class="example-log-time">{{ entry.time }}: </span>{{ entry.text }}
+          </li>
+        }
+      </ol>
+    </div>
+  </example-base-content>
+  <example-base-simple-options>
+    <div class="lux-flex lux-flex-col lux-highlight-section">
+      Diese Route ist mit <code>canDeactivate: [luxLeaveGuard]</code> geschützt, die Komponente erweitert <code>LuxLeaveGuardBase</code>. So
+      lässt sich das Zusammenspiel ausprobieren:
+      <ol>
+        <li>Namen eingeben und über das Menü zu einer anderen Komponente wechseln: Der Bestätigungsdialog erscheint.</li>
+        <li>
+          "Speichern" klicken und während der {{ saveDurationSeconds }} Sekunden wegnavigieren: Der Hinweisdialog erscheint, die Navigation
+          wird abgelehnt.
+        </li>
+        <li>Mit ungespeicherten Änderungen oder während des Speicherns die Seite neu laden: Der Browser fragt nach.</li>
+        <li>Im Filterfeld tippen: Nur die Progressbar läuft, Navigation bleibt möglich.</li>
+      </ol>
+    </div>
+    <div class="lux-highlight-section column">
+      <lux-toggle-ac
+        luxLabel="Seite dauerhaft blockieren"
+        luxTagId="leave-guard-permanent-block-toggle"
+        [luxChecked]="permanentlyBlocked()"
+        [luxNoTopLabel]="true"
+        (luxCheckedChange)="onPermanentBlockChange($event)"
+      >
+        <lux-form-hint
+          >Startet einen blockierenden Vorgang über <i>LuxLoadingService.block()</i>, der erst beim Ausschalten endet.</lux-form-hint
+        >
+      </lux-toggle-ac>
+    </div>
+  </example-base-simple-options>
+</example-base-structure>

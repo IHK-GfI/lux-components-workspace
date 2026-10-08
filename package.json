@@ -34,7 +34,7 @@
     "util:move-files": "node scripts/move-files.js",
     "util:clean-all": "npm run util:delete-dist && del-cli --force .angular && del-cli --force package-lock.json && del-cli --force node_modules",
     "util:delete-dist": "del-cli --force dist/",
-    "util:wait-and-start-demo": "wait-on dist/lux-components-lib/types/ihk-gfi-lux-components.d.ts dist/theme/prebuilt-themes/luxtheme-authentic.css && npm run start",
+    "util:wait-and-start-demo": "wait-on dist/lux-components-lib/types/ihk-gfi-lux-components.d.ts dist/lux-components-lib/types/ihk-gfi-lux-components-lux-accordion-aria.d.ts dist/lux-components-lib/types/ihk-gfi-lux-components-lux-chat.d.ts dist/lux-components-lib/types/ihk-gfi-lux-components-lux-file-preview.d.ts dist/lux-components-lib/types/ihk-gfi-lux-components-lux-html.d.ts dist/lux-components-lib/types/ihk-gfi-lux-components-lux-leave-guard.d.ts dist/lux-components-lib/types/ihk-gfi-lux-components-lux-list-select.d.ts dist/lux-components-lib/types/ihk-gfi-lux-components-lux-loading.d.ts dist/lux-components-lib/types/ihk-gfi-lux-components-lux-markdown.d.ts dist/lux-components-lib/types/ihk-gfi-lux-components-lux-paginator.d.ts dist/lux-components-lib/types/ihk-gfi-lux-components-test-utils.d.ts dist/theme/prebuilt-themes/luxtheme-authentic.css && npm run start",
     "vrt": "node scripts/vrt.js",
     "vrt:build": "npm run pack:theme && npm run pack:components && npm run pack:demo",
     "vrt:update": "node scripts/vrt.js --update-snapshots",

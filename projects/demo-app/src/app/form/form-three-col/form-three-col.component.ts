@@ -12,7 +12,6 @@ import {
 } from '@ihk-gfi/lux-components';
 import { ICompanyType } from '../model/company-type.interface';
 import { ICountry } from '../model/country.interface';
-import { FormBase } from '../model/form-base.class';
 import { IGender } from '../model/gender.interface';
 import { TableExampleDataProviderService } from '../table-example-data-provider.service';
 
@@ -56,7 +55,7 @@ interface FormThreeColDummyForm {
     JsonPipe
   ]
 })
-export class FormThreeColComponent extends FormBase {
+export class FormThreeColComponent {
   private dataProvider = inject(TableExampleDataProviderService);
 
   myGroup: FormGroup<FormThreeColDummyForm>;
@@ -65,8 +64,6 @@ export class FormThreeColComponent extends FormBase {
   genders: IGender[] = [];
 
   constructor() {
-    super();
-
     this.countries = this.dataProvider.countries;
     this.types = this.dataProvider.companyTypes;
     this.genders = this.dataProvider.genders;
@@ -89,9 +86,5 @@ export class FormThreeColComponent extends FormBase {
         anonymous: new FormControl<boolean | null>(false)
       })
     });
-  }
-
-  hasUnsavedData(): boolean {
-    return this.myGroup.dirty;
   }
 }

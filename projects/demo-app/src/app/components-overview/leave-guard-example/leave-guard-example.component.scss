@@ -1,0 +1,19 @@
+.example-progress-slot {
+  min-height: 4px;
+}
+
+.example-state {
+  display: grid;
+  grid-template-columns: max-content auto;
+  gap: 4px 16px;
+  margin: 0;
+
+  dt {
+    font-family: monospace;
+  }
+
+  dd {
+    margin: 0;
+    font-weight: bold;
+  }
+}

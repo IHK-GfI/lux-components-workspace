@@ -16,7 +16,6 @@ import {
     LuxToggleAcComponent
 } from '@ihk-gfi/lux-components';
 import { ICountry } from '../model/country.interface';
-import { FormBase } from '../model/form-base.class';
 import { IGender } from '../model/gender.interface';
 import { IRole } from '../model/roles.interface';
 import { TableExampleDataProviderService } from '../table-example-data-provider.service';
@@ -59,7 +58,7 @@ interface FormSingleUserForm {
     JsonPipe
   ]
 })
-export class FormSingleColComponent extends FormBase {
+export class FormSingleColComponent {
   private dataProvider = inject(TableExampleDataProviderService);
 
   myGroup: FormGroup<FormSingleDummyForm>;
@@ -69,8 +68,6 @@ export class FormSingleColComponent extends FormBase {
   salutations: string[] = [];
 
   constructor() {
-    super();
-
     this.roles = this.dataProvider.roles;
     this.countries = this.dataProvider.countries;
     this.genders = this.dataProvider.genders;
@@ -94,10 +91,6 @@ export class FormSingleColComponent extends FormBase {
       roles: new FormControl<string>('', { validators: Validators.required, nonNullable: true }),
       eula: new FormControl<boolean>(false, { validators: Validators.requiredTrue, nonNullable: true })
     });
-  }
-
-  hasUnsavedData(): boolean {
-    return this.myGroup.dirty;
   }
 
   addRole(name: string) {

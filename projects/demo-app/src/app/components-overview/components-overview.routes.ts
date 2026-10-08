@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { luxLeaveGuard } from '@ihk-gfi/lux-components/lux-leave-guard';
 
 // prettier-ignore
 export const COMPONENT_OVERVIEW_ROUTES: Routes = [
@@ -23,6 +24,7 @@ export const COMPONENT_OVERVIEW_ROUTES: Routes = [
       { path: 'http-error', loadComponent: () => import('./http-error-example/http-error-example.component').then(m => m.HttpErrorExampleComponent) },
       { path: 'icon', loadComponent: () => import('./icon-example/icon-example.component').then(m => m.IconExampleComponent) },
       { path: 'image', loadComponent: () => import('./image-example/image-example.component').then(m => m.ImageExampleComponent) },
+      { path: 'leave-guard', loadComponent: () => import('./leave-guard-example/leave-guard-example.component').then(m => m.LeaveGuardExampleComponent), canDeactivate: [luxLeaveGuard] },
       { path: 'link', loadComponent: () => import('./link-example/link-example.component').then(m => m.LinkExampleComponent) },
       { path: 'progress', loadComponent: () => import('./progress-example/progress-example.component').then(m => m.ProgressBarExampleComponent) },
       { path: 'radio-button-ac', loadComponent: () => import('./radio-authentic-example/radio-authentic-example.component').then(m => m.RadioAuthenticExampleComponent) },
