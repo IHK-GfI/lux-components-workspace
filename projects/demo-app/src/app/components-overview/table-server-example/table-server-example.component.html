@@ -97,8 +97,9 @@
       [luxNoLabels]="true"
     >
       <lux-form-hint
-        >Meldet den Ladezustand der Tabelle über luxLoadingChange an den globalen Ladebalken unter dem App-Header. Damit nicht zwei
-        Ladebalken angezeigt werden, wird luxShowProgress dabei abgeschaltet.</lux-form-hint
+        >Meldet den Ladezustand der Tabelle über luxLoadingChange als anzeigenden Vorgang (busy) an den LuxLoadingService. Der globale
+        Ladebalken unter dem App-Header zeigt ihn an. Damit nicht zwei Ladebalken angezeigt werden, wird luxShowProgress dabei
+        abgeschaltet.</lux-form-hint
       >
     </lux-toggle-ac>
     <lux-toggle-ac luxLabel="luxShowProgress" [(luxChecked)]="showProgress" [luxDisabled]="useGlobalLoading" [luxNoLabels]="true">

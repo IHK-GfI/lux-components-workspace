@@ -12,7 +12,7 @@ import {
   LuxTableComponent,
   LuxToggleAcComponent
 } from '@ihk-gfi/lux-components';
-import { DemoGlobalLoadingService } from '../../base/global-loading/demo-global-loading.service';
+import { LuxLoadingService } from '@ihk-gfi/lux-components/lux-loading';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
 import { ExampleBaseOptionsActionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-options-actions.component';
@@ -51,7 +51,7 @@ import { TestHttpDao } from './test-http-dao';
 })
 export class TableServerExampleComponent extends TableExampleBaseClass {
   private logger = inject(LuxConsoleService);
-  private globalLoading = inject(DemoGlobalLoadingService);
+  private loading = inject(LuxLoadingService);
   private releaseTableLoading?: () => void;
   private tableLoading = false;
   private showProgressBeforeGlobalLoading = true;
@@ -75,7 +75,7 @@ export class TableServerExampleComponent extends TableExampleBaseClass {
   }
 
   /**
-   * Schaltet zwischen der internen Progressbar und dem globalen Ladebalken (unter dem App-Header) um.
+   * Schaltet zwischen der internen Progressbar und dem globalen Ladezustand (LuxLoadingService) um.
    * Damit nie zwei Ladebalken gleichzeitig laufen, wird die interne Progressbar dabei deaktiviert.
    */
   onUseGlobalLoadingChange(useGlobalLoading: boolean) {
@@ -103,13 +103,13 @@ export class TableServerExampleComponent extends TableExampleBaseClass {
   }
 
   /**
-   * Meldet den Ladezustand der Tabelle an den globalen Ladezustand, solange dieser verwendet wird.
+   * Meldet den Ladezustand der Tabelle als anzeigenden Vorgang (busy) an den LuxLoadingService, solange dieser verwendet wird.
    * Wird während eines Ladevorgangs umgeschaltet, wird der laufende Vorgang übernommen bzw. freigegeben.
    */
   private syncGlobalLoading() {
     const loading = this.useGlobalLoading && this.tableLoading;
     if (loading && !this.releaseTableLoading) {
-      this.releaseTableLoading = this.globalLoading.busy();
+      this.releaseTableLoading = this.loading.busy();
     } else if (!loading && this.releaseTableLoading) {
       this.releaseTableLoading();
       this.releaseTableLoading = undefined;

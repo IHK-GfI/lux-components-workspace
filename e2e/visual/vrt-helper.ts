@@ -88,6 +88,27 @@ export async function screenshotSoft(page: Page, target: Locator, name: string) 
   await expect.soft(target).toHaveScreenshot(name);
 }
 
+/**
+ * Wie screenshotSoft, aber inklusive des globalen Ladebalkens unter dem App-Header (LuxLoadingService.isBusy()).
+ * Der Ausschnitt hat die Breite des Elements und reicht vom Ladebalken bis zum unteren Rand des Elements.
+ */
+export async function screenshotWithGlobalProgressSoft(page: Page, target: Locator, name: string) {
+  await prepareScreenshot(page);
+  const progress = page.locator('.app-global-progress').getByRole('progressbar');
+  await expect(progress).toBeVisible();
+  const progressBox = await progress.boundingBox();
+  const targetBox = await target.boundingBox();
+  if (!progressBox || !targetBox) {
+    throw new Error(`Ausschnitt für ${name} kann nicht bestimmt werden.`);
+  }
+  // Nach außen runden, damit z. B. der untere Rahmen des Elements nicht abgeschnitten wird
+  const x = Math.floor(targetBox.x);
+  const y = Math.floor(progressBox.y);
+  const width = Math.ceil(targetBox.x + targetBox.width) - x;
+  const height = Math.ceil(targetBox.y + targetBox.height) - y;
+  await expect.soft(page).toHaveScreenshot(name, { clip: { x, y, width, height } });
+}
+
 /** Öffnet eine Beispielseite unter /components-overview/example/* und wartet auf die Beispielkomponente. */
 export async function openExample(page: Page, route: string) {
   await openStable(page, `/components-overview/example/${route}`, page.locator('.example-base-content > router-outlet + *'));

@@ -49,9 +49,9 @@ import {
   LuxThemeService,
   LuxTooltipDirective
 } from '@ihk-gfi/lux-components';
+import { LuxLoadingService } from '@ihk-gfi/lux-components/lux-loading';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { Subscription } from 'rxjs';
-import { DemoGlobalLoadingService } from './base/global-loading/demo-global-loading.service';
 import { ComponentsOverviewNavigationService } from './components-overview/components-overview-navigation.service';
 import { MockLuxLookupService } from './components-overview/lookup-examples/mock-lookup-service';
 import { TenantLogoExampleConfigData } from './components-overview/tenant-logo-example/tenant-logo-example-config/tenant-logo-example-config-data';
@@ -112,7 +112,7 @@ export class AppComponent implements OnInit, OnDestroy {
   private consentService = inject(LuxConsentService);
   componentsOverviewService = inject(ComponentsOverviewNavigationService);
   tenantLogoHeaderService = inject(TenantLogoExampleHeaderService);
-  globalLoading = inject(DemoGlobalLoadingService);
+  globalLoading = inject(LuxLoadingService);
   fixedFooterService = inject(LuxAppFooterFixedService);
   iconService = inject(LuxIconRegistryService);
   tService = inject(TranslocoService);

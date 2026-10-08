@@ -93,28 +93,7 @@
 
 Beispiel für einen globalen Ladebalken im Header:
 
-Der Header kennt die Tabelle nicht. Deshalb meldet die Seite den Ladezustand der Tabelle an einen globalen Service, den der Header ausliest. Dort laufen auch andere Vorgänge der Seite zusammen, sodass nur ein Ladebalken angezeigt wird. `luxLoadingChange` wird asynchron emittiert, damit der Handler auch während der Change Detection Zustand ändern darf. Ausnahme: Beim Zerstören der Tabelle wird `false` synchron emittiert. Entfernt die Seite die Tabelle während des Ladens (z. B. per `@if`), muss der Handler deshalb ein Signal oder einen Service (wie unten) beschreiben; ein normales Feld führt dann zu einem `ExpressionChangedAfterItHasBeenCheckedError`.
-
-```typescript
-// Globaler Service (eigene Implementierung)
-@Injectable({ providedIn: 'root' })
-export class AppLoadingService {
-  private readonly count = signal(0);
-  readonly isBusy = computed(() => this.count() > 0);
-
-  /** Startet einen Vorgang und liefert eine idempotente Release-Funktion. */
-  busy(): () => void {
-    this.count.update((count) => count + 1);
-    let released = false;
-    return () => {
-      if (!released) {
-        released = true;
-        this.count.update((count) => Math.max(0, count - 1));
-      }
-    };
-  }
-}
-```
+Der Header kennt die Tabelle nicht. Deshalb meldet die Seite den Ladezustand der Tabelle als anzeigenden Vorgang (`busy()`) an den zentralen [LuxLoadingService](lux‐loading-v21), den der Header ausliest. Dort laufen auch andere Vorgänge der Seite zusammen, sodass nur ein Ladebalken angezeigt wird. `luxLoadingChange` wird asynchron emittiert, damit der Handler auch während der Change Detection Zustand ändern darf. Ausnahme: Beim Zerstören der Tabelle wird `false` synchron emittiert. Entfernt die Seite die Tabelle während des Ladens (z. B. per `@if`), muss der Handler deshalb ein Signal oder einen Service (wie unten) beschreiben; ein normales Feld führt dann zu einem `ExpressionChangedAfterItHasBeenCheckedError`.
 
 ```html
 <!-- Seite -->
@@ -125,7 +104,9 @@ export class AppLoadingService {
 
 ```typescript
 // Seite
-private loading = inject(AppLoadingService);
+import { LuxLoadingService } from '@ihk-gfi/lux-components/lux-loading';
+
+private readonly loading = inject(LuxLoadingService);
 private releaseTableLoading?: () => void;
 
 onTableLoadingChange(loading: boolean) {

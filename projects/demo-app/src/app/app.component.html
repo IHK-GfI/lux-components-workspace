@@ -344,12 +344,13 @@
       </lux-app-header-ac-action-nav>
     </lux-app-header-ac>
   }
-  <!-- Globaler Ladebalken (z. B. für Tabellen mit luxShowProgress = false), siehe DemoGlobalLoadingService -->
+  <!-- Globaler Ladebalken für alle über den LuxLoadingService gemeldeten Vorgänge (z. B. Tabellen mit luxShowProgress = false) -->
   <div class="app-global-progress">
     @if (globalLoading.isBusy()) {
       <lux-progress
         class="lux-pointer-events-none"
         luxTagId="appGlobalProgress"
+        luxAriaLabel="{{ 'luxc.loading.busy' | transloco }}"
         luxType="Progressbar"
         luxMode="indeterminate"
         luxSize="small"
