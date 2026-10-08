@@ -113,6 +113,7 @@ Es wird empfohlen, das Layout mit den Komponenten aus dem [Layout](#layout) zu e
 - [lux-paginator](lux‐paginator-v21)
 - [lux-popup](lux‐popup-v21)
 - [lux-progress](lux‐progress-v21)
+- [lux-skeleton](lux‐skeleton-v21)
 - [lux-snackbar](lux‐snackbar-v21)
 - [lux-table](lux‐table-v21)
 - [lux‐tenant‐logo](lux‐tenant‐logo-v21)

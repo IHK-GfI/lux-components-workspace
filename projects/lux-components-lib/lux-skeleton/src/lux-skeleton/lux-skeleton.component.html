@@ -1,0 +1,12 @@
+@for (item of items(); track $index) {
+  <span
+    class="lux-skeleton__item lux-relative lux-block lux-bg-color-neutral-90"
+    [class.lux-mb-3]="!$last"
+    [class.lux-rounded-sm]="luxVariant() !== 'circle'"
+    [class.lux-rounded-full]="luxVariant() === 'circle'"
+    [class.lux-skeleton__item--text]="luxVariant() === 'text'"
+    [class.lux-skeleton__item--rect]="luxVariant() === 'rect'"
+    [class.lux-skeleton__item--circle]="luxVariant() === 'circle'"
+    [class.lux-skeleton__item--trailing]="luxVariant() === 'text' && luxCount() > 1 && $last"
+  ></span>
+}
