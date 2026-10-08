@@ -1,0 +1,18 @@
+.example-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.example-avatar {
+  width: 2.5em;
+  height: 2.5em;
+  flex-shrink: 0;
+  background-color: var(--lux-theme-primary-color);
+  color: var(--mat-sys-on-primary);
+  font-size: 1em;
+}
+
+.example-list-title {
+  font-weight: bold;
+}

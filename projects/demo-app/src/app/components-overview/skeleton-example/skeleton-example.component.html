@@ -1,0 +1,108 @@
+<example-base-structure
+  exampleTitle="Skeleton"
+  exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/lux%E2%80%90skeleton-v21"
+>
+  <example-base-content class="lux-flex lux-flex-col lux-gap-4">
+    <div class="lux-highlight-section lux-flex lux-flex-col lux-gap-2">
+      <h3>Konfigurierbar</h3>
+      <lux-skeleton
+        [luxVariant]="variant()"
+        [luxWidth]="width() || undefined"
+        [luxHeight]="height() || undefined"
+        [luxCount]="count()"
+        [luxAnimated]="animated()"
+      ></lux-skeleton>
+    </div>
+
+    <div class="lux-highlight-section lux-flex lux-flex-col lux-gap-2">
+      <h3>Varianten</h3>
+      <div class="lux-flex lux-flex-col lux-gap-4">
+        <lux-skeleton luxVariant="text" [luxAnimated]="animated()"></lux-skeleton>
+        <lux-skeleton luxVariant="rect" luxHeight="4em" [luxAnimated]="animated()"></lux-skeleton>
+        <lux-skeleton luxVariant="circle" luxWidth="2.5em" [luxAnimated]="animated()"></lux-skeleton>
+      </div>
+    </div>
+
+    <div class="lux-highlight-section lux-flex lux-flex-col lux-gap-2">
+      <h3>Rezept: Absatz</h3>
+      <lux-skeleton [luxCount]="3" [luxAnimated]="animated()"></lux-skeleton>
+    </div>
+
+    <div class="lux-highlight-section lux-flex lux-flex-col lux-gap-2">
+      <div class="lux-flex lux-items-center lux-justify-between lux-gap-2 lux-flex-wrap">
+        <h3>Rezept: Listenzeile</h3>
+        <lux-button
+          luxLabel="Daten neu laden"
+          luxColor="primary"
+          luxTagId="skeleton-reload-btn"
+          [luxStroked]="true"
+          [luxDisabled]="loading()"
+          (luxClicked)="reload()"
+        >
+        </lux-button>
+      </div>
+      <ul class="example-list lux-flex lux-flex-col lux-gap-4" [attr.aria-busy]="loading()" aria-label="Personen">
+        @if (loading()) {
+          @for (person of persons; track person.name) {
+            <li class="lux-flex lux-gap-3 lux-items-center">
+              <lux-skeleton luxVariant="circle" luxWidth="2.5em" [luxAnimated]="animated()"></lux-skeleton>
+              <div class="lux-flex-1 lux-flex lux-flex-col lux-gap-2">
+                <lux-skeleton luxVariant="text" luxWidth="40%" [luxAnimated]="animated()"></lux-skeleton>
+                <lux-skeleton luxVariant="text" [luxAnimated]="animated()"></lux-skeleton>
+              </div>
+            </li>
+          }
+        } @else {
+          @for (person of persons; track person.name) {
+            <li class="lux-flex lux-gap-3 lux-items-center">
+              <span class="example-avatar lux-rounded-full lux-flex lux-items-center lux-justify-center" aria-hidden="true">{{
+                person.initials
+              }}</span>
+              <div class="lux-flex-1 lux-flex lux-flex-col lux-gap-2">
+                <span class="example-list-title">{{ person.name }}</span>
+                <span>{{ person.description }}</span>
+              </div>
+            </li>
+          }
+        }
+      </ul>
+    </div>
+  </example-base-content>
+  <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
+    <lux-radio-ac
+      luxLabel="luxVariant"
+      [luxOptions]="variantOptions"
+      [(luxSelected)]="variant"
+      [luxOrientationVertical]="false"
+      luxHint="Form des Platzhalters: Textzeile (typografie-relativ), Rechteck oder Kreis."
+    ></lux-radio-ac>
+
+    <lux-input-ac luxLabel="luxWidth" luxAutocomplete="off" [(luxValue)]="width">
+      <lux-form-hint>CSS-Länge (z. B. 120px, 40% oder 3em); bei circle der Durchmesser. Leer: Standardwert der Variante.</lux-form-hint>
+    </lux-input-ac>
+
+    <lux-input-ac luxLabel="luxHeight" luxAutocomplete="off" [(luxValue)]="height">
+      <lux-form-hint>
+        Feste CSS-Länge (z. B. 16px oder 4em), keine Prozentangabe; wird bei circle ignoriert. Leer: Standardwert der Variante.
+      </lux-form-hint>
+    </lux-input-ac>
+
+    <lux-input-ac
+      luxLabel="luxCount"
+      luxType="number"
+      [luxNumberAlignLeft]="true"
+      [luxValue]="count()"
+      (luxValueChange)="onCountChange($event)"
+    >
+      <lux-form-hint>Anzahl der Platzhalter; bei text wird die letzte Zeile kürzer dargestellt.</lux-form-hint>
+    </lux-input-ac>
+
+    <lux-toggle-ac luxLabel="luxAnimated" [(luxChecked)]="animated" [luxNoTopLabel]="true">
+      <lux-form-hint>
+        Schaltet die Puls-Animation aller Platzhalter auf dieser Seite ein oder aus. Die Animation respektiert zusätzlich die
+        Systemeinstellung
+        <i>prefers-reduced-motion</i>.
+      </lux-form-hint>
+    </lux-toggle-ac>
+  </example-base-simple-options>
+</example-base-structure>

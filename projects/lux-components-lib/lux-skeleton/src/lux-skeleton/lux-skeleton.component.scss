@@ -1,0 +1,49 @@
+// MUI skeleton pulse values; LUX and Angular Material expose no motion CSS variables yet
+$pulse-duration: 2s;
+$pulse-delay: 0.5s;
+$pulse-min-opacity: 0.4;
+
+:host {
+  display: block;
+}
+
+.lux-skeleton__item {
+  animation: lux-skeleton-pulse $pulse-duration ease-in-out $pulse-delay infinite;
+}
+
+.lux-skeleton__item--text {
+  width: var(--lux-skeleton-width, 100%);
+  height: var(--lux-skeleton-height, 1em);
+}
+
+.lux-skeleton__item--rect {
+  width: var(--lux-skeleton-width, 100%);
+  height: var(--lux-skeleton-height, 4em);
+}
+
+// Height derived via aspect-ratio, so percentages work too (a percentage height would resolve against the parent)
+.lux-skeleton__item--circle {
+  width: var(--lux-skeleton-width, 2.5em);
+  aspect-ratio: 1;
+}
+
+// Relative to the configured width, otherwise the trailing line would be wider than e.g. luxWidth="40%"
+.lux-skeleton__item--trailing {
+  width: calc(var(--lux-skeleton-width, 100%) * 0.6);
+}
+
+:host(.lux-skeleton--static) .lux-skeleton__item {
+  animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lux-skeleton__item {
+    animation: none;
+  }
+}
+
+@keyframes lux-skeleton-pulse {
+  50% {
+    opacity: $pulse-min-opacity;
+  }
+}
