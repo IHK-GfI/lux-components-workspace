@@ -18,6 +18,9 @@ async function expandLabelVariants(content: Locator) {
   await card.getByRole('button', { name: 'Mehr', exact: true }).click();
   await expect(card.getByRole('button', { name: 'Weniger', exact: true })).toBeVisible();
   await expect(content.getByRole('heading', { name: 'Komponenten ohne Top- und Bottom-Label' })).toBeVisible();
+  await card.locator('.lux-card-content-expanded').evaluate(async (element) => {
+    await Promise.all(element.getAnimations().map((animation) => animation.finished));
+  });
 }
 
 async function screenshotContent(page: Page, name: string) {

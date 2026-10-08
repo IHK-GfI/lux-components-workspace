@@ -36,7 +36,8 @@ const STYLES: Record<string, string> = {
  */
 const READY: Record<string, (exampleArea: Locator) => Locator> = {
   // Die Liste wird per setTimeout (2 s) gefüllt, vorher steht dort "Lade Daten...".
-  list: (exampleArea) => exampleArea.locator('lux-list-item').first()
+  list: (exampleArea) => exampleArea.locator('lux-list-item').first(),
+  'table-server': (exampleArea) => exampleArea.locator('lux-table .lux-row').first()
 };
 
 function readExampleRoutes(): string[] {

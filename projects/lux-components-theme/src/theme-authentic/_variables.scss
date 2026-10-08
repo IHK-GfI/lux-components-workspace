@@ -232,7 +232,7 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-accordion-header-description-color-neutral: var(--lux-theme-accordion-header-color-on-neutral);
 
   // LUX-Badge
-  --lux-theme-badge-red: var(--lux-theme-custom-red);
+  --lux-theme-badge-red: #c00013;
   --lux-theme-badge-on-red: var(--lux-theme-custom-on-red);
   --lux-theme-badge-green: var(--lux-theme-custom-green);
   --lux-theme-badge-on-green: var(--lux-theme-custom-on-green);
@@ -273,7 +273,7 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-badge-muted-stroke-gray: var(--lux-theme-neutral-80);
   --lux-theme-badge-muted-orange: var(--lux-theme-custom-orange-95);
   --lux-theme-badge-muted-on-orange: var(--lux-theme-custom-orange-30);
-  --lux-theme-badge-muted-stroke-orange: var(--lux-theme-custom-orange-30);
+  --lux-theme-badge-muted-stroke-orange: var(--lux-theme-custom-orange-80);
   --lux-theme-badge-muted-black: var(--lux-theme-neutral-100);
   --lux-theme-badge-muted-on-black: var(--lux-theme-neutral-10);
   --lux-theme-badge-muted-stroke-black: var(--lux-theme-neutral-40);
@@ -283,9 +283,9 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-badge-muted-pink: var(--lux-theme-custom-pink-95);
   --lux-theme-badge-muted-on-pink: var(--lux-theme-custom-pink-30);
   --lux-theme-badge-muted-stroke-pink: var(--lux-theme-custom-pink-80);
-  --lux-theme-badge-muted-lightblue: var(--lux-theme-custom-lightblue-95);
+  --lux-theme-badge-muted-lightblue: var(--lux-theme-primary-95);
   --lux-theme-badge-muted-on-lightblue: var(--lux-theme-primary-20);
-  --lux-theme-badge-muted-stroke-lightblue: var(--lux-theme-custom-lightblue-80);
+  --lux-theme-badge-muted-stroke-lightblue: var(--lux-theme-primary-80);
 
   // LUX-Breadcrumb
   --lux-theme-breadcrumb-hover-color: var(--lux-theme-link-plain-hover-color);
