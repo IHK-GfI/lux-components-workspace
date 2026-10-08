@@ -344,6 +344,19 @@
       </lux-app-header-ac-action-nav>
     </lux-app-header-ac>
   }
+  <!-- Globaler Ladebalken (z. B. für Tabellen mit luxShowProgress = false), siehe DemoGlobalLoadingService -->
+  <div class="app-global-progress">
+    @if (globalLoading.isBusy()) {
+      <lux-progress
+        class="lux-pointer-events-none"
+        luxTagId="appGlobalProgress"
+        luxType="Progressbar"
+        luxMode="indeterminate"
+        luxSize="small"
+        luxColor="green"
+      ></lux-progress>
+    }
+  </div>
   <lux-app-content luxAriaRoleMainLabel="{{ 'luxc.app_content.ariarolemain' | transloco }}" cdkScrollable>
     @if (this.luxAppFooter !== 'none' && (fixedFooterService.fixedModeAsObservable | async) === false) {
       <lux-app-footer luxVersion="21.9.0"></lux-app-footer>

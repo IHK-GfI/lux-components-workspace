@@ -6,6 +6,8 @@
     <div [ngStyle]="{ height: calculateProportions ? tableHeightPx + 'px' : 'unset' }">
       <lux-table
         [luxMinWidthPx]="minWidthPx"
+        [luxShowProgress]="showProgress"
+        (luxLoadingChange)="onTableLoadingChange($event)"
         [luxShowPagination]="pagination"
         [luxColWidthsPercent]="columnWidthOption"
         [luxShowFilter]="filter"
@@ -88,6 +90,20 @@
     </div>
   </example-base-content>
   <example-base-simple-options>
+    <lux-toggle-ac
+      luxLabel="Globaler Ladezustand"
+      [luxChecked]="useGlobalLoading"
+      (luxCheckedChange)="onUseGlobalLoadingChange($event)"
+      [luxNoLabels]="true"
+    >
+      <lux-form-hint
+        >Meldet den Ladezustand der Tabelle über luxLoadingChange an den globalen Ladebalken unter dem App-Header. Damit nicht zwei
+        Ladebalken angezeigt werden, wird luxShowProgress dabei abgeschaltet.</lux-form-hint
+      >
+    </lux-toggle-ac>
+    <lux-toggle-ac luxLabel="luxShowProgress" [(luxChecked)]="showProgress" [luxDisabled]="useGlobalLoading" [luxNoLabels]="true">
+      <lux-form-hint>Dieses Flag steuert, ob die interne Progressbar beim Laden angezeigt wird.</lux-form-hint>
+    </lux-toggle-ac>
     <table-example-simple-options [tableExample]="this" class="lux-flex lux-flex-col lux-gap-4"></table-example-simple-options>
   </example-base-simple-options>
   <example-base-advanced-options>
