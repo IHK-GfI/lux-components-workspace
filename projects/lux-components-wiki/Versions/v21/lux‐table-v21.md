@@ -7,6 +7,7 @@
     - [Allgemein](#allgemein)
     - [@Input](#input)
     - [@Output](#output)
+    - [Signals](#signals)
     - [@ViewChild](#viewchild)
   - [Components](#components)
     - [LuxTableColumnComponent](#luxtablecolumncomponent)
@@ -28,6 +29,7 @@
     - [4. Sortable](#4-sortable)
     - [5. Filter, Pagination, Sortierung und angepassten Spaltenbreiten](#5-filter-pagination-sortierung-und-angepassten-spaltenbreiten)
     - [6. Custom CSS](#6-custom-css)
+      - [Automatische Deaktivierung der alternierenden Zeilenfarben](#automatische-deaktivierung-der-alternierenden-zeilenfarben)
     - [7. Async Data](#7-async-data)
     - [8. Multiselect mit deaktivierten Checkboxen](#8-multiselect-mit-deaktivierten-checkboxen)
     - [9. Responsive](#9-responsive)
@@ -50,6 +52,7 @@
 | luxHttpDAO                      | ILuxTableHttpDao                      | Alternative zu luxData, welche den asynchronen Abruf von Daten pro Page ermöglicht. Sollte die Funktion loadData(conf: { page: number, pageSize: number, filter?: string, sort?: string, order?: string}: Observable<{totalCount: number, items: any[]}> Das DAO kann das Interface ILuxTableHttpDao implementieren und die Funktion loadData den Rückgabetyp Observable \<ILuxTableHttpDaoStructure> besitzen. |
 | luxColWidthsPercent             | number[]                              | Enthält ein Array mit Größenangaben in Prozent für die einzelnen Spalten in der Tabelle.                                                                                                                                                                                                                                                                                                                        |
 | luxShowFilter                   | boolean                               | Bestimmt, ob das Input-Feld für Filtereingaben dargestellt werden soll oder nicht. Der Filter berücksichtigt alle in der Tabelle bekannten Inhalte und Kopfzeilen.                                                                                                                                                                                                                                              |
+| luxShowProgress                 | boolean                               | Bestimmt, ob die interne Progressbar angezeigt wird, während die Tabelle lädt (`luxHttpDAO`) oder filtert (Standard: `true`). Bei `false` entfällt auch der dafür reservierte Platz. Overlay und Sperrung der Tabelle bleiben aktiv. Ein eigener bzw. globaler Ladebalken kann über `luxLoadingChange` oder `isLoading` gesteuert werden.                                                                       |
 | luxFilterText                   | string                                | Bestimmt den Text der als Platzhalter im Filter-Input angezeigt wird.                                                                                                                                                                                                                                                                                                                                           |
 | luxShowPagination               | boolean                               | Bestimmt, ob eine Pagination unterhalb der Tabelle angezeigt werden soll oder nicht.                                                                                                                                                                                                                                                                                                                            |
 | luxPageSize                     | number                                | Bestimmt die Anzahl an Einträgen, die pro Pagination-Page für die Tabelle angezeigt werden.                                                                                                                                                                                                                                                                                                                     |
@@ -80,6 +83,48 @@
 | luxSingleClicked         | EventEmitter \<{ event: Event; rowItem: T, rowIndex: number }> | Wird emittet, wenn ein einfacher Mausklick (oder Enter oder Leertaste) auf eine Tabellenzeile ausgeführt wird. Anmerkung: Dieser Emitter wird ausschließlich für normale Tabellen (d.h. `luxMultiSelect` muss `false` sein) unterstützt. |
 | luxDoubleClicked         | EventEmitter \<{ event: MouseEvent; rowItem: T }>              | Wird emittet, wenn ein Doppelklick auf eine Tabellenzeile ausgeführt wird. Anmerkung: Dieser Emitter wird ausschließlich für normale Tabellen (d.h. `luxMultiSelect` muss `false` sein) unterstützt.                                     |
 | luxHiddenColumnsChange   | EventEmitter \<string[]>                                       | Wird emittet, wenn sich die ausgeblendeten Spalten ändern.                                                                                                                                                                               |
+| luxLoadingChange         | EventEmitter \<boolean>                                        | Wird asynchron emittiert, wenn sich der Ladezustand (`isLoading`) ändert. Wird die Tabelle während des Ladens zerstört, wird abschließend `false` synchron emittiert. Geeignet für einen globalen Ladebalken (z. B. im Header).          |
+
+### Signals
+
+| Name      | Typ              | Beschreibung                                                                                                                                                                                                                                                                                                             |
+| --------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| isLoading | Signal\<boolean> | Ist `true`, solange die Tabelle Daten lädt (`luxHttpDAO`) oder eine Filtereingabe verarbeitet. In dieser Zeit ist die Tabelle gesperrt. Innerhalb derselben Komponente (z. B. per Template-Referenz) nutzbar; für einen globalen Ladebalken siehe `luxLoadingChange`. Ersetzt das veraltete Property `isLoadingResults`. |
+
+Beispiel für einen globalen Ladebalken im Header:
+
+Der Header kennt die Tabelle nicht. Deshalb meldet die Seite den Ladezustand der Tabelle als anzeigenden Vorgang (`busy()`) an den zentralen [LuxLoadingService](lux‐loading-v21), den der Header ausliest. Dort laufen auch andere Vorgänge der Seite zusammen, sodass nur ein Ladebalken angezeigt wird. `luxLoadingChange` wird asynchron emittiert, damit der Handler auch während der Change Detection Zustand ändern darf. Ausnahme: Beim Zerstören der Tabelle wird `false` synchron emittiert. Entfernt die Seite die Tabelle während des Ladens (z. B. per `@if`), muss der Handler deshalb ein Signal oder einen Service (wie unten) beschreiben; ein normales Feld führt dann zu einem `ExpressionChangedAfterItHasBeenCheckedError`.
+
+```html
+<!-- Seite -->
+<lux-table [luxHttpDAO]="httpDao" [luxShowProgress]="false" (luxLoadingChange)="onTableLoadingChange($event)">
+  ...
+</lux-table>
+```
+
+```typescript
+// Seite
+import { LuxLoadingService } from '@ihk-gfi/lux-components/lux-loading';
+
+private readonly loading = inject(LuxLoadingService);
+private releaseTableLoading?: () => void;
+
+onTableLoadingChange(loading: boolean) {
+  this.releaseTableLoading?.();
+  this.releaseTableLoading = loading ? this.loading.busy() : undefined;
+}
+
+ngOnDestroy() {
+  this.releaseTableLoading?.();
+}
+```
+
+```html
+<!-- Header (z. B. app.component.html) -->
+@if (loading.isBusy()) {
+  <lux-progress class="lux-pointer-events-none" luxMode="indeterminate" luxSize="small" luxColor="green"></lux-progress>
+}
+```
 
 ### @ViewChild
 
@@ -623,6 +668,8 @@ deaktiviert. Bei Client-Tabellen wird der komplette Datenbestand geprüft, daher
 auch dann deaktiviert, wenn ein Filter gerade alle markierten Zeilen ausblendet.
 
 ### 7. Async Data
+
+Startet die Tabelle einen neuen Request (Sortieren, Blättern, Filtern oder ein neues `luxHttpDAO`), wird ein noch laufender Request abgebrochen (Unsubscribe). Nur der neueste Request liefert Daten und bestimmt den Ladezustand. Wird `luxHttpDAO` auf `undefined` gesetzt, wird ein laufender Request ebenfalls abgebrochen.
 
 ![Beispielbild 07](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v21/lux‐table-v21-img-07.png)
 

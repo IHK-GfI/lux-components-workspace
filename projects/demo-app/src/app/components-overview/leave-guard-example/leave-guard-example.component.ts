@@ -1,12 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import {
-  LuxButtonComponent,
-  LuxFormHintComponent,
-  LuxInputAcComponent,
-  LuxProgressComponent,
-  LuxToggleAcComponent
-} from '@ihk-gfi/lux-components';
+import { LuxButtonComponent, LuxFormHintComponent, LuxInputAcComponent, LuxToggleAcComponent } from '@ihk-gfi/lux-components';
 import { LuxLeaveGuardBase } from '@ihk-gfi/lux-components/lux-leave-guard';
 import { LuxLoadingService } from '@ihk-gfi/lux-components/lux-loading';
 import { debounceTime, distinctUntilChanged, finalize, Subject, switchMap, tap, timer } from 'rxjs';
@@ -27,7 +21,6 @@ const FILTER_DEBOUNCE_MS = 600;
     LuxButtonComponent,
     LuxFormHintComponent,
     LuxInputAcComponent,
-    LuxProgressComponent,
     LuxToggleAcComponent,
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,

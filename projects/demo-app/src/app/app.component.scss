@@ -1,5 +1,18 @@
 .lux-side-nav-header-greeting {
-    text-align: center;
-    margin: 8px;
+  text-align: center;
+  margin: 8px;
+}
+
+// Der globale Ladebalken liegt über dem Content, damit sich das Layout beim Ein-/Ausblenden nicht verschiebt.
+.app-global-progress {
+  position: relative;
+  height: 0;
+
+  lux-progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
   }
-  
+}
