@@ -1,3 +1,4 @@
+import { CdkMenuTrigger } from '@angular/cdk/menu';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -8,7 +9,7 @@ import { LuxA11yTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { TranslocoService } from '@jsverse/transloco';
 import Quill from 'quill/core';
 import Strike from 'quill/formats/strike';
-import { of } from 'rxjs';
+import { of, Subject } from 'rxjs';
 import { provideLuxTranslocoTesting } from '../../../src/testing/transloco-test.provider';
 import { LUX_QUILL_CONFIG, LuxQuillConfig, LuxQuillPreset } from './lux-quill-config';
 import { luxQuillNormalizeHtml } from './lux-quill-formats';
@@ -72,7 +73,7 @@ describe('LuxQuillComponent', () => {
       expect(editorRoot(fixture).getAttribute('aria-multiline')).toEqual('true');
     });
 
-    it('Sollte den Wert über luxValue setzen und Änderungen zurückmelden', () => {
+    it('Sollte den Wert über [(value)] setzen und Änderungen zurückmelden', () => {
       // Änderungen durchführen
       host.value.set('<p>Hallo Welt</p>');
       fixture.detectChanges();
@@ -86,6 +87,22 @@ describe('LuxQuillComponent', () => {
 
       // Nachbedingungen prüfen
       expect(host.value()).toEqual('<p>Hallo Welt!</p>');
+    });
+
+    it('Sollte valueChange nur bei Änderungen durch den Benutzer auslösen', () => {
+      // Änderungen durchführen
+      host.value.set('<p>Von außen</p>');
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen
+      expect(host.valueChanges).toEqual([]);
+
+      // Änderungen durchführen
+      editorOf(fixture).insertText(0, 'Neu ', 'user');
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen
+      expect(host.valueChanges).toEqual(['<p>Neu Von außen</p>']);
     });
 
     it('Sollte für einen leeren Editor einen leeren String liefern', () => {
@@ -176,7 +193,7 @@ describe('LuxQuillComponent', () => {
       expect(buttons.every((button) => button.disabled)).toBeTrue();
     });
 
-    it('Sollte bei luxReadonly den Editor sperren, die Toolbar ausblenden und lesbar bleiben', () => {
+    it('Sollte bei readonly den Editor sperren, die Toolbar ausblenden und lesbar bleiben', () => {
       // Änderungen durchführen
       host.readonly.set(true);
       fixture.detectChanges();
@@ -225,6 +242,18 @@ describe('LuxQuillComponent', () => {
 
         // Nachbedingungen prüfen
         expect(button.getAttribute('aria-pressed')).toEqual('true');
+      });
+
+      it('Sollte die aktiven Formate bei unveränderten Formaten nicht neu setzen', () => {
+        // Vorbedingungen testen
+        editorOf(fixture).setSelection(1, 0);
+        const before = quillComponentOf(fixture)['activeFormats']();
+
+        // Änderungen durchführen: Cursorbewegung innerhalb desselben (unformatierten) Textes
+        editorOf(fixture).setSelection(3, 0);
+
+        // Nachbedingungen prüfen
+        expect(quillComponentOf(fixture)['activeFormats']()).toBe(before);
       });
 
       it('Sollte Aufzählung und Nummerierung setzen', () => {
@@ -350,6 +379,59 @@ describe('LuxQuillComponent', () => {
         fixture.detectChanges();
       }
 
+      it('Sollte erkennen, wenn der Fokus das geöffnete Menü direkt nach außen verlässt', async () => {
+        // Vorbedingungen testen
+        host.preset.set('document');
+        host.required.set(true);
+        host.value.set('');
+        fixture.detectChanges();
+        const outside = document.createElement('button');
+        document.body.appendChild(outside);
+
+        try {
+          editorOf(fixture).focus();
+          fixture.detectChanges();
+          clickToolbarHeading();
+          const item = document.querySelector<HTMLElement>('.lux-quill-heading-menu-item');
+          expect(item).withContext('Menü geöffnet').toBeTruthy();
+
+          // Änderungen durchführen: Fokus ins Menü, dann direkt auf ein Element außerhalb.
+          item!.focus();
+          outside.focus();
+          fixture.detectChanges();
+
+          // Nachbedingungen prüfen: Solange das Menü offen ist, gilt die Komponente nicht als verlassen.
+          expect(fixture.nativeElement.querySelector('mat-error')).withContext('Menü offen').toBeNull();
+
+          // Änderungen durchführen: Menü schließt (z.B. durch den Klick nach außen).
+          fixture.debugElement.query(By.directive(CdkMenuTrigger)).injector.get(CdkMenuTrigger).close();
+          await new Promise((resolve) => setTimeout(resolve));
+          fixture.detectChanges();
+
+          // Nachbedingungen prüfen
+          expect(fixture.nativeElement.querySelector('mat-error')).withContext('nach dem Schließen').not.toBeNull();
+        } finally {
+          outside.remove();
+        }
+      });
+
+      it('Sollte nach Auswahl im Menü nicht als verlassen gelten', async () => {
+        // Vorbedingungen testen
+        host.preset.set('document');
+        host.required.set(true);
+        fixture.detectChanges();
+        editorOf(fixture).focus();
+        editorOf(fixture).setSelection(0, 0);
+
+        // Änderungen durchführen
+        selectHeading(1);
+        await new Promise((resolve) => setTimeout(resolve));
+        fixture.detectChanges();
+
+        // Nachbedingungen prüfen
+        expect(quillComponentOf(fixture)['focused']()).toBeTrue();
+      });
+
       it('Sollte im Kommentar-Preset keine Überschriften anbieten und eingefügte Überschriften zu Text machen', () => {
         // Änderungen durchführen
         host.value.set('<h1>Titel</h1><p>Text</p>');
@@ -451,6 +533,35 @@ describe('LuxQuillComponent', () => {
         );
         host.value.set('<p>Hallo Welt</p>');
         fixture.detectChanges();
+      });
+
+      it('Sollte das Öffnen des Link-Dialogs nicht als Verlassen der Komponente werten', () => {
+        // Vorbedingungen testen
+        const closed = new Subject<LuxQuillLinkDialogResult>();
+        openSpy.and.callFake(() => ({ dialogClosed: closed.asObservable() }) as unknown as LuxDialogRef);
+        host.required.set(true);
+        host.value.set('');
+        fixture.detectChanges();
+        editorOf(fixture).focus();
+        editorOf(fixture).setSelection(0, 0);
+
+        // Änderungen durchführen: Der Dialog nimmt dem Editor den Fokus.
+        pressKey(fixture, 'k', { ctrlKey: true });
+        editorRoot(fixture).dispatchEvent(new FocusEvent('focusout', { bubbles: true, relatedTarget: null }));
+        fixture.detectChanges();
+
+        // Nachbedingungen prüfen
+        expect(openSpy).toHaveBeenCalled();
+        expect(fixture.nativeElement.querySelector('mat-error')).withContext('Dialog offen').toBeNull();
+
+        // Änderungen durchführen: Dialog schließen, danach den Editor verlassen.
+        closed.next(undefined);
+        fixture.detectChanges();
+        editorRoot(fixture).dispatchEvent(new FocusEvent('focusout', { bubbles: true }));
+        fixture.detectChanges();
+
+        // Nachbedingungen prüfen
+        expect(fixture.nativeElement.querySelector('mat-error')).withContext('nach dem Verlassen').not.toBeNull();
       });
 
       it('Sollte für markierten Text einen Link setzen', () => {
@@ -623,6 +734,68 @@ describe('LuxQuillComponent', () => {
       expect(host.form.controls.text.touched).toBeTrue();
     });
 
+    it('Sollte disable()/enable() am FormControl über [(luxDisabled)] melden', () => {
+      // Änderungen durchführen
+      host.form.controls.text.disable();
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen
+      expect(host.disabled()).toBeTrue();
+
+      // Änderungen durchführen
+      host.form.controls.text.enable();
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen
+      expect(host.disabled()).toBeFalse();
+    });
+
+    it('Sollte ein von Anfang an deaktiviertes FormControl übernehmen', () => {
+      // Vorbedingungen testen
+      const initialFixture = TestBed.createComponent(FormHostComponent);
+      initialFixture.componentInstance.form.controls.text.disable();
+
+      // Änderungen durchführen
+      initialFixture.detectChanges();
+
+      // Nachbedingungen prüfen
+      expect(initialFixture.componentInstance.disabled()).toBeTrue();
+      expect(initialFixture.componentInstance.form.controls.text.disabled).toBeTrue();
+      expect(editorOf(initialFixture).isEnabled()).toBeFalse();
+    });
+
+    it('Sollte ein von Anfang an gesetztes luxDisabled bei aktivem FormControl übernehmen', () => {
+      // Vorbedingungen testen
+      const initialFixture = TestBed.createComponent(FormHostComponent);
+      initialFixture.componentInstance.disabled.set(true);
+
+      // Änderungen durchführen
+      initialFixture.detectChanges();
+
+      // Nachbedingungen prüfen
+      expect(initialFixture.componentInstance.disabled()).toBeTrue();
+      expect(initialFixture.componentInstance.form.controls.text.disabled).toBeTrue();
+      expect(editorOf(initialFixture).isEnabled()).toBeFalse();
+    });
+
+    it('Sollte luxDisabled auf das FormControl übertragen', () => {
+      // Änderungen durchführen
+      host.disabled.set(true);
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen
+      expect(host.form.controls.text.disabled).toBeTrue();
+      expect(editorOf(fixture).isEnabled()).toBeFalse();
+
+      // Änderungen durchführen
+      host.disabled.set(false);
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen
+      expect(host.form.controls.text.enabled).toBeTrue();
+      expect(editorOf(fixture).isEnabled()).toBeTrue();
+    });
+
     it('Sollte den Disabled-Status des FormControls übernehmen', () => {
       // Änderungen durchführen
       host.form.controls.text.disable();
@@ -656,6 +829,24 @@ describe('LuxQuillComponent', () => {
       // Nachbedingungen prüfen
       expect(fixture.componentInstance.value).toEqual('<p>Mein Modell</p>');
     });
+
+    it('Sollte den nach einer Konfigurationsänderung angepassten Wert an das Model melden', async () => {
+      // Vorbedingungen testen
+      const fixture = TestBed.createComponent(NgModelHostComponent);
+      fixture.componentInstance.value = '<h1 class="lux-quill-heading-1">Titel</h1>';
+      fixture.componentInstance.preset.set('document');
+      fixture.detectChanges();
+      await fixture.whenStable();
+      fixture.detectChanges();
+
+      // Änderungen durchführen
+      fixture.componentInstance.config.set({ headingMode: 'visual' });
+      fixture.detectChanges();
+      await fixture.whenStable();
+
+      // Nachbedingungen prüfen
+      expect(fixture.componentInstance.value).toEqual('<p class="lux-quill-heading-1">Titel</p>');
+    });
   });
 
   describe('Konfiguration', () => {
@@ -669,6 +860,63 @@ describe('LuxQuillComponent', () => {
       const buttons = fixture.nativeElement.querySelectorAll('.lux-quill-toolbar-control');
       expect(buttons.length).toEqual(1);
       expect(buttons[0].classList).toContain('lux-quill-toolbar-bold');
+    });
+
+    it('Sollte den Wert nach einem Wechsel des headingMode anpassen und melden', () => {
+      // Vorbedingungen testen
+      const fixture = TestBed.createComponent(StandaloneHostComponent);
+      const host = fixture.componentInstance;
+      host.preset.set('document');
+      host.value.set('<h1 class="lux-quill-heading-1">Titel</h1><p>Text</p>');
+      fixture.detectChanges();
+      expect(host.valueChanges).toEqual([]);
+
+      // Änderungen durchführen
+      host.config.set({ headingMode: 'visual' });
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen
+      expect(host.value()).toEqual('<p class="lux-quill-heading-1">Titel</p><p>Text</p>');
+      expect(host.valueChanges).toEqual(['<p class="lux-quill-heading-1">Titel</p><p>Text</p>']);
+
+      // Änderungen durchführen
+      host.config.set({ headingMode: 'none' });
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen
+      expect(host.value()).toEqual('<p>Titel</p><p>Text</p>');
+    });
+
+    it('Sollte nicht mehr erlaubte Formate nach einer Toolbar-Änderung aus dem Wert entfernen', () => {
+      // Vorbedingungen testen
+      const fixture = TestBed.createComponent(StandaloneHostComponent);
+      const host = fixture.componentInstance;
+      host.value.set('<p><strong>Fett</strong> und <em>kursiv</em></p>');
+      fixture.detectChanges();
+
+      // Änderungen durchführen
+      host.config.set({ toolbar: ['italic'] });
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen
+      expect(host.value()).toEqual('<p>Fett und <em>kursiv</em></p>');
+    });
+
+    it('Sollte den angepassten Wert im Formular übernehmen, ohne es als dirty zu markieren', () => {
+      // Vorbedingungen testen
+      const fixture = TestBed.createComponent(FormHostComponent);
+      const host = fixture.componentInstance;
+      host.preset.set('document');
+      host.form.controls.text.setValue('<h2 class="lux-quill-heading-2">Titel</h2>');
+      fixture.detectChanges();
+
+      // Änderungen durchführen
+      host.config.set({ headingMode: 'visual' });
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen
+      expect(host.form.controls.text.value).toEqual('<p class="lux-quill-heading-2">Titel</p>');
+      expect(host.form.controls.text.dirty).toBeFalse();
     });
 
     it('Sollte die Quill-Instanz über luxEditorCreated liefern und bei Konfigurationsänderung neu aufbauen', () => {
@@ -745,16 +993,17 @@ describe('LuxQuillComponent', () => {
 @Component({
   template: `
     <lux-quill
-      [(luxValue)]="value"
+      [(value)]="value"
       luxLabel="Kommentar"
       [luxHint]="hint()"
       [luxPlaceholder]="placeholder()"
       [luxRequired]="required()"
       [luxDisabled]="disabled()"
-      [luxReadonly]="readonly()"
+      [readonly]="readonly()"
       [luxErrorMessage]="errorMessage()"
       [luxPreset]="preset()"
       [luxConfig]="config()"
+      (valueChange)="valueChanges.push($event)"
       (luxEditorCreated)="createdEditors.push($event)"
     ></lux-quill>
   `,
@@ -772,28 +1021,34 @@ class StandaloneHostComponent {
   preset = signal<LuxQuillPreset>('comment');
   config = signal<Partial<LuxQuillConfig> | undefined>(undefined);
   createdEditors: Quill[] = [];
+  valueChanges: string[] = [];
 }
 
 @Component({
   template: `
     <form [formGroup]="form">
-      <lux-quill formControlName="text" luxLabel="Beschreibung"></lux-quill>
+      <lux-quill formControlName="text" luxLabel="Beschreibung" [(luxDisabled)]="disabled" [luxPreset]="preset()" [luxConfig]="config()"></lux-quill>
     </form>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxQuillComponent, ReactiveFormsModule]
 })
 class FormHostComponent {
+  disabled = signal(false);
+  preset = signal<LuxQuillPreset>('comment');
+  config = signal<Partial<LuxQuillConfig> | undefined>(undefined);
   form = new FormGroup({
     text: new FormControl('<p>Start</p>', { nonNullable: true, validators: Validators.required })
   });
 }
 
 @Component({
-  template: `<lux-quill [(ngModel)]="value" luxLabel="Notiz"></lux-quill>`,
+  template: `<lux-quill [(ngModel)]="value" luxLabel="Notiz" [luxPreset]="preset()" [luxConfig]="config()"></lux-quill>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxQuillComponent, FormsModule]
 })
 class NgModelHostComponent {
   value = '<p>Modell</p>';
+  preset = signal<LuxQuillPreset>('comment');
+  config = signal<Partial<LuxQuillConfig> | undefined>(undefined);
 }

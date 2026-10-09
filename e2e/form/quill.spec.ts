@@ -135,9 +135,34 @@ test.describe('lux-quill', () => {
     await expect(editor).toHaveAttribute('aria-describedby', new RegExp(`\\b${errorId}\\b`));
   });
 
+  test('quill – luxDisabled-Schalter und Enable/Disable des Formulars sind synchron', async ({ page }) => {
+    const example = await open(page);
+    const standalone = editorOf(example.section(EXAMPLE_WITHOUT_FORM, TAG).control);
+    const inForm = editorOf(example.section(EXAMPLE_IN_FORM, TAG).control);
+    const toggle = example.options.switch('luxDisabled');
+
+    // Schalter deaktiviert beide Beispiele (auch das FormControl).
+    await example.options.setSwitch('luxDisabled', true);
+    await expect(standalone).toHaveAttribute('aria-disabled', 'true');
+    await expect(inForm).toHaveAttribute('aria-disabled', 'true');
+    await expect(example.options.button('Enable')).toBeEnabled();
+
+    // Enable am Formular aktiviert wieder beide und setzt den Schalter zurück.
+    await example.options.enableViaForm();
+    await expect(toggle).not.toBeChecked();
+    await expect(standalone).not.toHaveAttribute('aria-disabled', 'true');
+    await expect(inForm).not.toHaveAttribute('aria-disabled', 'true');
+
+    // Disable am Formular wirkt ebenfalls auf Schalter und beide Beispiele.
+    await example.options.disableViaForm();
+    await expect(toggle).toBeChecked();
+    await expect(standalone).toHaveAttribute('aria-disabled', 'true');
+    await expect(inForm).toHaveAttribute('aria-disabled', 'true');
+  });
+
   test('quill – Readonly: Inhalt nicht änderbar, aber fokussierbar', async ({ page }) => {
     const example = await open(page);
-    await example.options.setSwitch('luxReadonly', true);
+    await example.options.setSwitch('readonly', true);
     const section = example.section(EXAMPLE_WITHOUT_FORM, TAG);
     const editor = editorOf(section.control);
     const before = await section.value();
@@ -165,7 +190,7 @@ test.describe('lux-quill', () => {
       }
     },
     { name: 'Disabled', apply: (example) => example.options.setSwitch('luxDisabled', true) },
-    { name: 'Readonly', apply: (example) => example.options.setSwitch('luxReadonly', true) },
+    { name: 'Readonly', apply: (example) => example.options.setSwitch('readonly', true) },
     { name: 'Kommentar-Preset', apply: (example) => example.options.select('luxPreset', 'comment (Kommentar)') }
   ];
 

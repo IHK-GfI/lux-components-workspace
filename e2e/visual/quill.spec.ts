@@ -94,7 +94,7 @@ test.describe('lux-quill', () => {
 
     // Readonly
     await toggle(page, 'luxDisabled');
-    await toggle(page, 'luxReadonly');
+    await toggle(page, 'readonly');
     await expect(editor).toHaveAttribute('aria-readonly', 'true');
     await screenshotSoft(page, quill, 'quill-readonly.png');
   });

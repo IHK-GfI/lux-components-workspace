@@ -1,5 +1,19 @@
 import { CdkMenu, CdkMenuItemRadio, CdkMenuTrigger } from '@angular/cdk/menu';
-import { ChangeDetectionStrategy, Component, computed, ElementRef, inject, input, output, signal } from '@angular/core';
+import {
+  afterNextRender,
+  afterRenderEffect,
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  DestroyRef,
+  ElementRef,
+  inject,
+  input,
+  output,
+  signal,
+  untracked
+} from '@angular/core';
+import { TooltipPosition } from '@angular/material/tooltip';
 import { LuxIconComponent, LuxTooltipDirective } from '@ihk-gfi/lux-components';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { LuxQuillHeadingMode, LuxQuillToolbarItem } from '../lux-quill-config';
@@ -32,6 +46,12 @@ const BUTTONS: Record<Exclude<LuxQuillToolbarItem, 'heading'>, ToolbarButton> = 
 };
 
 /**
+ * Verzögerung der Tooltips in ms: Beim Überfahren der Toolbar erscheinen keine Tooltips,
+ * erst beim Verweilen auf einem Button.
+ */
+export const LUX_QUILL_TOOLTIP_SHOW_DELAY = 600;
+
+/**
  * Toolbar des lux-quill-Editors (interne Komponente).
  *
  * Umgesetzt nach dem WAI-ARIA-Toolbar-Pattern: Die Toolbar ist ein einziger Tab-Stopp,
@@ -40,6 +60,7 @@ const BUTTONS: Record<Exclude<LuxQuillToolbarItem, 'heading'>, ToolbarButton> = 
 @Component({
   selector: 'lux-quill-toolbar',
   templateUrl: './lux-quill-toolbar.component.html',
+  styleUrl: './lux-quill-toolbar.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CdkMenu, CdkMenuItemRadio, CdkMenuTrigger, LuxIconComponent, LuxTooltipDirective, TranslocoPipe],
   host: {
@@ -54,6 +75,7 @@ const BUTTONS: Record<Exclude<LuxQuillToolbarItem, 'heading'>, ToolbarButton> = 
 })
 export class LuxQuillToolbarComponent {
   private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly luxItems = input<LuxQuillToolbarItem[]>([]);
   readonly luxHeadingMode = input<LuxQuillHeadingMode>('none');
@@ -63,6 +85,8 @@ export class LuxQuillToolbarComponent {
   readonly luxAriaLabel = input<string>('');
 
   readonly luxAction = output<LuxQuillToolbarAction>();
+  /** Das Menü der Überschriften-Auswahl wurde geschlossen (für die Fokusbehandlung im Editor). */
+  readonly luxHeadingMenuClosed = output<void>();
 
   protected readonly headingStyles: (LuxQuillHeadingStyle | null)[] = [null, 1, 2];
 
@@ -89,6 +113,45 @@ export class LuxQuillToolbarComponent {
   /** activeIndex, begrenzt auf die aktuell vorhandenen Controls (die Einträge können sich ändern). */
   protected readonly rovingIndex = computed(() => Math.min(this.activeIndex(), this.buttonOffset() + this.buttons().length - 1));
 
+  protected readonly tooltipShowDelay = LUX_QUILL_TOOLTIP_SHOW_DELAY;
+
+  /**
+   * Indizes der Controls, die nicht in der ersten Zeile der (umbrechenden) Toolbar liegen.
+   * Deren Tooltips öffnen nach unten, damit sie keine Buttons der Zeile darüber verdecken.
+   * Material-Tooltips nehmen Mausereignisse an (WCAG 1.4.13 "Hoverable"), ein verdeckter Button
+   * wäre sonst nicht anklickbar.
+   */
+  private readonly lowerRowControls = signal<ReadonlySet<number>>(new Set());
+
+  private destroyed = false;
+
+  constructor() {
+    this.destroyRef.onDestroy(() => (this.destroyed = true));
+
+    // Nach jedem Rendern neu bestimmen, z.B. wenn sich die Einträge ändern ...
+    afterRenderEffect({
+      read: () => {
+        this.buttons();
+        this.showHeading();
+        this.updateRows();
+      }
+    });
+
+    // ... und wenn die Toolbar durch eine geänderte Breite anders umbricht.
+    afterNextRender(() => {
+      if (typeof ResizeObserver === 'undefined') {
+        return;
+      }
+      const observer = new ResizeObserver(() => this.updateRows());
+      observer.observe(this.elementRef.nativeElement);
+      this.destroyRef.onDestroy(() => observer.disconnect());
+    });
+  }
+
+  tooltipPosition(buttonIndex: number): TooltipPosition {
+    return this.lowerRowControls().has(buttonIndex + this.buttonOffset()) ? 'below' : 'above';
+  }
+
   isPressed(item: LuxQuillToolbarItem): boolean {
     const formats = this.luxActiveFormats();
     switch (item) {
@@ -109,6 +172,13 @@ export class LuxQuillToolbarComponent {
 
   headingLabelKey(style: LuxQuillHeadingStyle | null): string {
     return style === null ? 'luxc.quill.heading.normal' : `luxc.quill.heading.h${style}`;
+  }
+
+  onHeadingMenuClosed() {
+    // Das CDK-Menü schließt auch beim Zerstören der Toolbar, dann nicht mehr melden.
+    if (!this.destroyed) {
+      this.luxHeadingMenuClosed.emit();
+    }
   }
 
   onAction(item: LuxQuillToolbarItem, heading?: LuxQuillHeadingStyle | null) {
@@ -136,13 +206,15 @@ export class LuxQuillToolbarComponent {
       return;
     }
 
+    // rovingIndex statt activeIndex: Nach dem Verkleinern der Toolbar kann activeIndex außerhalb liegen.
+    const current = this.rovingIndex();
     let index: number;
     switch (event.key) {
       case 'ArrowRight':
-        index = (this.activeIndex() + 1) % controls.length;
+        index = (current + 1) % controls.length;
         break;
       case 'ArrowLeft':
-        index = (this.activeIndex() - 1 + controls.length) % controls.length;
+        index = (current - 1 + controls.length) % controls.length;
         break;
       case 'Home':
         index = 0;
@@ -157,6 +229,28 @@ export class LuxQuillToolbarComponent {
     event.preventDefault();
     this.activeIndex.set(index);
     controls[index].focus();
+  }
+
+  private updateRows() {
+    const controls = this.controls();
+    if (controls.length === 0) {
+      return;
+    }
+
+    // Toleranz von 2px für Rundungen bei Subpixel-Layouts.
+    const firstRowTop = Math.min(...controls.map((control) => control.offsetTop));
+    const lowerRow = new Set<number>();
+    controls.forEach((control, index) => {
+      if (control.offsetTop > firstRowTop + 2) {
+        lowerRow.add(index);
+      }
+    });
+
+    // untracked: Wird aus dem afterRenderEffect aufgerufen und soll nicht von sich selbst abhängen.
+    const current = untracked(this.lowerRowControls);
+    if (lowerRow.size !== current.size || [...lowerRow].some((index) => !current.has(index))) {
+      this.lowerRowControls.set(lowerRow);
+    }
   }
 
   private controls(): HTMLElement[] {

@@ -49,7 +49,7 @@ import { LuxQuillToolbarAction, LuxQuillToolbarComponent } from './lux-quill-too
  * Rich-Text-Editor auf Basis von Quill.js.
  *
  * Der Wert ist ein HTML-String (leerer Editor = ''). Die Komponente funktioniert ohne Formular
- * über [(luxValue)] sowie in Reactive Forms bzw. mit ngModel (ControlValueAccessor).
+ * über [(value)] sowie in Reactive Forms bzw. mit ngModel (ControlValueAccessor).
  */
 @Component({
   selector: 'lux-quill',
@@ -59,7 +59,7 @@ import { LuxQuillToolbarAction, LuxQuillToolbarComponent } from './lux-quill-too
   imports: [LuxQuillToolbarComponent, LuxIconComponent, LuxTagIdDirective, MatError, MatHint, TranslocoPipe],
   host: {
     class: 'lux-quill lux-form-control-wrapper-host',
-    '[class.lux-form-control-readonly]': 'luxReadonly()'
+    '[class.lux-form-control-readonly]': 'isReadonly()'
   }
 })
 export class LuxQuillComponent implements ControlValueAccessor, AfterContentInit, DoCheck {
@@ -88,8 +88,13 @@ export class LuxQuillComponent implements ControlValueAccessor, AfterContentInit
   readonly luxErrorCallback = input<LuxErrorCallbackFnType | undefined>(undefined);
   /** Pflichtfeld (nur ohne Formular, in Formularen den Required-Validator verwenden). */
   readonly luxRequired = input(false);
-  readonly luxDisabled = input(false);
-  readonly luxReadonly = input(false);
+  /**
+   * Deaktiviert Editor und Toolbar, auch als [(luxDisabled)]. In Reactive Forms bzw. mit ngModel wird der
+   * Zustand wie bei den übrigen LUX-Formularfeldern mit dem FormControl synchronisiert (in beide Richtungen).
+   */
+  readonly luxDisabled = model(false);
+  /** Schreibschutz: Die Toolbar wird ausgeblendet, der Inhalt bleibt per Tastatur erreichbar. */
+  readonly readonly = input(false);
   /** Blendet das Label nur visuell aus (es bleibt für Screenreader erhalten). */
   readonly luxNoTopLabel = input(false);
   /** Entfernt den Bereich für Hinweis und Fehlermeldung. */
@@ -104,8 +109,12 @@ export class LuxQuillComponent implements ControlValueAccessor, AfterContentInit
   /** Überschreibt einzelne Einstellungen des Presets bzw. von LUX_QUILL_CONFIG. */
   readonly luxConfig = input<Partial<LuxQuillConfig> | undefined>(undefined);
 
-  /** Der Wert als HTML-String (für die Nutzung ohne Formular). */
-  readonly luxValue = model<string>('');
+  /**
+   * Der Wert als HTML-String, z.B. für [(value)] ohne Formular. Emittiert über valueChange bei Änderungen
+   * durch den Benutzer und wenn eine geänderte Konfiguration den Wert anpasst, nicht beim Setzen von außen.
+   * Name entsprechend dem Signal-Forms-Vertrag (FormValueControl).
+   */
+  readonly value = model<string>('');
 
   readonly luxFocusIn = output<FocusEvent>();
   readonly luxFocusOut = output<FocusEvent>();
@@ -113,6 +122,7 @@ export class LuxQuillComponent implements ControlValueAccessor, AfterContentInit
   readonly luxEditorCreated = output<Quill>();
 
   private readonly editorHost = viewChild.required<ElementRef<HTMLElement>>('editor');
+  private readonly wrapperRef = viewChild.required<ElementRef<HTMLElement>>('wrapper');
 
   readonly uid = computed(() => this.luxId() || this.fallbackId);
   readonly config = computed(() => luxQuillResolveConfig(this.luxPreset(), this.globalConfig, this.luxConfig()));
@@ -121,21 +131,26 @@ export class LuxQuillComponent implements ControlValueAccessor, AfterContentInit
   readonly editor = signal<Quill | null>(null);
 
   protected readonly focused = signal(false);
-  protected readonly activeFormats = signal<Record<string, unknown>>({});
+  // Inhaltlicher Vergleich: Quill meldet bei jedem Tastendruck und jeder Cursorbewegung editor-change.
+  // Ohne equal würde jedes neue Objekt die Toolbar neu prüfen, auch wenn sich die Formate nicht ändern.
+  protected readonly activeFormats = signal<Record<string, unknown>>({}, { equal: (a, b) => JSON.stringify(a) === JSON.stringify(b) });
   private readonly cvaDisabled = signal(false);
-  private readonly touched = signal(false);
-  private readonly errors = signal<ValidationErrors | null>(null);
+  // Zustand des (internen oder Formular-)Controls. Bewusst nicht "touched"/"errors" genannt: Diese
+  // Namen sind im Signal-Forms-Vertrag für Inputs reserviert.
+  private readonly controlTouched = signal(false);
+  private readonly controlErrors = signal<ValidationErrors | null>(null);
   private readonly controlRequired = signal(false);
 
-  readonly disabled = computed(() => this.luxDisabled() || this.cvaDisabled());
-  readonly required = computed(() => (this.ngControl ? this.controlRequired() : this.luxRequired()));
+  readonly isDisabled = computed(() => this.luxDisabled() || this.cvaDisabled());
+  readonly isReadonly = computed(() => this.readonly());
+  readonly isRequired = computed(() => (this.ngControl ? this.controlRequired() : this.luxRequired()));
   protected readonly indentEnabled = computed(() => this.config().toolbar.some((item) => item === 'indent' || item === 'outdent'));
   protected readonly linkEnabled = computed(() => this.config().toolbar.includes('link'));
-  protected readonly showError = computed(() => this.touched() && !!this.errors() && !this.disabled());
-  protected readonly errorText = computed(() => (this.showError() ? this.fetchErrorMessage(this.errors()!) : ''));
+  protected readonly showError = computed(() => this.controlTouched() && !!this.controlErrors() && !this.isDisabled());
+  protected readonly errorText = computed(() => (this.showError() ? this.fetchErrorMessage(this.controlErrors()!) : ''));
   protected readonly hintId = computed(() => (!this.luxNoBottomLabel() && !this.showError() && this.luxHint() ? this.uid() + '-hint' : null));
   protected readonly errorId = computed(() => (!this.luxNoBottomLabel() && this.showError() ? this.uid() + '-error' : null));
-  protected readonly keyboardHintId = computed(() => (this.indentEnabled() && !this.luxReadonly() ? this.uid() + '-keyboard-hint' : null));
+  protected readonly keyboardHintId = computed(() => (this.indentEnabled() && !this.isReadonly() ? this.uid() + '-keyboard-hint' : null));
   protected readonly labelledBy = computed(() => {
     if (this.luxAriaLabelledby()) {
       return this.luxAriaLabelledby()!;
@@ -155,6 +170,8 @@ export class LuxQuillComponent implements ControlValueAccessor, AfterContentInit
   private editorElement?: HTMLElement;
   private editorConfigKey?: string;
   private recreating = false;
+  private linkDialogOpen = false;
+  private menuClosedTimeout?: ReturnType<typeof setTimeout>;
   private readonly keyboardState: LuxQuillKeyboardState = { tabReleased: false };
   private readonly modulesRefs = new WeakMap<object, number>();
   private modulesCounter = 0;
@@ -168,6 +185,7 @@ export class LuxQuillComponent implements ControlValueAccessor, AfterContentInit
     }
 
     afterNextRender({ write: () => this.createEditor() });
+    this.destroyRef.onDestroy(() => clearTimeout(this.menuClosedTimeout));
 
     // Konfigurationsänderungen nach der Initialisierung: Editor neu aufbauen, der Wert bleibt erhalten.
     effect(() => {
@@ -179,9 +197,9 @@ export class LuxQuillComponent implements ControlValueAccessor, AfterContentInit
       });
     });
 
-    // [(luxValue)] ohne Formular.
+    // [(value)] ohne Formular.
     effect(() => {
-      const value = this.luxValue() ?? '';
+      const value = this.value() ?? '';
       untracked(() => {
         if (!this.ngControl && value !== this.html) {
           this.html = value;
@@ -206,9 +224,15 @@ export class LuxQuillComponent implements ControlValueAccessor, AfterContentInit
       });
     });
 
+    // luxDisabled -> FormControl (Reactive Forms/ngModel).
+    effect(() => {
+      const disabled = this.luxDisabled();
+      untracked(() => this.applyDisabledToControl(disabled));
+    });
+
     effect(() => {
       const quill = this.editor();
-      const editable = !this.disabled() && !this.luxReadonly();
+      const editable = !this.isDisabled() && !this.isReadonly();
       if (quill) {
         quill.enable(editable);
       }
@@ -223,6 +247,9 @@ export class LuxQuillComponent implements ControlValueAccessor, AfterContentInit
     this.control = this.ngControl?.control ?? this.internalControl;
     this.control.events.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.syncControlState());
     this.syncControlState();
+    // Ein deaktiviertes FormControl hat luxDisabled bereits über setDisabledState() gesetzt. Hier bleibt
+    // nur der Fall, dass luxDisabled von außen auf true steht.
+    this.applyDisabledToControl(this.luxDisabled());
 
     setTimeout(() => this.checkA11yName());
   }
@@ -249,6 +276,18 @@ export class LuxQuillComponent implements ControlValueAccessor, AfterContentInit
 
   setDisabledState(isDisabled: boolean): void {
     this.cvaDisabled.set(isDisabled);
+
+    // Beim Einrichten des Controls ruft Angular immer setDisabledState(control.disabled) auf, also auch
+    // mit false. Das darf ein von außen gesetztes luxDisabled=true nicht überschreiben; ngAfterContentInit
+    // überträgt es danach auf das Control. Vor der Initialisierung deshalb nur "deaktiviert" übernehmen.
+    if (!this.control && !isDisabled) {
+      return;
+    }
+
+    // FormControl -> luxDisabled: disable()/enable() am Control wird über luxDisabledChange gemeldet.
+    if (this.luxDisabled() !== isDisabled) {
+      this.luxDisabled.set(isDisabled);
+    }
   }
 
   /** Setzt den Fokus in den Editor. */
@@ -264,16 +303,39 @@ export class LuxQuillComponent implements ControlValueAccessor, AfterContentInit
   }
 
   protected onFocusOut(event: FocusEvent) {
-    if (this.recreating) {
+    // Neuaufbau des Editors bzw. offener Link-Dialog: Das ist kein Verlassen der Komponente. Der Dialog
+    // gibt den Fokus beim Schließen an den Editor zurück.
+    if (this.recreating || this.linkDialogOpen) {
       return;
     }
 
     const next = event.relatedTarget as HTMLElement | null;
-    // Fokus bleibt in der Komponente oder wandert ins Menü der Überschriften-Auswahl (Overlay).
+    // Fokus bleibt in der Komponente oder wandert ins Menü der Überschriften-Auswahl (Overlay). Verlässt er
+    // das Menü später direkt nach außen, erkennt das onHeadingMenuClosed().
     if (next && ((event.currentTarget as HTMLElement).contains(next) || next.closest('.lux-quill-heading-menu'))) {
       return;
     }
 
+    this.leave(event);
+  }
+
+  /**
+   * Das Menü der Überschriften-Auswahl wurde geschlossen. Lag der Fokus darin und ist er danach nicht in
+   * die Komponente zurückgekehrt (z.B. Klick auf ein anderes Element), gilt die Komponente als verlassen.
+   * Geprüft wird verzögert, weil das CDK-Menü den Fokus erst nach dem Schließen zurückgibt.
+   */
+  protected onHeadingMenuClosed() {
+    clearTimeout(this.menuClosedTimeout);
+    this.menuClosedTimeout = setTimeout(() => {
+      const active = document.activeElement;
+      const wrapper = this.wrapperRef().nativeElement;
+      if (this.focused() && !this.linkDialogOpen && !(active && wrapper.contains(active))) {
+        this.leave(new FocusEvent('focusout', { relatedTarget: active }));
+      }
+    });
+  }
+
+  private leave(event: FocusEvent) {
     this.keyboardState.tabReleased = false;
     this.focused.set(false);
     this.markAsTouched();
@@ -282,7 +344,7 @@ export class LuxQuillComponent implements ControlValueAccessor, AfterContentInit
 
   protected onToolbarAction(action: LuxQuillToolbarAction) {
     const quill = this.editor();
-    if (!quill || this.disabled() || this.luxReadonly()) {
+    if (!quill || this.isDisabled() || this.isReadonly()) {
       return;
     }
 
@@ -325,7 +387,7 @@ export class LuxQuillComponent implements ControlValueAccessor, AfterContentInit
   /** Öffnet den Dialog zum Einfügen, Bearbeiten oder Entfernen eines Links. */
   openLinkDialog() {
     const quill = this.editor();
-    if (!quill || this.disabled() || this.luxReadonly() || !this.linkEnabled()) {
+    if (!quill || this.isDisabled() || this.isReadonly() || !this.linkEnabled()) {
       return;
     }
 
@@ -345,10 +407,15 @@ export class LuxQuillComponent implements ControlValueAccessor, AfterContentInit
       askForText: !url && range.length === 0
     };
 
+    // Solange der Dialog offen ist, gilt der Fokuswechsel nicht als Verlassen der Komponente (siehe onFocusOut).
+    this.linkDialogOpen = true;
     this.dialogService
       .openComponent(LuxQuillLinkDialogComponent, { width: 'auto', minWidth: 'min(30rem, 90vw)', disableClose: false }, data)
       .dialogClosed.pipe(take(1))
-      .subscribe((result: LuxQuillLinkDialogResult) => this.applyLinkResult(quill, linkRange, result));
+      .subscribe((result: LuxQuillLinkDialogResult) => {
+        this.linkDialogOpen = false;
+        this.applyLinkResult(quill, linkRange, result);
+      });
   }
 
   private applyLinkResult(quill: Quill, range: Range, result: LuxQuillLinkDialogResult) {
@@ -392,6 +459,7 @@ export class LuxQuillComponent implements ControlValueAccessor, AfterContentInit
     luxQuillRegisterFormats();
 
     let hadFocus = false;
+    const recreated = !!this.editorElement;
     if (this.editorElement) {
       // Beim Neuaufbau löst das Entfernen des fokussierten Editors ein focusout aus - mitten in der
       // Change Detection. Das ist kein Verlassen der Komponente und wird deshalb ignoriert.
@@ -411,7 +479,7 @@ export class LuxQuillComponent implements ControlValueAccessor, AfterContentInit
       const instance = new Quill(element, {
         formats: luxQuillFormats(config),
         placeholder: this.luxPlaceholder(),
-        readOnly: this.disabled() || this.luxReadonly(),
+        readOnly: this.isDisabled() || this.isReadonly(),
         modules: this.createModules(config)
       });
 
@@ -428,6 +496,9 @@ export class LuxQuillComponent implements ControlValueAccessor, AfterContentInit
 
     this.editor.set(quill);
     this.writeToEditor();
+    if (recreated) {
+      this.syncAdaptedValue(quill);
+    }
     // Direkt setzen: Der Effekt dafür läuft erst im nächsten Change-Detection-Durchlauf.
     this.updateEditorAttributes();
     if (hadFocus) {
@@ -512,7 +583,33 @@ export class LuxQuillComponent implements ControlValueAccessor, AfterContentInit
       } else {
         this.internalControl.setValue(html);
       }
-      this.luxValue.set(html);
+      this.value.set(html);
+    });
+  }
+
+  /**
+   * Nach einem Neuaufbau durch eine geänderte Konfiguration: Der Wert wurde beim Laden an die neue
+   * Konfiguration angepasst (z.B. <h1> -> <p class="lux-quill-heading-1"> bei headingMode 'visual',
+   * nicht mehr erlaubte Formate entfernt). Diesen Wert zurückmelden, damit Editor und Wert übereinstimmen.
+   * Im Formular ohne "dirty": Die Änderung stammt nicht vom Benutzer.
+   */
+  private syncAdaptedValue(quill: Quill) {
+    const html = this.readEditorHtml(quill);
+    if (html === this.html) {
+      return;
+    }
+
+    this.html = html;
+    this.ngZone.run(() => {
+      if (this.ngControl) {
+        this.control?.setValue(html, { emitModelToViewChange: false });
+        // Bei ngModel aktualisiert setValue() das gebundene Model nicht, erst viewToModelUpdate() meldet
+        // den Wert über ngModelChange - ebenfalls ohne das Control als dirty zu markieren.
+        this.ngControl.viewToModelUpdate(html);
+      } else {
+        this.internalControl.setValue(html);
+      }
+      this.value.set(html);
     });
   }
 
@@ -537,14 +634,28 @@ export class LuxQuillComponent implements ControlValueAccessor, AfterContentInit
     }
   }
 
+  /** Überträgt luxDisabled auf das Formular-Control (nur in Reactive Forms bzw. mit ngModel). */
+  private applyDisabledToControl(disabled: boolean) {
+    const control = this.ngControl ? this.control : undefined;
+    if (!control || control.disabled === disabled) {
+      return;
+    }
+
+    if (disabled) {
+      control.disable();
+    } else {
+      control.enable();
+    }
+  }
+
   private syncControlState() {
     const control = this.control;
     if (!control) {
       return;
     }
 
-    this.touched.set(control.touched);
-    this.errors.set(control.errors);
+    this.controlTouched.set(control.touched);
+    this.controlErrors.set(control.errors);
     this.controlRequired.set(control.hasValidator(Validators.required));
   }
 
@@ -566,7 +677,7 @@ export class LuxQuillComponent implements ControlValueAccessor, AfterContentInit
 
     const root = quill.root;
     const describedBy = [this.errorId() ?? this.hintId(), this.keyboardHintId()].filter((id) => !!id).join(' ');
-    const readonly = this.luxReadonly() && !this.disabled();
+    const readonly = this.isReadonly() && !this.isDisabled();
 
     this.setAttribute(root, 'id', this.uid());
     this.setAttribute(root, 'role', 'textbox');
@@ -574,10 +685,10 @@ export class LuxQuillComponent implements ControlValueAccessor, AfterContentInit
     this.setAttribute(root, 'aria-labelledby', this.labelledBy());
     this.setAttribute(root, 'aria-label', this.labelledBy() ? null : (this.luxAriaLabel() ?? null));
     this.setAttribute(root, 'aria-describedby', describedBy || null);
-    this.setAttribute(root, 'aria-required', this.required() ? 'true' : null);
+    this.setAttribute(root, 'aria-required', this.isRequired() ? 'true' : null);
     this.setAttribute(root, 'aria-invalid', this.showError() ? 'true' : null);
     this.setAttribute(root, 'aria-readonly', readonly ? 'true' : null);
-    this.setAttribute(root, 'aria-disabled', this.disabled() ? 'true' : null);
+    this.setAttribute(root, 'aria-disabled', this.isDisabled() ? 'true' : null);
     // Schreibgeschützte Inhalte sollen per Tastatur erreichbar und lesbar bleiben.
     this.setAttribute(root, 'tabindex', readonly ? '0' : null);
     this.setAttribute(root, 'data-placeholder', this.luxPlaceholder() || null);

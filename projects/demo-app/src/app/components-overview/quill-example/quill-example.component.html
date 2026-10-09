@@ -7,14 +7,14 @@
       <h3>Beispiel ohne Reactive-Form</h3>
       <lux-quill
         luxTagId="quill_withoutForm"
-        [(luxValue)]="value"
+        [(value)]="value"
         [luxLabel]="label()"
         [luxHint]="hint()"
         [luxPlaceholder]="placeholder()"
         [luxErrorMessage]="errorMessage() || undefined"
         [luxRequired]="required()"
-        [luxReadonly]="readonly()"
-        [luxDisabled]="disabled()"
+        [readonly]="readonly()"
+        [(luxDisabled)]="disabled"
         [luxDense]="dense()"
         [luxNoTopLabel]="noTopLabel()"
         [luxNoBottomLabel]="noBottomLabel()"
@@ -24,7 +24,7 @@
         [luxConfig]="config()"
         (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
         (luxFocusOut)="log(showOutputEvents(), 'luxFocusOut', $event)"
-        (luxValueChange)="log(showOutputEvents(), 'luxValueChange', $event)"
+        (valueChange)="log(showOutputEvents(), 'valueChange', $event)"
         (luxEditorCreated)="log(showOutputEvents(), 'luxEditorCreated', $event)"
       ></lux-quill>
       <example-value [value]="value()"></example-value>
@@ -35,11 +35,12 @@
       <lux-quill
         luxTagId="quill_withForm"
         [formControlName]="controlBinding"
+        [(luxDisabled)]="disabled"
         [luxLabel]="label()"
         [luxHint]="hint()"
         [luxPlaceholder]="placeholder()"
         [luxErrorMessage]="errorMessage() || undefined"
-        [luxReadonly]="readonly()"
+        [readonly]="readonly()"
         [luxDense]="dense()"
         [luxNoTopLabel]="noTopLabel()"
         [luxNoBottomLabel]="noBottomLabel()"
@@ -58,6 +59,10 @@
   </example-base-content>
 
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
+    <div class="lux-hint lux-p-2">
+      Tastatur im Editor: Tab / Umschalt+Tab rückt ein bzw. aus, Escape und dann Tab verlässt den Editor. Strg+B/I/U formatiert,
+      Strg+K fügt einen Link ein. In der Toolbar navigieren die Pfeiltasten.
+    </div>
     <lux-toggle-ac
       luxLabel="Output-Events loggen"
       luxHint="(Console --> F12/CMD+ALT+I)"
@@ -66,6 +71,7 @@
     ></lux-toggle-ac>
     <lux-select-ac
       luxLabel="luxPreset"
+      luxHint="comment: ohne Überschriften (z. B. Kommentare). document: Textstil-Auswahl mit echten Überschriften (h1/h2) für Briefe/PDF."
       [luxOptions]="presetOptions"
       luxOptionLabelProp="label"
       [luxPickValue]="(item) => item.value"
@@ -73,7 +79,7 @@
     ></lux-select-ac>
     <lux-select-ac
       luxLabel="luxConfig.headingMode"
-      luxHint="Überschreibt das Preset."
+      luxHint="Überschreibt das Preset. none: keine Überschriften, visual: nur Optik (Absatz mit Überschriften-Klasse), semantic: echte h-Tags. Vorhandene Überschriften werden beim Wechsel umgewandelt."
       [luxOptions]="headingModeOptions"
       luxOptionLabelProp="label"
       [luxPickValue]="(item) => item.value"
@@ -81,33 +87,53 @@
     ></lux-select-ac>
     <lux-select-ac
       luxLabel="luxConfig.headingLevels"
-      luxHint="HTML-Ebenen für Überschrift 1 / 2 (nur semantic)."
+      luxHint="HTML-Ebenen für Überschrift 1 / 2, z. B. h2/h3 auf Seiten mit eigener h1. Wirkt nur bei semantic, die Optik bleibt gleich."
       [luxOptions]="headingLevelOptions"
       luxOptionLabelProp="label"
       [luxPickValue]="(item) => item.value"
       [(luxSelected)]="headingLevels"
     ></lux-select-ac>
-    <lux-input-ac luxLabel="luxLabel" [(luxValue)]="label"></lux-input-ac>
-    <lux-input-ac luxLabel="luxHint" [(luxValue)]="hint"></lux-input-ac>
-    <lux-input-ac luxLabel="luxPlaceholder" [(luxValue)]="placeholder"></lux-input-ac>
-    <lux-toggle-ac luxLabel="luxRequired" [(luxChecked)]="required" [luxNoTopLabel]="true"></lux-toggle-ac>
-    <lux-toggle-ac luxLabel="luxReadonly" [(luxChecked)]="readonly" [luxNoTopLabel]="true"></lux-toggle-ac>
+    <lux-input-ac luxLabel="luxLabel" luxHint="Text oberhalb des Editors, zugleich sein zugänglicher Name." [(luxValue)]="label"></lux-input-ac>
+    <lux-input-ac luxLabel="luxHint" luxHint="Hinweis unterhalb des Editors (wird bei einem Fehler durch die Fehlermeldung ersetzt)." [(luxValue)]="hint"></lux-input-ac>
+    <lux-input-ac luxLabel="luxPlaceholder" luxHint="Nur bei leerem Editor sichtbar – zum Testen den Inhalt löschen." [(luxValue)]="placeholder"></lux-input-ac>
+    <lux-toggle-ac
+      luxLabel="luxRequired"
+      luxHint="Pflichtfeld (im Formular per Validators.required). Die Fehlermeldung erscheint erst, wenn man den leeren Editor verlässt."
+      [(luxChecked)]="required"
+      [luxNoTopLabel]="true"
+    ></lux-toggle-ac>
+    <lux-toggle-ac
+      luxLabel="readonly"
+      luxHint="Schreibschutz: Toolbar wird ausgeblendet, der Inhalt bleibt per Tab erreichbar und lesbar."
+      [(luxChecked)]="readonly"
+      [luxNoTopLabel]="true"
+    ></lux-toggle-ac>
     <example-form-disable [form]="form" [controlBinding]="controlBinding" [(disabled)]="disabled"></example-form-disable>
-    <lux-toggle-ac luxLabel="luxDense" [(luxChecked)]="dense" [luxNoTopLabel]="true"></lux-toggle-ac>
+    <lux-toggle-ac luxLabel="luxDense" luxHint="Kompaktere Darstellung (geringere Abstände und Mindesthöhe)." [(luxChecked)]="dense" [luxNoTopLabel]="true"></lux-toggle-ac>
   </example-base-simple-options>
 
   <example-base-advanced-options class="lux-flex lux-flex-col lux-gap-4">
     <lux-select-ac
       luxLabel="luxConfig.toolbar"
-      luxHint="Einträge der Toolbar. Formate ohne Eintrag sind im Editor nicht erlaubt."
+      luxHint="Einträge der Toolbar. Formate ohne Eintrag sind im Editor nicht erlaubt und werden aus dem Wert entfernt. Ohne indent/outdent wechselt Tab direkt den Fokus."
       [luxOptions]="toolbarOptions"
       [luxMultiple]="true"
       [(luxSelected)]="toolbar"
     ></lux-select-ac>
-    <lux-input-ac luxLabel="luxErrorMessage" [(luxValue)]="errorMessage"></lux-input-ac>
-    <lux-input-ac luxLabel="luxMinHeight" [(luxValue)]="minHeight"></lux-input-ac>
-    <lux-input-ac luxLabel="luxMaxHeight" [(luxValue)]="maxHeight"></lux-input-ac>
-    <lux-toggle-ac luxLabel="luxNoTopLabel" [(luxChecked)]="noTopLabel" [luxNoTopLabel]="true"></lux-toggle-ac>
-    <lux-toggle-ac luxLabel="luxNoBottomLabel" [(luxChecked)]="noBottomLabel" [luxNoTopLabel]="true"></lux-toggle-ac>
+    <lux-input-ac luxLabel="luxErrorMessage" luxHint="Ersetzt die Standardfehlermeldung, z. B. bei leerem Pflichtfeld (luxRequired)." [(luxValue)]="errorMessage"></lux-input-ac>
+    <lux-input-ac luxLabel="luxMinHeight" luxHint="Mindesthöhe des Eingabebereichs, z. B. 8rem." [(luxValue)]="minHeight"></lux-input-ac>
+    <lux-input-ac luxLabel="luxMaxHeight" luxHint="Längerer Inhalt scrollt innerhalb des Editors, z. B. 20rem." [(luxValue)]="maxHeight"></lux-input-ac>
+    <lux-toggle-ac
+      luxLabel="luxNoTopLabel"
+      luxHint="Blendet das Label nur visuell aus, für Screenreader bleibt es erhalten."
+      [(luxChecked)]="noTopLabel"
+      [luxNoTopLabel]="true"
+    ></lux-toggle-ac>
+    <lux-toggle-ac
+      luxLabel="luxNoBottomLabel"
+      luxHint="Entfernt Hinweis und Fehlermeldung unterhalb des Editors."
+      [(luxChecked)]="noBottomLabel"
+      [luxNoTopLabel]="true"
+    ></lux-toggle-ac>
   </example-base-advanced-options>
 </example-base-structure>

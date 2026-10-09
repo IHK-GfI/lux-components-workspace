@@ -279,12 +279,8 @@ $lux-quill-list-styles: (decimal, lower-alpha, lower-roman);
     }
   }
 
-  // Toolbar
+  // Toolbar (Flex-Layout im Component-SCSS der Toolbar)
   .lux-quill-toolbar {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.25rem;
     padding: 0.25rem;
     border-bottom: var(--lux-theme-form-border-width) solid var(--lux-theme-form-border-color);
   }
