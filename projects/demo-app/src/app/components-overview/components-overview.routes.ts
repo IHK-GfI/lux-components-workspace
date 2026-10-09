@@ -27,6 +27,7 @@ export const COMPONENT_OVERVIEW_ROUTES: Routes = [
       { path: 'leave-guard', loadComponent: () => import('./leave-guard-example/leave-guard-example.component').then(m => m.LeaveGuardExampleComponent), canDeactivate: [luxLeaveGuard] },
       { path: 'link', loadComponent: () => import('./link-example/link-example.component').then(m => m.LinkExampleComponent) },
       { path: 'progress', loadComponent: () => import('./progress-example/progress-example.component').then(m => m.ProgressBarExampleComponent) },
+      { path: 'quill', loadComponent: () => import('./quill-example/quill-example.component').then(m => m.QuillExampleComponent) },
       { path: 'radio-button-ac', loadComponent: () => import('./radio-authentic-example/radio-authentic-example.component').then(m => m.RadioAuthenticExampleComponent) },
       { path: 'select-ac', loadComponent: () => import('./select-authentic-example/select-authentic-example.component').then(m => m.SelectAuthenticExampleComponent) },
       { path: 'slider-ac', loadComponent: () => import('./slider-authentic-example/slider-authentic-example.component').then(m => m.SliderAuthenticExampleComponent) },

@@ -1,0 +1,113 @@
+<example-base-structure
+  exampleTitle="Quill"
+  exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/lux%E2%80%90quill-v21"
+>
+  <example-base-content>
+    <div class="lux-flex lux-flex-col">
+      <h3>Beispiel ohne Reactive-Form</h3>
+      <lux-quill
+        luxTagId="quill_withoutForm"
+        [(luxValue)]="value"
+        [luxLabel]="label()"
+        [luxHint]="hint()"
+        [luxPlaceholder]="placeholder()"
+        [luxErrorMessage]="errorMessage() || undefined"
+        [luxRequired]="required()"
+        [luxReadonly]="readonly()"
+        [luxDisabled]="disabled()"
+        [luxDense]="dense()"
+        [luxNoTopLabel]="noTopLabel()"
+        [luxNoBottomLabel]="noBottomLabel()"
+        [luxMinHeight]="minHeight() || undefined"
+        [luxMaxHeight]="maxHeight() || undefined"
+        [luxPreset]="preset()"
+        [luxConfig]="config()"
+        (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
+        (luxFocusOut)="log(showOutputEvents(), 'luxFocusOut', $event)"
+        (luxValueChange)="log(showOutputEvents(), 'luxValueChange', $event)"
+        (luxEditorCreated)="log(showOutputEvents(), 'luxEditorCreated', $event)"
+      ></lux-quill>
+      <example-value [value]="value()"></example-value>
+    </div>
+
+    <div class="lux-flex lux-flex-col" [formGroup]="form">
+      <h3>Beispiel in Reactive-Form</h3>
+      <lux-quill
+        luxTagId="quill_withForm"
+        [formControlName]="controlBinding"
+        [luxLabel]="label()"
+        [luxHint]="hint()"
+        [luxPlaceholder]="placeholder()"
+        [luxErrorMessage]="errorMessage() || undefined"
+        [luxReadonly]="readonly()"
+        [luxDense]="dense()"
+        [luxNoTopLabel]="noTopLabel()"
+        [luxNoBottomLabel]="noBottomLabel()"
+        [luxMinHeight]="minHeight() || undefined"
+        [luxMaxHeight]="maxHeight() || undefined"
+        [luxPreset]="preset()"
+        [luxConfig]="config()"
+      ></lux-quill>
+      <example-form-value [form]="form" [controlBinding]="controlBinding"></example-form-value>
+    </div>
+
+    <div class="lux-flex lux-flex-col">
+      <h3>Ausgabe mit lux-html</h3>
+      <lux-html [luxData]="value()" luxClass="lux-quill-content" [luxSanitizeConfig]="{ addAllowedAttrs: ['target'] }"></lux-html>
+    </div>
+  </example-base-content>
+
+  <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
+    <lux-toggle-ac
+      luxLabel="Output-Events loggen"
+      luxHint="(Console --> F12/CMD+ALT+I)"
+      [(luxChecked)]="showOutputEvents"
+      [luxNoTopLabel]="true"
+    ></lux-toggle-ac>
+    <lux-select-ac
+      luxLabel="luxPreset"
+      [luxOptions]="presetOptions"
+      luxOptionLabelProp="label"
+      [luxPickValue]="(item) => item.value"
+      [(luxSelected)]="preset"
+    ></lux-select-ac>
+    <lux-select-ac
+      luxLabel="luxConfig.headingMode"
+      luxHint="Überschreibt das Preset."
+      [luxOptions]="headingModeOptions"
+      luxOptionLabelProp="label"
+      [luxPickValue]="(item) => item.value"
+      [(luxSelected)]="headingMode"
+    ></lux-select-ac>
+    <lux-select-ac
+      luxLabel="luxConfig.headingLevels"
+      luxHint="HTML-Ebenen für Überschrift 1 / 2 (nur semantic)."
+      [luxOptions]="headingLevelOptions"
+      luxOptionLabelProp="label"
+      [luxPickValue]="(item) => item.value"
+      [(luxSelected)]="headingLevels"
+    ></lux-select-ac>
+    <lux-input-ac luxLabel="luxLabel" [(luxValue)]="label"></lux-input-ac>
+    <lux-input-ac luxLabel="luxHint" [(luxValue)]="hint"></lux-input-ac>
+    <lux-input-ac luxLabel="luxPlaceholder" [(luxValue)]="placeholder"></lux-input-ac>
+    <lux-toggle-ac luxLabel="luxRequired" [(luxChecked)]="required" [luxNoTopLabel]="true"></lux-toggle-ac>
+    <lux-toggle-ac luxLabel="luxReadonly" [(luxChecked)]="readonly" [luxNoTopLabel]="true"></lux-toggle-ac>
+    <example-form-disable [form]="form" [controlBinding]="controlBinding" [(disabled)]="disabled"></example-form-disable>
+    <lux-toggle-ac luxLabel="luxDense" [(luxChecked)]="dense" [luxNoTopLabel]="true"></lux-toggle-ac>
+  </example-base-simple-options>
+
+  <example-base-advanced-options class="lux-flex lux-flex-col lux-gap-4">
+    <lux-select-ac
+      luxLabel="luxConfig.toolbar"
+      luxHint="Einträge der Toolbar. Formate ohne Eintrag sind im Editor nicht erlaubt."
+      [luxOptions]="toolbarOptions"
+      [luxMultiple]="true"
+      [(luxSelected)]="toolbar"
+    ></lux-select-ac>
+    <lux-input-ac luxLabel="luxErrorMessage" [(luxValue)]="errorMessage"></lux-input-ac>
+    <lux-input-ac luxLabel="luxMinHeight" [(luxValue)]="minHeight"></lux-input-ac>
+    <lux-input-ac luxLabel="luxMaxHeight" [(luxValue)]="maxHeight"></lux-input-ac>
+    <lux-toggle-ac luxLabel="luxNoTopLabel" [(luxChecked)]="noTopLabel" [luxNoTopLabel]="true"></lux-toggle-ac>
+    <lux-toggle-ac luxLabel="luxNoBottomLabel" [(luxChecked)]="noBottomLabel" [luxNoTopLabel]="true"></lux-toggle-ac>
+  </example-base-advanced-options>
+</example-base-structure>

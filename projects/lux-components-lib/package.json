@@ -18,7 +18,8 @@
     "axe-core": "^4.12.1",
     "dompurify": "^3.0.0",
     "jasmine-axe": "^1.1.0",
-    "marked": "^15.0.0"
+    "marked": "^15.0.0",
+    "quill": "^2.0.3"
   },
   "dependencies": {
     "tslib": "^2.3.0"
