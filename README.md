@@ -15,7 +15,7 @@ Alle _LUX-Components_ sind einfach zu verwenden und können mit den LUX-Themes _
 Aus technischer Sicht handelt es sich bei den _LUX-Components_ um eine
 _Angular_-Klassenbibliothek, die via NPM in das eigene Projekt eingebunden wird.
 
-## Demo
+## Demo (regular)
 
 Live-Demo (_develop_-Branch):
 
