@@ -18,6 +18,7 @@
       "@ihk-gfi/lux-components/lux-loading": ["./dist/lux-components-lib/lux-loading"],
       "@ihk-gfi/lux-components/lux-markdown": ["./dist/lux-components-lib/lux-markdown"],
       "@ihk-gfi/lux-components/lux-paginator": ["./dist/lux-components-lib/lux-paginator"],
+      "@ihk-gfi/lux-components/lux-quill": ["./dist/lux-components-lib/lux-quill"],
       "@ihk-gfi/lux-components/test-utils": ["./dist/lux-components-lib/test-utils"]
     },
     "noImplicitReturns": true,

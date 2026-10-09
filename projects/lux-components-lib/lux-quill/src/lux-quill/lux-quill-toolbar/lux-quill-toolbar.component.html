@@ -1,0 +1,55 @@
+@if (showHeading()) {
+  <button
+    type="button"
+    class="lux-quill-toolbar-control lux-quill-toolbar-heading"
+    [attr.tabindex]="rovingIndex() === 0 ? 0 : -1"
+    [disabled]="luxDisabled()"
+    [attr.aria-label]="'luxc.quill.heading.trigger' | transloco: { style: (headingLabelKey(headingStyle()) | transloco) }"
+    [cdkMenuTriggerFor]="headingMenu"
+    (cdkMenuClosed)="onHeadingMenuClosed()"
+    (mousedown)="onMousedown($event)"
+  >
+    <span class="lux-quill-toolbar-heading-label">{{ headingLabelKey(headingStyle()) | transloco }}</span>
+    <lux-icon luxIconName="lux-interface-arrows-button-down" luxIconSize="1x" luxPadding="0" luxMargin="0" aria-hidden="true"></lux-icon>
+  </button>
+  <ng-template #headingMenu>
+    <div class="lux-quill-heading-menu" cdkMenu>
+      @for (style of headingStyles; track $index) {
+        <button
+          type="button"
+          class="lux-quill-heading-menu-item"
+          [class.lux-quill-heading-menu-item-h1]="style === 1"
+          [class.lux-quill-heading-menu-item-h2]="style === 2"
+          cdkMenuItemRadio
+          [cdkMenuItemChecked]="headingStyle() === style"
+          (cdkMenuItemTriggered)="onAction('heading', style)"
+        >
+          {{ headingLabelKey(style) | transloco }}
+        </button>
+      }
+    </div>
+  </ng-template>
+  @if (buttons().length > 0) {
+    <span class="lux-quill-toolbar-separator" aria-hidden="true"></span>
+  }
+}
+@for (button of buttons(); track button.item; let i = $index) {
+  <button
+    type="button"
+    class="lux-quill-toolbar-control"
+    [class]="'lux-quill-toolbar-' + button.item"
+    [class.lux-quill-toolbar-pressed]="button.toggle && isPressed(button.item)"
+    [attr.tabindex]="rovingIndex() === i + buttonOffset() ? 0 : -1"
+    [disabled]="luxDisabled()"
+    [attr.aria-label]="'luxc.quill.toolbar.' + button.item | transloco"
+    [attr.aria-pressed]="button.toggle ? isPressed(button.item) : null"
+    [luxTooltip]="'luxc.quill.toolbar.' + button.item + '_tooltip' | transloco"
+    [luxTooltipShowDelay]="tooltipShowDelay"
+    [luxTooltipPosition]="tooltipPosition(i)"
+    [luxTooltipDisabled]="luxDisabled()"
+    (mousedown)="onMousedown($event)"
+    (click)="onAction(button.item)"
+  >
+    <lux-icon [luxIconName]="button.icon" luxIconSize="1x" luxPadding="0" luxMargin="0" aria-hidden="true"></lux-icon>
+  </button>
+}
