@@ -11,6 +11,8 @@
   box-sizing: border-box;
   padding: var(--lux-theme-popup-panel-padding);
   border-radius: var(--lux-theme-app-border-radius);
+  // Lange Wörter ohne Leerzeichen (z. B. URLs, IDs) notfalls im Wort umbrechen, damit nichts aus dem Rahmen läuft
+  overflow-wrap: anywhere;
   animation: lux-popup-fade-in var(--lux-theme-popup-fade-in-duration) ease-out;
 }
 
