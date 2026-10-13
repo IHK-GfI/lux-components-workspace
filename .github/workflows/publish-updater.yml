@@ -1,29 +1,26 @@
 name: publish - updater
 
-on: workflow_dispatch # Ermöglicht das manuelle Starten des Workflows
+# Startet automatisch, sobald ein GitHub-Release veröffentlicht wird (npm run release:finish).
+# Manuell auf main bleibt als Fallback möglich, mit "dry_run" auch als Test ohne Veröffentlichung.
+# Den Dateinamen nicht ändern: npm (Trusted Publishing) erlaubt das Veröffentlichen nur aus diesem Workflow.
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Nur testen (npm publish --dry-run)'
+        type: boolean
+        default: false
 
 permissions:
   contents: read
   id-token: write
 
 jobs:
-  build:
-    if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-node@v6
-        with:
-          node-version: 24
-      - run: |
-          npm install
-          npm run pack:updater
-          cd dist/updater
-          ls -lR
-
   publish-npm:
-    if: github.ref == 'refs/heads/main'
-    needs: build
+    # Manuell nur auf main oder einem Pflege-Branch v<major>.x (z.B. v21.x).
+    if: github.event_name == 'release' || github.ref == 'refs/heads/main' || (startsWith(github.ref, 'refs/heads/v') && endsWith(github.ref, '.x'))
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -32,10 +29,23 @@ jobs:
           node-version: 24
           registry-url: https://registry.npmjs.org/
           scope: '@ihk-gfi'
-      - name: Publish NPM
-        run: |
-          npm install
-          npm run pack:updater
-          cd dist/updater
-          ls -lR
-          npm publish
+      - name: Release prüfen
+        id: check
+        uses: ./.github/actions/release-check
+        with:
+          package-dir: projects/lux-components-update
+      - name: Build und Publish
+        # Eine bereits veröffentlichte Version wird übersprungen, damit sich der Workflow gefahrlos wiederholen lässt.
+        if: steps.check.outputs.published != 'true' || inputs.dry_run
+        uses: ./.github/actions/npm-publish
+        with:
+          pack-script: pack:updater
+          dist-dir: dist/updater
+          dry-run: ${{ inputs.dry_run && 'true' || 'false' }}
+          npm-tag: ${{ steps.check.outputs.npm-tag }}
+          # Der Updater setzt diese Versionen in den Anwendungen; er erscheint erst, wenn beide auf npm liegen.
+          # Gewartet wird auf die Versionen aus den package.json-Dateien. Ohne Theme-Release steht dort die bisherige,
+          # bereits veröffentlichte Theme-Version, dann wird für das Theme nicht gewartet.
+          wait-for-packages: |
+            projects/lux-components-lib
+            projects/lux-components-theme

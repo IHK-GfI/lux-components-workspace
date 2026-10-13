@@ -1,0 +1,36 @@
+name: Auf npm-Pakete warten
+description: >-
+  Wartet, bis die Versionen der angegebenen Projekte auf npm veröffentlicht sind. Die Publish-Workflows laufen
+  parallel; so erscheinen z.B. Updater und Wiki erst, wenn LUX-Components und Theme verfügbar sind.
+
+inputs:
+  package-dirs:
+    description: Projektordner, eine pro Zeile (Name und Version kommen aus deren package.json)
+    required: true
+  timeout-minutes:
+    description: Wie lange insgesamt gewartet wird, bevor der Workflow abbricht
+    required: false
+    default: '30'
+
+runs:
+  using: composite
+  steps:
+    - name: Auf npm-Pakete warten
+      shell: bash
+      env:
+        PACKAGE_DIRS: ${{ inputs.package-dirs }}
+        TIMEOUT_MINUTES: ${{ inputs.timeout-minutes }}
+      run: |
+        DEADLINE=$(( $(date +%s) + TIMEOUT_MINUTES * 60 ))
+        for DIR in $PACKAGE_DIRS; do
+          SPEC=$(node -p "const p = require('./$DIR/package.json'); p.name + '@' + p.version")
+          until [ -n "$(npm view --prefer-online "$SPEC" version 2>/dev/null)" ]; do
+            if [ "$(date +%s)" -ge "$DEADLINE" ]; then
+              echo "::error::$SPEC ist nach $TIMEOUT_MINUTES Minuten nicht auf npm verfügbar. Es wird nichts veröffentlicht."
+              exit 1
+            fi
+            echo "Warte auf $SPEC ..."
+            sleep 30
+          done
+          echo "$SPEC ist veröffentlicht."
+        done

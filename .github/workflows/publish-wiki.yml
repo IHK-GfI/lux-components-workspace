@@ -1,20 +1,71 @@
 name: publish - wiki
 
-on: workflow_dispatch # Ermöglicht das manuelle Starten des Workflows
+# Startet automatisch, sobald ein GitHub-Release veröffentlicht wird (npm run release:finish).
+# Manuell auf main bleibt als Fallback möglich, mit "dry_run" auch als Test ohne Push.
+#
+# Es gibt nur ein Wiki: Die Doku aller Hauptversionen (Versions/vN, Update-Guide-vN.md) wird zentral auf develop
+# gepflegt und nur aus Releases von main veröffentlicht. Pflege-Releases (v<major>.x) lassen das Wiki aus, siehe
+# README, Abschnitt "Release".
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Nur testen (Änderungen anzeigen, nicht pushen)'
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+# "shell: bash" startet mit -eo pipefail (ohne Angabe nur -e): Scheitert ein Befehl in einer Pipeline, bricht der
+# Schritt ab, statt mit leerem Ergebnis weiterzulaufen.
+defaults:
+  run:
+    shell: bash
 
 jobs:
   publish-wiki:
-    if: github.ref == 'refs/heads/main'
+    # Manuell nur auf main.
+    if: github.event_name == 'release' || github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout LUX-components
         uses: actions/checkout@v7
         with:
           token: ${{secrets.GITHUB}}
-          ref: main
+          # Bei einem Release genau dessen Stand, damit das Wiki zum veröffentlichten Updater passt.
+          ref: ${{ github.event_name == 'release' && github.sha || github.ref_name }}
           path: components
 
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+
+      - name: Release prüfen
+        id: check
+        uses: ./components/.github/actions/release-check
+
+      - name: Pflege-Release auslassen
+        id: line
+        if: steps.check.outputs.maintenance == 'true'
+        run: |
+          # Den Update-Guide-Abschnitt eines Pflege-Releases trägt man auf develop nach, ins Wiki kommt er mit dem
+          # nächsten Release von main.
+          echo "::notice::$GITHUB_REF_NAME ist ein Pflege-Release. Das Wiki wird nur aus Releases von main aktualisiert."
+          echo "skip=true" >> "$GITHUB_OUTPUT"
+
+      - name: Auf den Updater warten
+        # Das Wiki verweist auf "update-<version>"; es erscheint erst, wenn der Updater auf npm liegt.
+        if: github.event_name == 'release' && steps.line.outputs.skip != 'true'
+        uses: ./components/.github/actions/wait-for-npm
+        with:
+          package-dirs: components/projects/lux-components-update
+          timeout-minutes: '45'
+
       - name: Checkout Wiki
+        if: steps.line.outputs.skip != 'true'
         uses: actions/checkout@v7
         with:
           repository: IHK-GfI/lux-components-workspace.wiki
@@ -23,9 +74,27 @@ jobs:
           path: wiki
           clean: false
 
-      - name: Update Wiki
+      - name: Neuestes Release prüfen
+        id: latest
+        if: github.event_name == 'release' && steps.line.outputs.skip != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          ls -l
+          # Wird ein älteres Release (erneut) veröffentlicht, darf dessen Stand das aktuelle Wiki nicht überschreiben.
+          # Die Prüfung steht bewusst nach dem Warten und nach dem Checkout des Wikis: Hat ein neueres Release sein
+          # Wiki schon gepusht, ist es hier bereits das neueste. Pusht es erst nach dem Checkout, lehnt Git den Push
+          # unten als Non-Fast-Forward ab, statt die neuere Doku zu überschreiben.
+          LATEST=$(gh api "repos/$GITHUB_REPOSITORY/releases/latest" --jq .tag_name)
+          if [ "$LATEST" != "$GITHUB_REF_NAME" ]; then
+            echo "::notice::$GITHUB_REF_NAME ist nicht das neueste Release ($LATEST), das Wiki bleibt unverändert."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Update Wiki
+        if: steps.line.outputs.skip != 'true' && steps.latest.outputs.skip != 'true'
+        env:
+          DRY_RUN: ${{ inputs.dry_run && 'true' || 'false' }}
+        run: |
           cp -rf components/projects/lux-components-wiki/* wiki/
           cd wiki
           ls -lR
@@ -33,5 +102,12 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add .
           git status
-          git commit -m "Wiki aktualisiert"
-          git push
+          if git diff --cached --quiet; then
+            echo "::notice::Das Wiki ist bereits aktuell."
+          elif [ "$DRY_RUN" = "true" ]; then
+            git diff --cached --stat
+            echo "::notice::Dry Run: Die Änderungen werden nicht gepusht."
+          else
+            git commit -m "Wiki aktualisiert"
+            git push
+          fi

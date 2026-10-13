@@ -3,6 +3,9 @@
 - [LUX-Components](#lux-components)
   - [Demo](#demo)
   - [Visual Regression Tests](#visual-regression-tests)
+  - [Release](#release)
+    - [Ablauf](#ablauf)
+    - [Was die Skripte tun](#was-die-skripte-tun)
   - [Dokumentation](#dokumentation)
   - [Aktualisierung](#aktualisierung)
   - [Autoren](#autoren)
@@ -53,6 +56,75 @@ Da sich das Schriftrendering zwischen Betriebssystemen unterscheidet, laufen die
 - `npm run vrt:report` – HTML-Report mit den Abweichungen im Browser öffnen.
 
 Die Version von `@playwright/test` in `e2e/package.json` muss zum Image-Tag in `.github/workflows/visual-regression.yml` passen. Bei einem Playwright-Update müssen alle Referenzbilder neu erzeugt werden.
+
+## Release
+
+### Ablauf
+
+1. Auf dem `develop`-Branch oder einem Pflege-Branch (z.B. `v19.x`):
+
+   Wenn man keinen Container (z.B. Podman) eingerichtet hat, kann man die Option `--container` weglassen.
+
+   ```bash
+   npm run release:prepare -- 21.10.0 --container
+   ```
+
+2. Changelog-Einträge (siehe `CHANGELOG.md`) prüfen und ggf. Hinweise im Update Guide (siehe `Update-Guide-v21.md`) ergänzen.
+3. Committen und pushen:
+
+   ```bash
+   git add --all && git commit -m "Release v21.10.0" && git push
+   ```
+
+4. Sobald die [Actions](https://github.com/IHK-GfI/lux-components-workspace/actions) zum Release-Commit (die Smoketests) grün sind:
+
+   ```bash
+   npm run release:finish
+   ```
+
+   Das Skript zeigt die Release-Notes an und fragt vor dem Merge nach `main`, dem Push und dem Anlegen des GitHub-Releases einmal nach (mit `--yes` automatisch bestätigt). Bei „Nein“ wird nichts gepusht.
+
+5. Die Publish-Workflows unter [Actions](https://github.com/IHK-GfI/lux-components-workspace/actions) abwarten.
+
+Optionen immer nach `--` angeben, sonst fängt `npm` sie ab:
+
+| Befehl            | Option                                      | Wirkung                                                         |
+| ----------------- | ------------------------------------------- | --------------------------------------------------------------- |
+| `release:prepare` | `--dry-run`                                 | zeigt nur an, was geändert würde                                |
+|                   | `--with-theme` / `--skip-theme`             | Theme-Release erzwingen bzw. auslassen                          |
+|                   | `--no-fresh`                                | `node_modules` und `package-lock.json` behalten                 |
+|                   | `--skip-tests`                              | Smoketest überspringen                                          |
+|                   | `--container`                               | zusätzlich Demo-Image mit _podman_ bauen und mit _trivy_ prüfen |
+| `release:finish`  | `--yes`                                     | Rückfragen automatisch bestätigen                               |
+| `release:updater` | `--dry-run`, `--with-theme`, `--skip-theme` | wie bei `release:prepare`                                       |
+
+Einen Updater mit eigenen Migrationen legt `npm run release:updater -- 21.10.0` schon während der Entwicklung an.
+
+### Was die Skripte tun
+
+- **`release:prepare`**:
+  - Hebt die Versionen an (alle `package.json` sowie den Footer der Demo) und legt den Updater `update-<version>` an.
+  - Ergänzt Changelogs und Update Guide (auf einem Pflege-Branch nur die Changelogs).
+  - Installiert frisch gegen die öffentliche npm-Registry und startet den Smoketest.
+  - Kann mehrfach laufen: Vorhandene Changelog-Einträge, Updater und Wiki-Abschnitte bleiben erhalten, fehlende Issues werden ergänzt.
+- **`release:finish`**:
+  - Prüft Release-Commit, Versionen und „- TODO“ in den Changelogs und wartet auf alle CI-Workflows, die der Release-Commit auslöst (die Smoketests laufen nur bei Änderungen in ihren Pfaden).
+  - Bringt `main` nach einer Rückfrage per Fast-Forward auf `develop` und legt das GitHub-Release an. Die Release-Notes kommen aus dem Abschnitt _Issues_ des Lib-Changelogs.
+- **Theme**:
+  - Wird nur veröffentlicht, wenn sich Dateien unter `projects/lux-components-theme` seit dem letzten Theme-Release geändert haben; sonst bleibt seine Version unverändert.
+  - Als npm-Workspace wird es lokal verlinkt und muss nicht vorab veröffentlicht werden.
+- **Workflows** (`publish-*.yml`, gemeinsame Schritte in `.github/actions/`):
+  - Starten durch das GitHub-Release und veröffentlichen nur, wenn das Tag auf `main` liegt.
+  - Pre-Releases und Versionen mit Suffix (z.B. `22.0.0-rc.1`) werden nicht veröffentlicht.
+  - Der Updater wartet auf LUX-Components und Theme, das Wiki auf den Updater.
+  - Bereits veröffentlichte Versionen werden übersprungen, ein fehlgeschlagener Workflow kann einfach neu gestartet werden.
+  - Manuell auf `main` lassen sie sich mit _dry_run_ testen, ohne etwas zu veröffentlichen.
+- **Pflege-Branches** `v<major>.x` (z.B. `v21.x`, wenn 22 auf main liegt; vom letzten Tag der Hauptversion abzweigen):
+  - Auf dem Pflege-Branch wird gearbeitet und direkt veröffentlicht, der Ablauf oben gilt unverändert (ohne Merge nach `main`).
+  - Erlaubt sind nur Versionen dieser Hauptversion; die Pakete erhalten das npm-Tag `v<major>-lts`, das GitHub-Release ist nicht „Latest“.
+  - Das Wiki wird nicht auf dem Pflege-Branch gepflegt, siehe **Wiki**. Ein Pflege-Release lässt das Wiki aus, auch `release:prepare` legt dort keinen Abschnitt im Update Guide an. Den Abschnitt `### Version <version>` in `Update-Guide-v<major>.md` auf `develop` nachtragen (`release:prepare` gibt eine Vorlage aus), ebenso Doku zu neuen Funktionen. Ins Wiki kommt das mit dem nächsten Release von `main`.
+- **Wiki**: Es gibt nur ein Wiki. Die Doku aller Hauptversionen (`Versions/v<major>/`, `Update-Guide-v<major>.md`) wird zentral auf `develop` gepflegt und nur aus Releases von `main` veröffentlicht (Bilder verlinken auf `main`).
+- **Tests**: `npm run test:release-scripts` (auch in `test:all` und im Workflow _smoketest - release-scripts_).
 
 ## Dokumentation
 

@@ -1,0 +1,126 @@
+name: Release prüfen
+description: >-
+  Bestimmt die Release-Linie (main oder Pflege-Branch v<major>.x), prüft vor dem Veröffentlichen, dass das
+  Release-Tag auf diesem Branch liegt, und (mit package-dir) dass die Version des Pakets zum Tag passt.
+  Gemeinsam genutzt von den Workflows publish-*.yml.
+
+inputs:
+  package-dir:
+    description: Projektordner des Pakets, z.B. projects/lux-components-lib (leer = nur das Release-Tag prüfen)
+    required: false
+    default: ''
+  allow-unchanged-version:
+    description: "'true', wenn das Paket bei einem Release auf seiner bisherigen Version bleiben darf (Theme ohne Änderungen)"
+    required: false
+    default: 'false'
+
+outputs:
+  published:
+    description: "'true', wenn die Version des Pakets bereits auf npm veröffentlicht ist"
+    value: ${{ steps.version.outputs.published }}
+  branch:
+    description: Release-Branch, main oder ein Pflege-Branch wie v21.x
+    value: ${{ steps.line.outputs.branch }}
+  npm-tag:
+    description: npm-Dist-Tag, latest bzw. v<major>-lts auf einem Pflege-Branch
+    value: ${{ steps.line.outputs.npm-tag }}
+  maintenance:
+    description: "'true' bei einem Release aus einem Pflege-Branch"
+    value: ${{ steps.line.outputs.maintenance }}
+
+runs:
+  using: composite
+  steps:
+    - name: Release-Linie bestimmen
+      id: line
+      shell: bash
+      env:
+        GH_TOKEN: ${{ github.token }}
+        PRERELEASE: ${{ github.event.release.prerelease }}
+      run: |
+        # Gibt es zur Hauptversion des Tags einen Pflege-Branch v<major>.x (wie früher v19.x), gehört das Release
+        # zu dieser Linie. Nur ein 404 heißt "kein Pflege-Branch"; andere Fehler brechen ab, damit ein Pflege-Release
+        # nie versehentlich als "latest" veröffentlicht wird.
+        if [ "$GITHUB_EVENT_NAME" = "release" ]; then
+          # Pre-Releases (z.B. v22.0.0-rc.1) kennt der Release-Prozess nicht, sie würden sonst als "latest" veröffentlicht.
+          if [ "$PRERELEASE" = "true" ] || [[ ! "$GITHUB_REF_NAME" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::$GITHUB_REF_NAME ist ein Pre-Release bzw. kein Tag vX.Y.Z. Veröffentlicht werden nur reguläre Releases."
+            exit 1
+          fi
+          MAJOR=$(echo "${GITHUB_REF_NAME#v}" | cut -d. -f1)
+          if RESPONSE=$(gh api "repos/$GITHUB_REPOSITORY/branches/v$MAJOR.x" --jq .name 2>&1); then
+            BRANCH="v$MAJOR.x"
+          elif grep -q "HTTP 404" <<< "$RESPONSE"; then
+            BRANCH=main
+          else
+            echo "::error::Die Abfrage des Branches v$MAJOR.x ist fehlgeschlagen: $RESPONSE"
+            exit 1
+          fi
+        else
+          BRANCH="$GITHUB_REF_NAME"
+        fi
+        if [[ "$BRANCH" =~ ^v([0-9]+)\.x$ ]]; then
+          NPM_TAG="v${BASH_REMATCH[1]}-lts"
+          MAINTENANCE=true
+        else
+          NPM_TAG=latest
+          MAINTENANCE=false
+        fi
+        echo "::notice::Release-Branch $BRANCH, npm-Tag $NPM_TAG."
+        {
+          echo "branch=$BRANCH"
+          echo "npm-tag=$NPM_TAG"
+          echo "maintenance=$MAINTENANCE"
+        } >> "$GITHUB_OUTPUT"
+
+    - name: Release-Tag auf dem Release-Branch prüfen
+      if: github.event_name == 'release'
+      shell: bash
+      env:
+        GH_TOKEN: ${{ github.token }}
+        BRANCH: ${{ steps.line.outputs.branch }}
+      run: |
+        # Veröffentlicht wird nur, was auf dem Release-Branch liegt: Der Tag-Commit muss ihm entsprechen oder ein Vorgänger sein.
+        STATUS=$(gh api "repos/$GITHUB_REPOSITORY/compare/$BRANCH...$GITHUB_SHA" --jq .status)
+        if [ "$STATUS" != "identical" ] && [ "$STATUS" != "behind" ]; then
+          echo "::error::Das Tag $GITHUB_REF_NAME zeigt auf einen Commit, der nicht auf $BRANCH liegt (Status: $STATUS)."
+          exit 1
+        fi
+
+    - name: Version prüfen
+      id: version
+      if: inputs.package-dir != ''
+      shell: bash
+      env:
+        PACKAGE_DIR: ${{ inputs.package-dir }}
+        ALLOW_UNCHANGED: ${{ inputs.allow-unchanged-version }}
+      run: |
+        NAME=$(node -p "require('./$PACKAGE_DIR/package.json').name")
+        VERSION=$(node -p "require('./$PACKAGE_DIR/package.json').version")
+        # Auch der manuelle Fallback darf keine Vorabversion (z.B. 22.0.0-rc.1) als "latest" veröffentlichen.
+        if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+          echo "::error::$NAME hat die Version $VERSION. Veröffentlicht werden nur Versionen X.Y.Z."
+          exit 1
+        fi
+        # Nur E404 heißt "nicht veröffentlicht". Andere Fehler (Netz, Registry) brechen ab, statt falsch zu entscheiden.
+        ERRORS=$(mktemp)
+        if VIEW=$(npm view --prefer-online "$NAME@$VERSION" version 2>"$ERRORS") && [ -n "$VIEW" ]; then
+          echo "::notice::$NAME@$VERSION ist bereits veröffentlicht."
+          PUBLISHED=true
+        elif grep -q E404 "$ERRORS"; then
+          PUBLISHED=false
+        else
+          echo "::error::Die Abfrage von $NAME@$VERSION bei npm ist fehlgeschlagen:"
+          cat "$ERRORS"
+          exit 1
+        fi
+        echo "published=$PUBLISHED" >> "$GITHUB_OUTPUT"
+        if [ "$GITHUB_EVENT_NAME" = "release" ] && [ "${GITHUB_REF_NAME#v}" != "$VERSION" ]; then
+          # Das Theme behält bei einem Release ohne Theme-Änderungen seine bisherige, bereits veröffentlichte Version.
+          if [ "$ALLOW_UNCHANGED" = "true" ] && [ "$PUBLISHED" = "true" ]; then
+            echo "::notice::Release $GITHUB_REF_NAME ohne neue Version von $NAME, es bleibt bei $VERSION."
+          else
+            echo "::error::Das Tag $GITHUB_REF_NAME passt nicht zur Version $VERSION von $NAME."
+            exit 1
+          fi
+        fi

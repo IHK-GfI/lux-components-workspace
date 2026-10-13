@@ -1,0 +1,21 @@
+name: smoketest - release-scripts
+
+on:
+  push:
+    paths:
+      - 'scripts/release*.js'
+      - 'package.json'
+      # Die Tests lesen die Workflows (release:finish leitet daraus ab, welche Smoketests ein Release-Commit auslöst).
+      - '.github/workflows/**'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+      # Die Release-Skripte haben keine Abhängigkeiten, ein npm install ist nicht nötig.
+      - run: npm run test:release-scripts

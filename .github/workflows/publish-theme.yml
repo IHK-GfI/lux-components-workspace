@@ -1,29 +1,26 @@
 name: publish - theme
 
-on: workflow_dispatch # Ermöglicht das manuelle Starten des Workflows
+# Startet automatisch, sobald ein GitHub-Release veröffentlicht wird (npm run release:finish).
+# Manuell auf main bleibt als Fallback möglich, mit "dry_run" auch als Test ohne Veröffentlichung.
+# Den Dateinamen nicht ändern: npm (Trusted Publishing) erlaubt das Veröffentlichen nur aus diesem Workflow.
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Nur testen (npm publish --dry-run)'
+        type: boolean
+        default: false
 
 permissions:
   contents: read
   id-token: write
 
 jobs:
-  build:
-    if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-node@v6
-        with:
-          node-version: 24
-      - run: |
-          npm install
-          npm run pack:theme
-          cd dist/theme
-          ls -lR
-
   publish-npm:
-    if: github.ref == 'refs/heads/main'
-    needs: build
+    # Manuell nur auf main oder einem Pflege-Branch v<major>.x (z.B. v21.x).
+    if: github.event_name == 'release' || github.ref == 'refs/heads/main' || (startsWith(github.ref, 'refs/heads/v') && endsWith(github.ref, '.x'))
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -32,10 +29,19 @@ jobs:
           node-version: 24
           registry-url: https://registry.npmjs.org/
           scope: '@ihk-gfi'
-      - name: Publish NPM
-        run: |
-          npm install
-          npm run pack:theme
-          cd dist/theme
-          ls -lR
-          npm publish
+      - name: Release prüfen
+        id: check
+        uses: ./.github/actions/release-check
+        with:
+          package-dir: projects/lux-components-theme
+          # Bei einem Release ohne Theme-Änderungen bleibt das Theme auf seiner bisherigen Version.
+          allow-unchanged-version: 'true'
+      - name: Build und Publish
+        # Eine bereits veröffentlichte Version wird übersprungen (Release ohne Theme, erneuter Lauf).
+        if: steps.check.outputs.published != 'true' || inputs.dry_run
+        uses: ./.github/actions/npm-publish
+        with:
+          pack-script: pack:theme
+          dist-dir: dist/theme
+          dry-run: ${{ inputs.dry_run && 'true' || 'false' }}
+          npm-tag: ${{ steps.check.outputs.npm-tag }}

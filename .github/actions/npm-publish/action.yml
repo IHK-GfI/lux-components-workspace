@@ -1,0 +1,61 @@
+name: Paket bauen und veröffentlichen
+description: >-
+  Baut ein Paket und veröffentlicht es auf npm, mit dry-run als Test mit einer Testversion. Gemeinsam genutzt von
+  publish-theme, publish-components und publish-updater. Trusted Publishing bezieht sich weiterhin auf den
+  aufrufenden Workflow.
+
+inputs:
+  pack-script:
+    description: npm-Script, das das Paket baut, z.B. pack:theme
+    required: true
+  dist-dir:
+    description: Ordner mit dem gebauten Paket, z.B. dist/theme
+    required: true
+  dry-run:
+    description: "'true' veröffentlicht nichts (npm publish --dry-run)"
+    required: false
+    default: 'false'
+  wait-for-packages:
+    description: Projektordner (einer pro Zeile), deren Versionen vor dem Veröffentlichen auf npm liegen müssen
+    required: false
+    default: ''
+  npm-tag:
+    description: npm-Dist-Tag, latest bzw. v<major>-lts für einen Pflege-Branch (siehe release-check)
+    required: false
+    default: 'latest'
+
+runs:
+  using: composite
+  steps:
+    - name: Build
+      shell: bash
+      env:
+        PACK_SCRIPT: ${{ inputs.pack-script }}
+        DIST_DIR: ${{ inputs.dist-dir }}
+      run: |
+        npm install
+        npm run "$PACK_SCRIPT"
+        ls -lR "$DIST_DIR"
+
+    # Gewartet wird erst nach dem eigenen Build, damit er parallel zu den anderen Workflows läuft.
+    - name: Auf abhängige Pakete warten
+      if: inputs.wait-for-packages != '' && inputs.dry-run != 'true'
+      uses: ./.github/actions/wait-for-npm
+      with:
+        package-dirs: ${{ inputs.wait-for-packages }}
+
+    - name: Publish
+      shell: bash
+      working-directory: ${{ inputs.dist-dir }}
+      env:
+        DRY_RUN: ${{ inputs.dry-run }}
+        NPM_TAG: ${{ inputs.npm-tag }}
+      run: |
+        if [ "$DRY_RUN" = "true" ]; then
+          # npm publish --dry-run lehnt bereits veröffentlichte Versionen ab, deshalb mit eigener Testversion.
+          node -e "const p = require('./package.json'); p.version += '-dryrun.' + process.env.GITHUB_RUN_NUMBER; require('fs').writeFileSync('package.json', JSON.stringify(p, null, 2))"
+          npm publish --dry-run --tag dryrun
+        else
+          # Ein Pflege-Release (npm-Tag v<major>-lts) darf "latest" nicht auf die ältere Hauptversion zurücksetzen.
+          npm publish --tag "$NPM_TAG"
+        fi
