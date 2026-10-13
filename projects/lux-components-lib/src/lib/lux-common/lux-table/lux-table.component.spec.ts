@@ -1,6 +1,16 @@
 // noinspection DuplicatedCode
 import { Component, signal } from '@angular/core';
-import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, inject, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import {
+  ComponentFixture,
+  discardPeriodicTasks,
+  fakeAsync,
+  flush,
+  flushMicrotasks,
+  inject,
+  TestBed,
+  tick,
+  waitForAsync
+} from '@angular/core/testing';
 import { MockMediaObserverService } from '../../lux-util/testing/mock-media-observer.service';
 import { ICustomCSSConfig } from './lux-table-custom-css-config.interface';
 
@@ -9,8 +19,8 @@ import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
-import { Observable, of } from 'rxjs';
-import { delay } from 'rxjs/operators';
+import { Observable, of, throwError, timer } from 'rxjs';
+import { delay, ignoreElements, switchMap, tap } from 'rxjs/operators';
 import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxConsoleService } from '../../lux-util/lux-console.service';
@@ -52,6 +62,74 @@ describe('LuxTableComponent', () => {
       component = fixture.componentInstance;
       luxTableComponent = fixture.debugElement.query(By.directive(LuxTableComponent)).componentInstance;
       fixture.detectChanges();
+    }));
+
+    it('Sollte die Progressbar standardmäßig während des Filterns anzeigen', fakeAsync(() => {
+      component.dataSource = [
+        { c1: 1, c2: 'Hydrogen' },
+        { c1: 2, c2: 'Helium' }
+      ];
+      component.showFilter = true;
+      LuxTestHelper.wait(fixture);
+
+      expect(luxTableComponent.luxShowProgress()).toBeTrue();
+      expect(fixture.nativeElement.querySelector('.lux-table-progress-container')).not.toBeNull();
+      expect(luxTableComponent.isLoading()).toBeFalse();
+
+      luxTableComponent.filtered$.next('Hel');
+      fixture.detectChanges();
+
+      expect(luxTableComponent.isLoading()).toBeTrue();
+      expect(luxTableComponent.isLoadingResults).toBeTrue();
+      expect(fixture.nativeElement.querySelector('lux-progress')).not.toBeNull();
+
+      LuxTestHelper.wait(fixture, 500);
+
+      expect(luxTableComponent.isLoading()).toBeFalse();
+      expect(fixture.nativeElement.querySelector('lux-progress')).toBeNull();
+
+      flush();
+    }));
+
+    it('Sollte den Ladezustand beenden, wenn der Filter während des Debounce deaktiviert wird', fakeAsync(() => {
+      component.showFilter = true;
+      LuxTestHelper.wait(fixture);
+
+      luxTableComponent.filtered$.next('Hel');
+      fixture.detectChanges();
+      expect(luxTableComponent.isLoading()).toBeTrue();
+
+      component.showFilter = false;
+      LuxTestHelper.wait(fixture);
+      expect(luxTableComponent.isLoading()).toBeFalse();
+
+      // Der abgebrochene Debounce darf den Ladezustand auch später nicht mehr ändern
+      LuxTestHelper.wait(fixture, 500);
+      expect(luxTableComponent.isLoading()).toBeFalse();
+    }));
+
+    it('Sollte den Ladezustand beenden, wenn derselbe Filter erneut eingegeben wird', fakeAsync(() => {
+      component.dataSource = [
+        { c1: 1, c2: 'Hydrogen' },
+        { c1: 2, c2: 'Helium' }
+      ];
+      component.showFilter = true;
+      LuxTestHelper.wait(fixture);
+
+      luxTableComponent.filtered$.next('He');
+      LuxTestHelper.wait(fixture, 500);
+      expect(luxTableComponent.isLoading()).toBeFalse();
+
+      // "Hel" und zurück zu "He": Der Debounce liefert denselben Filter wie zuvor
+      luxTableComponent.filtered$.next('Hel');
+      tick(100);
+      luxTableComponent.filtered$.next('He');
+      fixture.detectChanges();
+      expect(luxTableComponent.isLoading()).toBeTrue();
+
+      LuxTestHelper.wait(fixture, 500);
+      expect(luxTableComponent.isLoading()).toBeFalse();
+      expect(luxTableComponent.dataSource.filter).toEqual('he');
     }));
 
     it('Sollte Spalten per luxShowColumnSelector und hiddenColumns ausblenden', fakeAsync(() => {
@@ -839,6 +917,329 @@ describe('LuxTableComponent', () => {
       expect(component).toBeTruthy();
     });
 
+    it('Sollte die Progressbar ausblenden, den Platz freigeben und die Tabelle sperren, wenn luxShowProgress false ist', fakeAsync(() => {
+      component.showProgress = false;
+      component.httpDao.loadData = () =>
+        of({ items: component.httpDao.dataSourceFix, totalCount: component.httpDao.dataSourceFix.length }).pipe(delay(1000));
+
+      LuxTestHelper.wait(fixture);
+
+      expect(luxTableComponent.isLoading()).toBeTrue();
+      expect(fixture.nativeElement.querySelector('lux-progress')).toBeNull();
+      expect(fixture.nativeElement.querySelector('.lux-table-progress-container')).toBeNull();
+      expect(luxTableComponent.tableHeightCSSCalc).toContain('calc(100% - 0px');
+      expect(fixture.nativeElement.querySelector('.lux-table-overlay').classList.contains('lux-table-overlay-active')).toBeTrue();
+      expect(fixture.nativeElement.querySelector('.lux-table.lux-pointer-events-none')).not.toBeNull();
+
+      LuxTestHelper.wait(fixture, 1000);
+
+      expect(luxTableComponent.isLoading()).toBeFalse();
+      expect(fixture.nativeElement.querySelector('.lux-table-overlay').classList.contains('lux-table-overlay-active')).toBeFalse();
+
+      flush();
+    }));
+
+    it('Sollte die Progressbar während des Ladens anzeigen, wenn luxShowProgress true ist', fakeAsync(() => {
+      component.httpDao.loadData = () =>
+        of({ items: component.httpDao.dataSourceFix, totalCount: component.httpDao.dataSourceFix.length }).pipe(delay(1000));
+
+      LuxTestHelper.wait(fixture);
+
+      expect(luxTableComponent.isLoading()).toBeTrue();
+      expect(fixture.nativeElement.querySelector('lux-progress')).not.toBeNull();
+      expect(luxTableComponent.tableHeightCSSCalc).toContain('calc(100% - 15px');
+
+      LuxTestHelper.wait(fixture, 1000);
+
+      expect(luxTableComponent.isLoading()).toBeFalse();
+      expect(fixture.nativeElement.querySelector('lux-progress')).toBeNull();
+
+      flush();
+    }));
+
+    it('Sollte die Progressbar ausblenden, wenn luxShowProgress während des Ladens auf false gesetzt wird', fakeAsync(() => {
+      component.httpDao.loadData = () =>
+        of({ items: component.httpDao.dataSourceFix, totalCount: component.httpDao.dataSourceFix.length }).pipe(delay(1000));
+
+      LuxTestHelper.wait(fixture);
+      expect(fixture.nativeElement.querySelector('lux-progress')).not.toBeNull();
+
+      component.showProgress = false;
+      LuxTestHelper.wait(fixture);
+
+      expect(luxTableComponent.isLoading()).toBeTrue();
+      expect(fixture.nativeElement.querySelector('lux-progress')).toBeNull();
+      expect(luxTableComponent.tableHeightCSSCalc).toContain('calc(100% - 0px');
+
+      flush();
+    }));
+
+    it('Sollte den Platz der Progressbar wiederherstellen, wenn luxShowProgress wieder auf true gesetzt wird', fakeAsync(() => {
+      component.showProgress = false;
+      LuxTestHelper.wait(fixture);
+      expect(fixture.nativeElement.querySelector('.lux-table-progress-container')).toBeNull();
+      expect(luxTableComponent.tableHeightCSSCalc).toContain('calc(100% - 0px');
+
+      component.showProgress = true;
+      LuxTestHelper.wait(fixture);
+      expect(fixture.nativeElement.querySelector('.lux-table-progress-container')).not.toBeNull();
+      expect(luxTableComponent.tableHeightCSSCalc).toContain('calc(100% - 15px');
+
+      flush();
+    }));
+
+    describe('luxLoadingChange', () => {
+      beforeEach(() => {
+        component.httpDao.loadData = () =>
+          of({ items: component.httpDao.dataSourceFix, totalCount: component.httpDao.dataSourceFix.length }).pipe(delay(1000));
+      });
+
+      it('Sollte beim Laden true und danach false emittieren', fakeAsync(() => {
+        LuxTestHelper.wait(fixture);
+        expect(component.loadingChanges).toEqual([true]);
+
+        LuxTestHelper.wait(fixture, 1000);
+        expect(component.loadingChanges).toEqual([true, false]);
+      }));
+
+      it('Sollte asynchron emittieren', fakeAsync(() => {
+        LuxTestHelper.wait(fixture);
+        LuxTestHelper.wait(fixture, 1000);
+        component.loadingChanges = [];
+
+        luxTableComponent.filtered$.next('a');
+        expect(luxTableComponent.isLoading()).toBeTrue();
+        expect(component.loadingChanges).toEqual([]);
+
+        flushMicrotasks();
+        expect(component.loadingChanges).toEqual([true]);
+
+        flush();
+      }));
+
+      it('Sollte beim Filtern nur einmal true und nach dem Laden false emittieren', fakeAsync(() => {
+        LuxTestHelper.wait(fixture);
+        LuxTestHelper.wait(fixture, 1000);
+        component.loadingChanges = [];
+
+        luxTableComponent.filtered$.next('a');
+        tick(100);
+        luxTableComponent.filtered$.next('al');
+        fixture.detectChanges();
+        flushMicrotasks();
+        expect(component.loadingChanges).toEqual([true]);
+
+        // Debounce abwarten: das anschließende Laden über das DAO darf keinen Zwischenstand false emittieren
+        LuxTestHelper.wait(fixture, 500);
+        expect(component.loadingChanges).toEqual([true]);
+        expect(luxTableComponent.isLoading()).toBeTrue();
+
+        LuxTestHelper.wait(fixture, 1000);
+        expect(component.loadingChanges).toEqual([true, false]);
+      }));
+
+      it('Sollte beim Wechsel des luxHttpDAO per Binding ohne NG0100 emittieren', fakeAsync(() => {
+        LuxTestHelper.wait(fixture);
+        LuxTestHelper.wait(fixture, 1000);
+        component.loadingChanges = [];
+
+        // Der Host zeigt tableLoading oberhalb der Tabelle an (normales Feld, kein Signal).
+        // Eine synchrone Emission während der Change Detection würde hier NG0100 auslösen.
+        const newHttpDao = new TestHttpDao();
+        newHttpDao.loadData = () => of({ items: newHttpDao.dataSourceFix, totalCount: newHttpDao.dataSourceFix.length }).pipe(delay(1000));
+        component.httpDao = newHttpDao;
+        LuxTestHelper.wait(fixture);
+        expect(component.loadingChanges).toEqual([true]);
+        expect(fixture.nativeElement.querySelector('.host-table-loading')).not.toBeNull();
+
+        LuxTestHelper.wait(fixture, 1000);
+        expect(component.loadingChanges).toEqual([true, false]);
+        expect(fixture.nativeElement.querySelector('.host-table-loading')).toBeNull();
+      }));
+
+      it('Sollte bei überlappenden Requests den alten abbrechen und erst nach dem neuesten false emittieren', fakeAsync(() => {
+        const deliveredFilters: (string | undefined)[] = [];
+        component.httpDao.loadData = (conf) => {
+          const filter = conf.filter;
+          return of({ items: [{ c1: 1, c2: filter }], totalCount: 1 }).pipe(
+            delay(1000),
+            tap(() => deliveredFilters.push(filter))
+          );
+        };
+        LuxTestHelper.wait(fixture);
+        LuxTestHelper.wait(fixture, 1000);
+        component.loadingChanges = [];
+        deliveredFilters.length = 0;
+
+        // t=0: Filter "a" -> Request startet nach dem Debounce bei t=500 und würde bis t=1500 dauern
+        luxTableComponent.filtered$.next('a');
+        tick(600);
+        // t=600: Filter "al" -> Request startet bei t=1100 (bricht "a" ab) und dauert bis t=2100
+        luxTableComponent.filtered$.next('al');
+        tick(1000);
+
+        // t=1600: Der Request für "a" wurde abgebrochen und hat weder Daten noch Ladezustand geändert
+        expect(deliveredFilters).toEqual([]);
+        expect(luxTableComponent.isLoading()).toBeTrue();
+        expect(component.loadingChanges).toEqual([true]);
+
+        tick(500);
+        fixture.detectChanges();
+        expect(deliveredFilters).toEqual(['al']);
+        expect(luxTableComponent.dataSource.data[0].c2).toEqual('al');
+        expect(luxTableComponent.isLoading()).toBeFalse();
+        expect(component.loadingChanges).toEqual([true, false]);
+      }));
+
+      it('Sollte den Ladezustand beenden, wenn luxHttpDAO während des Ladens entfernt wird', fakeAsync(() => {
+        const deliveredItems: unknown[] = [];
+        component.httpDao.loadData = () =>
+          of({ items: component.httpDao.dataSourceFix, totalCount: component.httpDao.dataSourceFix.length }).pipe(
+            delay(1000),
+            tap((data: unknown) => deliveredItems.push(data))
+          );
+        LuxTestHelper.wait(fixture);
+        expect(component.loadingChanges).toEqual([true]);
+
+        component.httpDao = undefined as unknown as TestHttpDao;
+        LuxTestHelper.wait(fixture);
+        expect(luxTableComponent.isLoading()).toBeFalse();
+        expect(component.loadingChanges).toEqual([true, false]);
+
+        // Der abgebrochene Request darf keine veralteten Daten mehr in die Tabelle schreiben
+        flush();
+        expect(deliveredItems).toEqual([]);
+        expect(component.loadingChanges).toEqual([true, false]);
+      }));
+
+      it('Sollte bei unverändertem Filter den laufenden Request abwarten', fakeAsync(() => {
+        LuxTestHelper.wait(fixture);
+        LuxTestHelper.wait(fixture, 1000);
+        component.loadingChanges = [];
+
+        // t=0: Filter "a" -> Request von t=500 bis t=1500
+        luxTableComponent.filtered$.next('a');
+        tick(600);
+        // t=600/700: "ab" und zurück zu "a" -> Debounce liefert bei t=1200 wieder "a"
+        luxTableComponent.filtered$.next('ab');
+        tick(100);
+        luxTableComponent.filtered$.next('a');
+        tick(600);
+
+        // t=1300: Der Request für "a" läuft noch
+        expect(luxTableComponent.isLoading()).toBeTrue();
+        expect(component.loadingChanges).toEqual([true]);
+
+        tick(200);
+        expect(luxTableComponent.isLoading()).toBeFalse();
+        expect(component.loadingChanges).toEqual([true, false]);
+      }));
+
+      it('Sollte false emittieren, wenn das DAO ohne Wert abschließt', fakeAsync(() => {
+        component.httpDao.loadData = () => timer(1000).pipe(ignoreElements());
+
+        LuxTestHelper.wait(fixture);
+        expect(component.loadingChanges).toEqual([true]);
+
+        LuxTestHelper.wait(fixture, 1000);
+        expect(luxTableComponent.isLoading()).toBeFalse();
+        expect(component.loadingChanges).toEqual([true, false]);
+      }));
+
+      it('Sollte false emittieren und die Tabelle entsperren, wenn das DAO einen Fehler liefert', fakeAsync(() => {
+        component.httpDao.loadData = () => timer(1000).pipe(switchMap(() => throwError(() => new Error('Serverfehler'))));
+
+        LuxTestHelper.wait(fixture);
+        expect(component.loadingChanges).toEqual([true]);
+
+        LuxTestHelper.wait(fixture, 1000);
+        expect(luxTableComponent.isLoading()).toBeFalse();
+        expect(component.loadingChanges).toEqual([true, false]);
+        expect(fixture.nativeElement.querySelector('.lux-table-overlay').classList.contains('lux-table-overlay-active')).toBeFalse();
+        expect(luxTableComponent.dataSource.data.length).toEqual(0);
+      }));
+
+      it('Sollte beim Blättern einen laufenden Request abbrechen', fakeAsync(() => {
+        const deliveredPages: (number | undefined)[] = [];
+        component.httpDao.loadData = (conf) => {
+          const page = conf.page;
+          return of({ items: component.httpDao.dataSourceFix, totalCount: 50 }).pipe(
+            delay(1000),
+            tap(() => deliveredPages.push(page))
+          );
+        };
+        LuxTestHelper.wait(fixture);
+        LuxTestHelper.wait(fixture, 1000);
+        component.loadingChanges = [];
+        deliveredPages.length = 0;
+
+        // t=0: Seite 1 anfordern, t=500: Seite 2 anfordern (bricht Seite 1 ab)
+        luxTableComponent.onPaginatorPageChange({ pageIndex: 1, pageSize: 5, length: 50, previousPageIndex: 0 });
+        tick(500);
+        luxTableComponent.onPaginatorPageChange({ pageIndex: 2, pageSize: 5, length: 50, previousPageIndex: 1 });
+
+        // t=1200: Seite 1 wäre jetzt fertig, wurde aber abgebrochen
+        tick(700);
+        expect(deliveredPages).toEqual([]);
+        expect(luxTableComponent.isLoading()).toBeTrue();
+        expect(component.loadingChanges).toEqual([true]);
+
+        // t=1500: Seite 2 ist fertig
+        tick(300);
+        expect(deliveredPages).toEqual([2]);
+        expect(luxTableComponent.isLoading()).toBeFalse();
+        expect(component.loadingChanges).toEqual([true, false]);
+      }));
+
+      it('Sollte über den veralteten Setter isLoadingResults den Ladezustand setzen und emittieren', fakeAsync(() => {
+        LuxTestHelper.wait(fixture);
+        LuxTestHelper.wait(fixture, 1000);
+        component.loadingChanges = [];
+
+        luxTableComponent.isLoadingResults = true;
+        LuxTestHelper.wait(fixture);
+        expect(luxTableComponent.isLoading()).toBeTrue();
+        expect(luxTableComponent.isLoadingResults).toBeTrue();
+        expect(fixture.nativeElement.querySelector('.lux-table-overlay').classList.contains('lux-table-overlay-active')).toBeTrue();
+        expect(component.loadingChanges).toEqual([true]);
+
+        luxTableComponent.isLoadingResults = false;
+        LuxTestHelper.wait(fixture);
+        expect(luxTableComponent.isLoading()).toBeFalse();
+        expect(component.loadingChanges).toEqual([true, false]);
+      }));
+
+      it('Sollte false emittieren, wenn die Tabelle während des Ladens zerstört wird', fakeAsync(() => {
+        LuxTestHelper.wait(fixture);
+        expect(component.loadingChanges).toEqual([true]);
+
+        fixture.destroy();
+        expect(component.loadingChanges).toEqual([true, false]);
+
+        flush();
+        expect(component.loadingChanges).toEqual([true, false]);
+      }));
+
+      it('Sollte beim Entfernen der Tabelle per @if während des Ladens mit Signal-Handler kein NG0100 auslösen', fakeAsync(() => {
+        const toggleFixture = TestBed.createComponent(HttpDaoToggleTableComponent);
+        const host = toggleFixture.componentInstance;
+        host.httpDao.loadData = () =>
+          of({ items: host.httpDao.dataSourceFix, totalCount: host.httpDao.dataSourceFix.length }).pipe(delay(1000));
+
+        LuxTestHelper.wait(toggleFixture);
+        expect(host.tableLoading()).toBeTrue();
+        expect(toggleFixture.nativeElement.querySelector('.host-table-loading')).not.toBeNull();
+
+        // Die Tabelle wird während der Change Detection des Hosts zerstört und emittiert dabei synchron false
+        host.showTable = false;
+        LuxTestHelper.wait(toggleFixture);
+        expect(host.tableLoading()).toBeFalse();
+        expect(toggleFixture.nativeElement.querySelector('.host-table-loading')).toBeNull();
+
+        flush();
+      }));
+    });
+
     it('Die load-Data Funktion des übergebenen DAOs aufrufen', fakeAsync(() => {
       // Vorbedingungen testen
       let contentRows = document.querySelectorAll('.mat-mdc-row');
@@ -1573,8 +1974,13 @@ class TableCursorComponent {
 
 @Component({
   template: `
+    @if (tableLoading) {
+      <span class="host-table-loading"></span>
+    }
     <lux-table
       [luxHttpDAO]="httpDao"
+      [luxShowProgress]="showProgress"
+      (luxLoadingChange)="onLoadingChange($event)"
       [luxShowColumnSelector]="showColumnSelector"
       luxColumnStorageKey="test-table"
       [luxShowPagination]="true"
@@ -1621,9 +2027,45 @@ class TableCursorComponent {
 })
 class HttpDaoTableComponent {
   httpDao: TestHttpDao = new TestHttpDao();
+  showProgress = true;
+  loadingChanges: boolean[] = [];
+  tableLoading = false;
   selected = new Set();
 
   constructor() {}
+
+  onLoadingChange(loading: boolean) {
+    this.loadingChanges.push(loading);
+    this.tableLoading = loading;
+  }
+}
+
+@Component({
+  template: `
+    @if (tableLoading()) {
+      <span class="host-table-loading"></span>
+    }
+    @if (showTable) {
+      <lux-table [luxHttpDAO]="httpDao" (luxLoadingChange)="tableLoading.set($event)">
+        <lux-table-column luxColumnDef="c1">
+          <lux-table-column-header>
+            <ng-template>C1</ng-template>
+          </lux-table-column-header>
+          <lux-table-column-content>
+            <ng-template let-element>
+              <span>{{ element.c1 }}</span>
+            </ng-template>
+          </lux-table-column-content>
+        </lux-table-column>
+      </lux-table>
+    }
+  `,
+  imports: [LuxTableComponent, LuxTableColumnComponent, LuxTableColumnHeaderComponent, LuxTableColumnContentComponent]
+})
+class HttpDaoToggleTableComponent {
+  httpDao: TestHttpDao = new TestHttpDao();
+  showTable = true;
+  tableLoading = signal(false);
 }
 
 @Component({

@@ -39,6 +39,7 @@ import {
   LuxMenuComponent,
   LuxMenuItemComponent,
   LuxMenuSectionTitleComponent,
+  LuxProgressComponent,
   LuxSideNavComponent,
   LuxSideNavFooterComponent,
   LuxSideNavHeaderComponent,
@@ -48,6 +49,7 @@ import {
   LuxThemeService,
   LuxTooltipDirective
 } from '@ihk-gfi/lux-components';
+import { LuxLoadingService } from '@ihk-gfi/lux-components/lux-loading';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { Subscription } from 'rxjs';
 import { ComponentsOverviewNavigationService } from './components-overview/components-overview-navigation.service';
@@ -89,6 +91,7 @@ import { TenantLogoExampleHeaderService } from './components-overview/tenant-log
     CdkScrollable,
     LuxDividerComponent,
     LuxMenuSectionTitleComponent,
+    LuxProgressComponent,
     TranslocoPipe,
     LuxAppHeaderAcSessionTimerComponent
   ],
@@ -109,6 +112,7 @@ export class AppComponent implements OnInit, OnDestroy {
   private consentService = inject(LuxConsentService);
   componentsOverviewService = inject(ComponentsOverviewNavigationService);
   tenantLogoHeaderService = inject(TenantLogoExampleHeaderService);
+  globalLoading = inject(LuxLoadingService);
   fixedFooterService = inject(LuxAppFooterFixedService);
   iconService = inject(LuxIconRegistryService);
   tService = inject(TranslocoService);

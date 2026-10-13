@@ -15,6 +15,7 @@
     - [1. Formular speichern (blockierend)](#1-formular-speichern-blockierend)
     - [2. Liste filtern (anzeigend)](#2-liste-filtern-anzeigend)
     - [3. Manuell steuern](#3-manuell-steuern)
+    - [4. LUX-Table (anzeigend)](#4-lux-table-anzeigend)
 
 ## Global Blocking State
 
@@ -192,5 +193,27 @@ try {
   await doSomething();
 } finally {
   release(); // idempotent, mehrfacher Aufruf ist harmlos
+}
+```
+
+### 4. LUX-Table (anzeigend)
+
+Die [lux-table](lux‐table-v21) meldet ihren Ladezustand über `luxLoadingChange`. Mit `luxShowProgress = false` entfällt die interne Progressbar,
+die Fortschrittsanzeige übernimmt dann der globale Ladebalken (`isBusy()`):
+
+```html
+<lux-table [luxHttpDAO]="httpDao" [luxShowProgress]="false" (luxLoadingChange)="onTableLoadingChange($event)"> ... </lux-table>
+```
+
+```typescript
+private releaseTableLoading?: () => void;
+
+onTableLoadingChange(loading: boolean) {
+  this.releaseTableLoading?.();
+  this.releaseTableLoading = loading ? this.loading.busy() : undefined;
+}
+
+ngOnDestroy() {
+  this.releaseTableLoading?.();
 }
 ```

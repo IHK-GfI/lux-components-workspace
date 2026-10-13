@@ -1,10 +1,12 @@
 <div class="lux-table lux-flex lux-flex-col">
   <!-- Progress für das Laden/Filtern von Daten -->
-  <div class="lux-table-progress-container">
-    @if (isLoadingResults) {
-      <lux-progress luxTagId="tableProgress" luxColor="blue" luxType="Progressbar" class="lux-mb-3"></lux-progress>
-    }
-  </div>
+  @if (luxShowProgress()) {
+    <div class="lux-table-progress-container">
+      @if (isLoading()) {
+        <lux-progress luxTagId="tableProgress" luxColor="blue" luxType="Progressbar" class="lux-mb-3"></lux-progress>
+      }
+    </div>
+  }
   <!-- Input-Feld für das Filtern der Datensätze dieser Tabelle -->
   <div class="lux-table-filter lux-flex lux-flex-auto lux-gap-4" [ngClass]="{ 'lux-hide': !luxShowFilter && !luxShowColumnSelector() }">
     <lux-input-ac
@@ -45,11 +47,11 @@
   <div
     [ngStyle]="{ 'max-height': tableHeightCSSCalc }"
     class="lux-table"
-    [ngClass]="{ 'lux-pointer-events-none': isLoadingResults }"
+    [ngClass]="{ 'lux-pointer-events-none': isLoading() }"
     #tableContainer
   >
     <!-- Overlay, welches bei der Anzeige des Ladebalkens die Interaktion mit der Tabelle unterbindet -->
-    <div class="lux-table-overlay" [ngClass]="{ 'lux-table-overlay-active': isLoadingResults }"></div>
+    <div class="lux-table-overlay" [ngClass]="{ 'lux-table-overlay-active': isLoading() }"></div>
 
     <div class="lux-table-content" [ngClass]="{ 'lux-hide-borders': luxHideBorders, 'lux-table-no-striping': hasHighlightedRows }">
       <table

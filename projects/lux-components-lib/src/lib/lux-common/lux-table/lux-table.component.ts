@@ -16,6 +16,7 @@ import {
   OnInit,
   Output,
   QueryList,
+  signal,
   ViewChild
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
@@ -39,7 +40,7 @@ import {
 import { LuxPageEvent, LuxPaginatorComponent } from '@ihk-gfi/lux-components/lux-paginator';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { of, Subject, Subscription } from 'rxjs';
-import { catchError, debounceTime, distinctUntilChanged, tap } from 'rxjs/operators';
+import { catchError, debounceTime, distinctUntilChanged, finalize, tap } from 'rxjs/operators';
 import { LuxAriaLabelDirective } from '../../lux-directives/lux-aria/lux-aria-label.directive';
 import { LuxTabIndexDirective } from '../../lux-directives/lux-tabindex/lux-tab-index.directive';
 import { LuxTooltipDirective } from '../../lux-directives/lux-tooltip/lux-tooltip.directive';
@@ -130,6 +131,10 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
   private httpDaoSubscription?: Subscription;
   private filterChangedSubscription?: Subscription;
   private columnSubscriptions: Subscription[] = [];
+  private readonly _isLoading = signal(false);
+  private lastEmittedLoading = false;
+  private loadingChangeScheduled = false;
+  private filterPending = false;
   private tableColumnsChangedSubscription?: Subscription;
   private sortChangedSubscription?: Subscription;
   private selectedSubscription?: Subscription;
@@ -137,7 +142,13 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
   filtered$: Subject<string> = new Subject<string>();
   currentCustomClasses: { entry: any; classes: string }[] = [];
   hasHighlightedRows = false;
-  isLoadingResults = false;
+  /**
+   * Gibt an, ob die Tabelle gerade Daten lädt bzw. filtert (inkl. Filter-Debounce).
+   * Während dieser Zeit ist die Tabelle gesperrt. Kann genutzt werden, um bei
+   * luxShowProgress = false einen eigenen Ladebalken anzuzeigen. Für einen globalen
+   * Ladebalken außerhalb der Seite (z. B. im Header) eignet sich luxLoadingChange.
+   */
+  readonly isLoading = this._isLoading.asReadonly();
   allSelected = false;
   mediaQuery: string;
   movedTableColumns: LuxTableColumnComponent[] = [];
@@ -151,6 +162,7 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
   columnVisibilityPickValueFN = (option: { label: string; value: string }) => option.value;
 
   luxShowColumnSelector = input<boolean>(false);
+  luxShowProgress = input<boolean>(true);
   @Input() luxColumnStorageKey?: string;
   @Input() luxColumnVisibilityStore: ILuxTableColumnVisibilityStore = this.defaultColumnVisibilityStore;
   @Input() luxColWidthsPercent: number[] = [];
@@ -173,6 +185,7 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
   @Output() luxSingleClicked = new EventEmitter<{ event: Event; rowItem: T; rowIndex: number }>();
   @Output() luxDoubleClicked = new EventEmitter<{ event: MouseEvent; rowItem: T }>();
   @Output() luxHiddenColumnsChange = new EventEmitter<string[]>();
+  @Output() luxLoadingChange = new EventEmitter<boolean>();
 
   @ViewChild(LuxPaginatorComponent, { static: true }) paginator?: LuxPaginatorComponent;
   @ViewChild(MatSort, { static: true }) sort?: MatSort;
@@ -181,6 +194,17 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
   @ViewChild('filter', { static: true }) filterComponent?: LuxInputAcComponent;
   @ViewChild('tableContainer', { read: ElementRef, static: true }) tableContainerElement!: ElementRef;
   @ContentChildren(LuxTableColumnComponent) tableColumns!: QueryList<LuxTableColumnComponent>;
+
+  /**
+   * @deprecated Bitte das Signal isLoading verwenden.
+   */
+  get isLoadingResults(): boolean {
+    return this._isLoading();
+  }
+
+  set isLoadingResults(isLoading: boolean) {
+    this.setLoading(isLoading);
+  }
 
   get luxHttpDAO(): ILuxTableHttpDao | undefined {
     return this._luxHttpDAO;
@@ -390,6 +414,12 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
 
       this.updateColumnsByMediaQuery();
     });
+
+    effect(() => {
+      // Ohne Progressbar entfällt deren Platz, daher muss die Tabellenhöhe neu berechnet werden.
+      this.luxShowProgress();
+      this.calculateProportions();
+    });
   }
 
   ngOnInit() {
@@ -443,6 +473,12 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
   }
 
   ngOnDestroy() {
+    // Einen laufenden Ladezustand beenden, damit z. B. ein globaler Ladebalken nicht hängen bleibt.
+    // Hier synchron emittieren, da die Listener nach dem Zerstören nicht mehr erreichbar sind. Wird die Tabelle während
+    // der Change Detection entfernt (z. B. per @if), sollte der Handler daher ein Signal oder einen Service nutzen.
+    this._isLoading.set(false);
+    this.emitLoadingChange();
+
     // Subscriptions auflösen
     this.columnSubscriptions.forEach((subscription: Subscription) => {
       subscription.unsubscribe();
@@ -772,13 +808,17 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
    * @param filteredBy
    */
   loadHttpDAOData(filteredBy?: string) {
+    // Nur der neueste Request bestimmt Daten und Ladezustand: Ein noch laufender Request wird abgebrochen.
+    // Dessen finalize setzt den Ladezustand zwar kurz zurück, der Zwischenstand wird aber nicht emittiert (siehe setLoading).
+    // Ohne DAO (z. B. luxHttpDAO = undefined) endet damit auch ein laufender Ladezustand.
+    this.httpDaoSubscription?.unsubscribe();
     if (this.luxHttpDAO) {
-      this.isLoadingResults = true;
-      this.luxHttpDAO
+      this.setLoading(true);
+      this.httpDaoSubscription = this.luxHttpDAO
         .loadData(this.httpRequestConf)
         .pipe(
           tap((data: ILuxTableHttpDaoStructure) => {
-            this.isLoadingResults = false;
+            this.finishHttpLoading();
             // Wenn ein Filter-Text gegeben ist, sich dieser aber vom Aktuellen unterscheiden, brechen wir die Datenaktualisierung ab
             if (filteredBy && this.httpRequestConf.filter !== filteredBy) {
               return;
@@ -798,9 +838,11 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
             this.insertCustomCSSClasses();
           }),
           catchError((error) => {
-            this.isLoadingResults = false;
+            this.finishHttpLoading();
             return of(error);
-          })
+          }),
+          // Auch ohne emittierten Wert (z. B. EMPTY oder Abbruch) darf der Ladezustand nicht hängen bleiben
+          finalize(() => this.finishHttpLoading())
         )
         .subscribe();
     }
@@ -845,27 +887,43 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
   private handleFilter() {
     if (this.filterChangedSubscription) {
       this.filterChangedSubscription.unsubscribe();
+
+      // Ein abgebrochener Filter-Debounce darf den Ladezustand nicht blockieren
+      if (this.filterPending) {
+        this.filterPending = false;
+        if (!this.isHttpRequestPending()) {
+          this.setLoading(false);
+        }
+      }
     }
     if (this.luxShowFilter) {
       this.filterChangedSubscription = this.filtered$
         .asObservable()
         .pipe(
-          tap(() => (this.isLoadingResults = true)),
+          tap(() => {
+            this.filterPending = true;
+            this.setLoading(true);
+          }),
           debounceTime(500),
           distinctUntilChanged((x: string, y: string) => {
             if (x === y) {
-              this.isLoadingResults = false;
+              this.filterPending = false;
+              // Ein noch laufender Request für denselben Filter bestimmt weiterhin den Ladezustand
+              if (!this.isHttpRequestPending()) {
+                this.setLoading(false);
+              }
             }
 
             return x === y;
           })
         )
         .subscribe((filterValue: string) => {
+          this.filterPending = false;
           filterValue = filterValue.trim();
           filterValue = filterValue.toLocaleLowerCase();
           this.resetPaginatorToFirstPage();
-          this.isLoadingResults = false;
           if (!this.luxHttpDAO) {
+            this.setLoading(false);
             this.dataSource.filter = filterValue;
           }
           if (this.luxHttpDAO) {
@@ -897,6 +955,51 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
     this.calculateProportions();
   }
 
+  /**
+   * Setzt den Ladezustand und plant die Emission von luxLoadingChange.
+   *
+   * Die Emission erfolgt asynchron (Microtask), da der Ladezustand auch während der Change Detection
+   * des Parents wechseln kann (z. B. beim Setzen von luxHttpDAO). Ein synchroner Event-Handler, der
+   * ein bereits geprüftes Binding ändert, würde sonst NG0100 auslösen. Mehrere Wechsel innerhalb
+   * desselben Tasks werden dabei zusammengefasst.
+   */
+  private setLoading(loading: boolean) {
+    if (this._isLoading() !== loading) {
+      this._isLoading.set(loading);
+      if (!this.loadingChangeScheduled) {
+        this.loadingChangeScheduled = true;
+        queueMicrotask(() => {
+          this.loadingChangeScheduled = false;
+          this.emitLoadingChange();
+        });
+      }
+    }
+  }
+
+  /**
+   * Emittiert luxLoadingChange, wenn sich der Ladezustand seit der letzten Emission geändert hat.
+   */
+  private emitLoadingChange() {
+    const loading = this._isLoading();
+    if (loading !== this.lastEmittedLoading) {
+      this.lastEmittedLoading = loading;
+      this.luxLoadingChange.emit(loading);
+    }
+  }
+
+  /**
+   * Beendet den Ladezustand eines DAO-Requests, sofern kein Filter-Debounce mehr aussteht.
+   */
+  private finishHttpLoading() {
+    if (!this.filterPending) {
+      this.setLoading(false);
+    }
+  }
+
+  private isHttpRequestPending(): boolean {
+    return !!this.httpDaoSubscription && !this.httpDaoSubscription.closed;
+  }
+
   private resetPaginatorToFirstPage(): void {
     if (this.paginator) {
       this.paginator.luxPageIndex.set(0);
@@ -919,13 +1022,15 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
     setTimeout(() => {
       const filter = this.filterElement ? this.filterElement.nativeElement.offsetHeight : 0;
       const pagination = this.paginatorElement ? this.paginatorElement.nativeElement.scrollHeight : 0;
-      const progress = 15;
+      const progress = this.luxShowProgress() ? 15 : 0;
       const temp = 'calc(100% - ' + progress + 'px' + ' - ' + pagination + 'px' + ' - ' + filter + 'px)';
-      if (temp !== this.tableHeightCSSCalc) {
+      const minWidth = this.luxMinWidthPx > -1 ? this.luxMinWidthPx + 'px' : 'unset';
+      if (temp !== this.tableHeightCSSCalc || minWidth !== this.tableMinWidth) {
         this.tableHeightCSSCalc = temp;
+        this.tableMinWidth = minWidth;
+        // Für zoneless Apps: Das setTimeout löst dort keine Change Detection aus
+        this.cdr.markForCheck();
       }
-
-      this.tableMinWidth = this.luxMinWidthPx > -1 ? this.luxMinWidthPx + 'px' : 'unset';
     });
   }
 

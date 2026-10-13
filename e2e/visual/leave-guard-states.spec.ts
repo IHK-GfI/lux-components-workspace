@@ -1,6 +1,6 @@
 import { expect, Page, test } from '@playwright/test';
 import { FormExamplePage } from '../form/support/form-example';
-import { openStable, pauseClock, screenshotSoft } from './vrt-helper';
+import { openStable, pauseClock, screenshotSoft, screenshotWithGlobalProgressSoft } from './vrt-helper';
 
 /**
  * Zustände der Leave-Guard-Demo (luxLeaveGuard + LuxLoadingService, Pattern "Global Blocking State").
@@ -16,6 +16,9 @@ const HIDE_LOG_TIME = '.example-log-time { display: none; }';
 /** Dauer des simulierten Speicherns (SAVE_DURATION_MS) und Eingabepause des Filters (FILTER_DEBOUNCE_MS) in der Demo. */
 const SAVE_DURATION_MS = 5000;
 const FILTER_DEBOUNCE_MS = 600;
+
+/** LuxComponentsConfigService.DEFAULT_CONFIG.buttonConfiguration.throttleTimeMs */
+const BUTTON_THROTTLE_MS = 600;
 
 async function openLeaveGuard(page: Page) {
   await openStable(page, ROUTE, page.locator('app-leave-guard-example'), HIDE_LOG_TIME);
@@ -65,9 +68,9 @@ test('leave-guard-states/ungespeichert', async ({ page }) => {
 test('leave-guard-states/speichern-laeuft', async ({ page }) => {
   await openLeaveGuard(page);
   await startSaving(page);
-  await expect(page.getByRole('progressbar', { name: 'Vorgang läuft' })).toBeVisible();
+  await expect(page.getByRole('progressbar', { name: 'Verarbeitung läuft.' })).toBeVisible();
 
-  await screenshotSoft(page, exampleCard(page), 'leave-guard-speichern-laeuft.png');
+  await screenshotWithGlobalProgressSoft(page, exampleCard(page), 'leave-guard-speichern-laeuft.png');
 
   await page.clock.runFor(SAVE_DURATION_MS);
   await expect(nameInput(page)).toBeEnabled();
@@ -80,11 +83,11 @@ test('leave-guard-states/filtern-laeuft', async ({ page }) => {
   await pauseClock(page);
   await page.locator('example-base-content').getByRole('textbox', { name: 'Filterbegriff', exact: true }).fill('Antrag');
   await page.clock.runFor(FILTER_DEBOUNCE_MS);
-  await expect(page.getByRole('progressbar', { name: 'Vorgang läuft' })).toBeVisible();
+  await expect(page.getByRole('progressbar', { name: 'Verarbeitung läuft.' })).toBeVisible();
   // Anzeigend: die Seite bleibt bedienbar.
   await expect(nameInput(page)).toBeEnabled();
 
-  await screenshotSoft(page, exampleCard(page), 'leave-guard-filtern-laeuft.png');
+  await screenshotWithGlobalProgressSoft(page, exampleCard(page), 'leave-guard-filtern-laeuft.png');
 });
 
 test('leave-guard-states/dauerhaft-blockiert', async ({ page }) => {
@@ -92,7 +95,7 @@ test('leave-guard-states/dauerhaft-blockiert', async ({ page }) => {
   await FormExamplePage.forPage(page).options.setSwitch('Seite dauerhaft blockieren');
   await expect(nameInput(page)).toBeDisabled();
 
-  await screenshotSoft(page, exampleCard(page), 'leave-guard-dauerhaft-blockiert.png');
+  await screenshotWithGlobalProgressSoft(page, exampleCard(page), 'leave-guard-dauerhaft-blockiert.png');
 });
 
 test('leave-guard-states/dialog-ungespeichert', async ({ page }) => {
@@ -110,6 +113,9 @@ test('leave-guard-states/dialog-ungespeichert', async ({ page }) => {
   await expect(page).toHaveURL(new RegExp(`${ROUTE}$`));
 
   // Verwerfen und fortfahren: die Navigation wird zugelassen.
+  // "Weiter" ist dieselbe lux-button-Instanz wie beim ersten Klick und ignoriert Klicks innerhalb von
+  // buttonConfiguration.throttleTimeMs. Die Uhr deshalb vorspulen, sonst wird der Klick je nach Laufzeit verschluckt.
+  await page.clock.runFor(BUTTON_THROTTLE_MS);
   await navigateAway(page);
   await dialog.getByRole('button', { name: 'Verwerfen und fortfahren', exact: true }).click();
   await expect(dialog).toBeHidden();
