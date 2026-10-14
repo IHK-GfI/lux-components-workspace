@@ -1,0 +1,391 @@
+@use "sass:list";
+@use "../common/luxfocus";
+
+// Styles für lux-quill (Rich-Text-Editor auf Basis von Quill.js).
+//
+// Die Grundregeln des Editors sind an quill.core.css (Quill 2) angelehnt und auf die von lux-quill
+// genutzten Formate beschränkt. Das Quill-CSS wird bewusst nicht importiert, damit das Theme ohne die
+// (optionale) Abhängigkeit "quill" gebaut werden kann.
+//
+// Der folgende Lizenzhinweis ist ein "/*!"-Kommentar, damit er auch im komprimierten CSS erhalten bleibt
+// (BSD-3-Clause, Klausel 1 und 2).
+
+/*!
+ * lux-quill: Editor-Grundregeln angelehnt an quill.core.css (Quill Editor v2, https://quilljs.com)
+ *
+ * Copyright (c) 2017-2024, Slab
+ * Copyright (c) 2014, Jason Chen
+ * Copyright (c) 2013, salesforce.com
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ *
+ * 3. Neither the name of the copyright holder nor the names of its
+ *    contributors may be used to endorse or promote products derived from
+ *    this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+$lux-quill-indent-levels: 8;
+$lux-quill-list-styles: (decimal, lower-alpha, lower-roman);
+
+// Liefert "list-<from> list-<from+1> ... list-<levels>" für counter-set.
+@function lux-quill-counters($from) {
+  $counters: ();
+  @for $i from $from through $lux-quill-indent-levels {
+    $counters: list.append($counters, list-#{$i}, space);
+  }
+  @return $counters;
+}
+
+// Inhalte - im Editor (.ql-editor) und bei der Ausgabe außerhalb, z.B. <lux-html luxClass="lux-quill-content">.
+.lux-quill-content {
+  font-family: var(--lux-theme-app-font-family);
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--lux-theme-dark-primary-text);
+
+  p,
+  ol,
+  ul,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin: 0;
+    padding: 0;
+  }
+
+  .lux-quill-heading-1,
+  .lux-quill-heading-2 {
+    font-family: var(--lux-theme-app-headline-font);
+    font-weight: 500;
+    line-height: 1.3;
+    margin-block: 0.5em 0.25em;
+  }
+
+  .lux-quill-heading-1 {
+    font-size: 1.5rem;
+  }
+
+  .lux-quill-heading-2 {
+    font-size: 1.25rem;
+  }
+
+  > :first-child {
+    margin-top: 0;
+  }
+
+  // Semantische Listen der Ausgabe (im Editor rendert Quill die Listen als li[data-list], siehe unten).
+  ul,
+  ol {
+    padding-left: 1.5em;
+  }
+
+  ol ol {
+    list-style-type: lower-alpha;
+  }
+
+  ol ol ol {
+    list-style-type: lower-roman;
+  }
+
+  @for $i from 1 through $lux-quill-indent-levels {
+    .ql-indent-#{$i} {
+      padding-left: #{$i * 3}em;
+    }
+  }
+
+  // Farben und Hover der Links kommen aus der globalen Regel für a:not(.lux-link) (_luxstyles.scss).
+  a[href]:focus-visible {
+    @include luxfocus.focus-dark-mixin;
+    border-radius: var(--lux-theme-app-border-radius);
+  }
+}
+
+.lux-quill {
+  // Editor-Grundregeln (angelehnt an quill.core.css)
+  .ql-container {
+    position: relative;
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    box-sizing: border-box;
+    margin: 0;
+  }
+
+  .ql-clipboard {
+    position: absolute;
+    top: 50%;
+    left: -100000px;
+    height: 1px;
+    overflow-y: hidden;
+
+    p {
+      margin: 0;
+      padding: 0;
+    }
+  }
+
+  .ql-editor {
+    flex: 1 1 auto;
+    box-sizing: border-box;
+    padding: var(--lux-theme-form-control-textarea-padding) 0.5rem;
+    outline: none;
+    text-align: left;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+    tab-size: 4;
+    counter-reset: lux-quill-counters(0);
+
+    > * {
+      cursor: text;
+    }
+
+    p,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      counter-set: lux-quill-counters(0);
+    }
+
+    // Quill rendert alle Listen als <ol> mit li[data-list]. Ohne eigenen Einzug des <ol> entspricht
+    // die Einrückung der von verschachtelten <ul>/<ol> in der Ausgabe (je Ebene 1.5em).
+    ol {
+      padding-left: 0;
+    }
+
+    li {
+      position: relative;
+      padding-left: 1.5em;
+      list-style-type: none;
+
+      > .ql-ui::before {
+        display: inline-block;
+        width: 1.2em;
+        margin-left: -1.5em;
+        margin-right: 0.3em;
+        text-align: right;
+        white-space: nowrap;
+      }
+    }
+
+    .ql-ui {
+      position: absolute;
+    }
+
+    li[data-list] {
+      counter-set: lux-quill-counters(1);
+    }
+
+    li[data-list="bullet"] > .ql-ui::before {
+      content: "\2022";
+    }
+
+    li[data-list="ordered"] {
+      counter-increment: list-0;
+
+      > .ql-ui::before {
+        content: counter(list-0, decimal) ". ";
+      }
+    }
+
+    @for $i from 1 through $lux-quill-indent-levels {
+      li.ql-indent-#{$i} {
+        padding-left: #{($i + 1) * 1.5}em;
+      }
+
+      @if $i < $lux-quill-indent-levels {
+        li[data-list].ql-indent-#{$i} {
+          counter-set: lux-quill-counters($i + 1);
+        }
+      }
+
+      li[data-list="ordered"].ql-indent-#{$i} {
+        counter-increment: list-#{$i};
+
+        > .ql-ui::before {
+          content: counter(list-#{$i}, list.nth($lux-quill-list-styles, ($i % 3) + 1)) ". ";
+        }
+      }
+    }
+
+    &.ql-blank::before {
+      position: absolute;
+      left: 0.5rem;
+      right: 0.5rem;
+      color: var(--lux-theme-dark-secondary-text);
+      font-style: italic;
+      content: attr(data-placeholder);
+      pointer-events: none;
+    }
+  }
+
+  // Rahmen, Hover, Fokus, Fehler und Disabled kommen aus _luxFormControlWrapper.scss (.lux-form-control-wrapper-host).
+  .lux-form-control-wrapper {
+    .lux-quill-container.lux-form-control-container-authentic {
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .lux-quill-editor {
+      min-height: 6rem;
+    }
+
+    &.lux-dense-authentic {
+      .ql-editor {
+        padding-top: var(--lux-theme-form-control-textarea-dense-padding);
+        padding-bottom: var(--lux-theme-form-control-textarea-dense-padding);
+      }
+
+      .lux-quill-editor {
+        min-height: 4rem;
+      }
+    }
+
+    &:not(.lux-form-control-disabled-authentic).lux-form-control-readonly-authentic .lux-form-control-container-authentic {
+      color: var(--lux-theme-form-readonly-color);
+      background-color: var(--lux-theme-form-readonly-bg-color);
+    }
+
+    &.lux-form-control-disabled-authentic .lux-quill-content {
+      color: var(--lux-theme-dark-disabled-text);
+    }
+  }
+
+  // Toolbar
+  .lux-quill-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem;
+    border-bottom: var(--lux-theme-form-border-width) solid var(--lux-theme-form-border-color);
+  }
+
+  .lux-quill-toolbar-control {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    min-width: 2rem;
+    height: 2rem;
+    padding: 0 0.375rem;
+    border: none;
+    border-radius: var(--lux-theme-app-border-radius);
+    background-color: transparent;
+    color: var(--lux-theme-dark-primary-text);
+    font-family: var(--lux-theme-app-font-family);
+    font-size: 0.875rem;
+    cursor: pointer;
+
+    &:hover:not(:disabled) {
+      background-color: var(--lux-theme-hover-color);
+    }
+
+    &:focus-visible {
+      @include luxfocus.lux-button-focus;
+    }
+
+    &.lux-quill-toolbar-pressed {
+      background-color: var(--mat-sys-primary-container);
+      color: var(--mat-sys-on-primary-container);
+    }
+
+    &:disabled {
+      color: var(--lux-theme-dark-disabled-text);
+      cursor: default;
+    }
+  }
+
+  .lux-quill-toolbar-heading {
+    justify-content: space-between;
+    gap: 0.25rem;
+    min-width: 9rem;
+  }
+
+  .lux-quill-toolbar-separator {
+    align-self: stretch;
+    width: var(--lux-theme-form-border-width);
+    margin: 0.25rem 0.125rem;
+    background-color: var(--lux-theme-form-border-color);
+  }
+}
+
+// Menü der Überschriften-Auswahl (wird im CDK-Overlay außerhalb von lux-quill gerendert)
+.lux-quill-heading-menu {
+  display: flex;
+  flex-direction: column;
+  min-width: 12rem;
+  padding: 0.25rem 0;
+  // Dieselben Tokens wie mat-menu bzw. lux-menu.
+  border-radius: var(--mat-menu-container-shape);
+  background-color: var(--mat-menu-container-color);
+  box-shadow: var(--mat-menu-container-elevation-shadow);
+
+  .lux-quill-heading-menu-item {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-left: 3px solid transparent;
+    background-color: transparent;
+    color: var(--lux-theme-dark-primary-text);
+    font-family: var(--lux-theme-app-font-family);
+    font-size: 1rem;
+    text-align: left;
+    cursor: pointer;
+
+    &:hover,
+    &:focus {
+      background-color: var(--lux-theme-hover-color);
+      outline: none;
+    }
+
+    &:focus-visible {
+      @include luxfocus.focus-dark-mixin-inline;
+    }
+
+    &[aria-checked="true"] {
+      border-left-color: var(--mat-sys-primary);
+    }
+
+    &.lux-quill-heading-menu-item-h1,
+    &.lux-quill-heading-menu-item-h2 {
+      font-family: var(--lux-theme-app-headline-font);
+      font-weight: 500;
+    }
+
+    &.lux-quill-heading-menu-item-h1 {
+      font-size: 1.5rem;
+    }
+
+    &.lux-quill-heading-menu-item-h2 {
+      font-size: 1.25rem;
+    }
+  }
+}

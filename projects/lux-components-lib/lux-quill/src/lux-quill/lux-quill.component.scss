@@ -1,0 +1,16 @@
+// Die Optik (Rahmen, Zustände, Inhalte) kommt aus dem Theme (_luxQuill.scss), hier nur das Grundlayout.
+:host {
+  display: block;
+}
+
+.lux-quill-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.lux-quill-editor {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  overflow-y: auto;
+}
