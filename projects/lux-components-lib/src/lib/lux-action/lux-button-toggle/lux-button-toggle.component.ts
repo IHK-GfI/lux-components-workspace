@@ -3,13 +3,19 @@ import {
   ChangeDetectorRef,
   Component,
   DestroyRef,
+  ElementRef,
   Injector,
   OnInit,
+  afterNextRender,
+  booleanAttribute,
+  computed,
   effect,
   inject,
   input,
   model,
-  signal
+  signal,
+  untracked,
+  viewChild
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlContainer, ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, NgControl } from '@angular/forms';
@@ -23,6 +29,14 @@ export interface LuxButtonToggleOption<T = unknown> {
   value: T;
   disabled?: boolean;
   ariaLabel?: string;
+}
+
+/** Einrückung (padding-left), mit der Material ausgewählte Toggles für das Häkchen versieht. */
+const SELECTION_INDICATOR_WIDTH = 30;
+
+/** Wie booleanAttribute, aber null und undefined bleiben "nicht gesetzt". */
+function optionalBooleanAttribute(value: unknown): boolean | undefined {
+  return value === null || value === undefined ? undefined : booleanAttribute(value);
 }
 
 @Component({
@@ -53,7 +67,22 @@ export class LuxButtonToggleComponent<T = unknown> implements ControlValueAccess
   private readonly tService = inject(TranslocoService);
   private readonly defaultAriaLabel = signal(this.tService.translate('luxc.button-toggle.aria_label'));
 
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly groupElement = viewChild(MatButtonToggleGroup, { read: ElementRef<HTMLElement> });
+  private readonly autoVertical = signal(false);
+  private readonly naturalWidth = signal<number | null>(null);
+  private remeasurePending = false;
+
   readonly luxDense = input(false);
+  /** true: immer vertikal, false: immer horizontal, undefined: abhängig vom verfügbaren Platz. */
+  readonly luxVertical = input<boolean | undefined, unknown>(undefined, { transform: optionalBooleanAttribute });
+  readonly isVertical = computed(() => this.luxVertical() ?? this.autoVertical());
+  readonly isAutoVertical = computed(() => this.luxVertical() === undefined && this.autoVertical());
+  /**
+   * Im Auto-Modus behält die vertikale Darstellung den Platzbedarf der horizontalen (begrenzt auf den verfügbaren Platz).
+   * Sonst würde ein vom Inhalt abhängiger Host mit der vertikalen Gruppe schrumpfen und nie wieder auf horizontal wechseln.
+   */
+  readonly autoVerticalWidth = computed(() => (this.isAutoVertical() ? this.naturalWidth() : null));
   readonly luxAriaLabel = input<string | undefined>(undefined);
   readonly luxOptions = input<LuxButtonToggleOption<T>[]>([]);
   readonly luxMultiple = input(false);
@@ -91,6 +120,103 @@ export class LuxButtonToggleComponent<T = unknown> implements ControlValueAccess
     effect(() => {
       this.normalizeSingleSelectionToOption();
     });
+
+    // Auto-Modus: Optionen und Auswahlmodus bestimmen die natürliche Breite.
+    effect(() => {
+      this.luxOptions();
+      this.luxMultiple();
+      if (this.luxVertical() === undefined) {
+        untracked(() => this.scheduleRemeasure());
+      }
+    });
+
+    // Auto-Modus: Der Host meldet Änderungen des verfügbaren Platzes, die Gruppe Änderungen ihrer eigenen Breite
+    // (z. B. nach dem Laden von Webfonts). Textänderungen bei gleichbleibender Box erkennt nur der MutationObserver.
+    effect((onCleanup) => {
+      const group = this.groupElement()?.nativeElement;
+      if (!group || this.luxVertical() !== undefined) {
+        return;
+      }
+
+      // typeof-Prüfungen: SSR/Non-DOM-Umgebungen kennen diese Globals nicht.
+      if (typeof ResizeObserver !== 'undefined') {
+        const resizeObserver = new ResizeObserver(() => this.evaluateLayout());
+        resizeObserver.observe(this.host.nativeElement);
+        resizeObserver.observe(group);
+        onCleanup(() => resizeObserver.disconnect());
+      }
+      if (typeof MutationObserver !== 'undefined') {
+        const mutationObserver = new MutationObserver(() => this.scheduleRemeasure());
+        mutationObserver.observe(group, { characterData: true, childList: true, subtree: true });
+        onCleanup(() => mutationObserver.disconnect());
+      }
+    });
+  }
+
+  /** Schaltet im Auto-Modus anhand der natürlichen Breite zwischen horizontal und vertikal um. */
+  evaluateLayout(): void {
+    if (this.luxVertical() !== undefined || this.remeasurePending) {
+      return;
+    }
+
+    const availableWidth = this.measureAvailableWidth();
+    if (availableWidth <= 0) {
+      return;
+    }
+
+    // Die natürliche Breite lässt sich nur horizontal messen, vertikal gilt der zuletzt gemessene Wert.
+    if (!this.autoVertical()) {
+      const group = this.groupElement()?.nativeElement;
+      if (!group) {
+        return;
+      }
+      this.naturalWidth.set(this.measureNaturalWidth(group));
+    }
+
+    const naturalWidth = this.naturalWidth();
+    this.autoVertical.set(naturalWidth !== null && naturalWidth > availableWidth);
+  }
+
+  /** Misst die natürliche Breite nach dem nächsten Rendern neu. Dafür wird vorübergehend horizontal gerendert. */
+  private scheduleRemeasure(): void {
+    if (this.luxVertical() !== undefined || this.remeasurePending) {
+      return;
+    }
+
+    this.remeasurePending = true;
+    this.autoVertical.set(false);
+    this.cdr.markForCheck();
+    afterNextRender(
+      () => {
+        this.remeasurePending = false;
+        this.evaluateLayout();
+      },
+      { injector: this.injector }
+    );
+  }
+
+  private measureAvailableWidth(): number {
+    const host = this.host.nativeElement;
+    const style = getComputedStyle(host);
+    return host.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
+  }
+
+  /**
+   * Breite der horizontalen Gruppe inklusive Rahmen. Der Platz für das Häkchen wird unabhängig von der aktuellen
+   * Auswahl eingeplant (Single-Select einmal, Multi-Select je Option), damit ein Klick die Ausrichtung nicht umschaltet.
+   */
+  private measureNaturalWidth(group: HTMLElement): number {
+    const buttons = Array.from(group.querySelectorAll<HTMLElement>('.mat-button-toggle-button'));
+    // Material setzt am Button nur für das Häkchen ein Padding; auch während der Animation passt es zur gemessenen Breite.
+    const indicatorPadding = buttons.reduce((sum, button) => {
+      const style = getComputedStyle(button);
+      return sum + parseFloat(style.paddingLeft) + parseFloat(style.paddingRight);
+    }, 0);
+    const hasIndicator = group.querySelector('.mat-button-toggle-checkbox-wrapper') !== null;
+    const indicatorReserve = hasIndicator ? SELECTION_INDICATOR_WIDTH * (this.luxMultiple() ? buttons.length : 1) : 0;
+    const borderWidth = group.offsetWidth - group.clientWidth;
+
+    return group.scrollWidth + borderWidth - indicatorPadding + indicatorReserve;
   }
 
   ngOnInit(): void {

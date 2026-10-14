@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, NgZone } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
+import { LuxA11yTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { TranslocoService } from '@jsverse/transloco';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxButtonToggleComponent, LuxButtonToggleOption } from './lux-button-toggle.component';
@@ -156,6 +157,167 @@ describe('LuxButtonToggleComponent', () => {
     group = fixture.debugElement.query(By.css('mat-button-toggle-group'));
     expect(group.nativeElement.getAttribute('aria-label')).toBe('Custom Label');
   }));
+
+  describe('luxVertical', () => {
+    const groupElement = (): HTMLElement => fixture.debugElement.query(By.css('mat-button-toggle-group')).nativeElement;
+    const isVerticalGroup = () => {
+      const classList = groupElement().classList;
+      // Die Lux-Klasse (Theme) muss immer zur Material-Klasse passen.
+      expect(classList.contains('lux-button-toggle-vertical')).toBe(classList.contains('mat-button-toggle-vertical'));
+      return classList.contains('mat-button-toggle-vertical');
+    };
+    // Ohne Theme ist der Host ein Inline-Element ohne messbare Breite.
+    const setHostWidth = (width: number) => {
+      fixture.nativeElement.style.display = 'block';
+      fixture.nativeElement.style.width = `${width}px`;
+    };
+    // Rendert inklusive afterNextRender-Hooks. In der Zone, damit kein zweiter Tick (onMicrotaskEmpty) verschachtelt startet.
+    const render = () => TestBed.inject(NgZone).run(() => TestBed.tick());
+    const nextFrame = () => new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
+
+    it('ist ohne Angabe bei ausreichend Platz horizontal', () => {
+      setHostWidth(1000);
+      render();
+
+      expect(isVerticalGroup()).toBeFalse();
+    });
+
+    it('rendert bei luxVertical=true vertikal', () => {
+      setHostWidth(1000);
+      fixture.componentRef.setInput('luxVertical', true);
+      render();
+
+      expect(isVerticalGroup()).toBeTrue();
+      expect(groupElement().classList).not.toContain('lux-button-toggle-auto-vertical');
+    });
+
+    it('bleibt bei luxVertical=false auf schmalem Platz horizontal und misst nach Zurücksetzen neu', () => {
+      setHostWidth(40);
+      fixture.componentRef.setInput('luxVertical', false);
+      render();
+      expect(isVerticalGroup()).toBeFalse();
+
+      fixture.componentRef.setInput('luxVertical', undefined);
+      render();
+      expect(isVerticalGroup()).toBeTrue();
+    });
+
+    it('wertet Attribut-Schreibweisen und null aus', () => {
+      setHostWidth(40);
+
+      fixture.componentRef.setInput('luxVertical', '');
+      render();
+      expect(isVerticalGroup()).toBeTrue();
+
+      fixture.componentRef.setInput('luxVertical', 'false');
+      render();
+      expect(isVerticalGroup()).toBeFalse();
+
+      // null bedeutet wie undefined: abhängig vom Platz.
+      fixture.componentRef.setInput('luxVertical', null);
+      render();
+      expect(isVerticalGroup()).toBeTrue();
+    });
+
+    it('wechselt im Auto-Modus bei Größenänderung des Hosts auf vertikal und zurück', async () => {
+      setHostWidth(1000);
+      render();
+      expect(isVerticalGroup()).toBeFalse();
+
+      setHostWidth(40);
+      await nextFrame();
+      render();
+      expect(isVerticalGroup()).toBeTrue();
+      expect(groupElement().classList).toContain('lux-button-toggle-auto-vertical');
+
+      setHostWidth(1000);
+      await nextFrame();
+      render();
+      expect(isVerticalGroup()).toBeFalse();
+      expect(groupElement().classList).not.toContain('lux-button-toggle-auto-vertical');
+    });
+
+    it('misst im Auto-Modus neu, wenn sich die Optionen ändern', () => {
+      setHostWidth(400);
+      render();
+      expect(isVerticalGroup()).toBeFalse();
+
+      fixture.componentRef.setInput('luxOptions', [
+        { label: 'Eine sehr lange Beschriftung für die erste Option', value: { key: 'first' } },
+        { label: 'Eine sehr lange Beschriftung für die zweite Option', value: { key: 'second' } }
+      ]);
+      render();
+      expect(isVerticalGroup()).toBeTrue();
+
+      fixture.componentRef.setInput('luxOptions', options);
+      render();
+      expect(isVerticalGroup()).toBeFalse();
+    });
+
+    it('misst im Auto-Modus neu, wenn sich der Text der Optionen in vertikaler Darstellung ändert', async () => {
+      setHostWidth(400);
+      fixture.componentRef.setInput('luxOptions', [
+        { label: 'Eine sehr lange Beschriftung für die erste Option', value: { key: 'first' } },
+        { label: 'Eine sehr lange Beschriftung für die zweite Option', value: { key: 'second' } }
+      ]);
+      render();
+      expect(isVerticalGroup()).toBeTrue();
+
+      // Vertikal gilt sonst die zuletzt gemessene Breite, nur der MutationObserver erkennt den neuen Text.
+      groupElement()
+        .querySelectorAll('.mat-button-toggle-label-content')
+        .forEach((label, index) => (label.textContent = `Option ${index + 1}`));
+      await nextFrame();
+      render();
+      expect(isVerticalGroup()).toBeFalse();
+    });
+
+    it('berücksichtigt den Rahmen der Gruppe und das Padding des Hosts', async () => {
+      setHostWidth(1000);
+      render();
+      const widthWithoutSelection = groupElement().offsetWidth;
+
+      // Inhaltsbreite des Hosts 1px zu schmal für Gruppe inklusive Rahmen und Häkchen.
+      fixture.nativeElement.style.padding = '0 20px';
+      setHostWidth(widthWithoutSelection + 30 - 1);
+      await nextFrame();
+      render();
+      expect(isVerticalGroup()).toBeTrue();
+
+      setHostWidth(widthWithoutSelection + 30);
+      await nextFrame();
+      render();
+      expect(isVerticalGroup()).toBeFalse();
+    });
+
+    it('plant den Platz für das Häkchen ein, damit eine Auswahl die Ausrichtung nicht umschaltet', async () => {
+      setHostWidth(1000);
+      render();
+      const widthWithoutSelection = groupElement().offsetWidth;
+
+      // Passt ohne Häkchen, aber nicht mit.
+      setHostWidth(widthWithoutSelection + 10);
+      await nextFrame();
+      render();
+      expect(isVerticalGroup()).toBeTrue();
+
+      component.luxSelected.set(options[0].value);
+      render();
+      expect(isVerticalGroup()).toBeTrue();
+    });
+  });
+
+  describe('Barrierefreiheit', () => {
+    beforeAll(() => LuxA11yTestHelper.addA11yMatchers());
+
+    it('hat keine A11y-Verstöße (horizontal und vertikal)', async () => {
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+
+      fixture.componentRef.setInput('luxVertical', true);
+      fixture.detectChanges();
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+  });
 
   describe('mit String-Optionswerten', () => {
     let stringFixture: ComponentFixture<LuxButtonToggleComponent<string>>;

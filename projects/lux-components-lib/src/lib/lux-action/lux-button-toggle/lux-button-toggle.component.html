@@ -1,7 +1,10 @@
 @if (hasMinimumOptions) {
-  <div class="lux-button-toggle-wrapper">
+  <div class="lux-button-toggle-wrapper" [style.width.px]="autoVerticalWidth()">
     <mat-button-toggle-group
       class="lux-button-toggle-group"
+      [class.lux-button-toggle-vertical]="isVertical()"
+      [class.lux-button-toggle-auto-vertical]="isAutoVertical()"
+      [vertical]="isVertical()"
       [attr.aria-label]="ariaLabel"
       [attr.aria-describedby]="errorMessage ? errorElementId : hintMessage ? hintElementId : null"
       [multiple]="luxMultiple()"
