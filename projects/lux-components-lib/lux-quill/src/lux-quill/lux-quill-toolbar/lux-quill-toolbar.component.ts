@@ -54,8 +54,8 @@ export const LUX_QUILL_TOOLTIP_SHOW_DELAY = 600;
 /**
  * Toolbar des lux-quill-Editors (interne Komponente).
  *
- * Umgesetzt nach dem WAI-ARIA-Toolbar-Pattern: Die Toolbar ist ein einziger Tab-Stopp,
- * innerhalb wird mit Pfeil links/rechts sowie Pos1/Ende navigiert (Roving Tabindex).
+ * Jeder Button ist per Tab erreichbar; zusätzlich wird nach dem WAI-ARIA-Toolbar-Pattern
+ * mit Pfeil links/rechts sowie Pos1/Ende navigiert.
  */
 @Component({
   selector: 'lux-quill-toolbar',
@@ -90,7 +90,7 @@ export class LuxQuillToolbarComponent {
 
   protected readonly headingStyles: (LuxQuillHeadingStyle | null)[] = [null, 1, 2];
 
-  /** Index des Controls, das per Tab erreichbar ist (Roving Tabindex). */
+  /** Index des zuletzt fokussierten Controls (Startpunkt der Pfeiltasten-Navigation). */
   protected readonly activeIndex = signal(0);
 
   protected readonly showHeading = computed(() => this.luxHeadingMode() !== 'none' && this.luxItems().includes('heading'));

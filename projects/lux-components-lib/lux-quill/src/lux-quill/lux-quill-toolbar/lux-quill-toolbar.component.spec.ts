@@ -83,10 +83,10 @@ describe('LuxQuillToolbarComponent', () => {
     expect(pressed('indent')).toBeNull();
   });
 
-  it('Sollte einen Roving-Tabindex mit Pfeiltasten, Pos1 und Ende umsetzen', () => {
+  it('Sollte alle Buttons per Tab erreichbar machen und mit Pfeiltasten, Pos1 und Ende navigieren', () => {
     // Vorbedingungen testen
     const buttons = controls();
-    expect(buttons.map((button) => button.tabIndex)).toEqual([0, ...buttons.slice(1).map(() => -1)]);
+    expect(buttons.map((button) => button.tabIndex)).toEqual(buttons.map(() => 0));
     buttons[0].focus();
 
     // Änderungen durchführen
@@ -94,8 +94,6 @@ describe('LuxQuillToolbarComponent', () => {
 
     // Nachbedingungen prüfen
     expect(document.activeElement).toBe(controls()[1]);
-    expect(controls()[1].tabIndex).toEqual(0);
-    expect(controls()[0].tabIndex).toEqual(-1);
 
     // Änderungen durchführen
     keydown('End');
@@ -125,7 +123,6 @@ describe('LuxQuillToolbarComponent', () => {
     // Änderungen durchführen: Toolbar auf drei Einträge verkleinern, dann Pfeil rechts
     host.items.set(['bold', 'italic', 'underline']);
     fixture.detectChanges();
-    expect(controls().map((button) => button.tabIndex)).toEqual([-1, -1, 0]);
     keydown('ArrowRight');
 
     // Nachbedingungen prüfen: Von der Tab-Position (letztes Control) geht es zum ersten.
@@ -175,7 +172,9 @@ describe('LuxQuillToolbarComponent', () => {
 
     it('Sollte in einer einzeiligen Toolbar alle Tooltips nach oben öffnen', () => {
       // Nachbedingungen prüfen
-      expect(new Set(controls().map((control) => control.offsetTop)).size).withContext('einzeilig').toEqual(1);
+      expect(new Set(controls().map((control) => control.offsetTop)).size)
+        .withContext('einzeilig')
+        .toEqual(1);
       expect(tooltips().every((tooltip) => tooltip.position === 'above')).toBeTrue();
     });
 
@@ -197,7 +196,9 @@ describe('LuxQuillToolbarComponent', () => {
       await waitForResize();
 
       // Nachbedingungen prüfen
-      expect(new Set(controls().map((control) => control.offsetTop)).size).withContext('wieder einzeilig').toEqual(1);
+      expect(new Set(controls().map((control) => control.offsetTop)).size)
+        .withContext('wieder einzeilig')
+        .toEqual(1);
       expect(tooltips().map((tooltip) => tooltip.position)).toEqual(controls().map(() => 'above'));
     });
   });
@@ -231,7 +232,18 @@ describe('LuxQuillToolbarComponent', () => {
   imports: [LuxQuillToolbarComponent]
 })
 class ToolbarHostComponent {
-  items = signal<LuxQuillToolbarItem[]>(['heading', 'bold', 'italic', 'underline', 'bulletList', 'orderedList', 'outdent', 'indent', 'link', 'clean']);
+  items = signal<LuxQuillToolbarItem[]>([
+    'heading',
+    'bold',
+    'italic',
+    'underline',
+    'bulletList',
+    'orderedList',
+    'outdent',
+    'indent',
+    'link',
+    'clean'
+  ]);
   headingMode = signal<LuxQuillHeadingMode>('none');
   activeFormats = signal<Record<string, unknown>>({});
   disabled = signal(false);

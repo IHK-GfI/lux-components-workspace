@@ -2,7 +2,6 @@
   <button
     type="button"
     class="lux-quill-toolbar-control lux-quill-toolbar-heading"
-    [attr.tabindex]="rovingIndex() === 0 ? 0 : -1"
     [disabled]="luxDisabled()"
     [attr.aria-label]="'luxc.quill.heading.trigger' | transloco: { style: (headingLabelKey(headingStyle()) | transloco) }"
     [cdkMenuTriggerFor]="headingMenu"
@@ -39,7 +38,6 @@
     class="lux-quill-toolbar-control"
     [class]="'lux-quill-toolbar-' + button.item"
     [class.lux-quill-toolbar-pressed]="button.toggle && isPressed(button.item)"
-    [attr.tabindex]="rovingIndex() === i + buttonOffset() ? 0 : -1"
     [disabled]="luxDisabled()"
     [attr.aria-label]="'luxc.quill.toolbar.' + button.item | transloco"
     [attr.aria-pressed]="button.toggle ? isPressed(button.item) : null"
