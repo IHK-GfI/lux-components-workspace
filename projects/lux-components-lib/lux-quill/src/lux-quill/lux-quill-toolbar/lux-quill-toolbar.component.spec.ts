@@ -1,10 +1,12 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
+import { LuxTooltipDirective } from '@ihk-gfi/lux-components';
 import { LuxA11yTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../../src/testing/transloco-test.provider';
 import { LuxQuillHeadingMode, LuxQuillToolbarItem } from '../lux-quill-config';
-import { LuxQuillToolbarAction, LuxQuillToolbarComponent } from './lux-quill-toolbar.component';
+import { LUX_QUILL_TOOLTIP_SHOW_DELAY, LuxQuillToolbarAction, LuxQuillToolbarComponent } from './lux-quill-toolbar.component';
 
 describe('LuxQuillToolbarComponent', () => {
   let fixture: ComponentFixture<ToolbarHostComponent>;
@@ -115,6 +117,21 @@ describe('LuxQuillToolbarComponent', () => {
     expect(document.activeElement).toBe(controls()[0]);
   });
 
+  it('Sollte nach dem Verkleinern der Toolbar von der gültigen Tab-Position aus navigieren', () => {
+    // Vorbedingungen testen: Fokus auf dem letzten von zehn Controls
+    controls()[controls().length - 1].focus();
+    fixture.detectChanges();
+
+    // Änderungen durchführen: Toolbar auf drei Einträge verkleinern, dann Pfeil rechts
+    host.items.set(['bold', 'italic', 'underline']);
+    fixture.detectChanges();
+    expect(controls().map((button) => button.tabIndex)).toEqual([-1, -1, 0]);
+    keydown('ArrowRight');
+
+    // Nachbedingungen prüfen: Von der Tab-Position (letztes Control) geht es zum ersten.
+    expect(document.activeElement).toBe(controls()[0]);
+  });
+
   it('Sollte beim Klick eine Aktion melden und den Fokusverlust des Editors verhindern', () => {
     // Vorbedingungen testen
     const button: HTMLButtonElement = fixture.nativeElement.querySelector('.lux-quill-toolbar-italic');
@@ -139,6 +156,52 @@ describe('LuxQuillToolbarComponent', () => {
     expect(fixture.nativeElement.querySelector('lux-quill-toolbar').getAttribute('aria-disabled')).toEqual('true');
   });
 
+  describe('Tooltips', () => {
+    function tooltips(): LuxTooltipDirective[] {
+      return fixture.debugElement.queryAll(By.directive(LuxTooltipDirective)).map((element) => element.injector.get(LuxTooltipDirective));
+    }
+
+    /** Wartet auf den ResizeObserver (feuert vor dem nächsten Frame). */
+    async function waitForResize() {
+      await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+      fixture.detectChanges();
+    }
+
+    it('Sollte Tooltips erst verzögert anzeigen', () => {
+      // Nachbedingungen prüfen
+      expect(tooltips().length).toBeGreaterThan(0);
+      expect(tooltips().every((tooltip) => tooltip.showDelay === LUX_QUILL_TOOLTIP_SHOW_DELAY)).toBeTrue();
+    });
+
+    it('Sollte in einer einzeiligen Toolbar alle Tooltips nach oben öffnen', () => {
+      // Nachbedingungen prüfen
+      expect(new Set(controls().map((control) => control.offsetTop)).size).withContext('einzeilig').toEqual(1);
+      expect(tooltips().every((tooltip) => tooltip.position === 'above')).toBeTrue();
+    });
+
+    it('Sollte Tooltips unterer Zeilen nach unten öffnen und bei Größenänderung neu bestimmen', async () => {
+      // Änderungen durchführen
+      host.width.set('160px');
+      fixture.detectChanges();
+      await waitForResize();
+
+      // Nachbedingungen prüfen
+      const firstRowTop = Math.min(...controls().map((control) => control.offsetTop));
+      const expected = controls().map((control) => (control.offsetTop > firstRowTop + 2 ? 'below' : 'above'));
+      expect(expected).withContext('mehrzeilig').toContain('below');
+      expect(tooltips().map((tooltip) => tooltip.position)).toEqual(expected);
+
+      // Änderungen durchführen
+      host.width.set('600px');
+      fixture.detectChanges();
+      await waitForResize();
+
+      // Nachbedingungen prüfen
+      expect(new Set(controls().map((control) => control.offsetTop)).size).withContext('wieder einzeilig').toEqual(1);
+      expect(tooltips().map((tooltip) => tooltip.position)).toEqual(controls().map(() => 'above'));
+    });
+  });
+
   it('Sollte keine A11y-Fehler haben', async () => {
     host.headingMode.set('visual');
     host.activeFormats.set({ bold: true });
@@ -149,17 +212,20 @@ describe('LuxQuillToolbarComponent', () => {
 });
 
 @Component({
+  // Über die Breite lässt sich der Zeilenumbruch der Toolbar steuern.
   template: `
-    <lux-quill-toolbar
-      [luxItems]="items()"
-      [luxHeadingMode]="headingMode()"
-      [luxActiveFormats]="activeFormats()"
-      [luxDisabled]="disabled()"
-      luxEditorId="editor-id"
-      luxAriaLabel="Formatierung"
-      (luxAction)="actions.push($event)"
-    ></lux-quill-toolbar>
-    <div id="editor-id" role="textbox" aria-label="Editor" contenteditable="true"></div>
+    <div [style.width]="width()">
+      <lux-quill-toolbar
+        [luxItems]="items()"
+        [luxHeadingMode]="headingMode()"
+        [luxActiveFormats]="activeFormats()"
+        [luxDisabled]="disabled()"
+        luxEditorId="editor-id"
+        luxAriaLabel="Formatierung"
+        (luxAction)="actions.push($event)"
+      ></lux-quill-toolbar>
+      <div id="editor-id" role="textbox" aria-label="Editor" contenteditable="true"></div>
+    </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxQuillToolbarComponent]
@@ -169,5 +235,6 @@ class ToolbarHostComponent {
   headingMode = signal<LuxQuillHeadingMode>('none');
   activeFormats = signal<Record<string, unknown>>({});
   disabled = signal(false);
+  width = signal('600px');
   actions: LuxQuillToolbarAction[] = [];
 }

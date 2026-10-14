@@ -6,6 +6,7 @@
     [disabled]="luxDisabled()"
     [attr.aria-label]="'luxc.quill.heading.trigger' | transloco: { style: (headingLabelKey(headingStyle()) | transloco) }"
     [cdkMenuTriggerFor]="headingMenu"
+    (cdkMenuClosed)="onHeadingMenuClosed()"
     (mousedown)="onMousedown($event)"
   >
     <span class="lux-quill-toolbar-heading-label">{{ headingLabelKey(headingStyle()) | transloco }}</span>
@@ -43,6 +44,8 @@
     [attr.aria-label]="'luxc.quill.toolbar.' + button.item | transloco"
     [attr.aria-pressed]="button.toggle ? isPressed(button.item) : null"
     [luxTooltip]="'luxc.quill.toolbar.' + button.item + '_tooltip' | transloco"
+    [luxTooltipShowDelay]="tooltipShowDelay"
+    [luxTooltipPosition]="tooltipPosition(i)"
     [luxTooltipDisabled]="luxDisabled()"
     (mousedown)="onMousedown($event)"
     (click)="onAction(button.item)"

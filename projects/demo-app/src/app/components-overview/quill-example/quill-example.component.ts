@@ -53,8 +53,9 @@ export class QuillExampleComponent {
     { label: 'document (Dokument)', value: 'document' }
   ];
 
-  readonly headingModeOptions: { label: string; value: LuxQuillHeadingMode | null }[] = [
-    { label: 'Wie im Preset', value: null },
+  // 'preset' statt null: lux-select-ac wertet null als "nichts ausgewählt" und zeigt dann keinen Text an.
+  readonly headingModeOptions: { label: string; value: LuxQuillHeadingMode | 'preset' }[] = [
+    { label: 'Wie im Preset', value: 'preset' },
     { label: 'none', value: 'none' },
     { label: 'visual', value: 'visual' },
     { label: 'semantic', value: 'semantic' }
@@ -63,7 +64,9 @@ export class QuillExampleComponent {
   readonly headingLevelOptions: { label: string; value: string }[] = [
     { label: 'h1 / h2', value: '1,2' },
     { label: 'h2 / h3', value: '2,3' },
-    { label: 'h3 / h4', value: '3,4' }
+    { label: 'h3 / h4', value: '3,4' },
+    { label: 'h4 / h5', value: '4,5' },
+    { label: 'h5 / h6', value: '5,6' }
   ];
 
   readonly toolbarOptions: LuxQuillToolbarItem[] = [...LUX_QUILL_DEFAULT_TOOLBAR];
@@ -75,7 +78,7 @@ export class QuillExampleComponent {
 
   showOutputEvents = signal(false);
   preset = signal<LuxQuillPreset>('document');
-  headingMode = signal<LuxQuillHeadingMode | null>(null);
+  headingMode = signal<LuxQuillHeadingMode | 'preset'>('preset');
   headingLevels = signal('1,2');
   toolbar = signal<LuxQuillToolbarItem[]>([...LUX_QUILL_DEFAULT_TOOLBAR]);
   label = signal('Nachricht');
@@ -97,7 +100,7 @@ export class QuillExampleComponent {
     const [level1, level2] = this.headingLevels().split(',').map(Number) as LuxQuillHeadingLevel[];
     const config: Partial<LuxQuillConfig> = { headingLevels: [level1, level2], toolbar: this.toolbar() };
     const headingMode = this.headingMode();
-    if (headingMode) {
+    if (headingMode !== 'preset') {
       config.headingMode = headingMode;
     }
     return config;

@@ -1,10 +1,11 @@
 <div
+  #wrapper
   class="lux-form-control-wrapper lux-quill-wrapper"
   luxTagIdHandler
   [luxTagId]="luxTagId()"
   [class.lux-form-control-error-authentic]="showError()"
-  [class.lux-form-control-disabled-authentic]="disabled()"
-  [class.lux-form-control-readonly-authentic]="luxReadonly()"
+  [class.lux-form-control-disabled-authentic]="isDisabled()"
+  [class.lux-form-control-readonly-authentic]="isReadonly()"
   [class.lux-focused-authentic]="focused()"
   [class.lux-dense-authentic]="luxDense()"
   (focusin)="onFocusIn($event)"
@@ -15,22 +16,23 @@
     <div class="lux-label-authentic">
       @if (luxLabel()) {
         <span class="lux-form-label-authentic" [id]="uid() + '-label'"
-          >&nbsp;{{ luxLabel() }}&nbsp;@if (required()) {<span aria-hidden="true">*</span>}</span
+          >&nbsp;{{ luxLabel() }}&nbsp;@if (isRequired()) {<span aria-hidden="true">*</span>}</span
         >
       }
     </div>
   </div>
 
   <div class="lux-form-control-container-authentic lux-quill-container">
-    @if (!luxReadonly()) {
+    @if (!isReadonly()) {
       <lux-quill-toolbar
         [luxItems]="config().toolbar"
         [luxHeadingMode]="config().headingMode"
         [luxActiveFormats]="activeFormats()"
-        [luxDisabled]="disabled()"
+        [luxDisabled]="isDisabled()"
         [luxEditorId]="uid()"
         [luxAriaLabel]="'luxc.quill.toolbar.arialabel' | transloco"
         (luxAction)="onToolbarAction($event)"
+        (luxHeadingMenuClosed)="onHeadingMenuClosed()"
       ></lux-quill-toolbar>
     }
     <div #editor class="lux-quill-editor" [style.min-height]="luxMinHeight() ?? null" [style.max-height]="luxMaxHeight() ?? null"></div>
@@ -50,7 +52,7 @@
           <mat-error [id]="uid() + '-error'">{{ errorText() }}</mat-error>
         </div>
       } @else if (luxHint()) {
-        <mat-hint [id]="uid() + '-hint'" [attr.aria-disabled]="disabled() || null">{{ luxHint() }}</mat-hint>
+        <mat-hint [id]="uid() + '-hint'" [attr.aria-disabled]="isDisabled() || null">{{ luxHint() }}</mat-hint>
       }
     </div>
   }

@@ -9,11 +9,12 @@
     - [Inputs](#inputs)
     - [Outputs](#outputs)
     - [ControlValueAccessor](#controlvalueaccessor)
+    - [Zustände](#zustände)
   - [Konfiguration](#konfiguration)
     - [Presets](#presets)
     - [LuxQuillConfig](#luxquillconfig)
     - [Überschriften: Darstellung und Semantik](#überschriften-darstellung-und-semantik)
-    - [App-weite Vorgaben (LUX_QUILL_CONFIG)](#app-weite-vorgaben-lux_quill_config)
+    - [App-weite Vorgaben (LUX\_QUILL\_CONFIG)](#app-weite-vorgaben-lux_quill_config)
   - [Wert und Ausgabe](#wert-und-ausgabe)
   - [Erweiterbarkeit](#erweiterbarkeit)
   - [Tastaturbedienung und Barrierefreiheit](#tastaturbedienung-und-barrierefreiheit)
@@ -45,9 +46,9 @@ Verfügbare Formatierungen:
 
 Typografie:
 
-| Textstil      | Schriftgröße | Schriftart                                        | Schriftstärke |
-| ------------- | ------------ | ------------------------------------------------- | ------------- |
-| Standardtext  | 1rem         | App-Schrift (`--lux-theme-app-font-family`)       | Regular (400) |
+| Textstil      | Schriftgröße | Schriftart                                         | Schriftstärke |
+| ------------- | ------------ | -------------------------------------------------- | ------------- |
+| Standardtext  | 1rem         | App-Schrift (`--lux-theme-app-font-family`)        | Regular (400) |
 | Überschrift 1 | 1.5rem       | Headline-Schrift (`--lux-theme-app-headline-font`) | Medium (500)  |
 | Überschrift 2 | 1.25rem      | Headline-Schrift (`--lux-theme-app-headline-font`) | Medium (500)  |
 
@@ -71,37 +72,38 @@ Die Styles des Editors sind im LUX-Theme enthalten. Ein CSS von Quill wird nicht
 
 ### Inputs
 
-| Name              | Typ                                     | Default     | Beschreibung                                                                                                                                                                       |
-| ----------------- | --------------------------------------- | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| luxValue          | string                                  | `''`        | Der Wert als HTML-String (für die Nutzung ohne Formular). `model<string>`, also auch als `[(luxValue)]` nutzbar. Ein leerer Editor liefert `''`.                                  |
-| luxLabel          | string                                  | `''`        | Label oberhalb des Editors. Es wird per `aria-labelledby` mit dem Editor verknüpft.                                                                                               |
-| luxHint           | string                                  | `''`        | Hinweistext unterhalb des Editors.                                                                                                                                                 |
-| luxPlaceholder    | string                                  | `''`        | Platzhalter im leeren Editor.                                                                                                                                                      |
-| luxAriaLabel      | string \| undefined                     | `undefined` | Zugänglicher Name, wenn kein sichtbares Label vorhanden ist.                                                                                                                       |
-| luxAriaLabelledby | string \| undefined                     | `undefined` | Id eines externen Label-Elements. Hat Vorrang vor `luxAriaLabel` und `luxLabel`.                                                                                                   |
-| luxErrorMessage   | string \| undefined                     | `undefined` | Eigene Fehlermeldung. Sie ersetzt bei jedem Validierungsfehler die Standardmeldung.                                                                                                |
-| luxErrorCallback  | LuxErrorCallbackFnType \| undefined     | `undefined` | Funktion `(value, errors) => string \| undefined` für eigene Fehlermeldungen je Fehler. Wird nach `luxErrorMessage` ausgewertet.                                                   |
-| luxRequired       | boolean                                 | `false`     | Pflichtfeld. Nur ohne Formular. In Reactive Forms bzw. mit `ngModel` den `Validators.required` verwenden, `luxRequired` wird dort ignoriert.                                       |
-| luxDisabled       | boolean                                 | `false`     | Deaktiviert Editor und Toolbar. In Reactive Forms alternativ `formControl.disable()`.                                                                                              |
-| luxReadonly       | boolean                                 | `false`     | Schreibschutz. Die Toolbar wird ausgeblendet, der Inhalt bleibt per Tastatur erreichbar und lesbar.                                                                                |
-| luxNoTopLabel     | boolean                                 | `false`     | Blendet das Label nur visuell aus, für Screenreader bleibt es erhalten.                                                                                                           |
-| luxNoBottomLabel  | boolean                                 | `false`     | Entfernt den Bereich für Hinweis und Fehlermeldung. Achtung: Damit entfällt auch die per `aria-describedby` verknüpfte Fehlermeldung.                                             |
-| luxDense          | boolean                                 | `false`     | Kompaktere Darstellung (geringere Innenabstände und Mindesthöhe).                                                                                                                 |
-| luxMinHeight      | string \| undefined                     | `undefined` | Minimale Höhe des Eingabebereichs, z. B. `'8rem'`. Standard: `6rem` (dense: `4rem`).                                                                                              |
-| luxMaxHeight      | string \| undefined                     | `undefined` | Maximale Höhe des Eingabebereichs, z. B. `'20rem'`. Längere Inhalte scrollen innerhalb des Editors.                                                                                |
-| luxId             | string                                  | `''`        | Id des Editors. Ohne Angabe wird eine eindeutige Id erzeugt.                                                                                                                       |
-| luxTagId          | string \| undefined                     | `undefined` | Tag-Id für automatisierte Tests (`luxTagIdHandler`).                                                                                                                               |
-| luxPreset         | LuxQuillPreset (`'comment'` \| `'document'`) | `'comment'` | Vordefinierte Konfiguration, siehe [Presets](#presets).                                                                                                                       |
-| luxConfig         | Partial\<LuxQuillConfig> \| undefined   | `undefined` | Überschreibt einzelne Einstellungen des Presets und von `LUX_QUILL_CONFIG`, siehe [LuxQuillConfig](#luxquillconfig). Eine Änderung zur Laufzeit baut den Editor neu auf, der Inhalt bleibt erhalten. |
+| Name              | Typ                                          | Default     | Beschreibung                                                                                                                                                                                                                                                                                                       |
+| ----------------- | -------------------------------------------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| value             | string                                       | `''`        | Der Wert als HTML-String (für die Nutzung ohne Formular). `model<string>`, also auch als `[(value)]` nutzbar. Ein leerer Editor liefert `''`.                                                                                                                                                                      |
+| luxLabel          | string                                       | `''`        | Label oberhalb des Editors. Es wird per `aria-labelledby` mit dem Editor verknüpft.                                                                                                                                                                                                                                |
+| luxHint           | string                                       | `''`        | Hinweistext unterhalb des Editors.                                                                                                                                                                                                                                                                                 |
+| luxPlaceholder    | string                                       | `''`        | Platzhalter im leeren Editor.                                                                                                                                                                                                                                                                                      |
+| luxAriaLabel      | string \| undefined                          | `undefined` | Zugänglicher Name, wenn kein sichtbares Label vorhanden ist.                                                                                                                                                                                                                                                       |
+| luxAriaLabelledby | string \| undefined                          | `undefined` | Id eines externen Label-Elements. Hat Vorrang vor `luxAriaLabel` und `luxLabel`.                                                                                                                                                                                                                                   |
+| luxErrorMessage   | string \| undefined                          | `undefined` | Eigene Fehlermeldung. Sie ersetzt bei jedem Validierungsfehler die Standardmeldung.                                                                                                                                                                                                                                |
+| luxErrorCallback  | LuxErrorCallbackFnType \| undefined          | `undefined` | Funktion `(value, errors) => string \| undefined` für eigene Fehlermeldungen je Fehler. Wird nach `luxErrorMessage` ausgewertet.                                                                                                                                                                                   |
+| luxRequired       | boolean                                      | `false`     | Pflichtfeld. Nur ohne Formular. In Reactive Forms bzw. mit `ngModel` den `Validators.required` verwenden, `luxRequired` wird dort ignoriert.                                                                                                                                                                       |
+| luxDisabled       | boolean                                      | `false`     | Deaktiviert Editor und Toolbar. `model<boolean>`, also auch als `[(luxDisabled)]` nutzbar. In Reactive Forms bzw. mit `ngModel` wird der Zustand mit dem FormControl synchronisiert: `luxDisabled` ruft `disable()`/`enable()` auf, und `formControl.disable()`/`enable()` wird über `luxDisabledChange` gemeldet. |
+| readonly          | boolean                                      | `false`     | Schreibschutz. Die Toolbar wird ausgeblendet, der Inhalt bleibt per Tastatur erreichbar und lesbar.                                                                                                                                                                                                                |
+| luxNoTopLabel     | boolean                                      | `false`     | Blendet das Label nur visuell aus, für Screenreader bleibt es erhalten.                                                                                                                                                                                                                                            |
+| luxNoBottomLabel  | boolean                                      | `false`     | Entfernt den Bereich für Hinweis und Fehlermeldung. Achtung: Damit entfällt auch die per `aria-describedby` verknüpfte Fehlermeldung.                                                                                                                                                                              |
+| luxDense          | boolean                                      | `false`     | Kompaktere Darstellung (geringere Innenabstände und Mindesthöhe).                                                                                                                                                                                                                                                  |
+| luxMinHeight      | string \| undefined                          | `undefined` | Minimale Höhe des Eingabebereichs, z. B. `'8rem'`. Standard: `6rem` (dense: `4rem`).                                                                                                                                                                                                                               |
+| luxMaxHeight      | string \| undefined                          | `undefined` | Maximale Höhe des Eingabebereichs, z. B. `'20rem'`. Längere Inhalte scrollen innerhalb des Editors.                                                                                                                                                                                                                |
+| luxId             | string                                       | `''`        | Id des Editors. Ohne Angabe wird eine eindeutige Id erzeugt.                                                                                                                                                                                                                                                       |
+| luxTagId          | string \| undefined                          | `undefined` | Tag-Id für automatisierte Tests (`luxTagIdHandler`).                                                                                                                                                                                                                                                               |
+| luxPreset         | LuxQuillPreset (`'comment'` \| `'document'`) | `'comment'` | Vordefinierte Konfiguration, siehe [Presets](#presets).                                                                                                                                                                                                                                                            |
+| luxConfig         | Partial\<LuxQuillConfig> \| undefined        | `undefined` | Überschreibt einzelne Einstellungen des Presets und von `LUX_QUILL_CONFIG`, siehe [LuxQuillConfig](#luxquillconfig). Eine Änderung zur Laufzeit baut den Editor neu auf. Der Inhalt bleibt erhalten und wird an die neue Konfiguration angepasst (z. B. `<h1>` → `<p class="lux-quill-heading-1">` beim Wechsel auf `headingMode: 'visual'`, nicht mehr erlaubte Formate entfallen). Der angepasste Wert wird über `valueChange` bzw. an das FormControl gemeldet, im Formular ohne es als "dirty" zu markieren. |
 
 ### Outputs
 
-| Name             | Typ                       | Beschreibung                                                                                                                  |
-| ---------------- | ------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| luxValueChange   | OutputEmitterRef\<string> | Emittiert den neuen Wert (HTML) nach jeder Änderung durch den Benutzer. Wird nicht ausgelöst, wenn der Wert von außen gesetzt wird. |
-| luxFocusIn       | OutputEmitterRef\<FocusEvent> | Emittiert, wenn der Fokus in die Komponente (Toolbar oder Editor) wechselt.                                                 |
-| luxFocusOut      | OutputEmitterRef\<FocusEvent> | Emittiert, wenn der Fokus die Komponente verlässt. Das Control gilt danach als "touched".                                   |
-| luxEditorCreated | OutputEmitterRef\<Quill>  | Liefert die Quill-Instanz nach jeder (Neu-)Erzeugung, z. B. für Erweiterungen. Siehe [Erweiterbarkeit](#erweiterbarkeit).     |
+| Name              | Typ                           | Beschreibung                                                                                                                        |
+| ----------------- | ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| valueChange       | OutputEmitterRef\<string>     | Emittiert den neuen Wert (HTML) nach jeder Änderung durch den Benutzer und wenn eine geänderte Konfiguration den Wert anpasst (siehe `luxConfig`). Wird nicht ausgelöst, wenn der Wert von außen gesetzt wird. |
+| luxDisabledChange | OutputEmitterRef\<boolean>    | Emittiert, wenn sich der Disabled-Zustand ändert, z. B. durch `formControl.disable()`. Gegenstück zu `[(luxDisabled)]`.             |
+| luxFocusIn        | OutputEmitterRef\<FocusEvent> | Emittiert, wenn der Fokus in die Komponente (Toolbar oder Editor) wechselt.                                                         |
+| luxFocusOut       | OutputEmitterRef\<FocusEvent> | Emittiert, wenn der Fokus die Komponente verlässt. Das Control gilt danach als "touched".                                           |
+| luxEditorCreated  | OutputEmitterRef\<Quill>      | Liefert die Quill-Instanz nach jeder (Neu-)Erzeugung, z. B. für Erweiterungen. Siehe [Erweiterbarkeit](#erweiterbarkeit).           |
 
 Öffentliche Methoden: `focus()` setzt den Fokus in den Editor, `openLinkDialog()` öffnet den Link-Dialog.
 
@@ -115,26 +117,40 @@ Die Styles des Editors sind im LUX-Theme enthalten. Ein CSS von Quill wird nicht
 
 Hinweis: Validatoren wie `Validators.maxLength` beziehen sich auf den HTML-String inklusive der Tags, nicht auf die Anzahl der sichtbaren Zeichen.
 
+### Zustände
+
+Fehler (Pflichtfeld nach dem Verlassen):
+
+![Zustand Fehler](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v21/lux‐quill-v21-img-05.png)
+
+Deaktiviert (`luxDisabled` bzw. `formControl.disable()`):
+
+![Zustand Disabled](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v21/lux‐quill-v21-img-06.png)
+
+Schreibgeschützt (`readonly`, ohne Toolbar):
+
+![Zustand Readonly](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v21/lux‐quill-v21-img-07.png)
+
 ## Konfiguration
 
 ### Presets
 
-| Preset     | Einsatz                                     | Überschriften                                                          |
-| ---------- | ------------------------------------------- | ---------------------------------------------------------------------- |
-| `comment`  | Freitext, z. B. Kommentare (Standard)        | Keine. Eingefügte Überschriften werden zu normalem Text.               |
-| `document` | Strukturierte Inhalte, z. B. Briefe, PDF     | Semantische Überschriften (`<h1>`, `<h2>`) für Druck- und PDF-Ausgaben. |
+| Preset     | Einsatz                                  | Überschriften                                                           |
+| ---------- | ---------------------------------------- | ----------------------------------------------------------------------- |
+| `comment`  | Freitext, z. B. Kommentare (Standard)    | Keine. Eingefügte Überschriften werden zu normalem Text.                |
+| `document` | Strukturierte Inhalte, z. B. Briefe, PDF | Semantische Überschriften (`<h1>`, `<h2>`) für Druck- und PDF-Ausgaben. |
 
 Beide Presets bieten dieselbe Toolbar. Sie stehen als Konstanten `LUX_QUILL_PRESET_COMMENT` und `LUX_QUILL_PRESET_DOCUMENT` zur Verfügung.
 
 ### LuxQuillConfig
 
-| Eigenschaft   | Typ                                                  | Beschreibung                                                                                                                                                                       |
-| ------------- | ---------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| headingMode   | LuxQuillHeadingMode (`'none'` \| `'visual'` \| `'semantic'`) | Darstellung und Semantik der Überschriften, siehe [unten](#überschriften-darstellung-und-semantik).                                                                       |
-| headingLevels | [LuxQuillHeadingLevel, LuxQuillHeadingLevel]          | HTML-Ebenen (1-6) für Überschrift 1 und Überschrift 2 im Modus `'semantic'`. Standard: `[1, 2]`.                                                                                  |
-| toolbar       | LuxQuillToolbarItem[]                                 | Einträge und Reihenfolge der Toolbar: `'heading'`, `'bold'`, `'italic'`, `'underline'`, `'bulletList'`, `'orderedList'`, `'outdent'`, `'indent'`, `'link'`, `'clean'`. Formate ohne Toolbar-Eintrag sind im Editor nicht erlaubt (auch nicht per Tastenkürzel oder beim Einfügen). Ohne `'indent'`/`'outdent'` wechselt `Tab` wie üblich den Fokus. |
-| formats       | string[]                                              | Zusätzliche, per `Quill.register(...)` registrierte Quill-Formate. Siehe [Erweiterbarkeit](#erweiterbarkeit).                                                                    |
-| modules       | Record\<string, unknown>                               | Zusätzliche Quill-Module bzw. Modul-Optionen. `keyboard.bindings` und `clipboard.matchers` werden mit denen von `lux-quill` zusammengeführt.                                      |
+| Eigenschaft   | Typ                                                          | Beschreibung                                                                                                                                                                                                                                                                                                                                        |
+| ------------- | ------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| headingMode   | LuxQuillHeadingMode (`'none'` \| `'visual'` \| `'semantic'`) | Darstellung und Semantik der Überschriften, siehe [unten](#überschriften-darstellung-und-semantik).                                                                                                                                                                                                                                                 |
+| headingLevels | [LuxQuillHeadingLevel, LuxQuillHeadingLevel]                 | HTML-Ebenen (1-6) für Überschrift 1 und Überschrift 2 im Modus `'semantic'`. Standard: `[1, 2]`.                                                                                                                                                                                                                                                    |
+| toolbar       | LuxQuillToolbarItem[]                                        | Einträge und Reihenfolge der Toolbar: `'heading'`, `'bold'`, `'italic'`, `'underline'`, `'bulletList'`, `'orderedList'`, `'outdent'`, `'indent'`, `'link'`, `'clean'`. Formate ohne Toolbar-Eintrag sind im Editor nicht erlaubt (auch nicht per Tastenkürzel oder beim Einfügen). Ohne `'indent'`/`'outdent'` wechselt `Tab` wie üblich den Fokus. |
+| formats       | string[]                                                     | Zusätzliche, per `Quill.register(...)` registrierte Quill-Formate. Siehe [Erweiterbarkeit](#erweiterbarkeit).                                                                                                                                                                                                                                       |
+| modules       | Record\<string, unknown>                                     | Zusätzliche Quill-Module bzw. Modul-Optionen. `keyboard.bindings` und `clipboard.matchers` werden mit denen von `lux-quill` zusammengeführt.                                                                                                                                                                                                        |
 
 Die wirksame Konfiguration ergibt sich aus Preset, `LUX_QUILL_CONFIG` und `luxConfig` (in dieser Reihenfolge, spätere Angaben überschreiben frühere eigenschaftsweise).
 
@@ -142,11 +158,15 @@ Die wirksame Konfiguration ergibt sich aus Preset, `LUX_QUILL_CONFIG` und `luxCo
 
 Darstellung und HTML-Semantik der Überschriften sind voneinander unabhängig: Die Optik hängt immer an einer CSS-Klasse (`lux-quill-heading-1` bzw. `lux-quill-heading-2`), die HTML-Ebene steuern `headingMode` und `headingLevels`.
 
-| headingMode | Toolbar             | Ergebnis für "Überschrift 1"                       |
-| ----------- | ------------------- | -------------------------------------------------- |
-| `none`      | ohne Textstil-Auswahl | – (normaler Text)                                 |
-| `visual`    | mit Textstil-Auswahl  | `<p class="lux-quill-heading-1">…</p>`           |
+| headingMode | Toolbar               | Ergebnis für "Überschrift 1"                                         |
+| ----------- | --------------------- | -------------------------------------------------------------------- |
+| `none`      | ohne Textstil-Auswahl | – (normaler Text)                                                    |
+| `visual`    | mit Textstil-Auswahl  | `<p class="lux-quill-heading-1">…</p>`                               |
 | `semantic`  | mit Textstil-Auswahl  | `<h1 class="lux-quill-heading-1">…</h1>` (Ebene aus `headingLevels`) |
+
+Textstil-Auswahl in der Toolbar (Modus `visual` oder `semantic`):
+
+![Textstil-Auswahl](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v21/lux‐quill-v21-img-03.png)
 
 Beim Laden eines Werts und beim Einfügen aus der Zwischenablage werden beliebige Überschriften (`<h1>`-`<h6>`) auf die zwei Stufen abgebildet: Ebenen bis einschließlich `headingLevels[0]` werden zu Überschrift 1, tiefere zu Überschrift 2. Im Modus `none` werden sie zu normalem Text.
 
@@ -169,7 +189,11 @@ Der Wert ist semantisches HTML (`quill.getSemanticHTML()`):
 - Eingerückte Absätze erhalten die Klasse `ql-indent-1` bis `ql-indent-8`
 - Links als `<a href="…" rel="noopener noreferrer" target="_blank">`
 
-Beim Setzen eines Werts und beim Einfügen bleiben nur die erlaubten Formate erhalten. Skripte, Event-Handler, Inline-Styles und nicht erlaubte Elemente werden entfernt, Links mit unsicheren Protokollen (z. B. `javascript:`) werden neutralisiert. Der Link-Dialog erlaubt `http`, `https`, `mailto` und `tel`, Adressen ohne Protokoll werden um `https://` ergänzt.
+Beim Setzen eines Werts und beim Einfügen bleiben im Editor nur die erlaubten Formate erhalten. Skripte, Event-Handler, Inline-Styles und nicht erlaubte Elemente werden entfernt, Links mit unsicheren Protokollen (z. B. `javascript:`) werden neutralisiert. Ein von außen gesetzter Wert (`[(value)]`, `setValue()`, `ngModel`) wird dabei nicht zurückgeschrieben: `value` bzw. das FormControl enthalten den ursprünglichen HTML-String, bis der Benutzer den Inhalt ändert oder eine Konfigurationsänderung den Wert anpasst. Werte aus fremden Quellen deshalb bei der Anzeige außerhalb des Editors weiterhin bereinigen (siehe unten). Der Link-Dialog erlaubt `http`, `https`, `mailto` und `tel`, Adressen ohne Protokoll werden um `https://` ergänzt.
+
+Link-Dialog (Toolbar-Button oder `Strg+K`):
+
+![Link-Dialog](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v21/lux‐quill-v21-img-04.png)
 
 Für die Anzeige außerhalb des Editors stellt das Theme die Klasse `lux-quill-content` bereit (Typografie, Überschriften, Listen, Einzüge, Link-Fokus). Gespeichertes HTML sollte bei der Anzeige trotzdem bereinigt werden, z. B. mit [lux-html](lux‐html-v21), siehe [Beispiel 4](#4-ausgabe-anzeigen).
 
@@ -192,7 +216,7 @@ Quill.register({ 'formats/strike': Strike }, true);
 @Component({
   selector: 'app-notiz',
   imports: [LuxQuillComponent],
-  template: `<lux-quill luxLabel="Notiz" [luxConfig]="config" [(luxValue)]="notiz"></lux-quill>`
+  template: `<lux-quill luxLabel="Notiz" [luxConfig]="config" [(value)]="notiz"></lux-quill>`
 })
 export class NotizComponent {
   notiz = signal('');
@@ -222,13 +246,13 @@ Die Hilfsfunktionen `luxQuillResolveConfig`, `luxQuillFormats`, `luxQuillHeading
 
 ## Tastaturbedienung und Barrierefreiheit
 
-| Taste                         | Wirkung                                                                                       |
-| ----------------------------- | --------------------------------------------------------------------------------------------- |
-| `Tab` / `Umschalt+Tab`        | Einzug des Absatzes bzw. Listeneintrags vergrößern / verkleinern.                              |
-| `Escape`, dann `Tab`          | Verlässt den Editor (vorwärts bzw. mit `Umschalt+Tab` rückwärts, z. B. zur Toolbar).           |
-| `Strg+B` / `Strg+I` / `Strg+U` | Fett / Kursiv / Unterstrichen (macOS: `Cmd`).                                                |
-| `Strg+K`                      | Link einfügen oder bearbeiten.                                                                |
-| Pfeiltasten, `Pos1`, `Ende`   | Navigation innerhalb der Toolbar.                                                             |
+| Taste                          | Wirkung                                                                              |
+| ------------------------------ | ------------------------------------------------------------------------------------ |
+| `Tab` / `Umschalt+Tab`         | Einzug des Absatzes bzw. Listeneintrags vergrößern / verkleinern.                    |
+| `Escape`, dann `Tab`           | Verlässt den Editor (vorwärts bzw. mit `Umschalt+Tab` rückwärts, z. B. zur Toolbar). |
+| `Strg+B` / `Strg+I` / `Strg+U` | Fett / Kursiv / Unterstrichen (macOS: `Cmd`).                                        |
+| `Strg+K`                       | Link einfügen oder bearbeiten.                                                       |
+| Pfeiltasten, `Pos1`, `Ende`    | Navigation innerhalb der Toolbar.                                                    |
 
 - Da `Tab` im Editor einrückt, gibt `Escape` den Fokus frei (WCAG 2.1.2 "Keine Tastaturfalle"). Dieser Hinweis ist per `aria-describedby` mit dem Editor verknüpft. Ohne `'indent'`/`'outdent'` in der Toolbar wechselt `Tab` direkt den Fokus.
 - Der Editor hat die Rolle `textbox` mit `aria-multiline`, `aria-required`, `aria-invalid`, `aria-readonly` und `aria-disabled`. Label, Hinweis und Fehlermeldung sind per `aria-labelledby` bzw. `aria-describedby` verknüpft.
@@ -239,10 +263,12 @@ Die Hilfsfunktionen `luxQuillResolveConfig`, `luxQuillFormats`, `luxQuillHeading
 
 ### 1. Kommentar ohne Formular
 
+![Beispielbild 01](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v21/lux‐quill-v21-img-01.png)
+
 Html
 
 ```html
-<lux-quill luxLabel="Kommentar" luxPlaceholder="Kommentar eingeben" [luxRequired]="true" [(luxValue)]="comment"></lux-quill>
+<lux-quill luxLabel="Kommentar" luxPlaceholder="Kommentar eingeben" [luxRequired]="true" [(value)]="comment"></lux-quill>
 ```
 
 Ts
@@ -252,6 +278,8 @@ comment = signal('');
 ```
 
 ### 2. Dokument in einem Reactive Form
+
+![Beispielbild 02](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v21/lux‐quill-v21-img-02.png)
 
 Html
 
@@ -282,7 +310,7 @@ Steht der Inhalt auf einer Seite, die bereits eine `<h1>` besitzt, können die �
 Html
 
 ```html
-<lux-quill luxLabel="Abschnitt" luxPreset="document" [luxConfig]="{ headingLevels: [2, 3] }" [(luxValue)]="section"></lux-quill>
+<lux-quill luxLabel="Abschnitt" luxPreset="document" [luxConfig]="{ headingLevels: [2, 3] }" [(value)]="section"></lux-quill>
 ```
 
 ### 4. Ausgabe anzeigen
