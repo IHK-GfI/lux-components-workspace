@@ -29,6 +29,7 @@ export const COMPONENT_OVERVIEW_ROUTES: Routes = [
       { path: 'progress', loadComponent: () => import('./progress-example/progress-example.component').then(m => m.ProgressBarExampleComponent) },
       { path: 'radio-button-ac', loadComponent: () => import('./radio-authentic-example/radio-authentic-example.component').then(m => m.RadioAuthenticExampleComponent) },
       { path: 'select-ac', loadComponent: () => import('./select-authentic-example/select-authentic-example.component').then(m => m.SelectAuthenticExampleComponent) },
+      { path: 'skeleton', loadComponent: () => import('./skeleton-example/skeleton-example.component').then(m => m.SkeletonExampleComponent) },
       { path: 'slider-ac', loadComponent: () => import('./slider-authentic-example/slider-authentic-example.component').then(m => m.SliderAuthenticExampleComponent) },
       { path: 'snackbar', loadComponent: () => import('./snackbar-example/snackbar-example.component').then(m => m.SnackbarExampleComponent) },
       { path: 'spinner', loadComponent: () => import('./spinner-example/spinner-example.component').then(m => m.SpinnerExampleComponent) },
