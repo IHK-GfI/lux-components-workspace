@@ -58,6 +58,7 @@ Es wird empfohlen, das Layout mit den Komponenten aus dem [Layout](#layout) zu e
 - [lux-file-list](lux‐file‐list-v21)
 - [lux-file-upload](lux‐file‐upload-v21)
 - [lux-input](lux‐input-v21)
+- [lux-quill](lux‐quill-v21)
 - [lux-radio](lux‐radio-v21)
 - [lux-select](lux‐select-v21)
 - [lux-slider](lux‐slider-v21)

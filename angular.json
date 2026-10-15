@@ -60,6 +60,7 @@
             "browser": "projects/demo-app/src/main.ts",
             "polyfills": ["zone.js"],
             "tsConfig": "projects/demo-app/tsconfig.app.json",
+            "allowedCommonJsDependencies": ["quill-delta"],
             "inlineStyleLanguage": "scss",
             "assets": [
               {

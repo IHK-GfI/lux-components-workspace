@@ -1,0 +1,37 @@
+<lux-dialog-structure>
+  <lux-dialog-title>{{ (data.hasLink ? 'luxc.quill.link.title_edit' : 'luxc.quill.link.title_add') | transloco }}</lux-dialog-title>
+  <lux-dialog-content>
+    <form class="lux-quill-link-dialog-form lux-flex lux-flex-col lux-gap-4" [formGroup]="form" (keydown.enter)="$event.preventDefault(); apply()">
+      <lux-input-ac
+        class="lux-quill-link-dialog-url"
+        luxAutofocus
+        luxControlBinding="url"
+        luxAutocomplete="url"
+        [luxLabel]="'luxc.quill.link.url' | transloco"
+        [luxHint]="'luxc.quill.link.url_hint' | transloco"
+        [luxErrorCallback]="urlErrorCallback"
+      ></lux-input-ac>
+      @if (data.askForText) {
+        <lux-input-ac class="lux-quill-link-dialog-text" luxControlBinding="text" [luxLabel]="'luxc.quill.link.text' | transloco"></lux-input-ac>
+      }
+    </form>
+  </lux-dialog-content>
+  <lux-dialog-actions>
+    @if (data.hasLink) {
+      <lux-button
+        class="lux-quill-link-dialog-remove lux-mr-4"
+        [luxStroked]="true"
+        [luxLabel]="'luxc.quill.link.remove' | transloco"
+        (luxClicked)="remove()"
+      ></lux-button>
+    }
+    <lux-button class="lux-quill-link-dialog-cancel lux-mr-4" [luxStroked]="true" [luxLabel]="'luxc.quill.link.cancel' | transloco" (luxClicked)="cancel()"></lux-button>
+    <lux-button
+      class="lux-quill-link-dialog-apply"
+      luxColor="primary"
+      [luxFlat]="true"
+      [luxLabel]="'luxc.quill.link.apply' | transloco"
+      (luxClicked)="apply()"
+    ></lux-button>
+  </lux-dialog-actions>
+</lux-dialog-structure>

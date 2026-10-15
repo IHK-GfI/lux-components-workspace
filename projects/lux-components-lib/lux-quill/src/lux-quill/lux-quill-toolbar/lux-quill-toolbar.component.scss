@@ -1,0 +1,9 @@
+// Grundlayout der Toolbar. Optik (Rahmen, Abstände, Farben) kommt aus dem Theme (_luxQuill.scss).
+// Das Layout liegt bewusst hier: Die Erkennung der Toolbar-Zeilen (Tooltip-Richtung) misst die
+// umbrechende Flexbox und darf nicht vom geladenen Theme abhängen.
+:host {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem;
+}

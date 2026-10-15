@@ -109,7 +109,10 @@ lux-textarea-ac {
   }
 }
 
-lux-form-control-wrapper {
+// .lux-form-control-wrapper-host: Für Form-Controls, die das Wrapper-Markup selbst rendern
+// (z.B. lux-quill als eigener ControlValueAccessor) und so dieselbe Optik erhalten.
+lux-form-control-wrapper,
+.lux-form-control-wrapper-host {
   width: 100%;
 
   .lux-form-control-wrapper {

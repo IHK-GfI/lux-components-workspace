@@ -40,6 +40,8 @@ export class LuxAutofocusDirective implements AfterViewInit {
         this.luxAutofocusSelector = 'div.lux-file-upload-drop-container';
       } else if (tagName === 'lux-textarea-ac') {
         this.luxAutofocusSelector = 'textarea:not([disabled])';
+      } else if (tagName === 'lux-quill') {
+        this.luxAutofocusSelector = '.ql-editor[contenteditable="true"]';
       } else if (tagName == 'lux-tile' || tagName == 'lux-tile-ac') {
         this.luxAutofocusSelector = 'mat-card';
       } else if (tagName == 'lux-breadcrumb') {

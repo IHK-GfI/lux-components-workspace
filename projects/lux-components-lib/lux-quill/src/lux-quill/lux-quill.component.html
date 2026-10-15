@@ -1,0 +1,63 @@
+<div
+  #wrapper
+  class="lux-form-control-wrapper lux-quill-wrapper"
+  luxTagIdHandler
+  [luxTagId]="luxTagId()"
+  [class.lux-form-control-error-authentic]="showError()"
+  [class.lux-form-control-disabled-authentic]="isDisabled()"
+  [class.lux-form-control-readonly-authentic]="isReadonly()"
+  [class.lux-focused-authentic]="focused()"
+  [class.lux-dense-authentic]="luxDense()"
+  (focusin)="onFocusIn($event)"
+  (focusout)="onFocusOut($event)"
+>
+  <!-- Label: contenteditable kann nicht über <label for> verknüpft werden, deshalb aria-labelledby am Editor. -->
+  <div class="lux-form-control-label-authentic" [class.lux-sr-only]="luxNoTopLabel()">
+    <div class="lux-label-authentic">
+      @if (luxLabel()) {
+        <span class="lux-form-label-authentic" [id]="uid() + '-label'"
+          >&nbsp;{{ luxLabel() }}&nbsp;@if (isRequired()) {<span aria-hidden="true">*</span>}</span
+        >
+      }
+    </div>
+  </div>
+
+  <div class="lux-form-control-container-authentic lux-quill-container">
+    @if (!isReadonly()) {
+      <lux-quill-toolbar
+        [luxItems]="config().toolbar"
+        [luxHeadingMode]="config().headingMode"
+        [luxActiveFormats]="activeFormats()"
+        [luxDisabled]="isDisabled()"
+        [luxEditorId]="uid()"
+        [luxAriaLabel]="'luxc.quill.toolbar.arialabel' | transloco"
+        (luxAction)="onToolbarAction($event)"
+        (luxHeadingMenuClosed)="onHeadingMenuClosed()"
+      ></lux-quill-toolbar>
+    }
+    <div #editor class="lux-quill-editor" [style.min-height]="luxMinHeight() ?? null" [style.max-height]="luxMaxHeight() ?? null"></div>
+  </div>
+
+  @if (!luxNoBottomLabel()) {
+    <div class="lux-form-control-misc-authentic">
+      @if (showError()) {
+        <div class="lux-form-control-error-container">
+          <lux-icon
+            class="lux-color-red lux-alert-icon"
+            luxIconName="lux-interface-alert-warning-triangle"
+            luxIconSize="0.875rem"
+            luxPadding="1px"
+            luxMargin="0px 2px 0px 0px"
+          ></lux-icon>
+          <mat-error [id]="uid() + '-error'">{{ errorText() }}</mat-error>
+        </div>
+      } @else if (luxHint()) {
+        <mat-hint [id]="uid() + '-hint'" [attr.aria-disabled]="isDisabled() || null">{{ luxHint() }}</mat-hint>
+      }
+    </div>
+  }
+
+  @if (keyboardHintId()) {
+    <span class="lux-sr-only" [id]="keyboardHintId()">{{ 'luxc.quill.keyboard_hint' | transloco }}</span>
+  }
+</div>
