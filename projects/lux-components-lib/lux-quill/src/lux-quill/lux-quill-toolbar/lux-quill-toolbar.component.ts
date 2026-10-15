@@ -110,8 +110,11 @@ export class LuxQuillToolbarComponent {
   /** Index des ersten Buttons (hinter der Überschriften-Auswahl). */
   protected readonly buttonOffset = computed(() => (this.showHeading() ? 1 : 0));
 
-  /** activeIndex, begrenzt auf die aktuell vorhandenen Controls (die Einträge können sich ändern). */
-  protected readonly rovingIndex = computed(() => Math.min(this.activeIndex(), this.buttonOffset() + this.buttons().length - 1));
+  /**
+   * Startpunkt der Pfeiltasten-Navigation: activeIndex, begrenzt auf die aktuell vorhandenen Controls
+   * (die Einträge können sich ändern).
+   */
+  protected readonly navigationIndex = computed(() => Math.min(this.activeIndex(), this.buttonOffset() + this.buttons().length - 1));
 
   protected readonly tooltipShowDelay = LUX_QUILL_TOOLTIP_SHOW_DELAY;
 
@@ -206,8 +209,8 @@ export class LuxQuillToolbarComponent {
       return;
     }
 
-    // rovingIndex statt activeIndex: Nach dem Verkleinern der Toolbar kann activeIndex außerhalb liegen.
-    const current = this.rovingIndex();
+    // navigationIndex statt activeIndex: Nach dem Verkleinern der Toolbar kann activeIndex außerhalb liegen.
+    const current = this.navigationIndex();
     let index: number;
     switch (event.key) {
       case 'ArrowRight':

@@ -115,7 +115,7 @@ describe('LuxQuillToolbarComponent', () => {
     expect(document.activeElement).toBe(controls()[0]);
   });
 
-  it('Sollte nach dem Verkleinern der Toolbar von der gültigen Tab-Position aus navigieren', () => {
+  it('Sollte nach dem Verkleinern der Toolbar vom letzten gültigen Control aus navigieren', () => {
     // Vorbedingungen testen: Fokus auf dem letzten von zehn Controls
     controls()[controls().length - 1].focus();
     fixture.detectChanges();
@@ -125,7 +125,7 @@ describe('LuxQuillToolbarComponent', () => {
     fixture.detectChanges();
     keydown('ArrowRight');
 
-    // Nachbedingungen prüfen: Von der Tab-Position (letztes Control) geht es zum ersten.
+    // Nachbedingungen prüfen: Vom letzten gültigen Control geht es zum ersten.
     expect(document.activeElement).toBe(controls()[0]);
   });
 

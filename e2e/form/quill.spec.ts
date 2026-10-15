@@ -39,7 +39,7 @@ test.describe('lux-quill', () => {
     await page.keyboard.press('Tab');
     await expect(editor.locator('li.ql-indent-1')).toHaveCount(1);
     await expect(editor).toBeFocused();
-    expect(await section.value()).toContain('<ul><li>Punkt eins<ul><li>Punkt zwei</li></ul></li></ul>');
+    await expect.poll(() => section.value()).toContain('<ul><li>Punkt eins<ul><li>Punkt zwei</li></ul></li></ul>');
 
     await page.keyboard.press('Shift+Tab');
     await expect(editor.locator('li.ql-indent-1')).toHaveCount(0);
@@ -62,15 +62,18 @@ test.describe('lux-quill', () => {
     const control = example.section(EXAMPLE_WITHOUT_FORM, TAG).control;
     const toolbar = control.getByRole('toolbar', { name: 'Formatierung' });
 
-    // Die Toolbar ist ein einziger Tab-Stopp vor dem Editor. Im Editor rückt Shift+Tab aus,
-    // erst nach Escape wechselt der Fokus zurück in die Toolbar.
+    // Jeder Button der Toolbar ist ein eigener Tab-Stopp vor dem Editor. Im Editor rückt Shift+Tab aus,
+    // erst nach Escape wechselt der Fokus zurück in die Toolbar, und zwar auf deren letzten Button.
     await editorOf(control).locator('p').first().click();
     await page.keyboard.press('Home');
     await page.keyboard.press('Shift+End');
     await page.keyboard.press('Escape');
     await page.keyboard.press('Shift+Tab');
-    await expect(toolbar.getByRole('button', { name: /Textstil/ })).toBeFocused();
+    await expect(toolbar.getByRole('button').last()).toBeFocused();
 
+    // Innerhalb der Toolbar navigieren Pos1/Ende und die Pfeiltasten.
+    await page.keyboard.press('Home');
+    await expect(toolbar.getByRole('button', { name: /Textstil/ })).toBeFocused();
     await page.keyboard.press('ArrowRight');
     const bold = toolbar.getByRole('button', { name: 'Fett', exact: true });
     await expect(bold).toBeFocused();
@@ -88,7 +91,7 @@ test.describe('lux-quill', () => {
     await editor.locator('p').first().click();
     await section.control.getByRole('button', { name: /Textstil/ }).click();
     await page.getByRole('menuitemradio', { name: 'Überschrift 2' }).click();
-    expect(await section.value()).toContain('<h2 class="lux-quill-heading-2">Sehr geehrte Damen und Herren,</h2>');
+    await expect.poll(() => section.value()).toContain('<h2 class="lux-quill-heading-2">Sehr geehrte Damen und Herren,</h2>');
 
     await editor.locator('h2').click();
     await page.keyboard.press('End');
@@ -99,7 +102,7 @@ test.describe('lux-quill', () => {
     await dialog.getByRole('button', { name: 'Übernehmen' }).click();
 
     await expect(dialog).toHaveCount(0);
-    expect(await section.value()).toContain('<a href="mailto:info@ihk.de"');
+    await expect.poll(() => section.value()).toContain('<a href="mailto:info@ihk.de"');
   });
 
   test('quill – Reactive Form: Wert, dirty und touched', async ({ page }) => {
@@ -114,8 +117,8 @@ test.describe('lux-quill', () => {
     await page.keyboard.type(' Test');
     await editor.blur();
 
-    expect(await section.value()).toContain('<p>Sehr geehrte Damen und Herren, Test</p>');
-    expect(await section.formState()).toEqual({ valid: true, dirty: true, touched: true });
+    await expect.poll(() => section.value()).toContain('<p>Sehr geehrte Damen und Herren, Test</p>');
+    await expect.poll(() => section.formState()).toEqual({ valid: true, dirty: true, touched: true });
   });
 
   test('quill – Pflichtfeld: Fehler nach dem Verlassen, per aria-describedby verknüpft', async ({ page }) => {
