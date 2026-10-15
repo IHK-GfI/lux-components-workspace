@@ -26,5 +26,4 @@ export class LuxStepperLargeButtonInfo {
   color?: LuxThemePalette;
   iconName?: string;
   iconShowRight?: boolean;
-  alignIconWithLabel?: boolean;
 }

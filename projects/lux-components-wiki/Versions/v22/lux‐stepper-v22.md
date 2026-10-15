@@ -38,21 +38,21 @@
 
 ### @Input
 
-| Name                             | Typ                     | Beschreibung                                                                                                                                                                                                            |
-| -------------------------------- | ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| luxVerticalStepper | boolean | Definiert ob der Stepper vertikal oder horizontal dargestellt wird. Default: false. |
-| luxLinear | boolean | Definiert ob die einzelnen Schritte nur nacheinander abgearbeitet werden können oder ob jeder Step direkt angesteuert werden kann. Default: true. |
-| luxDisabled | boolean | Definiert ob der Stepper deaktiviert ist oder nicht. Wenn deaktiviert, ist der Stepper leicht ausgegraut. Default: false. |
-| luxHorizontalStepAnimationActive | boolean | Definiert ob die Übergangsanimationen für den horizontalen Stepper aktiviert sind oder nicht. Aktuell noch nicht für den vertikalen Stepper verfügbar. Default: true. |
-| luxShowNavigationButtons | boolean | Definiert ob die Navigations-Buttons (Zurück, Weiter, Finish) dargestellt werden sollen oder nicht. Default: true. |
-| luxUseCustomIcons | boolean | Definiert ob für die einzelnen Steps eigene Icons verwendet werden sollen oder nicht. Wenn false, dann werden Ziffern für die einzelnen Steps verwendet. Die Icons haben die Größe '2x', diese entspricht dem Wert 2em. Default: false. |
-| luxEditedIconName | string | Definiert das Icon das angezeigt wird wenn ein einzelner Step erfolgreich bearbeitet worden ist. Default: 'lux-interface-edit-pencil'. |
-| luxCurrentStepNumber | number | Definiert den aktiven Step, dadurch lässt sich der Start-Step festlegen, sofern luxLinear auf false gesetzt ist. Two-Way-Binding über `[(luxCurrentStepNumber)]` möglich. Default: 0. |
-| luxPreviousButtonConfig          | ILuxStepperButtonConfig | Konfigurationsobjekt, welches die Anpassung des Zurück-Buttons regelt. Mögliche Optionen sind im Interface ILuxStepperButtonConfig eingetragen.                                                                         |
-| luxNextButtonConfig              | ILuxStepperButtonConfig | Konfigurationsobjekt, welches die Anpassung des Weiter-Buttons regelt. Mögliche Optionen sind im Interface ILuxStepperButtonConfig eingetragen.                                                                         |
-| luxFinishButtonConfig            | ILuxStepperButtonConfig | Konfigurationsobjekt, welches die Anpassung des Abschließen-Buttons regelt. Mögliche Optionen sind im Interface ILuxStepperButtonConfig eingetragen.                                                                    |
-| luxA11YMode                      | boolean                 | Wenn aktiv, sind die Navigations-Buttons immer klickbar (nicht visuell deaktiviert), auch wenn der aktuelle Step noch nicht abgeschlossen ist. Standardwert: `false`.                                                   |
-| luxButtonAlignLeft               | boolean                 | Wenn aktiv, werden die Navigations-Buttons linksbündig unterhalb des Step-Contents angezeigt. Standardwert: `false` (rechtsbündig).                                                                                     |
+| Name                             | Typ                     | Beschreibung                                                                                                                                                                                                                            |
+| -------------------------------- | ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| luxVerticalStepper               | boolean                 | Definiert ob der Stepper vertikal oder horizontal dargestellt wird. Default: false.                                                                                                                                                     |
+| luxLinear                        | boolean                 | Definiert ob die einzelnen Schritte nur nacheinander abgearbeitet werden können oder ob jeder Step direkt angesteuert werden kann. Default: true.                                                                                       |
+| luxDisabled                      | boolean                 | Definiert ob der Stepper deaktiviert ist oder nicht. Wenn deaktiviert, ist der Stepper leicht ausgegraut. Default: false.                                                                                                               |
+| luxHorizontalStepAnimationActive | boolean                 | Definiert ob die Übergangsanimationen für den horizontalen Stepper aktiviert sind oder nicht. Aktuell noch nicht für den vertikalen Stepper verfügbar. Default: true.                                                                   |
+| luxShowNavigationButtons         | boolean                 | Definiert ob die Navigations-Buttons (Zurück, Weiter, Finish) dargestellt werden sollen oder nicht. Default: true.                                                                                                                      |
+| luxUseCustomIcons                | boolean                 | Definiert ob für die einzelnen Steps eigene Icons verwendet werden sollen oder nicht. Wenn false, dann werden Ziffern für die einzelnen Steps verwendet. Die Icons haben die Größe '2x', diese entspricht dem Wert 2em. Default: false. |
+| luxEditedIconName                | string                  | Definiert das Icon das angezeigt wird wenn ein einzelner Step erfolgreich bearbeitet worden ist. Default: 'lux-interface-edit-pencil'.                                                                                                  |
+| luxCurrentStepNumber             | number                  | Definiert den aktiven Step, dadurch lässt sich der Start-Step festlegen, sofern luxLinear auf false gesetzt ist. Two-Way-Binding über `[(luxCurrentStepNumber)]` möglich. Default: 0.                                                   |
+| luxPreviousButtonConfig          | ILuxStepperButtonConfig | Konfigurationsobjekt, welches die Anpassung des Zurück-Buttons regelt. Mögliche Optionen sind im Interface ILuxStepperButtonConfig eingetragen.                                                                                         |
+| luxNextButtonConfig              | ILuxStepperButtonConfig | Konfigurationsobjekt, welches die Anpassung des Weiter-Buttons regelt. Mögliche Optionen sind im Interface ILuxStepperButtonConfig eingetragen.                                                                                         |
+| luxFinishButtonConfig            | ILuxStepperButtonConfig | Konfigurationsobjekt, welches die Anpassung des Abschließen-Buttons regelt. Mögliche Optionen sind im Interface ILuxStepperButtonConfig eingetragen.                                                                                    |
+| luxA11YMode                      | boolean                 | Wenn aktiv, sind die Navigations-Buttons immer klickbar (nicht visuell deaktiviert), auch wenn der aktuelle Step noch nicht abgeschlossen ist. Standardwert: `false`.                                                                   |
+| luxButtonAlignLeft               | boolean                 | Wenn aktiv, werden die Navigations-Buttons linksbündig unterhalb des Step-Contents angezeigt. Standardwert: `false` (rechtsbündig).                                                                                                     |
 
 ### @Output
 
@@ -80,14 +80,14 @@ Die Validierung des Steps erfolgt entweder über `luxCompleted` (z.B. mit Signal
 
 #### @Input
 
-| Name           | Typ       | Beschreibung                                                                                                                                                             |
-| -------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| luxStepControl | FormGroup | Enthält die FormGroup (Reactive Forms), die für den aktuellen Step notwendig ist. Alternativ kann luxCompleted genutzt werden (z.B. mit Signal Forms). |
-| luxIconName    | string    | Enthält das Icon, welches für diesen Step angezeigt werden soll. Funktioniert nur, wenn der dazugehörige LuxStepper den Wert für luxUseCustomIcons auf true gesetzt hat. |
-| luxIconSize | string | Größe des Step-Icons (siehe luxIconName). Default: '1x'. |
-| luxOptional | boolean | Bestimmt, ob dieser Step optional ist. Greift nur, wenn kein luxStepControl gesetzt ist, welches invalid ist. Default: false. |
-| luxEditable | boolean | Bestimmt, ob dieser Step wieder angesteuert werden kann, nachdem er bearbeitet und verlassen wurde. Default: true. |
-| luxCompleted | boolean | Alternative zu luxStepControl, ermöglicht die Validierung des Steps ohne FormGroup (z.B. mit Signal Forms: `[luxCompleted]="myForm.feld().valid()"`). Ein Step ohne luxStepControl und luxCompleted gilt als abgeschlossen. Default: true. |
+| Name           | Typ       | Beschreibung                                                                                                                                                                                                                               |
+| -------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| luxStepControl | FormGroup | Enthält die FormGroup (Reactive Forms), die für den aktuellen Step notwendig ist. Alternativ kann luxCompleted genutzt werden (z.B. mit Signal Forms).                                                                                     |
+| luxIconName    | string    | Enthält das Icon, welches für diesen Step angezeigt werden soll. Funktioniert nur, wenn der dazugehörige LuxStepper den Wert für luxUseCustomIcons auf true gesetzt hat.                                                                   |
+| luxIconSize    | string    | Größe des Step-Icons (siehe luxIconName). Default: '1x'.                                                                                                                                                                                   |
+| luxOptional    | boolean   | Bestimmt, ob dieser Step optional ist. Greift nur, wenn kein luxStepControl gesetzt ist, welches invalid ist. Default: false.                                                                                                              |
+| luxEditable    | boolean   | Bestimmt, ob dieser Step wieder angesteuert werden kann, nachdem er bearbeitet und verlassen wurde. Default: true.                                                                                                                         |
+| luxCompleted   | boolean   | Alternative zu luxStepControl, ermöglicht die Validierung des Steps ohne FormGroup (z.B. mit Signal Forms: `[luxCompleted]="myForm.feld().valid()"`). Ein Step ohne luxStepControl und luxCompleted gilt als abgeschlossen. Default: true. |
 
 ### LuxStepHeaderComponent
 
@@ -113,14 +113,13 @@ Bei der Validierung über luxStepControl (Reactive Forms) wird dieser Tag ebenfa
 
 Objekte können dieses Interface implementieren, um so die einzelnen Steuer-Buttons zu modifizieren. Alle Properties sind optional.
 
-| Name               | Typ             | Beschreibung                                |
-| ------------------ | --------------- | ------------------------------------------- |
-| label? | string | Text des Buttons. |
-| color? | LuxThemePalette | Farbe des Buttons |
-| iconName? | string | Name des Icons, für diesen Button. |
-| alignIconWithLabel? | boolean | Ohne Wirkung (wird von den Buttons nicht mehr ausgewertet). |
-| flat? | boolean | Stellt den Button als Flat-Button dar. |
-| stroked? | boolean | Stellt den Button als Stroked-Button dar. |
+| Name      | Typ             | Beschreibung                              |
+| --------- | --------------- | ----------------------------------------- |
+| label?    | string          | Text des Buttons.                         |
+| color?    | LuxThemePalette | Farbe des Buttons                         |
+| iconName? | string          | Name des Icons, für diesen Button.        |
+| flat?     | boolean         | Stellt den Button als Flat-Button dar.    |
+| stroked?  | boolean         | Stellt den Button als Stroked-Button dar. |
 
 ## Beispiele
 
@@ -666,9 +665,9 @@ Die Komponenten LuxStepHeader und LuxStepContent bestehen lediglich aus dem Sele
 Mithilfe des LuxStepperHelperService können die nextStep- und previousStep-Funktionen eines bestimmten Steppers bzw. falls kein spezieller Stepper definiert ist aller aktuellen Stepper aufgerufen werden.
 Das ist besonders für ausgelagerte Navigation interessant (siehe Beispiel 3).
 
-| Methode                                    | Beschreibung                                                                                   |
-| ------------------------------------------ | ---------------------------------------------------------------------------------------------- |
-| nextStep(stepper?: LuxStepperComponent)     | Wechselt zum nächsten Schritt des übergebenen Steppers (ohne Parameter: aller aktuellen Stepper). |
+| Methode                                     | Beschreibung                                                                                        |
+| ------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| nextStep(stepper?: LuxStepperComponent)     | Wechselt zum nächsten Schritt des übergebenen Steppers (ohne Parameter: aller aktuellen Stepper).   |
 | previousStep(stepper?: LuxStepperComponent) | Wechselt zum vorherigen Schritt des übergebenen Steppers (ohne Parameter: aller aktuellen Stepper). |
 
 ### Validierung der Steps
