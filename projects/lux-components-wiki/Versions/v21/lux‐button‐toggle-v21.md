@@ -18,24 +18,25 @@
 | -------- | ----------------- |
 | selector | lux-button-toggle |
 
-Hinweis: Die Komponente benötigt mindestens zwei Optionen in `luxOptions`.
+Hinweis: Die Komponente benötigt mindestens zwei Optionen in `luxOptions`. Der Button-Toggle ist für wenige, kurze Optionen gedacht. Bei vielen oder langen Optionen sind Select oder Radio besser geeignet.
 
 ### @Input
 
-| Name              | Typ                         | Beschreibung                                                                                         |
-| ----------------- | --------------------------- | ---------------------------------------------------------------------------------------------------- |
-| luxAriaLabel      | string                      | Aria-Label für die gesamte Toggle-Gruppe.                                                            |
-| luxOptions        | LuxButtonToggleOption\<V>[] | Optionen der Gruppe. Jede Option unterstützt `label`, `value`, optional `disabled` und `ariaLabel`.  |
-| luxMultiple       | boolean                     | Aktiviert Mehrfachauswahl. Bei `false` wird eine einzelne Auswahl verwendet.                         |
-| luxDense          | boolean                     | Reduziert die Höhe der Komponente.                                                                   |
-| luxDisabled       | boolean                     | Deaktiviert die gesamte Gruppe.                                                                      |
-| luxRequired       | boolean                     | Kennzeichnet das Feld als Pflichtfeld.                                                               |
-| luxHint           | string                      | Hinweistext unterhalb der Gruppe (nur wenn kein Fehler angezeigt wird).                              |
-| luxError          | string                      | Optionaler eigener Fehlertext. Überschreibt die Standard-Required-Meldung.                           |
-| luxControlBinding | string                      | Verknüpft die Komponente in Reactive Forms mit einem `FormControl` im aktuellen `FormGroup`-Kontext. |
-| luxCompareWith    | (a: V, b: V) => boolean     | Vergleichsfunktion für Wertegleichheit (relevant für Objektwerte).                                   |
-| luxSelected       | V \| undefined              | Single-Select-Wert (auch als Two-Way-Binding nutzbar).                                               |
-| luxSelectedValues | V[]                         | Multi-Select-Werte (auch als Two-Way-Binding nutzbar).                                               |
+| Name              | Typ                         | Beschreibung                                                                                                                                                                          |
+| ----------------- | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| luxAriaLabel      | string                      | Aria-Label für die gesamte Toggle-Gruppe.                                                                                                                                             |
+| luxOptions        | LuxButtonToggleOption\<V>[] | Optionen der Gruppe. Jede Option unterstützt `label`, `value`, optional `disabled` und `ariaLabel`.                                                                                   |
+| luxMultiple       | boolean                     | Aktiviert Mehrfachauswahl. Bei `false` wird eine einzelne Auswahl verwendet.                                                                                                          |
+| luxDense          | boolean                     | Reduziert die Höhe der Komponente.                                                                                                                                                    |
+| luxVertical       | boolean \| undefined        | `true`: Optionen untereinander. `false`: nebeneinander. Ohne Angabe richtet sich die Ausrichtung nach dem verfügbaren Platz (vertikal, wenn die Optionen nicht nebeneinander passen). |
+| luxDisabled       | boolean                     | Deaktiviert die gesamte Gruppe.                                                                                                                                                       |
+| luxRequired       | boolean                     | Kennzeichnet das Feld als Pflichtfeld.                                                                                                                                                |
+| luxHint           | string                      | Hinweistext unterhalb der Gruppe (nur wenn kein Fehler angezeigt wird).                                                                                                               |
+| luxError          | string                      | Optionaler eigener Fehlertext. Überschreibt die Standard-Required-Meldung.                                                                                                            |
+| luxControlBinding | string                      | Verknüpft die Komponente in Reactive Forms mit einem `FormControl` im aktuellen `FormGroup`-Kontext.                                                                                  |
+| luxCompareWith    | (a: V, b: V) => boolean     | Vergleichsfunktion für Wertegleichheit (relevant für Objektwerte).                                                                                                                    |
+| luxSelected       | V \| undefined              | Single-Select-Wert (auch als Two-Way-Binding nutzbar).                                                                                                                                |
+| luxSelectedValues | V[]                         | Multi-Select-Werte (auch als Two-Way-Binding nutzbar).                                                                                                                                |
 
 ### @Output
 

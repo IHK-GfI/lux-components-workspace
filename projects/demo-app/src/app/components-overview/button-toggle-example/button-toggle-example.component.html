@@ -10,6 +10,7 @@
           [luxAriaLabel]="ariaLabel"
           [luxOptions]="singleOptions"
           [luxDense]="dense"
+          [luxVertical]="vertical()"
           [luxRequired]="required"
           [luxHint]="hint"
           [luxError]="error"
@@ -27,6 +28,7 @@
           [luxOptions]="multiOptions"
           [luxMultiple]="true"
           [luxDense]="dense"
+          [luxVertical]="vertical()"
           [luxRequired]="required"
           [luxHint]="hint"
           [luxError]="error"
@@ -43,6 +45,7 @@
           [luxAriaLabel]="ariaLabel"
           [luxOptions]="singleOptions"
           [luxDense]="dense"
+          [luxVertical]="vertical()"
           [luxRequired]="required"
           [luxHint]="hint"
           [luxError]="error"
@@ -61,6 +64,7 @@
           [luxOptions]="multiOptions"
           [luxMultiple]="true"
           [luxDense]="dense"
+          [luxVertical]="vertical()"
           [luxRequired]="required"
           [luxHint]="hint"
           [luxError]="error"
@@ -102,6 +106,19 @@
       [(luxChecked)]="dense"
       luxHint="Reduziert die Höhe der Button-Toggle-Komponente."
     ></lux-toggle-ac>
+
+    <div class="lux-flex lux-items-center lux-gap-2">
+      <lux-select-ac
+        class="lux-flex-auto"
+        luxLabel="luxVertical"
+        luxOptionLabelProp="label"
+        [luxOptions]="verticalOptions"
+        [(luxSelected)]="verticalOption"
+        luxHint="Automatisch: Die Ausrichtung richtet sich nach dem verfügbaren Platz."
+      >
+      </lux-select-ac>
+      <app-status-marker [markerType]="markerTypeNew"></app-status-marker>
+    </div>
 
     <lux-toggle-ac luxLabel="luxDisabled" [luxNoTopLabel]="true" [(luxChecked)]="disabled" luxHint="Deaktiviert die gesamte Toggle-Gruppe.">
       <lux-form-hint>Für die Multi-Select-Demo ist die Option „Archiv“ zusätzlich segmentweise deaktiviert.</lux-form-hint>

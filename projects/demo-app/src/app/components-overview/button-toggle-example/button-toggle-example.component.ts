@@ -1,12 +1,15 @@
-import { Component } from '@angular/core';
+import { Component, computed, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
   LuxButtonToggleComponent,
   LuxButtonToggleOption,
   LuxFormHintComponent,
   LuxInputAcComponent,
+  LuxSelectAcComponent,
   LuxToggleAcComponent
 } from '@ihk-gfi/lux-components';
+import { StatusMarkerComponent } from '../../base/status-marker/status-marker.component';
+import { DemoMarkerType } from '../../base/status-marker/status-marker.model';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
 import { ExampleBaseStructureComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-structure/example-base-structure.component';
@@ -15,6 +18,11 @@ import { ExampleValueComponent } from '../../example-base/example-value/example-
 
 interface ButtonToggleValue {
   key: string;
+}
+
+interface VerticalOption {
+  label: string;
+  value?: boolean;
 }
 
 interface ButtonToggleDemoForm {
@@ -31,13 +39,16 @@ interface ButtonToggleDemoForm {
     ExampleBaseSimpleOptionsComponent,
     LuxButtonToggleComponent,
     LuxInputAcComponent,
+    LuxSelectAcComponent,
     LuxToggleAcComponent,
+    StatusMarkerComponent,
     LuxFormHintComponent,
     ExampleValueComponent,
     ReactiveFormsModule
   ]
 })
 export class ButtonToggleExampleComponent {
+  readonly markerTypeNew = DemoMarkerType.New;
   showOutputEvents = false;
 
   ariaLabel?: string;
@@ -45,6 +56,13 @@ export class ButtonToggleExampleComponent {
   error = '';
   disabled = false;
   dense = false;
+  verticalOptions: VerticalOption[] = [
+    { label: 'Automatisch', value: undefined },
+    { label: 'Vertikal', value: true },
+    { label: 'Horizontal', value: false }
+  ];
+  verticalOption = signal<VerticalOption>(this.verticalOptions[0]);
+  vertical = computed(() => this.verticalOption()?.value);
 
   singleSelected: ButtonToggleValue | undefined = undefined;
   multiSelected: ButtonToggleValue[] = [];
