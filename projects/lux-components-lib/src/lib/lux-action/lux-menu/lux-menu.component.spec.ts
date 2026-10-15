@@ -4,14 +4,16 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { Component } from '@angular/core';
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
+import { LuxA11yTestHelper, LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
+import { LuxDividerComponent } from '../../lux-layout/lux-divider/lux-divider.component';
 import { LuxThemePalette } from '../../lux-util/lux-colors.enum';
 import { LuxMenuItemComponent } from '../lux-menu/lux-menu-subcomponents/lux-menu-item.component';
 import { LuxMenuTriggerComponent } from '../lux-menu/lux-menu-subcomponents/lux-menu-trigger.component';
 import { LuxMenuComponent } from './lux-menu.component';
 
 describe('LuxMenuComponent', () => {
+  beforeAll(() => LuxA11yTestHelper.addA11yMatchers());
   let component: MockComponent;
   let fixture: ComponentFixture<MockComponent>;
   let menuComponent: LuxMenuComponent;
@@ -85,6 +87,192 @@ describe('LuxMenuComponent', () => {
     expect(extendedMenuItems.length).toBeGreaterThan(0);
     expect(extendedMenuItems.length).toBeLessThan(3);
   }));
+
+  it('Zeigt Divider nur zwischen sichtbaren Aktionen in Button-Row und Overflow', fakeAsync(() => {
+    component.generateItems(4);
+    component.items[0].dividerAfter = true;
+    component.items[2].dividerAfter = true;
+    LuxTestHelper.wait(fixture);
+
+    const container = fixture.debugElement.query(By.css('.lux-menu-extended')).nativeElement as HTMLElement;
+    spyOnProperty(container, 'offsetWidth', 'get').and.returnValue(1200);
+    spyOnProperty(menuComponent.menuTriggerElRef!.nativeElement, 'offsetWidth', 'get').and.returnValue(50);
+    updateExtendedMenuItems();
+
+    expect(menuComponent.extendedMenuEntries.length).toBe(6);
+
+    expect(Array.from(container.querySelectorAll('lux-button.lux-menu-item, lux-divider')).map((element) => element.tagName)).toEqual([
+      'LUX-BUTTON',
+      'LUX-DIVIDER',
+      'LUX-BUTTON',
+      'LUX-BUTTON',
+      'LUX-DIVIDER',
+      'LUX-BUTTON'
+    ]);
+    expect(container.querySelectorAll('lux-divider[aria-hidden="true"]')).toHaveSize(2);
+    expect(container.querySelectorAll('lux-divider mat-divider.mat-divider-vertical')).toHaveSize(2);
+    expect(container.querySelector('lux-divider button, lux-divider[tabindex]')).toBeNull();
+
+    component.maximumExtended = 2;
+    updateExtendedMenuItems();
+    expect(container.querySelectorAll('mat-divider')).toHaveSize(1);
+    menuComponent.menuTriggerElRef!.nativeElement.click();
+    LuxTestHelper.wait(fixture);
+    expect(
+      Array.from(overlayContainer.getContainerElement().querySelectorAll('button.lux-menu-item, mat-divider')).map(
+        (element) => element.tagName
+      )
+    ).toEqual(['BUTTON', 'MAT-DIVIDER', 'BUTTON']);
+
+    flush();
+    discardPeriodicTasks();
+  }));
+
+  it('Unterdrueckt fuehrende, abschliessende und isolierte Divider nach Sichtbarkeitsaenderungen', fakeAsync(() => {
+    component.generateItems(3);
+    component.leadingDivider = true;
+    component.trailingDivider = true;
+    component.items[0].dividerAfter = true;
+    component.items[1].dividerAfter = true;
+    LuxTestHelper.wait(fixture);
+    spyOnProperty(fixture.debugElement.query(By.css('.lux-menu-extended')).nativeElement, 'offsetWidth', 'get').and.returnValue(1200);
+    spyOnProperty(menuComponent.menuTriggerElRef!.nativeElement, 'offsetWidth', 'get').and.returnValue(50);
+    updateExtendedMenuItems();
+
+    expect(fixture.nativeElement.querySelectorAll('.lux-menu-extended mat-divider')).toHaveSize(2);
+    component.items[1].hidden = true;
+    updateExtendedMenuItems();
+    expect(fixture.nativeElement.querySelectorAll('.lux-menu-extended mat-divider')).toHaveSize(1);
+    component.items[2].hidden = true;
+    updateExtendedMenuItems();
+    expect(fixture.nativeElement.querySelectorAll('.lux-menu-extended mat-divider')).toHaveSize(0);
+
+    component.displayExtended = false;
+    updateExtendedMenuItems();
+    menuComponent.menuTriggerElRef!.nativeElement.click();
+    LuxTestHelper.wait(fixture);
+    expect(overlayContainer.getContainerElement().querySelectorAll('mat-divider')).toHaveSize(0);
+    flush();
+    discardPeriodicTasks();
+  }));
+
+  it('Zeigt konfigurierte Divider ohne weiteren Input in der Extended View und im Panel', fakeAsync(() => {
+    component.generateItems(2);
+    component.items[0].dividerAfter = true;
+    LuxTestHelper.wait(fixture);
+    spyOnProperty(fixture.debugElement.query(By.css('.lux-menu-extended')).nativeElement, 'offsetWidth', 'get').and.returnValue(1200);
+    spyOnProperty(menuComponent.menuTriggerElRef!.nativeElement, 'offsetWidth', 'get').and.returnValue(50);
+    updateExtendedMenuItems();
+    expect(fixture.nativeElement.querySelectorAll('.lux-menu-extended mat-divider')).toHaveSize(1);
+    component.displayExtended = false;
+    updateExtendedMenuItems();
+    menuComponent.menuTriggerElRef!.nativeElement.click();
+    LuxTestHelper.wait(fixture);
+    expect(overlayContainer.getContainerElement().querySelectorAll('mat-divider')).toHaveSize(1);
+    flush();
+    discardPeriodicTasks();
+  }));
+
+  it('Beruecksichtigt die Divider-Breite beim Verschieben in das Overflow-Menue', fakeAsync(() => {
+    component.generateItems(2);
+    component.items[0].dividerAfter = true;
+    LuxTestHelper.wait(fixture);
+    const itemWidth = menuComponent.menuItems.reduce((width, item) => width + item.width, 0);
+    spyOnProperty(fixture.debugElement.query(By.css('.lux-menu-trigger')).nativeElement, 'offsetWidth', 'get').and.returnValue(50);
+    spyOnProperty(fixture.debugElement.query(By.css('.lux-menu-extended')).nativeElement, 'offsetWidth', 'get').and.returnValue(
+      itemWidth + 8
+    );
+    updateExtendedMenuItems();
+
+    expect(menuComponent.menuItems.filter((item) => item.extended)).toHaveSize(1);
+    expect(fixture.nativeElement.querySelectorAll('.lux-menu-extended mat-divider')).toHaveSize(0);
+  }));
+
+  describe('Barrierefreiheit', () => {
+    it('Hat mit vertikalem Divider in der erweiterten Button-Leiste keine Accessibility-Verstoesse', async () => {
+      component.generateItems(2);
+      component.items[0].dividerAfter = true;
+      fixture.detectChanges();
+      spyOnProperty(fixture.debugElement.query(By.css('.lux-menu-extended')).nativeElement, 'offsetWidth', 'get').and.returnValue(1200);
+      spyOnProperty(menuComponent.menuTriggerElRef!.nativeElement, 'offsetWidth', 'get').and.returnValue(50);
+      menuComponent.updateExtendedMenuItems();
+      fixture.detectChanges();
+
+      expect(fixture.nativeElement.querySelectorAll('.lux-menu-extended button')).toHaveSize(2);
+      expect(fixture.nativeElement.querySelectorAll('.lux-menu-extended mat-divider')).toHaveSize(1);
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+
+    it('Hat im geoeffneten Menue mit horizontalem Divider keine Accessibility-Verstoesse', async () => {
+      component.generateItems(2);
+      component.items[0].dividerAfter = true;
+      component.displayExtended = false;
+      fixture.detectChanges();
+      menuComponent.menuTriggerElRef!.nativeElement.click();
+      await fixture.whenStable();
+
+      const overlay = overlayContainer.getContainerElement();
+      expect(overlay.querySelectorAll('button.lux-menu-item')).toHaveSize(2);
+      expect(overlay.querySelectorAll('mat-divider')).toHaveSize(1);
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+      await LuxA11yTestHelper.expectNoA11yViolations(overlay);
+    });
+
+    it('Hat mit deaktivierter und ladender Aktion im geoeffneten Menue keine Accessibility-Verstoesse', async () => {
+      component.generateItems(2);
+      component.displayExtended = false;
+      component.items[0].disabled = true;
+      component.items[1].loading = true;
+      fixture.detectChanges();
+      menuComponent.menuTriggerElRef!.nativeElement.click();
+      await fixture.whenStable();
+
+      const overlay = overlayContainer.getContainerElement();
+      expect(overlay.querySelectorAll('button.lux-menu-item')).toHaveSize(2);
+      expect(overlay.querySelector('button.lux-menu-item[disabled]')).not.toBeNull();
+      expect(overlay.querySelector('button.lux-menu-item[aria-disabled="true"] lux-progress')).not.toBeNull();
+      await LuxA11yTestHelper.expectNoA11yViolations(overlay);
+    });
+
+    it('Hat bei teils erweiterten Aktionen und Overflow keine Accessibility-Verstoesse', async () => {
+      component.generateItems(3);
+      component.items[0].dividerAfter = true;
+      component.items[1].dividerAfter = true;
+      component.maximumExtended = 1;
+      fixture.detectChanges();
+      spyOnProperty(fixture.debugElement.query(By.css('.lux-menu-extended')).nativeElement, 'offsetWidth', 'get').and.returnValue(1200);
+      menuComponent.updateExtendedMenuItems();
+      fixture.detectChanges();
+      menuComponent.menuTriggerElRef!.nativeElement.click();
+      await fixture.whenStable();
+
+      const overlay = overlayContainer.getContainerElement();
+      expect(fixture.nativeElement.querySelectorAll('.lux-menu-extended lux-button.lux-menu-item:not([style*=none])')).toHaveSize(1);
+      expect(overlay.querySelectorAll('button.lux-menu-item')).toHaveSize(2);
+      expect(overlay.querySelectorAll('mat-divider')).toHaveSize(1);
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+      await LuxA11yTestHelper.expectNoA11yViolations(overlay);
+    });
+
+    for (const large of [false, true]) {
+      it(`Hat im geoeffneten ${large ? 'Large-' : 'Sektions-'}Panel keine Accessibility-Verstoesse`, async () => {
+        component.generateItems(2);
+        component.displayExtended = false;
+        component.showSections = true;
+        component.largePanel = large;
+        component.items[0].dividerAfter = true;
+        fixture.detectChanges();
+        menuComponent.menuTriggerElRef!.nativeElement.click();
+        await fixture.whenStable();
+
+        const overlay = overlayContainer.getContainerElement();
+        expect(overlay.querySelectorAll('button.lux-menu-item')).toHaveSize(2);
+        expect(overlay.querySelectorAll('mat-divider')).toHaveSize(1);
+        await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+        await LuxA11yTestHelper.expectNoA11yViolations(overlay);
+      });
+    }
+  });
 
   it('Sollte einen eigenen Toggle-Button injecten', fakeAsync(() => {
     // Vorbedingungen testen
@@ -613,6 +801,9 @@ describe('LuxMenuComponent', () => {
     [luxMenuPanelLarge]="largePanel"
     (luxMenuClosed)="closed()"
   >
+    @if (leadingDivider) {
+      <lux-divider #menuSection></lux-divider>
+    }
     @for (item of items; track item.label) {
       <lux-menu-item
         [luxLabel]="item.label"
@@ -631,6 +822,12 @@ describe('LuxMenuComponent', () => {
         #menuSection
       >
       </lux-menu-item>
+      @if (item.dividerAfter) {
+        <lux-divider #menuSection></lux-divider>
+      }
+    }
+    @if (trailingDivider) {
+      <lux-divider #menuSection></lux-divider>
     }
     @if (showMockTrigger) {
       <lux-menu-trigger>
@@ -638,7 +835,7 @@ describe('LuxMenuComponent', () => {
       </lux-menu-trigger>
     }
   </lux-menu>`,
-  imports: [LuxMenuComponent, LuxMenuItemComponent, LuxMenuTriggerComponent]
+  imports: [LuxMenuComponent, LuxMenuItemComponent, LuxMenuTriggerComponent, LuxDividerComponent]
 })
 class MockComponent {
   displayMenuLeft = true;
@@ -648,6 +845,8 @@ class MockComponent {
   showSections = false;
   largePanel = false;
   showMockTrigger = false;
+  leadingDivider = false;
+  trailingDivider = false;
 
   items: {
     label: string;
@@ -662,6 +861,7 @@ class MockComponent {
     hidden: boolean;
     raised?: boolean;
     color: LuxThemePalette;
+    dividerAfter?: boolean;
   }[] = [];
 
   clicked() {}

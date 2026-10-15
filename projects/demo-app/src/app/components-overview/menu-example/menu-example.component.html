@@ -39,8 +39,12 @@
             [luxClass]="item.class"
             [luxButtonBadge]="item.buttonBadge"
             [luxButtonBadgeColor]="item.buttonBadgeColor"
+            #menuSection
           >
           </lux-menu-item>
+          @if (item.prio === 1 || item.prio === 3) {
+            <lux-divider #menuSection></lux-divider>
+          }
         }
       }
     </lux-menu>
