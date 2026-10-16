@@ -6,15 +6,19 @@
     <div class="lux-flex lux-flex-col lux-gap-4">
       <div class="lux-app-data-bg lux-flex lux-flex-col lux-gap-3" [ngStyle]="{ backgroundColor: backgroundColor }">
         @for (color of colors; track color; let i = $index) {
-        <lux-progress
-          luxType="Progressbar"
-          luxTagId="pb-example-default{{ i }}"
-          [luxColor]="color"
-          [luxValue]="value"
-          [luxMode]="mode"
-          [luxSize]="size"
-        >
-        </lux-progress>
+          <lux-progress
+            luxType="Progressbar"
+            luxTagId="pb-example-default{{ i }}"
+            [luxColor]="color"
+            [luxValue]="value"
+            [luxMode]="mode"
+            [luxSize]="size"
+            [luxMuted]="muted"
+            [luxShowText]="showText"
+            [luxText]="text || undefined"
+            [luxTextPosition]="textPosition"
+          >
+          </lux-progress>
         }
       </div>
     </div>
@@ -26,6 +30,34 @@
         Dabei sind die Eingaben 'small', 'medium' und 'large' erlaubt.
       </lux-form-hint>
     </lux-select-ac>
+    <div class="lux-flex lux-items-center">
+      <lux-toggle-ac
+        luxLabel="Muted (dekorativ)"
+        luxHint="Nur verwenden, wenn der Fortschritt zusätzlich als Text angezeigt wird."
+        [(luxChecked)]="muted"
+        [luxNoTopLabel]="true"
+      ></lux-toggle-ac>
+      <app-status-marker [markerType]="markerTypeNew"></app-status-marker>
+    </div>
+    <div class="lux-flex lux-items-center">
+      <lux-toggle-ac luxLabel="Fortschrittstext anzeigen" [(luxChecked)]="showText" [luxNoTopLabel]="true"></lux-toggle-ac>
+      <app-status-marker [markerType]="markerTypeNew"></app-status-marker>
+    </div>
+    @if (showText) {
+      <div class="lux-flex lux-items-center">
+        <lux-select-ac [luxOptions]="textPositions" [(luxSelected)]="textPosition" luxLabel="luxTextPosition"></lux-select-ac>
+        <app-status-marker [markerType]="markerTypeNew"></app-status-marker>
+      </div>
+      <div class="lux-flex lux-items-center">
+        <lux-input-ac
+          luxName="progress_text"
+          [(luxValue)]="text"
+          luxLabel="luxText"
+          luxHint="Leer lassen, um den Prozentwert anzuzeigen."
+        ></lux-input-ac>
+        <app-status-marker [markerType]="markerTypeNew"></app-status-marker>
+      </div>
+    }
     <lux-select-ac
       [luxOptions]="modes"
       [(luxSelected)]="mode"
@@ -37,21 +69,21 @@
       <lux-form-hint>Kontrast zwischen Element und Hintergrund prüfen.</lux-form-hint>
     </lux-input-ac>
     @if (mode === 'determinate') {
-    <div class="lux-flex lux-flex-col lux-gap-2">
-      <lux-input-ac
-        class="lux-flex-auto"
-        luxLabel="luxValue"
-        luxHint="Diese Property setzt den Wert in dem ProgressBar, vorausgesetzt es ist im Modus 'determinate'"
-        luxType="number"
-        [(luxValue)]="value"
-        [luxNumberAlignLeft]="true"
-      >
-      </lux-input-ac>
-      <div class="lux-flex lux-flex-warp lux-gap-2">
-        <lux-button luxLabel="+10" (luxClicked)="addBarProgress()" luxColor="primary" [luxRaised]="true"></lux-button>
-        <lux-button luxLabel="-10" (luxClicked)="subtractBarProgress()" luxColor="primary" [luxRaised]="true"></lux-button>
+      <div class="lux-flex lux-flex-col lux-gap-2">
+        <lux-input-ac
+          class="lux-flex-auto"
+          luxLabel="luxValue"
+          luxHint="Diese Property setzt den Wert in dem ProgressBar, vorausgesetzt es ist im Modus 'determinate'"
+          luxType="number"
+          [(luxValue)]="value"
+          [luxNumberAlignLeft]="true"
+        >
+        </lux-input-ac>
+        <div class="lux-flex lux-flex-warp lux-gap-2">
+          <lux-button luxLabel="+10" (luxClicked)="addBarProgress()" luxColor="primary" [luxRaised]="true"></lux-button>
+          <lux-button luxLabel="-10" (luxClicked)="subtractBarProgress()" luxColor="primary" [luxRaised]="true"></lux-button>
+        </div>
       </div>
-    </div>
     }
   </example-base-simple-options>
 </example-base-structure>

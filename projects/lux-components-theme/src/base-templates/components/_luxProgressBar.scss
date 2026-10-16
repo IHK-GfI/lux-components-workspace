@@ -1,76 +1,206 @@
 @use "@angular/material" as mat;
 
 lux-progress {
-  // Farben
-  @include mat.progress-bar-overrides(
-    (
-      track-color: #bcc8d5
-    )
-  );
+  .lux-progress-content {
+    display: flex;
+    gap: var(--lux-theme-spacing-md);
+  }
+
+  .lux-progress-text-position-bottom,
+  .lux-progress-text-position-top {
+    flex-direction: column;
+  }
+
+  .lux-progress-text-position-left {
+    align-items: center;
+    flex-direction: row;
+  }
+
+  .lux-progress-text-position-left mat-progress-bar {
+    flex: 1 1 0;
+    min-width: 1px;
+  }
+
+  // Der Text steht im DOM hinter der Progressbar und wird für 'left' und 'top' nach vorn gezogen.
+  .lux-progress-text-position-left .lux-progress-text,
+  .lux-progress-text-position-top .lux-progress-text {
+    order: -1;
+  }
+
+  .lux-progress-text-position-top .lux-progress-text {
+    text-align: right;
+  }
+
+  .lux-progress-text {
+    color: var(--lux-theme-dark-primary-text);
+    font-family: var(--lux-theme-app-font-family);
+    font-size: var(--lux-theme-font-size-lg);
+    font-weight: 600;
+    line-height: normal;
+    overflow-wrap: anywhere;
+  }
+
+  // Standard ohne luxColor (z. B. lux-file-progress oder Anwendungen ohne Farbangabe)
+  .lux-progress-bar {
+    @include mat.progress-bar-overrides(
+      (
+        track-color: var(--lux-theme-primary-90)
+      )
+    );
+    &.lux-progress-muted {
+      @include mat.progress-bar-overrides(
+        (
+          active-indicator-color: var(--lux-theme-primary-80),
+          track-color: var(--lux-theme-primary-95)
+        )
+      );
+    }
+  }
 
   .lux-color-red {
     @include mat.progress-bar-overrides(
       (
-        active-indicator-color: var(--lux-theme-custom-red)
+        active-indicator-color: var(--lux-theme-custom-red),
+        track-color: var(--lux-theme-warn-90)
       )
     );
+    &.lux-progress-muted {
+      @include mat.progress-bar-overrides(
+        (
+          active-indicator-color: var(--lux-theme-warn-80),
+          track-color: var(--lux-theme-warn-95)
+        )
+      );
+    }
   }
   .lux-color-green {
     @include mat.progress-bar-overrides(
       (
-        active-indicator-color: var(--lux-theme-custom-green)
+        active-indicator-color: var(--lux-theme-accent-60),
+        track-color: var(--lux-theme-accent-95)
       )
     );
+    &.lux-progress-muted {
+      @include mat.progress-bar-overrides(
+        (
+          active-indicator-color: var(--lux-theme-accent-80),
+          track-color: var(--lux-theme-accent-98)
+        )
+      );
+    }
   }
   .lux-color-purple {
     @include mat.progress-bar-overrides(
       (
-        active-indicator-color: var(--lux-theme-custom-purple)
+        active-indicator-color: var(--lux-theme-custom-purple),
+        track-color: var(--lux-theme-custom-purple-90)
       )
     );
+    &.lux-progress-muted {
+      @include mat.progress-bar-overrides(
+        (
+          active-indicator-color: var(--lux-theme-custom-purple-80),
+          track-color: var(--lux-theme-custom-purple-95)
+        )
+      );
+    }
   }
   .lux-color-blue {
     @include mat.progress-bar-overrides(
       (
-        active-indicator-color: var(--lux-theme-custom-blue)
+        active-indicator-color: var(--lux-theme-custom-blue),
+        track-color: var(--lux-theme-primary-90)
       )
     );
+    &.lux-progress-muted {
+      @include mat.progress-bar-overrides(
+        (
+          active-indicator-color: var(--lux-theme-primary-80),
+          track-color: var(--lux-theme-primary-95)
+        )
+      );
+    }
   }
   .lux-color-gray {
     @include mat.progress-bar-overrides(
       (
-        active-indicator-color: var(--lux-theme-custom-gray)
+        active-indicator-color: var(--lux-theme-custom-gray),
+        track-color: var(--lux-theme-neutral-90)
       )
     );
+    &.lux-progress-muted {
+      @include mat.progress-bar-overrides(
+        (
+          active-indicator-color: var(--lux-theme-neutral-80),
+          track-color: var(--lux-theme-neutral-95)
+        )
+      );
+    }
   }
   .lux-color-orange {
     @include mat.progress-bar-overrides(
       (
-        active-indicator-color: var(--lux-theme-custom-orange)
+        active-indicator-color: var(--lux-theme-custom-orange-60),
+        track-color: var(--lux-theme-custom-orange-90)
       )
     );
+    &.lux-progress-muted {
+      @include mat.progress-bar-overrides(
+        (
+          active-indicator-color: var(--lux-theme-custom-orange-80),
+          track-color: var(--lux-theme-custom-orange-95)
+        )
+      );
+    }
   }
   .lux-color-yellow {
     @include mat.progress-bar-overrides(
       (
-        active-indicator-color: var(--lux-theme-custom-yellow)
+        active-indicator-color: var(--lux-theme-custom-yellow),
+        track-color: var(--lux-theme-custom-yellow-90)
       )
     );
+    &.lux-progress-muted {
+      @include mat.progress-bar-overrides(
+        (
+          active-indicator-color: var(--lux-theme-custom-yellow-80),
+          track-color: var(--lux-theme-custom-yellow-95)
+        )
+      );
+    }
   }
 
   .lux-color-pink {
     @include mat.progress-bar-overrides(
       (
-        active-indicator-color: var(--lux-theme-custom-pink)
+        active-indicator-color: var(--lux-theme-custom-pink),
+        track-color: var(--lux-theme-custom-pink-90)
       )
     );
+    &.lux-progress-muted {
+      @include mat.progress-bar-overrides(
+        (
+          active-indicator-color: var(--lux-theme-custom-pink-80),
+          track-color: var(--lux-theme-custom-pink-95)
+        )
+      );
+    }
   }
   .lux-color-lightblue {
     @include mat.progress-bar-overrides(
       (
-        active-indicator-color: var(--lux-theme-custom-lightblue)
+        active-indicator-color: var(--lux-theme-custom-lightblue),
+        track-color: var(--lux-theme-custom-lightblue-90)
       )
     );
+    &.lux-progress-muted {
+      @include mat.progress-bar-overrides(
+        (
+          active-indicator-color: var(--lux-theme-custom-lightblue-80),
+          track-color: var(--lux-theme-custom-lightblue-95)
+        )
+      );
+    }
   }
 
   // Höhe

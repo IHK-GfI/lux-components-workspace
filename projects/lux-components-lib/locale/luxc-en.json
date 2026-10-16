@@ -292,7 +292,8 @@
       "previous_page": "Previous Page"
     },
     "progress": {
-      "arialabel": "Loading indicator"
+      "arialabel": "Loading indicator",
+      "indeterminate": "Progress is being processed."
     },
     "relative-timestamp": {
       "ago": "ago",

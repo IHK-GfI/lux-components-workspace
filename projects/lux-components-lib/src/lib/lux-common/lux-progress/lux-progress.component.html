@@ -1,25 +1,52 @@
 <div [class]="animDurationCSS" [ngClass]="['lux-progress-' + luxSize, luxType === 'Spinner' ? 'spinner-padding' : '']">
-  @switch (luxType) { @case ('Progressbar') {
-  <mat-progress-bar
-    luxAriaLabel="{{ luxAriaLabel || ('luxc.progress.arialabel' | transloco) }}"
-    luxTagIdHandler
-    [luxTagId]="luxTagId"
-    [luxCustomTagId]="luxTagId"
-    [ngClass]="[typeCSS, 'lux-color-' + luxColor]"
-    [mode]="luxMode"
-    [value]="luxValue"
-  >
-  </mat-progress-bar>
-  } @case ('Spinner') {
-  <mat-progress-spinner
-    luxAriaLabel="{{ luxAriaLabel || ('luxc.progress.arialabel' | transloco) }}"
-    luxTagIdHandler
-    [luxTagId]="luxTagId"
-    [luxCustomTagId]="luxTagId"
-    [ngClass]="[typeCSS, 'lux-color-' + luxColor]"
-    [mode]="luxMode"
-    [value]="luxValue"
-  >
-  </mat-progress-spinner>
-  } }
+  <span class="lux-sr-only" role="status" aria-live="polite">
+    @if (indeterminateAnnounced()) {
+      {{ 'luxc.progress.indeterminate' | transloco }}
+    }
+  </span>
+  @switch (luxType) {
+    @case ('Progressbar') {
+      <div class="lux-progress-content" [ngClass]="'lux-progress-text-position-' + luxTextPosition">
+        <mat-progress-bar
+          luxAriaLabel="{{ luxAriaLabel || ('luxc.progress.arialabel' | transloco) }}"
+          luxTagIdHandler
+          [luxTagId]="luxTagId"
+          [luxCustomTagId]="luxTagId"
+          [ngClass]="[typeCSS, luxColorCSS, luxMuted ? 'lux-progress-muted' : '']"
+          [attr.aria-describedby]="luxTextVisible && luxText ? textId : null"
+          [mode]="luxMode"
+          [value]="luxValue"
+        >
+        </mat-progress-bar>
+        @if (luxTextVisible) {
+          <!-- Ohne luxText wird der Prozentwert angezeigt, der bereits in aria-valuenow steckt. -->
+          <span class="lux-progress-text" [id]="textId" [attr.aria-hidden]="luxText ? null : 'true'">{{
+            luxText || luxProgressPercent + '%'
+          }}</span>
+        }
+      </div>
+    }
+    @case ('Spinner') {
+      <div class="lux-progress-spinner-content">
+        <mat-progress-spinner
+          luxAriaLabel="{{ luxAriaLabel || ('luxc.progress.arialabel' | transloco) }}"
+          luxTagIdHandler
+          [luxTagId]="luxTagId"
+          [luxCustomTagId]="luxTagId"
+          [ngClass]="[typeCSS, luxColorCSS, luxMuted ? 'lux-progress-muted' : '']"
+          [style.--lux-progress-spinner-stroke-width]="luxSpinnerStrokeWidth + 'px'"
+          [style.--lux-progress-spinner-track-inset]="luxSpinnerTrackInset + 'px'"
+          [mode]="luxMode"
+          [value]="luxValue"
+          [diameter]="luxSpinnerDiameter"
+          [strokeWidth]="luxSpinnerStrokeWidth"
+        >
+        </mat-progress-spinner>
+        @if (luxTextVisible) {
+          <!-- Der Prozentwert steckt bereits in aria-valuenow des Spinners. -->
+          <span class="lux-progress-spinner-text" aria-hidden="true">{{ luxProgressPercent }}%</span>
+        }
+      </div>
+    }
+  }
 </div>
