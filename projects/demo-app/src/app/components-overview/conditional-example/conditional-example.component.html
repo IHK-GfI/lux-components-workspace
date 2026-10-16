@@ -1,0 +1,56 @@
+<example-base-structure
+  exampleTitle="Conditional"
+  exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/luxConditional-v21"
+>
+  <example-base-content class="lux-flex lux-flex-col lux-gap-4">
+    <div class="lux-highlight-section lux-flex lux-flex-col lux-gap-2">
+      <h3>Felder einblenden</h3>
+      <div class="example-form lux-flex lux-flex-col">
+        <lux-radio-ac
+          luxLabel="Beschäftigung"
+          luxTagId="conditional-employment"
+          [luxOptions]="employmentOptions"
+          [(luxSelected)]="employment"
+          [luxOrientationVertical]="false"
+        ></lux-radio-ac>
+
+        <lux-input-ac
+          *luxConditional="isEmployed(); announce: 'Arbeitgeber'"
+          luxLabel="Arbeitgeber"
+          luxTagId="conditional-employer"
+        ></lux-input-ac>
+        <lux-input-ac
+          *luxConditional="isEmployed(); announce: 'Eintrittsdatum'"
+          luxLabel="Eintrittsdatum"
+          luxTagId="conditional-entry-date"
+        ></lux-input-ac>
+        <lux-input-ac
+          *luxConditional="isSelfEmployed(); announce: 'Tätigkeit'"
+          luxLabel="Tätigkeit"
+          luxTagId="conditional-activity"
+        ></lux-input-ac>
+
+        <lux-input-ac luxLabel="Anmerkungen" luxTagId="conditional-remarks"></lux-input-ac>
+      </div>
+    </div>
+
+    <div class="lux-highlight-section lux-flex lux-flex-col lux-gap-2">
+      <h3>Card einblenden</h3>
+      <div class="example-form lux-flex lux-flex-col lux-gap-4">
+        <lux-checkbox-ac
+          luxLabel="Abweichende Rechnungsadresse"
+          luxTagId="conditional-billing-address"
+          [(luxChecked)]="differentBillingAddress"
+        ></lux-checkbox-ac>
+
+        <lux-card *luxConditional="differentBillingAddress(); announce: 'Rechnungsadresse'" luxTitle="Rechnungsadresse">
+          <lux-card-content>
+            <lux-input-ac luxLabel="Straße und Hausnummer" luxTagId="conditional-billing-street"></lux-input-ac>
+            <lux-input-ac luxLabel="PLZ" luxTagId="conditional-billing-zip"></lux-input-ac>
+            <lux-input-ac luxLabel="Ort" luxTagId="conditional-billing-city"></lux-input-ac>
+          </lux-card-content>
+        </lux-card>
+      </div>
+    </div>
+  </example-base-content>
+</example-base-structure>

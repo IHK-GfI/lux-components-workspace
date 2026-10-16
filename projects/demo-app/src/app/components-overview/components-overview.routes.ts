@@ -63,6 +63,7 @@ export const COMPONENT_OVERVIEW_ROUTES: Routes = [
       { path: 'file-list', loadComponent: () => import('./file-example/file-list-example/file-list-example.component').then(m => m.FileListExampleComponent) },
       { path: 'file-upload', loadComponent: () => import('./file-example/file-upload-example/file-upload-example.component').then(m => m.FileUploadExampleComponent) },
       { path: 'badge-notification', loadComponent: () => import('./badge-notification-example/badge-notification-example.component').then(m => m.BadgeNotificationExampleComponent) },
+      { path: 'conditional', loadComponent: () => import('./conditional-example/conditional-example.component').then(m => m.ConditionalExampleComponent) },
       { path: 'ripple', loadComponent: () => import('./ripple-example/ripple-example.component').then(m => m.RippleExampleComponent) },
       { path: 'html', loadComponent: () => import('./html-example/html-example.component').then(m => m.HtmlExampleComponent) },
       { path: 'markdown', loadComponent: () => import('./markdown-example/markdown-example.component').then(m => m.MarkdownExampleComponent) },
