@@ -1,5 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, input, TemplateRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, TemplateRef, ViewEncapsulation } from '@angular/core';
 
 /**
  * Interner Render-Host von `*luxConditional`. Trägt die Enter- und Leave-Animation,
@@ -9,6 +9,9 @@ import { ChangeDetectionStrategy, Component, computed, input, TemplateRef } from
   selector: 'lux-conditional',
   imports: [NgTemplateOutlet],
   styleUrl: './lux-conditional-host.component.scss',
+  // Ohne Kapselung: Angular benennt @keyframes sonst um, aktualisiert aber Verweise innerhalb von @media nicht.
+  // Der Fade-in bei reduzierter Bewegung liefe dann nie und die Enter-Klasse bliebe hängen.
+  encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     @if (visible()) {

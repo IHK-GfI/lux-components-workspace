@@ -5,7 +5,8 @@ $leave-duration: 160ms;
 $leave-easing: cubic-bezier(0.3, 0, 1, 1);
 $reduced-duration: 80ms;
 
-:host {
+// Ohne Kapselung (siehe Komponente), deshalb Elementselektor statt :host und nur Klassen mit Präfix lux-conditional.
+lux-conditional {
   display: contents;
 }
 
