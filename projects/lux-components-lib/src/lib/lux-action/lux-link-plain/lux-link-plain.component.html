@@ -15,12 +15,12 @@
   (auxclick)="!luxDisabled() ? auxClicked($event) : null"
 >
   @if (!luxIconShowRight() && luxIconName()) {
-    <lux-icon [luxIconName]="luxIconName()"></lux-icon>
+    <lux-icon [luxIconName]="luxIconName()" />
   }
   <span class="lux-link-plain-text">
     {{ luxLabel() }}
   </span>
   @if (luxIconShowRight() && luxIconName()) {
-    <lux-icon [luxIconName]="luxIconName()"></lux-icon>
+    <lux-icon [luxIconName]="luxIconName()" />
   }
 </a>

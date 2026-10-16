@@ -12,13 +12,13 @@ import { LuxFilePreviewToolbarComponent } from '../lux-file-preview-toolbar/lux-
   imports: [LuxFilePreviewToolbarComponent, LuxButtonComponent, LuxAriaLabelDirective, NgStyle, TranslocoPipe]
 })
 export class LuxFilePreviewImgViewerComponent extends LuxFilePreviewBase implements AfterViewInit {
-  private elementRef = inject(ElementRef);
-
-  previewImg = viewChild<ElementRef>('previewImg');
+  readonly previewImg = viewChild<ElementRef>('previewImg');
 
   zoomActive = signal(false);
   zoomWidth = signal(0);
   zoomStep = 250;
+
+  private elementRef = inject(ElementRef);
 
   ngAfterViewInit(): void {
     setTimeout(() => {

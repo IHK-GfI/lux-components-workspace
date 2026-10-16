@@ -38,7 +38,7 @@ export class LuxBytesToLabelPipe implements PipeTransform {
       KB: 1000,
       KiB: 1024,
       MB: 1000 * 1000,
-      MiB: 1024 * 1024,
+      MiB: 1024 * 1024
     };
 
     let currentUnit = unit;
@@ -73,7 +73,7 @@ export class LuxBytesToLabelPipe implements PipeTransform {
     const locale = this.transloco.getActiveLang();
     const formatted = truncated.toLocaleString(locale, {
       minimumFractionDigits: decimalPlaces,
-      maximumFractionDigits: decimalPlaces,
+      maximumFractionDigits: decimalPlaces
     });
 
     const displayUnit = legacyLabels ? currentUnit.replace('KiB', 'KB').replace('MiB', 'MB') : currentUnit;

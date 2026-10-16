@@ -1,111 +1,151 @@
 import { JsonPipe } from '@angular/common';
-import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { disabled, email, form, FormField, max, min, minLength, pattern, required, validate } from '@angular/forms/signals';
 import {
-    LuxAutocompleteAcComponent,
-    LuxCardComponent,
-    LuxCardContentComponent,
-    LuxChipAcComponent,
-    LuxChipsAcComponent,
-    LuxDatepickerAcComponent,
-    LuxIconComponent,
-    LuxInputAcComponent,
-    LuxInputAcSuffixComponent,
-    LuxRadioAcComponent,
-    LuxSelectAcComponent,
-    LuxToggleAcComponent
+  LuxAutocompleteComponent,
+  LuxCardComponent,
+  LuxCardContentComponent,
+  LuxChipComponent,
+  LuxChipsComponent,
+  LuxDatepickerComponent,
+  LuxIconComponent,
+  luxRequiredArray,
+  LuxInputComponent,
+  LuxInputSuffixComponent,
+  LuxRadioComponent,
+  LuxSelectComponent,
+  LuxToggleComponent
 } from '@ihk-gfi/lux-components';
+import { debounceTime } from 'rxjs';
+import { FormExampleSnapshot, FormExampleStateService } from '../form-example-state.service';
 import { ICountry } from '../model/country.interface';
 import { FormBase } from '../model/form-base.class';
 import { IGender } from '../model/gender.interface';
 import { IRole } from '../model/roles.interface';
 import { TableExampleDataProviderService } from '../table-example-data-provider.service';
 
-interface FormSingleDummyForm {
-  user: FormGroup<FormSingleUserForm>;
-  date: FormControl<string>;
-  roles: FormControl<string>;
-  eula: FormControl<boolean>;
+interface FormSingleModel {
+  user: {
+    name: string;
+    email: string;
+    password: string | null;
+    salutation: string | null;
+    gender: string;
+    age: number | null;
+    country: string | null;
+    deactivated: string;
+  };
+  date: string;
+  roles: string[];
+  eula: boolean;
 }
 
-interface FormSingleUserForm {
-  name: FormControl<string>;
-  email: FormControl<string>;
-  password: FormControl<string | null>;
-  salutation: FormControl<string | null>;
-  gender: FormControl<string>;
-  age: FormControl<number | null>;
-  country: FormControl<string | null>;
-  deactivated: FormControl<string>;
+interface FormSingleState extends FormExampleSnapshot<FormSingleModel> {
+  roles: IRole[];
 }
 
 @Component({
   selector: 'app-form-single-col',
   templateUrl: './form-single-col.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxIconComponent,
     LuxCardContentComponent,
     LuxCardComponent,
-    LuxToggleAcComponent,
-    LuxSelectAcComponent,
-    LuxRadioAcComponent,
-    LuxInputAcSuffixComponent,
-    LuxInputAcComponent,
-    LuxDatepickerAcComponent,
-    LuxChipsAcComponent,
-    LuxChipAcComponent,
-    LuxAutocompleteAcComponent,
-    ReactiveFormsModule,
+    LuxToggleComponent,
+    LuxSelectComponent,
+    LuxRadioComponent,
+    LuxInputSuffixComponent,
+    LuxInputComponent,
+    LuxDatepickerComponent,
+    LuxChipsComponent,
+    LuxChipComponent,
+    LuxAutocompleteComponent,
+    FormField,
     JsonPipe
   ]
 })
 export class FormSingleColComponent extends FormBase {
   private dataProvider = inject(TableExampleDataProviderService);
 
-  myGroup: FormGroup<FormSingleDummyForm>;
-  roles: IRole[] = [];
-  countries: ICountry[] = [];
-  genders: IGender[] = [];
-  salutations: string[] = [];
+  readonly roles = signal<IRole[]>(this.dataProvider.roles);
+  countries: ICountry[] = this.dataProvider.countries;
+  genders: IGender[] = this.dataProvider.genders;
+  salutations: string[] = this.dataProvider.salutations;
+  readonly pickGenderValue = (gender: IGender) => gender.short;
+
+  readonly model = signal<FormSingleModel>({
+    user: {
+      name: '',
+      email: '',
+      password: '',
+      salutation: '',
+      gender: '',
+      age: null,
+      country: null,
+      deactivated: 'deaktiviertes Element'
+    },
+    date: '',
+    roles: [],
+    eula: false
+  });
+
+  readonly myForm = form(this.model, (path) => {
+    required(path.user.name, { message: 'Bitte einen Namen eingeben' });
+    minLength(path.user.name, 3);
+    pattern(path.user.name, /^[a-zA-Z0-9]*$/);
+    required(path.user.email, { message: 'Bitte eine E-Mail-Adresse eingeben' });
+    email(path.user.email);
+    required(path.user.gender, { message: 'Bitte ein Geschlecht auswählen' });
+    min(path.user.age, 18);
+    max(path.user.age, 100);
+    disabled(path.user.deactivated);
+    required(path.date, { message: 'Bitte ein Datum auswählen' });
+    validate(path.roles, luxRequiredArray());
+    required(path.eula, { message: 'Bitte den AGBs zustimmen' });
+  });
+
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly state = inject(FormExampleStateService);
 
   constructor() {
     super();
 
-    this.roles = this.dataProvider.roles;
-    this.countries = this.dataProvider.countries;
-    this.genders = this.dataProvider.genders;
-    this.salutations = this.dataProvider.salutations;
+    const snapshot = this.state.get<FormSingleState>('single');
+    if (snapshot) {
+      this.model.set(snapshot.rawValue);
+      this.roles.set(snapshot.roles);
+      if (snapshot.dirty) {
+        this.myForm().markAsDirty();
+      }
+    }
 
-    this.myGroup = new FormGroup<FormSingleDummyForm>({
-      user: new FormGroup<FormSingleUserForm>({
-        name: new FormControl<string>('', {
-          validators: Validators.compose([Validators.required, Validators.minLength(3), Validators.pattern('[a-zA-Z0-9]*')]),
-          nonNullable: true
-        }),
-        email: new FormControl<string>('', { validators: Validators.compose([Validators.required, Validators.email]), nonNullable: true }),
-        password: new FormControl<string | null>(''),
-        salutation: new FormControl<string | null>(''),
-        gender: new FormControl<string>('', { validators: Validators.required, nonNullable: true }),
-        age: new FormControl<number | null>(null, { validators: Validators.compose([Validators.min(18), Validators.max(100)]) }),
-        country: new FormControl<string | null>(null),
-        deactivated: new FormControl<string>('deaktiviertes Element', { nonNullable: true })
-      }),
-      date: new FormControl<string>('', { validators: Validators.required, nonNullable: true }),
-      roles: new FormControl<string>('', { validators: Validators.required, nonNullable: true }),
-      eula: new FormControl<boolean>(false, { validators: Validators.requiredTrue, nonNullable: true })
-    });
+    toObservable(this.model)
+      .pipe(debounceTime(300), takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.saveState());
+    this.destroyRef.onDestroy(() => this.saveState());
   }
 
   hasUnsavedData(): boolean {
-    return this.myGroup.dirty;
+    return this.myForm().dirty();
   }
 
   addRole(name: string) {
-    this.roles.push({ name });
+    this.roles.update((roles) => [...roles, { name }]);
+    this.saveState();
   }
 
   removeRole(i: number) {
-    this.roles = this.roles.filter((_role, index) => index !== i);
+    this.roles.update((roles) => roles.filter((_role, index) => index !== i));
+    this.saveState();
+  }
+
+  private saveState(): void {
+    this.state.save<FormSingleState>('single', {
+      rawValue: this.model(),
+      dirty: this.myForm().dirty(),
+      roles: this.roles()
+    });
   }
 }

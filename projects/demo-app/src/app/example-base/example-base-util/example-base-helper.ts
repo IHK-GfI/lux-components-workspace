@@ -59,7 +59,7 @@ export const exampleErrorCallback = (value: any, errors: LuxValidationErrors) =>
   } else if (errors['maxlength']) {
     return `Die Eingabe darf maximal ${errors['maxlength'].requiredLength} Zeichen enthalten.`;
   }
-  return 'Es ist ein Fehler aufgetreten.';
+  return undefined;
 };
 
 /**

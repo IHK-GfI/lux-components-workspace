@@ -1,5 +1,5 @@
 import { DatePipe, LowerCasePipe, NgStyle } from '@angular/common';
-import { AfterViewInit, Component, OnDestroy, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, OutputRefSubscription, signal, viewChild } from '@angular/core';
 import {
   LuxFormHintComponent,
   LuxMenuComponent,
@@ -9,10 +9,9 @@ import {
   LuxTableColumnFooterComponent,
   LuxTableColumnHeaderComponent,
   LuxTableComponent,
-  LuxToggleAcComponent,
+  LuxToggleComponent,
   LuxTooltipDirective
 } from '@ihk-gfi/lux-components';
-import { Subscription } from 'rxjs';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
 import { ExampleBaseOptionsActionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-options-actions.component';
@@ -26,14 +25,14 @@ import { TableExampleSimpleOptionsComponent } from './table-example-simple-optio
   selector: 'app-table-example',
   templateUrl: './table-example.component.html',
   styleUrls: ['./table-example.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxTableColumnContentComponent,
     LuxTableColumnHeaderComponent,
     LuxTableColumnComponent,
     LuxTableColumnFooterComponent,
     LuxTableComponent,
-    LuxToggleAcComponent,
+    LuxToggleComponent,
     LuxMenuComponent,
     LuxMenuItemComponent,
     LuxTooltipDirective,
@@ -51,17 +50,17 @@ import { TableExampleSimpleOptionsComponent } from './table-example-simple-optio
   ]
 })
 export class TableExampleComponent extends TableExampleBaseClass implements AfterViewInit, OnDestroy {
-  @ViewChild('myTable') tableComponent!: LuxTableComponent;
+  readonly tableComponent = viewChild<LuxTableComponent<any>>('myTable');
 
-  private selectedChangeSub?: Subscription;
-  private selectedAsArrayChangeSub?: Subscription;
-
-  dataSource: any[] = [];
-  showColumnSelector = true;
+  readonly dataSource = signal<any[]>([]);
+  readonly showColumnSelector = signal(true);
 
   fontExample: { example1: string; example2: string; example3: string; example4: string; content: string }[] = [
     { example1: 'unformated', example2: 'span', example3: 'div', example4: 'p', content: 'Lorem ipsum' }
   ];
+
+  private selectedChangeSub?: OutputRefSubscription;
+  private selectedAsArrayChangeSub?: OutputRefSubscription;
 
   constructor() {
     super();
@@ -69,14 +68,6 @@ export class TableExampleComponent extends TableExampleBaseClass implements Afte
     setTimeout(() => {
       this.loadData(false);
     });
-  }
-
-  getTableComponent(): LuxTableComponent<any> {
-    return this.tableComponent;
-  }
-
-  getDataArr() {
-    return this.dataSource;
   }
 
   ngAfterViewInit(): void {
@@ -89,29 +80,42 @@ export class TableExampleComponent extends TableExampleBaseClass implements Afte
     super.ngOnDestroy();
   }
 
+  getTableComponent(): LuxTableComponent<any> {
+    return this.tableComponent()!;
+  }
+
+  getDataArr() {
+    return this.dataSource();
+  }
+
+  setMultiSelectDisabled(disabled: boolean): void {
+    // Neue Array-/Objekt-Referenzen, damit die Signal-Änderung das luxData-Input-Binding der Tabelle auslöst.
+    this.dataSource.update((data) => data.map((item, index) => (index === 0 || index === 2 ? { ...item, disabled } : item)));
+  }
+
   override refreshSelectionBindings() {
     this.selectedChangeSub?.unsubscribe();
     this.selectedAsArrayChangeSub?.unsubscribe();
 
-    if (!this.tableComponent) {
+    if (!this.tableComponent()) {
       return;
     }
 
-    if (this.bindLuxSelected || this.observeSelectedChange) {
-      this.selectedChangeSub = this.tableComponent.luxSelectedChange.subscribe((selected) => {
-        if (this.bindLuxSelected) {
+    if (this.bindLuxSelected() || this.observeSelectedChange()) {
+      this.selectedChangeSub = this.tableComponent()!.luxSelectedChange.subscribe((selected) => {
+        if (this.bindLuxSelected()) {
           this.onLuxSelectedBinding(selected);
-          this.selected = selected;
+          this.selected.set(selected);
         }
 
-        if (this.observeSelectedChange) {
+        if (this.observeSelectedChange()) {
           this.onSelectedChange(selected);
         }
       });
     }
 
-    if (this.observeSelectedAsArrayChange) {
-      this.selectedAsArrayChangeSub = this.tableComponent.luxSelectedAsArrayChange.subscribe((selected) => {
+    if (this.observeSelectedAsArrayChange()) {
+      this.selectedAsArrayChangeSub = this.tableComponent()!.luxSelectedAsArrayChange.subscribe((selected) => {
         this.onSelectedAsArrayChange(selected);
       });
     }
@@ -130,7 +134,7 @@ export class TableExampleComponent extends TableExampleBaseClass implements Afte
   }
 
   clearData() {
-    this.dataSource = [];
+    this.dataSource.set([]);
   }
 
   loadData(simulateLargeSource: boolean) {
@@ -168,7 +172,7 @@ export class TableExampleComponent extends TableExampleBaseClass implements Afte
     ];
 
     if (!simulateLargeSource) {
-      this.dataSource = data;
+      this.dataSource.set(data);
     } else {
       const largeData = [];
       for (let j = 0; j < 10; j++) {
@@ -179,7 +183,7 @@ export class TableExampleComponent extends TableExampleBaseClass implements Afte
           largeData.push(newObj);
         }
       }
-      this.dataSource = largeData;
+      this.dataSource.set(largeData);
     }
   }
 }

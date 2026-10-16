@@ -1,5 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { Component, Injector, OnDestroy, TemplateRef, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Injector, OnDestroy, TemplateRef, inject, signal, viewChild } from '@angular/core';
 import {
   ILuxDialogPresetConfig,
   LuxAccordionComponent,
@@ -7,13 +7,13 @@ import {
   LuxDialogDefaultButton,
   LuxDialogService,
   LuxFormHintComponent,
-  LuxInputAcComponent,
+  LuxInputComponent,
   LuxPanelComponent,
   LuxPanelContentComponent,
   LuxPanelHeaderTitleComponent,
-  LuxRadioAcComponent,
-  LuxSelectAcComponent,
-  LuxToggleAcComponent
+  LuxRadioComponent,
+  LuxSelectComponent,
+  LuxToggleComponent
 } from '@ihk-gfi/lux-components';
 import { Subscription } from 'rxjs';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
@@ -27,17 +27,17 @@ import { DIALOG_EXAMPLE_LOCAL_TOKEN } from './dialog-example-local.token';
 @Component({
   selector: 'app-dialog-example',
   templateUrl: './dialog-example.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxButtonComponent,
     LuxAccordionComponent,
     LuxPanelHeaderTitleComponent,
     LuxPanelContentComponent,
     LuxPanelComponent,
-    LuxToggleAcComponent,
-    LuxSelectAcComponent,
-    LuxRadioAcComponent,
-    LuxInputAcComponent,
+    LuxToggleComponent,
+    LuxSelectComponent,
+    LuxRadioComponent,
+    LuxInputComponent,
     LuxFormHintComponent,
     ExampleBaseStructureComponent,
     ExampleBaseSimpleOptionsComponent,
@@ -51,12 +51,10 @@ import { DIALOG_EXAMPLE_LOCAL_TOKEN } from './dialog-example-local.token';
   providers: [{ provide: DIALOG_EXAMPLE_LOCAL_TOKEN, useValue: 'Wert aus einem lokalen Provider der aufrufenden Komponente' }]
 })
 export class DialogExampleComponent implements OnDestroy {
-  private dialogService = inject(LuxDialogService);
-  private injector = inject(Injector);
+  readonly contentTemplate = viewChild.required<TemplateRef<any>>('contentTemplate');
 
-  @ViewChild('contentTemplate', { static: true }) contentTemplate!: TemplateRef<any>;
-  useContentTemplate = false;
-  showOutputEvents = false;
+  readonly useContentTemplate = signal(false);
+  readonly showOutputEvents = signal(false);
   contentTemplateString =
     ' <ng-template #contentTemplate>\n' +
     '     <i>Achtung: Ihre Daten werden gelöscht.</i><br/>\n' +
@@ -99,17 +97,15 @@ export class DialogExampleComponent implements OnDestroy {
     { label: 'decline', value: 'decline' }
   ];
 
-  _defaultButton?: LuxDialogDefaultButton = undefined;
-
   get defaultButton() {
-    return this._defaultButton;
+    return this._defaultButton();
   }
 
   set defaultButton(defaultButton) {
-    this._defaultButton = defaultButton;
-    this.dialogConfig.defaultButton = this._defaultButton;
+    this._defaultButton.set(defaultButton);
+    this.dialogConfig.defaultButton = defaultButton;
 
-    switch (this._defaultButton) {
+    switch (defaultButton) {
       case 'confirm':
         this.dialogConfig.confirmAction!.flat = true;
         this.dialogConfig.confirmAction!.outlined = false;
@@ -139,6 +135,10 @@ export class DialogExampleComponent implements OnDestroy {
     }
   }
 
+  private dialogService = inject(LuxDialogService);
+
+  private readonly injector = inject(Injector);
+  private readonly _defaultButton = signal<LuxDialogDefaultButton>(undefined);
   private subscriptions: Subscription[] = [];
 
   ngOnDestroy(): void {
@@ -150,31 +150,31 @@ export class DialogExampleComponent implements OnDestroy {
 
     this.subscriptions.push(
       dialogRef.dialogClosed.subscribe((result: any) => {
-        this.log(this.showOutputEvents, 'dialogClosed', result);
+        this.log(this.showOutputEvents(), 'dialogClosed', result);
       })
     );
 
     this.subscriptions.push(
       dialogRef.dialogDeclined.subscribe((result: any) => {
-        this.log(this.showOutputEvents, 'dialogDeclined', result);
+        this.log(this.showOutputEvents(), 'dialogDeclined', result);
       })
     );
 
     this.subscriptions.push(
       dialogRef.dialogConfirmed.subscribe((result: any) => {
-        this.log(this.showOutputEvents, 'dialogConfirmed', result);
+        this.log(this.showOutputEvents(), 'dialogConfirmed', result);
       })
     );
   }
 
   openDialogComponent() {
     const dialogRef = this.dialogService.openComponent(DialogComponentExampleComponent, this.dialogConfig, {
-      showOutputEvents: this.showOutputEvents
+      showOutputEvents: this.showOutputEvents()
     });
 
     this.subscriptions.push(
       dialogRef.dialogClosed.subscribe((result: any) => {
-        this.log(this.showOutputEvents, 'dialogClosed', result);
+        this.log(this.showOutputEvents(), 'dialogClosed', result);
       })
     );
   }
@@ -187,19 +187,19 @@ export class DialogExampleComponent implements OnDestroy {
     const dialogRef = this.dialogService.openComponent(
       DialogComponentExampleComponent,
       { ...this.dialogConfig, injector: this.injector },
-      { showOutputEvents: this.showOutputEvents }
+      { showOutputEvents: this.showOutputEvents() }
     );
 
     this.subscriptions.push(
       dialogRef.dialogClosed.subscribe((result: any) => {
-        this.log(this.showOutputEvents, 'dialogClosed', result);
+        this.log(this.showOutputEvents(), 'dialogClosed', result);
       })
     );
   }
 
   useContentTemplateChange(useContentTemplate: boolean) {
     if (useContentTemplate) {
-      this.dialogConfig.contentTemplate = this.contentTemplate;
+      this.dialogConfig.contentTemplate = this.contentTemplate();
     } else {
       this.dialogConfig.contentTemplate = undefined;
     }

@@ -67,7 +67,7 @@ Es wird empfohlen, das Layout mit den Komponenten aus dem [Layout](#layout) zu e
 ### Layout
 
 - [lux-accordion](lux‐accordion-v21)
-- [lux-accordion-aria](lux‐accordion-aria-v21)
+- [lux-accordion-aria](lux‐accordion‐aria-v21)
 - [lux-app-content](lux‐app‐content-v21)
 - [lux-app-footer](lux‐app‐footer-v21)
 - [lux-app-header](lux‐app‐header-v21)
@@ -79,19 +79,19 @@ Es wird empfohlen, das Layout mit den Komponenten aus dem [Layout](#layout) zu e
 - [lux-list-select](lux‐list‐select-v21)
 - [lux‐master‐detail‐ac](lux‐master‐detail‐ac-v21)
 - [lux-panel](lux‐panel-v21)
-- [lux-session-timer](lux‐session‐timer‐v21)
+- [lux-session-timer](lux‐session‐timer-v21)
 - [lux-stepper](lux‐stepper-v21)
 - [lux-stepper-large](lux‐stepper‐large-v21)
 - [lux-tabs](lux‐tabs-v21)
 - [lux-tile](lux‐tile-v21)
-- [lux-tile (green)](lux‐tile-green-v21)
+- [lux-tile (green)](lux‐tile‐green-v21)
 
 ### Misc
 
 - [lux-badge](lux‐badge-v21)
 - [lux-breadcrumb](lux‐breadcrumb-v21)
-- [lux-chat](lux-chat-v21)
-- [lux-chat-popup](lux-chat-popup-v21)
+- [lux-chat](lux‐chat-v21)
+- [lux-chat-popup](lux‐chat‐popup-v21)
 - [lux-consent](lux‐consent-v21)
 - [lux-dialog](lux‐dialog-v21)
 - [lux-error-page](lux‐error‐page-v21)
@@ -114,7 +114,7 @@ Es wird empfohlen, das Layout mit den Komponenten aus dem [Layout](#layout) zu e
 - [lux-table](lux‐table-v21)
 - [lux‐tenant‐logo](lux‐tenant‐logo-v21)
 - [lux-textbox](lux‐textbox-v21)
-- [lux-tour-hint](lux-tour-hint-v21)
+- [lux-tour-hint](lux‐tour‐hint-v21)
 
 ### Directives
 

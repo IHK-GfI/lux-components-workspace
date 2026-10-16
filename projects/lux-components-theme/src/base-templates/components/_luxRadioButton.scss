@@ -1,6 +1,7 @@
 @use "@angular/material" as mat;
 
-lux-radio-ac {
+lux-radio-ac,
+lux-radio {
   @include mat.radio-overrides(
     (
       label-text-size: var(--lux-theme-form-control-font-size)

@@ -1,16 +1,17 @@
-import { Directive, HostListener, inject, OnDestroy, signal } from '@angular/core';
+import { Directive, inject, OnDestroy, signal } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { LuxUtil } from '@ihk-gfi/lux-components';
 import { LUX_FILE_PREVIEW_DATA } from '../lux-file-preview-config';
 import { LuxFilePreviewData } from '../lux-file-preview-data';
 import { LuxFilePreviewRef } from '../lux-file-preview-ref';
 
-@Directive()
+@Directive({
+  host: {
+    '(document:keydown)': 'handleKeydown($event)',
+    '(window:resize)': 'windowResize()'
+  }
+})
 export class LuxFilePreviewBase implements OnDestroy {
-  protected previewRef = inject(LuxFilePreviewRef);
-  protected previewData = inject<LuxFilePreviewData>(LUX_FILE_PREVIEW_DATA);
-  protected sanitizer = inject(DomSanitizer);
-
   url = signal<SafeResourceUrl | undefined>(undefined);
   urls = signal<SafeResourceUrl[]>([]);
 
@@ -30,6 +31,10 @@ export class LuxFilePreviewBase implements OnDestroy {
 
   closeIconName = 'lux-interface-delete-1';
   closeTagId = 'file-preview-close-btn';
+
+  protected previewRef = inject(LuxFilePreviewRef);
+  protected previewData = inject<LuxFilePreviewData>(LUX_FILE_PREVIEW_DATA);
+  protected sanitizer = inject(DomSanitizer);
 
   constructor() {
     this.loadingTimer = setTimeout(() => {
@@ -59,22 +64,20 @@ export class LuxFilePreviewBase implements OnDestroy {
     });
   }
 
-  @HostListener('document:keydown', ['$event'])
+  ngOnDestroy() {
+    this.urls().forEach((url) => {
+      window.URL.revokeObjectURL(url.toString());
+    });
+  }
+
   handleKeydown(keyboardEvent: KeyboardEvent) {
     if (LuxUtil.isKeyEscape(keyboardEvent)) {
       this.onClose();
     }
   }
 
-  @HostListener('window:resize')
   windowResize() {
     this.updateWidthAndHeight();
-  }
-
-  ngOnDestroy() {
-    this.urls().forEach((url) => {
-      window.URL.revokeObjectURL(url.toString());
-    });
   }
 
   onDownload() {

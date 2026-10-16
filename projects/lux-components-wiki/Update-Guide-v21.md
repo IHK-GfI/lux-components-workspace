@@ -221,8 +221,8 @@ Empfohlen sind ein reines Datum (`2027-03-13` bzw. `13.03.2027`) oder UTC-Mitter
 
 #### WICHTIG! - Die Einwilligung (Consent) muss ggf. ergänzt werden
 
-In diesem Update wurde für den [lux-session-timer](lux‐session‐timer‐v21) ein neuer Local Storage Key ([siehe hier](#lux-session-timer)) eingeführt.
-D.h. wenn die eigene Anwendung den [lux-session-timer](lux‐session‐timer‐v21) verwendet, muss die Einwilligung entsprechend ergänzt werden!!!
+In diesem Update wurde für den [lux-session-timer](lux‐session‐timer-v21) ein neuer Local Storage Key ([siehe hier](#lux-session-timer)) eingeführt.
+D.h. wenn die eigene Anwendung den [lux-session-timer](lux‐session‐timer-v21) verwendet, muss die Einwilligung entsprechend ergänzt werden!!!
 
 In diesem Abschnitt wird beschrieben, wie man die LUX-Components aktualisieren kann. Alle Updates sind inkrementelle Updates. D.h. alle Updates müssen in der korrekten Reihenfolge ausgeführt werden und **es darf kein Update übersprungen werden**, da jedes Update, neben der Versionsaktualisierung in der `package.json`, auch potenziell weitere wichtige Änderungen enthalten kann, die sonst fehlen würden.
 

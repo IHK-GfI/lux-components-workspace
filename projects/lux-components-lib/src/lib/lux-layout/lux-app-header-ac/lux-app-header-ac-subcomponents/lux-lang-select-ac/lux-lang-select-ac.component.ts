@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, ElementRef, Input, OnInit, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, inject, input, OnInit, viewChild } from '@angular/core';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { CookieService } from 'ngx-cookie-service';
 import { LuxButtonComponent } from '../../../../lux-action/lux-button/lux-button.component';
@@ -13,7 +13,7 @@ import { LuxLocaleAc } from './lux-locale-ac';
 @Component({
   selector: 'lux-lang-select-ac',
   templateUrl: './lux-lang-select-ac.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxAriaLabelDirective,
     LuxTooltipDirective,
@@ -26,14 +26,13 @@ import { LuxLocaleAc } from './lux-locale-ac';
   ]
 })
 export class LuxLangSelectAcComponent implements OnInit {
-  private cookieService = inject(CookieService);
+  readonly luxLocaleSupported = input(['de']);
+  readonly luxLocaleBaseHref = input('');
+  readonly mobileView = input(false);
+
+  readonly customTrigger = viewChild('customTrigger', { read: ElementRef });
+
   protected translocoService = inject(TranslocoService);
-
-  @Input() luxLocaleSupported = ['de'];
-  @Input() luxLocaleBaseHref = '';
-  @Input() mobileView = false;
-
-  @ViewChild('customTrigger', { read: ElementRef }) customTrigger?: ElementRef;
 
   menuOpened = false;
 
@@ -49,8 +48,10 @@ export class LuxLangSelectAcComponent implements OnInit {
 
   localeOptions: LuxLocaleAc[] = [];
 
+  private cookieService = inject(CookieService);
+
   ngOnInit() {
-    this.luxLocaleSupported.forEach((locale) => {
+    this.luxLocaleSupported().forEach((locale) => {
       const foundLocale = this.allSupportedLocaleArr.find((item) => item.code === locale);
       if (foundLocale) {
         this.localeOptions.push(foundLocale);
@@ -64,29 +65,25 @@ export class LuxLangSelectAcComponent implements OnInit {
     const newLocale = this.localeOptions.find((item) => item.code === locale);
     if (newLocale) {
       // Sicherstellen, dass Übersetzungen nach Lazy-Nachladen vorhanden sind
-      this.translocoService
-        .load(newLocale.code)
-        .subscribe({
-          next: () => this.translocoService.setActiveLang(newLocale!.code),
-          error: () => this.translocoService.setActiveLang('de')
-        });
+      this.translocoService.load(newLocale.code).subscribe({
+        next: () => this.translocoService.setActiveLang(newLocale!.code),
+        error: () => this.translocoService.setActiveLang('de')
+      });
     }
   }
 
   onLocaleChanged(locale: LuxLocaleAc) {
     // Vor Sprachwechsel: erst laden, dann aktivieren, damit Komponenten nicht kurz Keys anzeigen.
-    this.translocoService
-      .load(locale.code)
-      .subscribe({
-        next: () => {
-          this.cookieService.set(this.cookieName, locale.code, undefined, this.cookiePath);
-          this.translocoService.setActiveLang(locale.code);
-        },
-        error: () => {
-          // Fallback: Cookie nicht setzen, bei Fehler auf Default zurück.
-          this.translocoService.setActiveLang('de');
-        }
-      });
+    this.translocoService.load(locale.code).subscribe({
+      next: () => {
+        this.cookieService.set(this.cookieName, locale.code, undefined, this.cookiePath);
+        this.translocoService.setActiveLang(locale.code);
+      },
+      error: () => {
+        // Fallback: Cookie nicht setzen, bei Fehler auf Default zurück.
+        this.translocoService.setActiveLang('de');
+      }
+    });
   }
 
   onMenuOpened() {
@@ -94,8 +91,9 @@ export class LuxLangSelectAcComponent implements OnInit {
   }
   onMenuClosed() {
     this.menuOpened = false;
-    if (this.customTrigger) {
-      this.customTrigger.nativeElement.children[0].focus();
+    const customTrigger = this.customTrigger();
+    if (customTrigger) {
+      customTrigger.nativeElement.children[0].focus();
     }
   }
 }

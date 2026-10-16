@@ -1,4 +1,4 @@
-  $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "yellow", "pink", "lightblue", "black");
+$componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "yellow", "pink", "lightblue", "black");
 
 @mixin lux-icon-color-mixin($prefix) {
   @each $colorName in $componentColorNames {

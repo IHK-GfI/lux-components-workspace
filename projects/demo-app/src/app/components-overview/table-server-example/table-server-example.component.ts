@@ -1,5 +1,5 @@
 import { DatePipe, LowerCasePipe, NgStyle } from '@angular/common';
-import { Component, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, viewChild } from '@angular/core';
 import {
   LuxConsoleService,
   LuxMenuComponent,
@@ -24,7 +24,7 @@ import { TestHttpDao } from './test-http-dao';
   selector: 'app-table-server-example',
   templateUrl: './table-server-example.component.html',
   styleUrls: ['./table-server-example.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxTableColumnContentComponent,
     LuxTableColumnHeaderComponent,
@@ -46,12 +46,12 @@ import { TestHttpDao } from './test-http-dao';
   ]
 })
 export class TableServerExampleComponent extends TableExampleBaseClass {
-  private logger = inject(LuxConsoleService);
-
-  @ViewChild('myTable') tableComponent!: LuxTableComponent;
+  readonly tableComponent = viewChild<LuxTableComponent<any>>('myTable');
 
   httpDAO: TestHttpDao;
   reloadCount = 0;
+
+  private logger = inject(LuxConsoleService);
 
   constructor() {
     super();
@@ -63,8 +63,18 @@ export class TableServerExampleComponent extends TableExampleBaseClass {
     return this.httpDAO.data;
   }
 
+  setMultiSelectDisabled(disabled: boolean): void {
+    this.httpDAO.data.forEach((item, index) => {
+      if (index === 0 || index === 2) {
+        item.disabled = disabled;
+      }
+    });
+    // Erzwingt einen erneuten (gemockten) Server-Request, damit die Tabelle die geänderten Daten übernimmt.
+    this.getTableComponent().loadHttpDAOData();
+  }
+
   getTableComponent(): LuxTableComponent<any> {
-    return this.tableComponent;
+    return this.tableComponent()!;
   }
 
   onSelectedChange(selected: Set<any>) {

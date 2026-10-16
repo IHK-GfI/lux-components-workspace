@@ -1,5 +1,5 @@
-import { Component, ElementRef, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
-import { LuxTenantLogoComponent, LuxToggleAcComponent } from '@ihk-gfi/lux-components';
+import { Component, ElementRef, inject, signal, viewChild, ChangeDetectionStrategy } from '@angular/core';
+import { LuxTenantLogoComponent, LuxToggleComponent } from '@ihk-gfi/lux-components';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
 import { ExampleBaseStructureComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-structure/example-base-structure.component';
@@ -11,10 +11,10 @@ import { TenantLogoExampleHeaderService } from './tenant-logo-example-header.ser
   selector: 'app-tenant-logo-example',
   templateUrl: './tenant-logo-example.component.html',
   styleUrls: ['./tenant-logo-example.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxTenantLogoComponent,
-    LuxToggleAcComponent,
+    LuxToggleComponent,
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,
     ExampleBaseSimpleOptionsComponent,
@@ -22,12 +22,9 @@ import { TenantLogoExampleHeaderService } from './tenant-logo-example-header.ser
   ]
 })
 export class TenantLogoExampleComponent {
-  private tenantLogoHeaderService = inject(TenantLogoExampleHeaderService);
+  private readonly tenantRef = viewChild('exampleLogo', { read: ElementRef });
 
-  @ViewChild('exampleLogo', { read: ElementRef })
-  private tenantRef!: ElementRef;
-
-  public useTenantLogoForHeader = false;
+  readonly useTenantLogoForHeader = signal(false);
 
   public headerTenantLogoConfig: TenantLogoExampleConfigData = {
     luxTenantKey: '100',
@@ -43,8 +40,10 @@ export class TenantLogoExampleComponent {
     luxTenantLogoClicked: undefined
   };
 
+  private tenantLogoHeaderService = inject(TenantLogoExampleHeaderService);
+
   public onChangeUseTenantLogoForHeader(toggle: boolean) {
-    this.useTenantLogoForHeader = toggle;
+    this.useTenantLogoForHeader.set(toggle);
     if (toggle) {
       this.tenantLogoHeaderService.tenantConfigChange.emit(this.headerTenantLogoConfig);
     } else {
@@ -53,7 +52,10 @@ export class TenantLogoExampleComponent {
   }
 
   public onChangeShowBorderForImages(toggle: boolean) {
-    this.tenantLogoHeaderService.showBorderForTenantImage(this.tenantRef, toggle);
+    const tenantRef = this.tenantRef();
+    if (tenantRef) {
+      this.tenantLogoHeaderService.showBorderForTenantImage(tenantRef, toggle);
+    }
   }
 
   public onTenenatLogoClicked(config: TenantLogoExampleConfigData) {

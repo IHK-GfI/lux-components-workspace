@@ -1,0 +1,244 @@
+import { JsonPipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormField, disabled, form, readonly, required, validate } from '@angular/forms/signals';
+import {
+  LuxAutofocusDirective,
+  LuxButtonComponent,
+  LuxFormHintComponent,
+  LuxFormLegacySelectableBase,
+  LuxInputComponent,
+  luxRequiredArray,
+  LuxSelectComponent,
+  LuxToggleComponent,
+  LuxTooltipDirective
+} from '@ihk-gfi/lux-components';
+import { StatusMarkerComponent } from '../../base/status-marker/status-marker.component';
+import { DemoMarkerType } from '../../base/status-marker/status-marker.model';
+import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
+import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
+import { ExampleBaseOptionsActionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-options-actions.component';
+import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
+import { ExampleBaseStructureComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-structure/example-base-structure.component';
+import {
+  emptyErrorCallback,
+  exampleCompareWithFn,
+  exampleErrorCallback,
+  examplePickValueFn,
+  logResult,
+  setRequiredValidatorForFormControl
+} from '../../example-base/example-base-util/example-base-helper';
+import { ExampleFormDisableComponent } from '../../example-base/example-form-disable/example-form-disable.component';
+import { ExampleFormValueComponent } from '../../example-base/example-form-value/example-form-value.component';
+import { ExampleSignalFormValueComponent } from '../../example-base/example-signal-form-value/example-signal-form-value.component';
+import { ExampleValueComponent } from '../../example-base/example-value/example-value.component';
+
+interface SelectDummyForm {
+  selectExample: FormControl<any>;
+}
+
+@Component({
+  selector: 'lux-select-example',
+  templateUrl: './select-example.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    LuxButtonComponent,
+    LuxToggleComponent,
+    LuxSelectComponent,
+    LuxInputComponent,
+    LuxFormHintComponent,
+    LuxAutofocusDirective,
+    ExampleBaseStructureComponent,
+    ExampleBaseContentComponent,
+    ExampleValueComponent,
+    ReactiveFormsModule,
+    ExampleFormValueComponent,
+    ExampleSignalFormValueComponent,
+    ExampleBaseSimpleOptionsComponent,
+    ExampleFormDisableComponent,
+    ExampleBaseAdvancedOptionsComponent,
+    ExampleBaseOptionsActionsComponent,
+    LuxTooltipDirective,
+    StatusMarkerComponent,
+    JsonPipe,
+    FormField
+  ]
+})
+export class SelectExampleComponent {
+  // 1. Signal Form - der empfohlene Weg.
+  readonly signalModel = signal<{ selectValue: any }>({ selectValue: null });
+  readonly signalForm = form(this.signalModel, (path) => {
+    disabled(path.selectValue, { when: () => this.disabled() });
+    readonly(path.selectValue, { when: () => this.readonly() });
+    required(path.selectValue, { when: () => this.required() });
+  });
+  readonly signalMultiselectModel = signal<{ selectValue: any[] }>({ selectValue: [] });
+  readonly signalMultiselectForm = form(this.signalMultiselectModel, (path) => {
+    disabled(path.selectValue, { when: () => this.disabled() });
+    readonly(path.selectValue, { when: () => this.readonly() });
+    required(path.selectValue, { when: () => this.required() });
+    validate(path.selectValue, luxRequiredArray({ when: () => this.required() }));
+  });
+
+  // 2. Freistehend, ohne jedes Formular.
+  readonly plainValue = signal<any>(null);
+
+  readonly markerTypeNew = DemoMarkerType.New;
+  readonly markerTypeUpdated = DemoMarkerType.Updated;
+  readonly useErrorMessage = signal(true);
+  readonly useCompareWithFn = signal(false);
+  readonly useValueFn = signal(false);
+  readonly useSimpleArray = signal(false);
+  readonly showOutputEvents = signal(false);
+  readonly enableFilter = signal(true);
+  readonly filterPlaceholder = signal('Filter');
+  readonly filterValue = signal('');
+  readonly filterClearAriaLabel = signal('Clear filter');
+  readonly visibleOptionCount = signal(0);
+  readonly keepOptionOrder = signal(false);
+  // prettier-ignore
+  readonly options: { label: string; value: number }[] = [
+    { label: 'Argentinien, Bolivien, Chile, Costa Rica, Dominikanische Republik, Ecuador, El Salvador, Guatemala, Honduras, Kolumbien, Kuba, Mexiko', value: 0 },
+    { label: 'Afghanistan, Afghanistan, Afghanistan, Afghanistan, Afghanistan, Afghanistan, Afghanistan, Afghanistan, Afghanistan, Afghanistan', value: 1 },
+    { label: 'Albanien', value: 2 },
+    { label: 'Algerien, Algerien, Algerien, Algerien, Algerien, Algerien, Algerien, Algerien, Algerien', value: 3 },
+    { label: 'Bahamas', value: 4 },
+    { label: 'Belgien', value: 5 },
+    { label: 'Brasilien', value: 6 },
+    { label: 'China', value: 7 },
+    { label: 'Deutschland', value: 8 },
+    { label: 'Dominikanische Republik', value: 9 },
+    { label: 'Elfenbeinküste ', value: 10 },
+    { label: 'Gabun', value: 11 },
+    { label: 'Griechenland', value: 12 },
+    { label: 'Honduras', value: 13 },
+    { label: 'Jamaika', value: 14 },
+    { label: 'Japan', value: 15 },
+    { label: 'Kanada', value: 16 },
+    { label: 'Libyen', value: 17 },
+    { label: 'Mexiko', value: 18 },
+    { label: 'Montenegro', value: 19 },
+    { label: 'Neuseeland', value: 20 },
+    { label: 'Niederlande', value: 21 },
+    { label: 'Norwegen', value: 22 },
+    { label: 'Österreich', value: 23 },
+    { label: 'Peru', value: 24 },
+    { label: 'Polen', value: 25 },
+    { label: 'Portugal', value: 26 },
+    { label: 'Rumänien', value: 27 },
+    { label: 'Russland', value: 28 },
+    { label: 'San Marino', value: 29 },
+    { label: 'Schweden', value: 30 },
+    { label: 'Schweiz', value: 31 },
+    { label: 'Singapur', value: 32 },
+    { label: 'Spanien', value: 33 },
+    { label: 'Südafrika', value: 34 },
+    { label: 'Taiwan', value: 35 },
+    { label: 'Thailand', value: 36 },
+    { label: 'Türkei', value: 37 },
+    { label: 'Ukraine', value: 38 },
+    { label: 'Vereinigte Staaten', value: 39 },
+    { label: 'Weihnachtsinsel', value: 40 },
+    { label: 'Zypern', value: 41 }
+  ];
+  readonly optionsPrimitive: string[] = ['Option #1', 'Option #2', 'Option #3'];
+  readonly form: FormGroup<SelectDummyForm>;
+  log = logResult;
+  readonly labelLongFormat = signal(false);
+  readonly controlBinding = 'selectExample';
+  readonly disabled = signal(false);
+  readonly readonly = signal(false);
+  readonly required = signal(false);
+  readonly denseFormat = signal(false);
+  readonly label = signal('Label');
+  readonly hint = signal('Optionaler Zusatztext');
+  readonly hintShowOnlyOnFocus = signal(false);
+  readonly noTopLabel = signal(false);
+  readonly noBottomLabel = signal(false);
+  readonly noLabels = signal(false);
+  readonly placeholder = signal('Placeholder');
+  readonly errorMessage = signal('Das Feld enthält keinen gültigen Wert');
+  readonly value = signal<any>(null);
+  readonly multiselectValue = signal<any>(null);
+  readonly templateValue = signal<any>(null);
+  readonly errorCallback = exampleErrorCallback;
+  readonly emptyCallback = emptyErrorCallback;
+  readonly pickValueFn = examplePickValueFn;
+  readonly compareWithFn = exampleCompareWithFn;
+  readonly pickValueFnString: string;
+  readonly compareWithFnString: string;
+  readonly errorCallbackString: string;
+  readonly defaultCompareWith = (o1: any, o2: any) => o1 === o2;
+
+  constructor() {
+    this.form = new FormGroup<SelectDummyForm>({
+      selectExample: new FormControl<any>(null)
+    });
+
+    this.pickValueFnString = '' + this.pickValueFn;
+    this.compareWithFnString = '' + this.compareWithFn;
+    this.errorCallbackString = '' + this.errorCallback;
+  }
+
+  showErrors(...comps: LuxFormLegacySelectableBase[]) {
+    this.signalModel.set({ selectValue: null });
+    this.signalMultiselectModel.set({ selectValue: [] });
+    this.plainValue.set(null);
+    this.value.set(null);
+    this.multiselectValue.set(null);
+    this.templateValue.set(null);
+    this.form.get(this.controlBinding)!.setValue(null);
+
+    this.changeRequired(true);
+
+    comps.forEach((comp: LuxFormLegacySelectableBase) => {
+      comp.formControl.markAsTouched();
+    });
+  }
+
+  changeRequired(required: boolean) {
+    this.required.set(required);
+    setRequiredValidatorForFormControl(required, this.form, this.controlBinding);
+  }
+
+  changeUseSimpleArray(useSimpleArray: boolean) {
+    this.reset();
+    this.useSimpleArray.set(useSimpleArray);
+    if (useSimpleArray) {
+      this.useValueFn.set(false);
+      this.useCompareWithFn.set(false);
+    }
+  }
+
+  changeUseValueFn(useValueFn: boolean) {
+    this.reset();
+    this.useValueFn.set(useValueFn);
+    if (useValueFn) {
+      this.useSimpleArray.set(false);
+      this.useCompareWithFn.set(false);
+    }
+  }
+
+  changeCompareWithFn(useCompareWithfn: boolean) {
+    this.reset();
+    this.useCompareWithFn.set(useCompareWithfn);
+    if (useCompareWithfn) {
+      this.useSimpleArray.set(false);
+      this.useValueFn.set(false);
+    }
+  }
+
+  reset(...comps: LuxFormLegacySelectableBase[]) {
+    this.signalModel.set({ selectValue: null });
+    this.signalMultiselectModel.set({ selectValue: [] });
+    this.plainValue.set(undefined);
+    this.value.set(undefined);
+    this.multiselectValue.set(undefined);
+    this.templateValue.set(undefined);
+    this.form.get(this.controlBinding)!.setValue(undefined);
+
+    comps.forEach((comp: LuxFormLegacySelectableBase) => {
+      comp.formControl.markAsUntouched();
+    });
+  }
+}

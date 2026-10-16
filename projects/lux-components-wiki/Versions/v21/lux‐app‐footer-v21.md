@@ -212,7 +212,7 @@ Html
 
 ### 2. Zentrierter Inhalt des App-Footers
 
-Empfehlung: Die Werte für luxCenteredView und luxCenteredWidth über eine Config-Datei zu setzen [vgl.](config-v21.md).
+Empfehlung: Die Werte für luxCenteredView und luxCenteredWidth über eine Config-Datei zu setzen [vgl.](config-v21).
 Damit werden dieselben Parameter auch beim App-Header-Ac gesetzt.
 Die centeredWidth kann optional verändert werden (default=1500px).
 Aufgrund der unterschiedlichen Möglichkeiten der App-Gestaltung, muss in allen Fällen der Content-Bereich selbstständig angepasst werden.

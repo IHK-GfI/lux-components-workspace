@@ -6,6 +6,7 @@ import { appOptions, workspaceOptions } from '../../utility/test';
 import { Options } from '../../utility/types';
 import { UtilConfig } from '../../utility/util';
 import { update210301 } from './index';
+import { lastValueFrom } from 'rxjs';
 
 describe('update210301', () => {
   let appTree: UnitTestTree;
@@ -32,7 +33,7 @@ describe('update210301', () => {
   });
 
   describe('[Rule] update210301', () => {
-    it('Sollte die Abhängigkeiten aktualisieren', (done) => {
+    it('Sollte die Abhängigkeiten aktualisieren', async () => {
       appTree.overwrite(
         '/package.json',
         `
@@ -61,15 +62,9 @@ describe('update210301', () => {
         `
       );
 
-      callRule(update210301(testOptions), appTree, context).subscribe(
-        () => {
-          expect(getDep(appTree, '@ihk-gfi/lux-components').version).not.toEqual('20.0.0');
-          expect(getDep(appTree, '@ihk-gfi/lux-components').version).toEqual('21.3.1');
-
-          done();
-        },
-        (reason) => expect(reason).toBeUndefined()
-      );
+      await lastValueFrom(callRule(update210301(testOptions), appTree, context));
+      expect(getDep(appTree, '@ihk-gfi/lux-components').version).not.toEqual('20.0.0');
+      expect(getDep(appTree, '@ihk-gfi/lux-components').version).toEqual('21.3.1');
     });
   });
 });

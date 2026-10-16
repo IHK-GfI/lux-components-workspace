@@ -1,0 +1,439 @@
+# LUX-Button
+
+![Beispielbild LUX-Button](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v22/lux‐button-v22-img.png)
+
+- [LUX-Button](#lux-button)
+  - [Overview / API](#overview--api)
+    - [Allgemein](#allgemein)
+    - [@Input](#input)
+    - [@Output](#output)
+  - [Styleguide](#styleguide)
+  - [Beispiele](#beispiele)
+    - [1. Normale Buttons](#1-normale-buttons)
+    - [2. Flat Buttons](#2-flat-buttons)
+    - [3. Buttons mit Icons](#3-buttons-mit-icons)
+    - [4. Runde Buttons](#4-runde-buttons)
+    - [5. Stroked-Buttons](#5-stroked-buttons)
+    - [6. Rounded und Stroked-Buttons](#6-rounded-und-stroked-buttons)
+    - [7. Reine Icon-Buttons](#7-reine-icon-buttons)
+    - [8. Buttons mit Loading State](#8-buttons-mit-loading-state)
+  - [Zusatzinformationen](#zusatzinformationen)
+    - [Konfigurationsoptionen](#konfigurationsoptionen)
+
+## Overview / API
+
+### Allgemein
+
+| Name     | Beschreibung |
+| -------- | ------------ |
+| selector | lux-button   |
+
+### @Input
+
+| Name                | Typ                              | Beschreibung                                                                                                                                                                                                                                                                                                                                                                    |
+| ------------------- | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| luxType             | 'button' \| 'reset' \| 'submit'  | Bestimmt den Typ des Buttons; legt fest, ob in einem Reactive-Form der jeweilige "submit" oder "reset" bzw. kein Form-Event ausgelöst wird ("button"). Mögliche Werte: "submit", "reset", "button". Default: 'button'.                                                                                                                                                          |
+| luxLabel            | string                           | Bestimmt das Label, das in dieser Komponente angezeigt wird. Default: ''.                                                                                                                                                                                                                                                                                                       |
+| luxColor            | LuxThemePalette                  | Diese Property definiert die Farben der Komponente.                                                                                                                                                                                                                                                                                                                             |
+| luxRaised           | boolean                          | Gibt an, ob der Button hervorgehoben wird. Default: false.                                                                                                                                                                                                                                                                                                                      |
+| luxStroked          | boolean                          | Gibt an, ob der Button eine Outline erhält. Default: false.                                                                                                                                                                                                                                                                                                                     |
+| luxFlat             | boolean                          | Gibt an, ob der Button flach (gefüllt, ohne Schatten) dargestellt wird. Default: false.                                                                                                                                                                                                                                                                                         |
+| luxIconName         | string                           | Ein LUX-Iconname.                                                                                                                                                                                                                                                                                                                                                               |
+| luxIconShowRight    | boolean                          | Gibt an, ob das Icon rechts angezeigt wird. Default: false.                                                                                                                                                                                                                                                                                                                     |
+| luxTagId            | string                           | [LUX-Tag-Id](luxTagId-v22#direkte-konfiguration) für die automatischen Tests.                                                                                                                                                                                                                                                                                                   |
+| luxDisabled         | boolean                          | Gibt an, ob das Element deaktiviert ist. Alternativ _luxDisabledAria_ verwenden. Default: false.                                                                                                                                                                                                                                                                                |
+| luxDisabledAria     | boolean                          | Setzt das Attribut `aria-disabled="true"` am Button, ohne das native `disabled`-Attribut zu verwenden. Der Button bleibt damit technisch aktiv und fokussierbar, unterdrückt jedoch das Event _luxClicked_ und emittiert stattdessen das Event _luxClickNotAllowed_. Entwickler sollten dem Nutzer einen Hinweis auf die fachliche Deaktivierung bereitstellen. Default: false. |
+| luxRounded          | boolean                          | Gibt an, ob ein runder Button verwendet werden soll. Default: false.                                                                                                                                                                                                                                                                                                            |
+| luxThrottleTime     | number                           | Verhindert, dass ein Button mehrfach hintereinander ausgelöst wird (Zeit in ms). Über diese Property kann man den Standardwert aus der [Config - buttonConfiguration](config-v22#buttonconfiguration) überschreiben. Default: undefined (Wert aus der Config, dort Default 600).                                                                                                |
+| luxButtonBadge      | string                           | Text der in einer Badge hinter dem Label in einem Lux-Button angezeigt werden kann. Die maximale Länge beträgt vier Zeichen und wird bei Überlänge automatisch mit Ellipsis '...' abgeschnitten.                                                                                                                                                                                |
+| luxButtonBadgeColor | LuxThemePalette                  | Farbe der ButtonBadge, die analog zur Button-Farbe gewählt werden kann. Mögliche Werte: "primary", "accent", "warn". Default: 'primary'.                                                                                                                                                                                                                                        |
+| luxLoading          | boolean                          | Gibt an, ob der Button sich im Lade-Zustand befindet und einen Spinner/Progress angezeigt werden soll. Standardwert: false.                                                                                                                                                                                                                                                     |
+| luxSpinnerMode      | 'determinate' \| 'indeterminate' | Bestimmt den Modus des Spinners/Progress-Indikators. Im "determinate"-Modus wird der Fortschritt anhand von `luxSpinnerValue` angezeigt (0-100). Im "indeterminate"-Modus wird ein kontinuierlicher Ladezeiger angezeigt. Standardwert: "indeterminate".                                                                                                                        |
+| luxSpinnerValue     | number                           | Setzt den Wert des Spinners/Progress-Indikators im "determinate"-Modus (0-100). Dies ist nur relevant, wenn `luxSpinnerMode` auf "determinate" gesetzt ist. Standardwert: 70.                                                                                                                                                                                                   |
+| luxIconButton       | boolean                          | Aktiviert die Variante für reine Icon-Buttons ohne farbigen Hintergrund und ohne Rahmen. Diese Variante ist nicht mit `luxRaised`, `luxFlat`, `luxStroked` oder `luxRounded` kombinierbar. Für die Barrierefreiheit sollte `luxLabel` als aussagekräftiges Aria-Label gesetzt werden. Default: false.                                                                           |
+
+### @Output
+
+| Name               | Typ   | Beschreibung                                                                                                                                                                       |
+| ------------------ | ----- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| luxClicked         | Event | Event welches beim Klick auf den primären Button ausgelöst wird und einen Clicked-Event als Parameter enthält.                                                                     |
+| luxAuxClicked      | Event | Event welches beim Klick auf einen anderen Mausbutton als dem primären Mausbutton ausgelöst wird und einen Clicked-Event als Parameter enthält.                                    |
+| luxClickNotAllowed | Event | Event welches ausgelöst wird, wenn `luxDisabledAria === true` und der Button geklickt wird. In diesem Fall wird `luxClicked` unterdrückt und ausschließlich dieses Event gesendet. |
+
+## Styleguide
+
+Grundlegende Regeln zum Umgang mit buttons sind:
+
+- Der erste Buchstabe der Buttonbeschriftung wird immer groß geschrieben. Danach folgen Kleinbuchstaben.
+- Lange Buttonbezeichnungen sind unschön und verursachen in der mobilen Darstellung Probleme. Daher soll die Buttonbezeichnung 25 Zeichen nicht überschreiten.
+- Da es schwierig ist für alle Anwendungsfälle passende Richtlinien zur Button-Benennung festzulegen, soll darauf geachtet werden, dass Buttonbezeichnungen möglichst kurz und verständlich gehalten werden. Z.B. "Übersicht" anstatt "Zur Übersicht Abfragen".
+- Die Beschriftung für sonstige Buttons soll maximal aus zwei Wörtern bestehen und der Struktur 'Nomen' + 'Verb' folgen. Z.B. "Artikel löschen". Wobei das 'Nomen' als optional zu betrachten ist und nur Verwendung findet, wenn es dem Sachzusammenhang dienlich ist. Ist dies nicht der Fall, wird als Buttonbeschriftung nur "Löschen" verwendet.
+- Die Reihenfolge (und Beschriftung) für Standard-Buttons soll wie folgt eingehalten werden. "Speichern" -> rechts und "Abbrechen" -> links.
+- Buttons sollen nicht im "freien Raum" hängen, sondern immer z.B. in einer Card bzw. dem Action-Bereich angesiedelt sein.
+- Aufgrund der Reduzierung der Mauswege im Rahmen der UX und der Barrierefreiheit sollen Buttons unten links angeordnet sein.
+- _Die Art der Buttons muss noch definiert werden..._
+
+## Beispiele
+
+### 1. Normale Buttons
+
+![Beispielbild 01](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v22/lux‐button-v22-img-01.png)
+
+Ts
+
+```typescript
+onClick(label: string) {
+  console.log(label);
+}
+```
+
+Html
+
+```html
+<div class="lux-flex lux-gap-4">
+  <lux-button
+    luxLabel="Lorem ohne"
+    (luxClicked)="onClick('Lorem ohne')"
+  />
+  <lux-button
+    luxLabel="Lorem primary"
+    (luxClicked)="onClick('Lorem primary')"
+    luxColor="primary"
+  />
+  <lux-button
+    luxLabel="Lorem warn"
+    (luxClicked)="onClick('Lorem warn')"
+    luxColor="warn"
+  />
+  <lux-button
+    luxLabel="Lorem accent"
+    (luxClicked)="onClick('Lorem accent')"
+    luxColor="accent"
+  />
+</div>
+```
+
+### 2. Flat Buttons
+
+![Beispielbild 02](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v22/lux‐button-v22-img-02.png)
+
+Ts
+
+```typescript
+onClick(label: string) {
+  console.log(label);
+}
+```
+
+Html
+
+```html
+<div class="lux-flex lux-gap-4">
+  <lux-button
+    [luxFlat]="true"
+    luxLabel="Lorem ohne"
+    (luxClicked)="onClick('Lorem ohne')"
+  />
+  <lux-button
+    [luxFlat]="true"
+    luxLabel="Lorem primary"
+    (luxClicked)="onClick('Lorem primary')"
+    luxColor="primary"
+  />
+  <lux-button
+    [luxFlat]="true"
+    luxLabel="Lorem warn"
+    (luxClicked)="onClick('Lorem warn')"
+    luxColor="warn"
+  />
+  <lux-button
+    [luxFlat]="true"
+    luxLabel="Lorem accent"
+    (luxClicked)="onClick('Lorem accent')"
+    luxColor="accent"
+  />
+</div>
+```
+
+### 3. Buttons mit Icons
+
+![Beispielbild 03](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v22/lux‐button-v22-img-03.png)
+
+Ts
+
+```typescript
+onClick(label: string) {
+  console.log(label);
+}
+```
+
+Html
+
+```html
+<div class="lux-flex lux-gap-4">
+  <lux-button
+    luxIconName="lux-save"
+    [luxFlat]="true"
+    luxLabel="Lorem ohne"
+    (luxClicked)="onClick('Lorem ohne')"
+  />
+  <lux-button
+    luxIconName="lux-save"
+    [luxFlat]="true"
+    luxLabel="Lorem primary"
+    luxColor="primary"
+    (luxClicked)="onClick('Lorem primary')"
+  />
+  <lux-button
+    luxIconName="lux-save"
+    [luxFlat]="true"
+    luxLabel="Lorem warn"
+    luxColor="warn"
+    (luxClicked)="onClick('Lorem warn')"
+  />
+  <lux-button
+    luxIconName="lux-save"
+    [luxFlat]="true"
+    luxLabel="Lorem accent"
+    luxColor="accent"
+    (luxClicked)="onClick('Lorem accent')"
+  />
+</div>
+```
+
+### 4. Runde Buttons
+
+![Beispielbild 04](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v22/lux‐button-v22-img-04.png)
+
+Ts
+
+```typescript
+onClick(label: string) {
+  console.log(label);
+}
+```
+
+Html
+
+```html
+<div class="lux-flex lux-gap-4">
+  <lux-button
+    luxIconName="lux-interface-user-single"
+    [luxRounded]="true"
+    (luxClicked)="onClick('1')"
+  />
+  <lux-button
+    luxIconName="lux-interface-user-single"
+    luxColor="primary"
+    [luxRounded]="true"
+    (luxClicked)="onClick('2')"
+  />
+  <lux-button
+    luxIconName="lux-interface-user-single"
+    luxColor="warn"
+    [luxRounded]="true"
+    (luxClicked)="onClick('3')"
+  />
+  <lux-button
+    luxIconName="lux-interface-user-single"
+    luxColor="accent"
+    [luxRounded]="true"
+    (luxClicked)="onClick('3')"
+  />
+</div>
+```
+
+### 5. Stroked-Buttons
+
+![Beispielbild 05](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v22/lux‐button-v22-img-05.png)
+
+Ts
+
+```typescript
+onClick(label: string) {
+  console.log(label);
+}
+```
+
+Html
+
+```html
+<div class="lux-flex lux-gap-4">
+  <lux-button
+    luxIconName="lux-save"
+    [luxStroked]="true"
+    luxLabel="Lorem ohne"
+    (luxClicked)="onClick('Lorem ohne')"
+  />
+  <lux-button
+    luxIconName="lux-save"
+    [luxStroked]="true"
+    luxLabel="Lorem primary"
+    luxColor="primary"
+    (luxClicked)="onClick('Lorem primary')"
+  />
+  <lux-button
+    luxIconName="lux-save"
+    [luxStroked]="true"
+    luxLabel="Lorem warn"
+    luxColor="warn"
+    (luxClicked)="onClick('Lorem warn')"
+  />
+  <lux-button
+    luxIconName="lux-save"
+    [luxStroked]="true"
+    luxLabel="Lorem accent"
+    luxColor="accent"
+    (luxClicked)="onClick('Lorem accent')"
+  />
+</div>
+```
+
+### 6. Rounded und Stroked-Buttons
+
+![Beispielbild 06](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v22/lux‐button-v22-img-06.png)
+
+Ts
+
+```typescript
+onClick(label: string) {
+  console.log(label);
+}
+```
+
+Html
+
+```html
+<div class="lux-flex lux-gap-4">
+  <lux-button
+    luxIconName="lux-save"
+    [luxStroked]="true"
+    [luxRounded]="true"
+    luxLabel="Lorem ohne"
+    (luxClicked)="onClick('Lorem ohne')"
+  />
+  <lux-button
+    luxIconName="lux-save"
+    [luxStroked]="true"
+    [luxRounded]="true"
+    luxLabel="Lorem primary"
+    luxColor="primary"
+    (luxClicked)="onClick('Lorem primary')"
+  />
+  <lux-button
+    luxIconName="lux-save"
+    [luxStroked]="true"
+    [luxRounded]="true"
+    luxLabel="Lorem warn"
+    luxColor="warn"
+    (luxClicked)="onClick('Lorem warn')"
+  />
+  <lux-button
+    luxIconName="lux-save"
+    [luxStroked]="true"
+    [luxRounded]="true"
+    luxLabel="Lorem accent"
+    luxColor="accent"
+    (luxClicked)="onClick('Lorem accent')"
+  />
+</div>
+```
+
+### 7. Reine Icon-Buttons
+
+![Beispielbild 07](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v22/lux‐button-v22-img-07.png)
+
+Ts
+
+```typescript
+onClick(label: string) {
+  console.log(label);
+}
+```
+
+Html
+
+```html
+<div class="lux-flex lux-gap-4">
+  <lux-button
+    luxIconName="lux-save"
+    [luxIconButton]="true"
+    luxLabel="Speichern"
+    (luxClicked)="onClick('ohne Farbe')"
+  />
+  <lux-button
+    luxIconName="lux-save"
+    [luxIconButton]="true"
+    luxLabel="Speichern"
+    luxColor="primary"
+    (luxClicked)="onClick('primary')"
+  />
+  <lux-button
+    luxIconName="lux-save"
+    [luxIconButton]="true"
+    luxLabel="Speichern"
+    luxColor="warn"
+    (luxClicked)="onClick('warn')"
+  />
+  <lux-button
+    luxIconName="lux-save"
+    [luxIconButton]="true"
+    luxLabel="Speichern"
+    luxColor="accent"
+    (luxClicked)="onClick('accent')"
+  />
+</div>
+```
+
+### 8. Buttons mit Loading State
+
+![Beispielbild 08](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v22/lux‐button-v22-img-08.png)
+
+Ts
+
+```typescript
+readonly loadingState = signal(true);
+readonly loadingProgressValue = 50;
+
+toggleLoading() {
+  this.loadingState.update((value) => !value);
+}
+```
+
+Html
+
+```html
+<div class="lux-flex lux-gap-4">
+  <!-- Indeterminate Loading State -->
+  <lux-button
+    luxLabel="Lädt..."
+    [luxLoading]="loadingState()"
+    luxSpinnerMode="indeterminate"
+    (luxClicked)="toggleLoading()"
+  />
+  <!-- Determinate Loading State -->
+  <lux-button
+    luxLabel="Upload"
+    [luxLoading]="loadingState()"
+    luxSpinnerMode="determinate"
+    [luxSpinnerValue]="loadingProgressValue"
+    (luxClicked)="toggleLoading()"
+  />
+  <!-- Determinate with Different Progress -->
+  <lux-button
+    luxLabel="Speichern"
+    [luxLoading]="true"
+    luxSpinnerMode="determinate"
+    [luxSpinnerValue]="75"
+  />
+</div>
+```
+
+## Zusatzinformationen
+
+### Konfigurationsoptionen
+
+Standardmäßig werden die Texte der Buttons **nicht** in Großbuchstaben angezeigt.
+
+Über die [LUX-Components-Config](config-v22) (`labelConfiguration.allUppercase: true` in `provideLuxComponentsConfig()`) kann festgelegt werden, dass die Texte in Großbuchstaben ausgegeben werden.
+Will man die LuxButtons davon ausnehmen, muss der Selektor "lux-button" in `labelConfiguration.notAppliedTo` eingetragen werden.

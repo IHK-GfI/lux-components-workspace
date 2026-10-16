@@ -328,7 +328,7 @@ Vgl. auch <https://wiki.selfhtml.org/wiki/Grafik/Favicon#SVG-Favicons>
 
 ### 4. Zentrierter Inhalt des App-Headers-AC
 
-Empfehlung: Die Werte für luxCenteredView und luxCenteredWidth über eine Config-Datei zu setzen [vgl.](config-v21.md).
+Empfehlung: Die Werte für luxCenteredView und luxCenteredWidth über eine Config-Datei zu setzen [vgl.](config-v21).
 Damit werden die selben Parameter auch beim App-Footer gesetzt.
 Die centeredWidth kann optional verändert werden (default=1500px).
 Aufgrund der unterschiedlichen Möglichkeiten der App-Gestaltung, muss in allen Fällen der Content-Bereich selbstständig angepasst werden.

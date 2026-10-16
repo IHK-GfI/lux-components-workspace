@@ -7,6 +7,7 @@ import * as logging from '../../utility/logging';
 import { appOptions, workspaceOptions } from '../../utility/test';
 import { UtilConfig } from '../../utility/util';
 import { update190200 } from './index';
+import { lastValueFrom } from 'rxjs';
 
 describe('update190200', () => {
   let appTree: UnitTestTree;
@@ -33,7 +34,7 @@ describe('update190200', () => {
   });
 
   describe('[Rule] update190200', () => {
-    it('Sollte die Abhängigkeiten aktualisieren', (done) => {
+    it('Sollte die Abhängigkeiten aktualisieren', async () => {
       appTree.overwrite(
         '/package.json',
         `
@@ -62,21 +63,15 @@ describe('update190200', () => {
         `
       );
 
-      callRule(update190200(testOptions), appTree, context).subscribe(
-        (successTree) => {
-          expect(getDep(appTree, '@ihk-gfi/lux-components').version).not.toEqual('19.1.0');
-          expect(getDep(appTree, '@ihk-gfi/lux-components').version).toEqual('19.2.0');
+      const successTree = await lastValueFrom(callRule(update190200(testOptions), appTree, context));
+      expect(getDep(appTree, '@ihk-gfi/lux-components').version).not.toEqual('19.1.0');
+      expect(getDep(appTree, '@ihk-gfi/lux-components').version).toEqual('19.2.0');
 
-          expect(getDep(appTree, '@ihk-gfi/lux-components-theme').version).not.toEqual('19.0.0');
-          expect(getDep(appTree, '@ihk-gfi/lux-components-theme').version).toEqual('19.0.1');
-
-          done();
-        },
-        (reason) => expect(reason).toBeUndefined()
-      );
+      expect(getDep(appTree, '@ihk-gfi/lux-components-theme').version).not.toEqual('19.0.0');
+      expect(getDep(appTree, '@ihk-gfi/lux-components-theme').version).toEqual('19.0.1');
     });
 
-    it('Sollte eine Warnung ausgeben, wenn <lux-app-content> in app.component.html fehlt', (done) => {
+    it('Sollte eine Warnung ausgeben, wenn <lux-app-content> in app.component.html fehlt', async () => {
       const htmlPath = `${testOptions.path}/src/app/app.component.html`;
       const newContent = `<div cdkScrollable>Kein lux-app-content vorhanden</div>`;
       if (appTree.exists(htmlPath)) {
@@ -85,18 +80,13 @@ describe('update190200', () => {
         appTree.create(htmlPath, newContent);
       }
 
-      const logWarnMock = spyOn(logging, 'logWarn');
+      const logWarnMock = vi.spyOn(logging, 'logWarn').mockImplementation(() => undefined);
 
-      callRule(update190200(testOptions), appTree, context).subscribe(
-        () => {
-          expect(logWarnMock).toHaveBeenCalledTimes(1);
-          done();
-        },
-        (reason) => expect(reason).toBeUndefined()
-      );
+      await lastValueFrom(callRule(update190200(testOptions), appTree, context));
+      expect(logWarnMock).toHaveBeenCalledTimes(1);
     });
 
-    it('Sollte zwei Warnung ausgeben, wenn <lux-app-content> und cdkScrollable in app.component.html fehlen', (done) => {
+    it('Sollte zwei Warnung ausgeben, wenn <lux-app-content> und cdkScrollable in app.component.html fehlen', async () => {
       const htmlPath = `${testOptions.path}/src/app/app.component.html`;
       const newContent = `<div>Kein lux-app-content vorhanden</div>`;
       if (appTree.exists(htmlPath)) {
@@ -105,18 +95,13 @@ describe('update190200', () => {
         appTree.create(htmlPath, newContent);
       }
 
-      const logWarnMock = spyOn(logging, 'logWarn');
+      const logWarnMock = vi.spyOn(logging, 'logWarn').mockImplementation(() => undefined);
 
-      callRule(update190200(testOptions), appTree, context).subscribe(
-        () => {
-          expect(logWarnMock).toHaveBeenCalledTimes(2);
-          done();
-        },
-        (reason) => expect(reason).toBeUndefined()
-      );
+      await lastValueFrom(callRule(update190200(testOptions), appTree, context));
+      expect(logWarnMock).toHaveBeenCalledTimes(2);
     });
 
-    it('Sollte cdkScrollable zu <lux-app-content> in app.component.html ergänzen', (done) => {
+    it('Sollte cdkScrollable zu <lux-app-content> in app.component.html ergänzen', async () => {
       const htmlPath = `${testOptions.path}/src/app/app.component.html`;
       const htmlNewContent = `<lux-app-content></lux-app-content>`;
       if (appTree.exists(htmlPath)) {
@@ -140,17 +125,12 @@ export class AppComponent {}`;
         appTree.create(tsPath, tsNewContent);
       }
 
-      callRule(update190200(testOptions), appTree, context).subscribe(
-        (successTree) => {
-          const htmlContent = successTree.read(htmlPath)!.toString();
-          expect(htmlContent).toContain('<lux-app-content cdkScrollable');
-          done();
-        },
-        (reason) => expect(reason).toBeUndefined()
-      );
+      const successTree = await lastValueFrom(callRule(update190200(testOptions), appTree, context));
+      const htmlContent = successTree.read(htmlPath)!.toString();
+      expect(htmlContent).toContain('<lux-app-content cdkScrollable');
     });
 
-    it('Sollte nichts verändern wenn cdkScrollable bereits vorhanden ist', (done) => {
+    it('Sollte nichts verändern wenn cdkScrollable bereits vorhanden ist', async () => {
       const htmlPath = `${testOptions.path}/src/app/app.component.html`;
       const newContent = `<lux-app-content cdkScrollable></lux-app-content>`;
       if (appTree.exists(htmlPath)) {
@@ -159,19 +139,14 @@ export class AppComponent {}`;
         appTree.create(htmlPath, newContent);
       }
 
-      const replaceRuleMock = spyOn(files, 'replaceRule');
-      const logWarnMock = spyOn(logging, 'logWarn');
+      const replaceRuleMock = vi.spyOn(files, 'replaceRule').mockImplementation(() => (tree) => tree);
+      const logWarnMock = vi.spyOn(logging, 'logWarn').mockImplementation(() => undefined);
 
-      callRule(update190200(testOptions), appTree, context).subscribe(
-        (successTree) => {
-          const htmlContent = successTree.read(htmlPath)!.toString();
-          expect(htmlContent).toContain('<lux-app-content cdkScrollable></lux-app-content>');
-          expect(logWarnMock).toHaveBeenCalledTimes(0);
-          expect(replaceRuleMock).toHaveBeenCalledTimes(0);
-          done();
-        },
-        (reason) => expect(reason).toBeUndefined()
-      );
+      const successTree = await lastValueFrom(callRule(update190200(testOptions), appTree, context));
+      const htmlContent = successTree.read(htmlPath)!.toString();
+      expect(htmlContent).toContain('<lux-app-content cdkScrollable></lux-app-content>');
+      expect(logWarnMock).toHaveBeenCalledTimes(0);
+      expect(replaceRuleMock).toHaveBeenCalledTimes(0);
     });
   });
 });
