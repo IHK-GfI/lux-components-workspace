@@ -292,7 +292,8 @@
       "previous_page": "Vorherige Seite"
     },
     "progress": {
-      "arialabel": "Ladeanzeige"
+      "arialabel": "Ladeanzeige",
+      "indeterminate": "Fortschritt wird verarbeitet."
     },
     "quill": {
       "error_message.invalid": "Die Eingabe ist ungültig.",
