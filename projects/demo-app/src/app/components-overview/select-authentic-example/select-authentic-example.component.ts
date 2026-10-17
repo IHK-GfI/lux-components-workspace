@@ -1,5 +1,5 @@
 import { JsonPipe } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, ValidatorFn } from '@angular/forms';
 import {
   LuxAutofocusDirective,
@@ -37,6 +37,7 @@ interface SelectDummyForm {
 @Component({
   selector: 'lux-select-authentic-example',
   templateUrl: './select-authentic-example.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxButtonComponent,
     LuxToggleAcComponent,

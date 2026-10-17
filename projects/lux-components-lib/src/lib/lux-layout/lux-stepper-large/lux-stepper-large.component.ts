@@ -10,7 +10,8 @@ import {
   OnInit,
   Output,
   QueryList,
-  inject
+  inject,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { Subscription } from 'rxjs';
@@ -34,6 +35,7 @@ import { LuxStepperLargeStepComponent } from './lux-stepper-large-subcomponents/
   selector: 'lux-stepper-large',
   templateUrl: './lux-stepper-large.component.html',
   styleUrls: ['./lux-stepper-large.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [NgTemplateOutlet, LuxAriaLabelDirective, NgClass, LuxButtonComponent, TranslocoPipe]
 })
 export class LuxStepperLargeComponent implements OnInit, AfterContentInit, OnDestroy {

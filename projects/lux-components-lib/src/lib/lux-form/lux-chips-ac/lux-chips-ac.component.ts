@@ -12,7 +12,8 @@ import {
   Output,
   QueryList,
   ViewChild,
-  ViewChildren
+  ViewChildren,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { MatAutocomplete, MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { MatChip, MatChipGrid, MatChipInput, MatChipRemove, MatChipRow } from '@angular/material/chips';
@@ -35,6 +36,7 @@ let luxChipControlUID = 0;
   selector: 'lux-chips-ac',
   templateUrl: './lux-chips-ac.component.html',
   styleUrls: ['./lux-chips-ac.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxIconComponent,
     LuxFormControlWrapperComponent,

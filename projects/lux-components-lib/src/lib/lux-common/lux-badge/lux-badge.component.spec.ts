@@ -1,6 +1,6 @@
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { LuxLabelComponent } from '../lux-label/lux-label.component';
@@ -9,7 +9,7 @@ import { LuxBadgeComponent } from './lux-badge.component';
 describe('LuxBadgeComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+      providers: [provideHttpClient(withXhr(), withInterceptorsFromDi()), provideHttpClientTesting()]
     }).compileComponents();
   }));
 
@@ -120,6 +120,7 @@ describe('LuxBadgeComponent', () => {
       </lux-label>
     </lux-badge>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxBadgeComponent, LuxLabelComponent]
 })
 class MockBadgeComponent {
@@ -134,6 +135,7 @@ class MockBadgeComponent {
       <lux-label luxId="badgeLabel"> BVB </lux-label>
     </lux-badge>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxBadgeComponent, LuxLabelComponent]
 })
 class MockBadgeIconNameComponent {

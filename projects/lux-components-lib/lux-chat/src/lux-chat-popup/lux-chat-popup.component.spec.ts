@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { LuxMediaQueryObserverService } from '@ihk-gfi/lux-components';
@@ -23,6 +23,7 @@ class MockMediaQueryObserverService {
 @Component({
   standalone: true,
   imports: [LuxChatPopupComponent, LuxChatComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <lux-chat-popup>
       <lux-chat></lux-chat>

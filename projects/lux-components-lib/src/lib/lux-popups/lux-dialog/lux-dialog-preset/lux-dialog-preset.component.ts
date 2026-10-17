@@ -1,5 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { AfterViewInit, Component, OnInit, ViewChild, inject } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { LuxButtonComponent } from '../../../lux-action/lux-button/lux-button.component';
 import { LuxTabIndexDirective } from '../../../lux-directives/lux-tabindex/lux-tab-index.directive';
@@ -17,6 +17,7 @@ import { LuxDialogStructureComponent } from '../lux-dialog-structure/lux-dialog-
 @Component({
   selector: 'lux-dialog-preset',
   templateUrl: './lux-dialog-preset.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxDialogStructureComponent,
     LuxDialogTitleComponent,

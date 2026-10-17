@@ -1,4 +1,4 @@
-import { Component, OnDestroy, inject } from '@angular/core';
+import { Component, OnDestroy, inject, ChangeDetectionStrategy } from '@angular/core';
 import { LuxIconComponent, LuxMediaQueryObserverService } from '@ihk-gfi/lux-components';
 import { Subscription } from 'rxjs';
 import { LUX_FILE_PREVIEW_DATA } from '../lux-file-preview-config';
@@ -7,6 +7,7 @@ import { LuxFilePreviewData } from '../lux-file-preview-data';
 @Component({
   selector: 'lux-file-preview-toolbar',
   templateUrl: './lux-file-preview-toolbar.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxIconComponent]
 })
 export class LuxFilePreviewToolbarComponent implements OnDestroy {

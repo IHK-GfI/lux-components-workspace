@@ -1,5 +1,5 @@
 import { NgClass, NgStyle, NgTemplateOutlet } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, QueryList, ViewChildren, inject } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, QueryList, ViewChildren, inject, ChangeDetectionStrategy } from '@angular/core';
 import { MatError, MatHint } from '@angular/material/form-field';
 import { MatProgressBar } from '@angular/material/progress-bar';
 import { TranslocoPipe } from '@jsverse/transloco';
@@ -31,6 +31,7 @@ import { LuxFileReplaceDialogComponent } from '../lux-file-subcomponents/lux-fil
   selector: 'lux-file-upload',
   templateUrl: './lux-file-upload.component.html',
   styleUrls: ['./lux-file-upload.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     NgClass,
     NgTemplateOutlet,

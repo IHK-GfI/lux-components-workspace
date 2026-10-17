@@ -11,7 +11,8 @@ import {
   inject,
   signal,
   untracked,
-  viewChild
+  viewChild,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { LuxAccordionColor, LuxIconComponent, LuxMediaQueryObserverService, LuxThemeService } from '@ihk-gfi/lux-components';
@@ -23,6 +24,7 @@ import { LuxAccordionAriaBase, LuxAccordionAriaTogglePosition } from '../lux-acc
   styleUrls: ['./lux-panel-aria.component.scss'],
   standalone: true,
   imports: [AccordionPanel, AccordionTrigger, LuxIconComponent, AccordionContent],
+  changeDetection: ChangeDetectionStrategy.Eager,
   hostDirectives: [AccordionGroup]
 })
 export class LuxPanelAriaComponent {

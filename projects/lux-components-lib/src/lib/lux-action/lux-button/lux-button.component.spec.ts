@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { LuxA11yTestHelper } from '@ihk-gfi/lux-components/test-utils';
@@ -552,6 +552,7 @@ class Checker {
       [luxIconButton]="iconButton"
     ></lux-button>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxButtonComponent]
 })
 class MockButtonComponent {
@@ -580,6 +581,7 @@ class MockButtonComponent {
       [luxIconButton]="iconButton"
     ></lux-button>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxButtonComponent]
 })
 class MockButtonLabelComponent {
@@ -608,6 +610,7 @@ class MockButtonLabelComponent {
       [luxLoading]="loading"
     ></lux-button>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxButtonComponent]
 })
 class MockButtonLoadingComponent {

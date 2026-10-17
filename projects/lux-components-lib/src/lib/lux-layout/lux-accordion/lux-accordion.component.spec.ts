@@ -1,10 +1,10 @@
 // noinspection DuplicatedCode
 
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.component';
 import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
+import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.component';
 import { LuxPanelContentComponent } from '../lux-panel/lux-panel-subcomponents/lux-panel-content.component';
 import { LuxPanelHeaderTitleComponent } from '../lux-panel/lux-panel-subcomponents/lux-panel-header-title.component';
 import { LuxPanelComponent } from '../lux-panel/lux-panel.component';
@@ -562,13 +562,14 @@ describe('LuxAccordionComponent', () => {
         <lux-panel-content> 111111 </lux-panel-content>
       </lux-panel>
       @if (visible) {
-      <lux-panel>
-        <lux-panel-header-title>Titel 2</lux-panel-header-title>
-        <lux-panel-content> 2222222 </lux-panel-content>
-      </lux-panel>
+        <lux-panel>
+          <lux-panel-header-title>Titel 2</lux-panel-header-title>
+          <lux-panel-content> 2222222 </lux-panel-content>
+        </lux-panel>
       }
     </lux-accordion>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxButtonComponent, LuxAccordionComponent, LuxPanelComponent, LuxPanelContentComponent, LuxPanelHeaderTitleComponent]
 })
 class LuxAccordionHeightComponent {
@@ -587,13 +588,14 @@ class LuxAccordionHeightComponent {
         <lux-panel-content> 111111 </lux-panel-content>
       </lux-panel>
       @if (visible) {
-      <lux-panel luxCollapsedHeaderHeight="110px" luxExpandedHeaderHeight="120px">
-        <lux-panel-header-title>Titel 2</lux-panel-header-title>
-        <lux-panel-content> 2222222 </lux-panel-content>
-      </lux-panel>
+        <lux-panel luxCollapsedHeaderHeight="110px" luxExpandedHeaderHeight="120px">
+          <lux-panel-header-title>Titel 2</lux-panel-header-title>
+          <lux-panel-content> 2222222 </lux-panel-content>
+        </lux-panel>
       }
     </lux-accordion>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxButtonComponent, LuxAccordionComponent, LuxPanelComponent, LuxPanelContentComponent, LuxPanelHeaderTitleComponent]
 })
 class LuxAccordionPanelOverrideHeightComponent {
@@ -615,6 +617,7 @@ class LuxAccordionPanelOverrideHeightComponent {
       </lux-panel>
     </lux-accordion>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxButtonComponent, LuxAccordionComponent, LuxPanelComponent, LuxPanelContentComponent, LuxPanelHeaderTitleComponent]
 })
 class LuxAccordionPanelMultiComponent {
@@ -631,6 +634,7 @@ class LuxAccordionPanelMultiComponent {
       </lux-panel>
     </lux-accordion>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxAccordionComponent, LuxPanelComponent, LuxPanelContentComponent, LuxPanelHeaderTitleComponent]
 })
 class LuxAccordionHideToggleComponent {
@@ -643,12 +647,11 @@ class LuxAccordionHideToggleComponent {
     <lux-accordion [luxHideToggle]="hide">
       <lux-panel>
         <lux-panel-header-title>Titel 1</lux-panel-header-title>
-        <lux-panel-content>
-          111111
-        </lux-panel-content>
+        <lux-panel-content> 111111 </lux-panel-content>
       </lux-panel>
     </lux-accordion>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxAccordionComponent, LuxPanelComponent, LuxPanelContentComponent, LuxPanelHeaderTitleComponent]
 })
 class LuxAccordionHideToggleTrueComponent {
@@ -658,11 +661,9 @@ class LuxAccordionHideToggleTrueComponent {
 @Component({
   template: `
     <lux-accordion [luxHideToggle]="true">
-    <lux-panel id="panel1" [luxHideToggle]="false">
+      <lux-panel id="panel1" [luxHideToggle]="false">
         <lux-panel-header-title>Titel 1</lux-panel-header-title>
-        <lux-panel-content>
-          111111
-        </lux-panel-content>
+        <lux-panel-content> 111111 </lux-panel-content>
       </lux-panel>
       <lux-panel id="panel2">
         <lux-panel-header-title>Titel 1</lux-panel-header-title>
@@ -670,6 +671,7 @@ class LuxAccordionHideToggleTrueComponent {
       </lux-panel>
     </lux-accordion>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxAccordionComponent, LuxPanelComponent, LuxPanelContentComponent, LuxPanelHeaderTitleComponent]
 })
 class LuxAccordionOverrideHideToggleComponent {}
@@ -684,6 +686,7 @@ class LuxAccordionOverrideHideToggleComponent {}
       </lux-panel>
     </lux-accordion>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxAccordionComponent, LuxPanelComponent, LuxPanelContentComponent, LuxPanelHeaderTitleComponent]
 })
 class LuxAccordionDisabledComponent {
@@ -696,12 +699,11 @@ class LuxAccordionDisabledComponent {
     <lux-accordion [luxDisabled]="disabled">
       <lux-panel>
         <lux-panel-header-title>Titel 1</lux-panel-header-title>
-        <lux-panel-content>
-          111111
-        </lux-panel-content>
+        <lux-panel-content> 111111 </lux-panel-content>
       </lux-panel>
     </lux-accordion>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxAccordionComponent, LuxPanelComponent, LuxPanelContentComponent, LuxPanelHeaderTitleComponent]
 })
 class LuxAccordionDisabledTrueComponent {
@@ -717,12 +719,11 @@ class LuxAccordionDisabledTrueComponent {
       </lux-panel>
       <lux-panel id="panel2">
         <lux-panel-header-title>Titel 2</lux-panel-header-title>
-        <lux-panel-content>
-          22222222
-        </lux-panel-content>
+        <lux-panel-content> 22222222 </lux-panel-content>
       </lux-panel>
     </lux-accordion>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxAccordionComponent, LuxPanelComponent, LuxPanelContentComponent, LuxPanelHeaderTitleComponent]
 })
 class LuxAccordionOverrideDisabledComponent {}
@@ -733,35 +734,30 @@ class LuxAccordionOverrideDisabledComponent {}
     <lux-accordion [luxDisabled]="false">
       <lux-panel id="panel1" [luxDisabled]="true">
         <lux-panel-header-title>Titel 1</lux-panel-header-title>
-        <lux-panel-content>
-          111111
-        </lux-panel-content>
+        <lux-panel-content> 111111 </lux-panel-content>
       </lux-panel>
       <lux-panel id="panel2">
         <lux-panel-header-title>Titel 2</lux-panel-header-title>
-        <lux-panel-content>
-          22222222
-        </lux-panel-content>
+        <lux-panel-content> 22222222 </lux-panel-content>
       </lux-panel>
     </lux-accordion>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxAccordionComponent, LuxPanelComponent, LuxPanelContentComponent, LuxPanelHeaderTitleComponent]
 })
 class LuxAccordionOverrideDisabledReversedComponent {}
 
-
 @Component({
-  selector:'lux-toggleposition-after',
+  selector: 'lux-toggleposition-after',
   template: `
     <lux-accordion [luxTogglePosition]="togglePosition">
       <lux-panel>
         <lux-panel-header-title>Titel 1</lux-panel-header-title>
-        <lux-panel-content>
-          111111
-        </lux-panel-content>
+        <lux-panel-content> 111111 </lux-panel-content>
       </lux-panel>
     </lux-accordion>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxAccordionComponent, LuxPanelComponent, LuxPanelContentComponent, LuxPanelHeaderTitleComponent]
 })
 class LuxAccordionluxTogglePositionComponent {
@@ -769,17 +765,16 @@ class LuxAccordionluxTogglePositionComponent {
 }
 
 @Component({
-  selector:'lux-toggleposition-before',
+  selector: 'lux-toggleposition-before',
   template: `
     <lux-accordion [luxTogglePosition]="togglePosition">
       <lux-panel>
         <lux-panel-header-title>Titel 1</lux-panel-header-title>
-        <lux-panel-content>
-          111111
-        </lux-panel-content>
+        <lux-panel-content> 111111 </lux-panel-content>
       </lux-panel>
     </lux-accordion>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxAccordionComponent, LuxPanelComponent, LuxPanelContentComponent, LuxPanelHeaderTitleComponent]
 })
 class LuxAccordionluxTogglePositionBeforeComponent {
@@ -792,18 +787,15 @@ class LuxAccordionluxTogglePositionBeforeComponent {
     <lux-accordion [luxTogglePosition]="'after'">
       <lux-panel id="panel1">
         <lux-panel-header-title>Titel 1</lux-panel-header-title>
-        <lux-panel-content>
-          111111
-        </lux-panel-content>
+        <lux-panel-content> 111111 </lux-panel-content>
       </lux-panel>
       <lux-panel [luxTogglePosition]="'before'" id="panel2">
         <lux-panel-header-title>Titel 2</lux-panel-header-title>
-        <lux-panel-content>
-          22222222
-        </lux-panel-content>
+        <lux-panel-content> 22222222 </lux-panel-content>
       </lux-panel>
     </lux-accordion>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxAccordionComponent, LuxPanelComponent, LuxPanelContentComponent, LuxPanelHeaderTitleComponent]
 })
 class LuxAccordionOverrideluxTogglePositionComponent {}
@@ -814,18 +806,15 @@ class LuxAccordionOverrideluxTogglePositionComponent {}
     <lux-accordion [luxTogglePosition]="'before'">
       <lux-panel id="panel1">
         <lux-panel-header-title>Titel 1</lux-panel-header-title>
-        <lux-panel-content>
-          111111
-        </lux-panel-content>
+        <lux-panel-content> 111111 </lux-panel-content>
       </lux-panel>
       <lux-panel [luxTogglePosition]="'after'" id="panel2">
         <lux-panel-header-title>Titel 2</lux-panel-header-title>
-        <lux-panel-content>
-          22222222
-        </lux-panel-content>
+        <lux-panel-content> 22222222 </lux-panel-content>
       </lux-panel>
     </lux-accordion>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxAccordionComponent, LuxPanelComponent, LuxPanelContentComponent, LuxPanelHeaderTitleComponent]
 })
 class LuxAccordionOverridePanelReversedluxTogglePositionComponent {}
@@ -833,15 +822,14 @@ class LuxAccordionOverridePanelReversedluxTogglePositionComponent {}
 @Component({
   selector: 'lux-accordion-override-panel-reversed-luxtoggleposition-component',
   template: `
-    <lux-accordion [luxColor] = color>
+    <lux-accordion [luxColor]="color">
       <lux-panel>
         <lux-panel-header-title>Titel 1</lux-panel-header-title>
-        <lux-panel-content>
-          111111
-        </lux-panel-content>
+        <lux-panel-content> 111111 </lux-panel-content>
       </lux-panel>
     </lux-accordion>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxAccordionComponent, LuxPanelComponent, LuxPanelContentComponent, LuxPanelHeaderTitleComponent]
 })
 class LuxAccordionColorComponent {
@@ -858,6 +846,7 @@ class LuxAccordionColorComponent {
       </lux-panel>
     </lux-accordion>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxAccordionComponent, LuxPanelComponent, LuxPanelContentComponent, LuxPanelHeaderTitleComponent]
 })
 class LuxAccordionStickyHeaderComponent {

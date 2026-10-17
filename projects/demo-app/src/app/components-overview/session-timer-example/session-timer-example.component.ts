@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { LuxAppHeaderAcSessionTimerService, LuxButtonComponent, LuxInputAcComponent, LuxToggleAcComponent } from '@ihk-gfi/lux-components';
 import { DemoMarkerType } from '../../base/status-marker/status-marker.model';
 import { StatusMarkerComponent } from '../../base/status-marker/status-marker.component';
@@ -15,6 +15,7 @@ import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-ba
     LuxToggleAcComponent,
     StatusMarkerComponent
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './session-timer-example.component.html'
 })
 export class SessionTimerExampleComponent {

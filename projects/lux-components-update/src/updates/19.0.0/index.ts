@@ -1,5 +1,5 @@
 import { chain, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
-import * as chalk from 'chalk';
+import chalk from 'chalk';
 import { Node } from 'jsonc-parser';
 import { updateDependencies } from '../../update-dependencies/index';
 import { deleteFile, moveFilesToDirectory, replaceRule } from '../../utility/files';
@@ -16,8 +16,6 @@ import { AddTransUnitItem, RemoveTransUnitItem, ReplaceItem } from '../../utilit
 import type { Options } from '../../utility/types';
 import { applyRuleIf, finish, messageInfoRule, messageSuccessRule } from '../../utility/util';
 import { validateLuxComponentsVersion, validateNodeVersion } from '../../utility/validation';
-
-
 
 export const updateMajorVersion = '19';
 export const updateMinVersion = '18.5.0';

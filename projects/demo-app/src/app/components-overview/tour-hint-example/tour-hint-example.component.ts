@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import {
     ILuxTourHintStepConfig,
     LuxButtonComponent,
@@ -20,6 +20,7 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
 @Component({
   selector: 'tour-hint-example',
   templateUrl: './tour-hint-example.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxButtonComponent,
     LuxCardActionsComponent,

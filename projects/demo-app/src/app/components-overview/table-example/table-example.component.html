@@ -36,7 +36,7 @@
           [luxSortable]="nameConfig.sortable"
           [luxSticky]="nameConfig.sticky"
           [luxResponsiveAt]="nameConfig.responsiveAt"
-          [luxResponsiveBehaviour]="nameConfig.responsiveBehaviour?.value"
+          [luxResponsiveBehaviour]="$safeNavigationMigration(nameConfig.responsiveBehaviour?.value)"
         >
           <lux-table-column-header>
             <ng-template><span [luxTooltip]="'Tooltip Spalte \'Name\''">Name</span></ng-template>
@@ -56,7 +56,7 @@
           [luxSortable]="symbolConfig.sortable"
           [luxSticky]="symbolConfig.sticky"
           [luxResponsiveAt]="symbolConfig.responsiveAt"
-          [luxResponsiveBehaviour]="symbolConfig.responsiveBehaviour?.value"
+          [luxResponsiveBehaviour]="$safeNavigationMigration(symbolConfig.responsiveBehaviour?.value)"
         >
           <lux-table-column-header>
             <ng-template>
@@ -73,26 +73,26 @@
           </lux-table-column-footer>
         </lux-table-column>
         @if (!multiSelect || !multiSelectOnlyCheckboxClick) {
-        <lux-table-column
-          luxColumnDef="date"
-          luxConfigLabel="Datum"
-          [luxSortable]="dateConfig.sortable"
-          [luxSticky]="dateConfig.sticky"
-          [luxResponsiveAt]="dateConfig.responsiveAt"
-          [luxResponsiveBehaviour]="dateConfig.responsiveBehaviour?.value"
-        >
-          <lux-table-column-header>
-            <ng-template>Datum</ng-template>
-          </lux-table-column-header>
-          <lux-table-column-content>
-            <ng-template let-element
-              ><span>{{ element.date | date : 'dd.MM.yyyy' }}</span></ng-template
-            >
-          </lux-table-column-content>
-          <lux-table-column-footer>
-            <ng-template> Datum Footer </ng-template>
-          </lux-table-column-footer>
-        </lux-table-column>
+          <lux-table-column
+            luxColumnDef="date"
+            luxConfigLabel="Datum"
+            [luxSortable]="dateConfig.sortable"
+            [luxSticky]="dateConfig.sticky"
+            [luxResponsiveAt]="dateConfig.responsiveAt"
+            [luxResponsiveBehaviour]="$safeNavigationMigration(dateConfig.responsiveBehaviour?.value)"
+          >
+            <lux-table-column-header>
+              <ng-template>Datum</ng-template>
+            </lux-table-column-header>
+            <lux-table-column-content>
+              <ng-template let-element
+                ><span>{{ element.date | date: 'dd.MM.yyyy' }}</span></ng-template
+              >
+            </lux-table-column-content>
+            <lux-table-column-footer>
+              <ng-template> Datum Footer </ng-template>
+            </lux-table-column-footer>
+          </lux-table-column>
         }
       </lux-table>
     </div>

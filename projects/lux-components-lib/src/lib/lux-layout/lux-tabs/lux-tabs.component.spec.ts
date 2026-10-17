@@ -5,13 +5,13 @@ import { By } from '@angular/platform-browser';
 import { LuxLabelComponent } from '../../lux-common/lux-label/lux-label.component';
 import { LuxIconComponent } from '../../lux-icon/lux-icon/lux-icon.component';
 
-import { Component, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { Component, QueryList, ViewChild, ViewChildren, ChangeDetectionStrategy } from '@angular/core';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { LuxBadgeNotificationColor } from '../../lux-directives/lux-badge-notification/lux-badge-notification.directive';
 import { LuxTabComponent } from './lux-tabs-subcomponents/lux-tab.component';
 import { LuxTabsComponent } from './lux-tabs.component';
 
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { waitForAsync } from '@angular/core/testing';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
@@ -19,7 +19,7 @@ import { provideNoopAnimations } from '@angular/platform-browser/animations';
 describe('LuxTabsComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      providers: [provideNoopAnimations(), provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+      providers: [provideNoopAnimations(), provideHttpClient(withXhr(), withInterceptorsFromDi()), provideHttpClientTesting()]
     }).compileComponents();
   }));
 
@@ -445,6 +445,7 @@ describe('LuxTabsComponent', () => {
       </lux-tab>
     </lux-tabs>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxTabsComponent, LuxTabComponent]
 })
 class LuxActiveTabChangedTabsComponent {
@@ -476,6 +477,7 @@ class LuxActiveTabChangedTabsComponent {
       <ng-template> Tab-Content 2 </ng-template>
     </lux-tab>
   </lux-tabs>`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxTabsComponent, LuxTabComponent]
 })
 class LuxMockTabsComponent {
@@ -502,6 +504,7 @@ class LuxMockTabsComponent {
       </lux-tab>
     </lux-tabs>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxTabsComponent, LuxTabComponent]
 })
 class LuxTabNumberComponent {
@@ -519,6 +522,7 @@ class LuxTabNumberComponent {
       </lux-tab>
     </lux-tabs>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxTabsComponent, LuxTabComponent]
 })
 class LuxTabWithoutNumberComponent {}
@@ -538,6 +542,7 @@ class LuxTabWithoutNumberComponent {}
       </lux-tab>
     </lux-tabs>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxTabsComponent, LuxTabComponent, LuxLabelComponent]
 })
 class LuxTabLazyLoadingComponent {
@@ -564,6 +569,7 @@ class LuxTabLazyLoadingComponent {
       </lux-tab>
     </lux-tabs>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxTabsComponent, LuxTabComponent]
 })
 class LuxTabLuxDisabledComponent {
@@ -579,6 +585,7 @@ class LuxTabLuxDisabledComponent {
       </lux-tab>
     </lux-tabs>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxTabsComponent, LuxTabComponent]
 })
 class LuxNotificationColorComponent {

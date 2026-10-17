@@ -1,9 +1,9 @@
 import { ComponentFixture, fakeAsync, flush, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { LuxPaginatorComponent } from '@ihk-gfi/lux-components/lux-paginator';
@@ -22,7 +22,7 @@ describe('LuxMessageBoxComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       providers: [
-        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideHttpClientTesting(),
         provideNoopAnimations(),
         provideLuxTranslocoTesting()
@@ -243,6 +243,7 @@ describe('LuxMessageBoxComponent', () => {
     [luxIndex]="index"
     [luxMaximumDisplayed]="maxDisplayed"
   ></lux-message-box>`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxMessageBoxComponent]
 })
 class MockMessageBoxComponent {

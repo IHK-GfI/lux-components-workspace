@@ -5,7 +5,7 @@ import { FormGroup } from '@angular/forms';
 @Component({
   selector: 'example-form-value',
   templateUrl: './example-form-value.component.html',
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [JsonPipe]
 })
 export class ExampleFormValueComponent {

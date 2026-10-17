@@ -1,6 +1,6 @@
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component, importProvidersFrom, ViewChild } from '@angular/core';
+import { Component, importProvidersFrom, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, waitForAsync } from '@angular/core/testing';
 import { LuxOverlayHelper, LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
@@ -25,7 +25,7 @@ describe('LuxPopupComponent', () => {
             }
           })
         ]),
-        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideHttpClientTesting(),
         provideLuxTranslocoTesting()
       ]
@@ -102,6 +102,7 @@ describe('LuxPopupComponent', () => {
 
 @Component({
   imports: [LuxPopupComponent, LuxPopupTriggerDirective],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <lux-popup
       #popupRef="luxPopup"

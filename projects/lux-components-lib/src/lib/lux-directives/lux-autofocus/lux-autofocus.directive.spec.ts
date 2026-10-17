@@ -1,6 +1,6 @@
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
@@ -27,7 +27,7 @@ describe('LuxAutofocusDirective', () => {
     TestBed.configureTestingModule({
       providers: [
         LuxComponentsConfigService,
-        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideHttpClientTesting(),
         provideLuxTranslocoTesting()
       ]
@@ -188,6 +188,7 @@ describe('LuxAutofocusDirective', () => {
 @Component({
   selector: 'lux-autofocus-test-input',
   template: `<lux-input-ac luxAutofocus></lux-input-ac>`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxInputAcComponent, LuxAutofocusDirective]
 })
 class LuxAutoFocusInputComponent {}
@@ -195,6 +196,7 @@ class LuxAutoFocusInputComponent {}
 @Component({
   selector: 'lux-autofocus-test-input',
   template: `<lux-autocomplete-ac luxAutofocus></lux-autocomplete-ac>`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxAutocompleteAcComponent, LuxAutofocusDirective]
 })
 class LuxAutoFocusAutoCompleteComponent {}
@@ -202,6 +204,7 @@ class LuxAutoFocusAutoCompleteComponent {}
 @Component({
   selector: 'lux-autofocus-test-checkbox',
   template: `<lux-checkbox-ac luxAutofocus></lux-checkbox-ac>`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxCheckboxAcComponent, LuxAutofocusDirective]
 })
 class LuxAutoFocusCheckboxComponent {}
@@ -209,6 +212,7 @@ class LuxAutoFocusCheckboxComponent {}
 @Component({
   selector: 'lux-autofocus-test-chips',
   template: `<lux-chips-ac [luxInputAllowed]="true" luxAutofocus></lux-chips-ac>`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxChipsAcComponent, LuxAutofocusDirective]
 })
 class LuxAutoFocusChipsComponent {}
@@ -216,6 +220,7 @@ class LuxAutoFocusChipsComponent {}
 @Component({
   selector: 'lux-autofocus-test-datepicker',
   template: `<lux-datepicker-ac luxAutofocus></lux-datepicker-ac>`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxDatepickerAcComponent, LuxAutofocusDirective]
 })
 class LuxAutoFocusDatePickerComponent {}
@@ -230,6 +235,7 @@ class LuxAutoFocusTimepickerComponent {}
 @Component({
   selector: 'lux-autofocus-test-datetimepicker',
   template: `<lux-datetimepicker-ac luxAutofocus></lux-datetimepicker-ac>`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxDatetimepickerAcComponent, LuxAutofocusDirective]
 })
 class LuxAutoFocusDateTimePickerComponent {}
@@ -237,6 +243,7 @@ class LuxAutoFocusDateTimePickerComponent {}
 @Component({
   selector: 'lux-autofocus-test-fileinput',
   template: `<lux-file-input-ac luxAutofocus></lux-file-input-ac>`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxFileInputAcComponent, LuxAutofocusDirective]
 })
 class LuxAutoFocusFileInputComponent {}
@@ -244,6 +251,7 @@ class LuxAutoFocusFileInputComponent {}
 @Component({
   selector: 'lux-autofocus-test-radio',
   template: `<lux-radio-ac [luxOptions]="options" luxAutofocus></lux-radio-ac>`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxRadioAcComponent, LuxAutofocusDirective]
 })
 class LuxAutoFocusRadioComponent {
@@ -257,6 +265,7 @@ class LuxAutoFocusRadioComponent {
 @Component({
   selector: 'lux-autofocus-test-select',
   template: `<lux-select-ac [luxOptions]="options" luxAutofocus></lux-select-ac>`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxSelectAcComponent, LuxAutofocusDirective]
 })
 class LuxAutoFocusSelectComponent {
@@ -269,6 +278,7 @@ class LuxAutoFocusSelectComponent {
 @Component({
   selector: 'lux-autofocus-test-textarea',
   template: `<lux-textarea-ac luxAutofocus></lux-textarea-ac>`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxTextareaAcComponent, LuxAutofocusDirective]
 })
 class LuxAutoFocusTextAreaComponent {}
@@ -276,6 +286,7 @@ class LuxAutoFocusTextAreaComponent {}
 @Component({
   selector: 'lux-autofocus-test-toggle',
   template: `<lux-toggle-ac luxAutofocus></lux-toggle-ac>`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxToggleAcComponent, LuxAutofocusDirective]
 })
 class LuxAutoFocusToggleComponent {}
@@ -283,6 +294,7 @@ class LuxAutoFocusToggleComponent {}
 @Component({
   selector: 'lux-autofocus-test-button',
   template: `<lux-button luxAutofocus></lux-button>`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxButtonComponent, LuxAutofocusDirective]
 })
 class LuxAutoFocusButtonComponent {}
@@ -290,6 +302,7 @@ class LuxAutoFocusButtonComponent {}
 @Component({
   selector: 'lux-autofocus-test-file-list',
   template: `<lux-file-list luxAutofocus></lux-file-list>`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxFileListComponent, LuxAutofocusDirective]
 })
 class LuxAutoFocusFileListComponent {}
@@ -297,6 +310,7 @@ class LuxAutoFocusFileListComponent {}
 @Component({
   selector: 'lux-autofocus-test-file-upload',
   template: `<lux-file-upload luxAutofocus></lux-file-upload>`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxFileUploadComponent, LuxAutofocusDirective]
 })
 class LuxAutoFocusFileUploadComponent {}

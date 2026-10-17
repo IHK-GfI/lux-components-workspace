@@ -1,10 +1,11 @@
-import { Component, ContentChildren, input, QueryList } from '@angular/core';
+import { Component, ContentChildren, input, QueryList, ChangeDetectionStrategy } from '@angular/core';
 import { LuxMenuItemComponent } from '../../../lux-action/lux-menu/lux-menu-subcomponents/lux-menu-item.component';
 import { LuxDividerComponent } from '../../lux-divider/lux-divider.component';
 import { LuxMenuSectionTitleComponent } from '../../../lux-action/lux-menu/lux-menu-subcomponents/lux-menu-section-title.component';
 
 @Component({
   selector: 'lux-app-header-ac-user-menu',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: ''
 })
 export class LuxAppHeaderAcUserMenuComponent {

@@ -1,5 +1,5 @@
 import { NgStyle } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import {
   LuxAccordionComponent,
@@ -41,6 +41,7 @@ interface TabConfig {
 @Component({
   selector: 'app-tabs',
   templateUrl: './tabs-example.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxAccordionComponent,
     LuxPanelHeaderTitleComponent,

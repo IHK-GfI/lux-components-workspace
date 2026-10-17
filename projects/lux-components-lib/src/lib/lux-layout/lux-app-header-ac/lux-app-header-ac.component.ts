@@ -10,7 +10,8 @@ import {
   Output,
   SimpleChanges,
   ViewChild,
-  inject
+  inject,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.component';
@@ -39,6 +40,7 @@ import { LuxDividerComponent } from '../lux-divider/lux-divider.component';
 @Component({
   selector: 'lux-app-header-ac',
   templateUrl: './lux-app-header-ac.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxAriaRoleDirective,
     LuxAriaLabelDirective,

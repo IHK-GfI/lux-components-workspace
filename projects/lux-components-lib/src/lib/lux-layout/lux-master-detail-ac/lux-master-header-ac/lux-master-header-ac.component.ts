@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, HostBinding, Input, OnDestroy, Output, ViewChild, inject } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostBinding, Input, OnDestroy, Output, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
 import { TranslocoService } from '@jsverse/transloco';
 import { Subscription } from 'rxjs';
 import { LuxButtonComponent } from '../../../lux-action/lux-button/lux-button.component';
@@ -9,6 +9,7 @@ import { LuxMediaQueryObserverService } from '../../../lux-util/lux-media-query-
 @Component({
   selector: 'lux-master-header-ac',
   templateUrl: './lux-master-header-ac.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxAriaLabelDirective, LuxAriaExpandedDirective, LuxButtonComponent]
 })
 export class LuxMasterHeaderAcComponent implements OnDestroy {

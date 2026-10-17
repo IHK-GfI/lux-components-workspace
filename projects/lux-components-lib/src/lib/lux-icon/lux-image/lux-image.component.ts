@@ -1,10 +1,11 @@
 import { NgStyle } from '@angular/common';
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
   selector: 'lux-image',
   templateUrl: './lux-image.component.html',
   styleUrls: ['./lux-image.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [NgStyle]
 })
 export class LuxImageComponent implements OnChanges, OnInit {

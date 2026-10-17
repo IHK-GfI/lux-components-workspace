@@ -1,3 +1,5 @@
+/// <reference types="jasmine" />
+
 import { AxeResults } from 'axe-core';
 import { axe, toHaveNoViolations } from 'jasmine-axe';
 

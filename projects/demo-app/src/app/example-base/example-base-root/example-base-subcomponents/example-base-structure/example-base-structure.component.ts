@@ -1,5 +1,5 @@
 import { NgClass, NgTemplateOutlet } from '@angular/common';
-import { Component, ContentChild, Input, OnDestroy, OnInit, inject } from '@angular/core';
+import { Component, ContentChild, Input, OnDestroy, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import {
   LuxAppFooterButtonInfo,
@@ -22,6 +22,7 @@ import { ExampleBaseSimpleOptionsComponent } from '../example-base-options/examp
   selector: 'example-base-structure',
   templateUrl: './example-base-structure.component.html',
   styleUrls: ['./example-base-structure.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxCardActionsComponent,
     LuxCardContentComponent,

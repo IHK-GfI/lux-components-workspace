@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ExampleBaseStructureComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-structure/example-base-structure.component';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { LuxChatComponent, LuxChatData, LuxChatPopupComponent, LuxChatHeaderComponent } from '@ihk-gfi/lux-components/lux-chat';
@@ -31,6 +31,7 @@ const endOfLastYear = startOfThisYear - DAY_IN_MILLIS;
     LuxInputAcComponent
   ],
   templateUrl: './chat-example.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './chat-example.component.scss'
 })
 export class ChatExampleComponent {

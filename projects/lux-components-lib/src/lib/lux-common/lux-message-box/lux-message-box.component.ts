@@ -1,6 +1,6 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { NgClass } from '@angular/common';
-import { Component, ElementRef, EventEmitter, HostBinding, Input, Output, ViewChild, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, HostBinding, Input, Output, ViewChild, inject } from '@angular/core';
 import { LuxPageEvent, LuxPaginatorComponent } from '@ihk-gfi/lux-components/lux-paginator';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { LuxAriaLabelDirective } from '../../lux-directives/lux-aria/lux-aria-label.directive';
@@ -11,6 +11,7 @@ import { LuxMessageComponent } from './lux-message-box-subcomponents/lux-message
 @Component({
   selector: 'lux-message-box',
   templateUrl: './lux-message-box.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxAriaLabelDirective, LuxMessageComponent, NgClass, LuxPaginatorComponent, TranslocoPipe]
 })
 export class LuxMessageBoxComponent {

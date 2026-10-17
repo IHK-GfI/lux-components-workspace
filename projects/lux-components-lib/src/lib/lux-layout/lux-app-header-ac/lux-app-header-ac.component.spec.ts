@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { discardPeriodicTasks, fakeAsync, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { Viewport } from 'karma-viewport/dist/adapter/viewport';
@@ -38,6 +38,7 @@ describe('LuxAppHeaderAcComponent', () => {
     <lux-app-header-ac luxAppTitle="MyClickTitle" luxAppIconSrc="assets/svg/demoAppLogo.svg" (luxAppLogoClicked)="onClicked()">
     </lux-app-header-ac>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxAppHeaderAcComponent]
 })
 class MockIconsClickedAppHeaderAcComponent {

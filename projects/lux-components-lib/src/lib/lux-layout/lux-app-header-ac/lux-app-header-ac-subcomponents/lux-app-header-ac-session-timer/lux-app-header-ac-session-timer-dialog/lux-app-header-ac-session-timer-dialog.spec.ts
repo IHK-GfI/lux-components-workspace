@@ -1,7 +1,7 @@
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { LuxAppHeaderAcSessionTimerDialogComponent, LuxSessionTimerDialogType } from './lux-app-header-ac-session-timer-dialog';
 import { LuxAppHeaderAcSessionTimerService } from '../lux-app-header-ac-session-timer-service/lux-app-header-ac-session-timer.service';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { LuxDialogRef } from '../../../../../lux-popups/lux-dialog/lux-dialog-model/lux-dialog-ref.class';
 import { By } from '@angular/platform-browser';
@@ -21,7 +21,7 @@ describe('LuxAppHeaderAcSessionTimerDialogComponent', () => {
       imports: [LuxAppHeaderAcSessionTimerDialogComponent],
       providers: [
         LuxAppHeaderAcSessionTimerService,
-        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideHttpClientTesting(),
         { provide: LuxDialogRef, useValue: dialogRefMock },
         provideLuxTranslocoTesting()

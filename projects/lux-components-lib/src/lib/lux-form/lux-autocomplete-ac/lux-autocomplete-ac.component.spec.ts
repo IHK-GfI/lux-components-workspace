@@ -1,6 +1,6 @@
 // noinspection DuplicatedCode
 
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, ViewChild } from '@angular/core';
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -831,7 +831,8 @@ describe('LuxAutocompleteAcComponent', () => {
       ></lux-autocomplete-ac>
     </form>
   `,
-  imports: [ReactiveFormsModule, LuxAutocompleteAcComponent]
+  imports: [ReactiveFormsModule, LuxAutocompleteAcComponent],
+  changeDetection: ChangeDetectionStrategy.Eager
 })
 class LuxAutoCompleteClearableInFormComponent {
   clearable = true;
@@ -852,7 +853,8 @@ class LuxAutoCompleteClearableInFormComponent {
   template: `
     <lux-autocomplete-ac luxLabel="Autocomplete" [luxOptions]="options" [(luxValue)]="selected" [luxClearable]="true"></lux-autocomplete-ac>
   `,
-  imports: [LuxAutocompleteAcComponent]
+  imports: [LuxAutocompleteAcComponent],
+  changeDetection: ChangeDetectionStrategy.Eager
 })
 class LuxAutoCompleteClearableOutsideFormComponent {
   selected: TestOption | null = null;
@@ -872,6 +874,7 @@ class LuxAutoCompleteClearableOutsideFormComponent {
       <lux-autocomplete-ac luxLabel="Autocomplete" [luxOptions]="options" luxControlBinding="aufgaben"> </lux-autocomplete-ac>
     </form>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ReactiveFormsModule, LuxAutocompleteAcComponent]
 })
 class LuxAutoCompleteInFormWithStringValuesComponent {
@@ -893,6 +896,7 @@ class LuxAutoCompleteInFormWithStringValuesComponent {
   template: `
     <lux-autocomplete-ac luxLabel="Autocomplete" [luxOptions]="options" [(luxValue)]="selected" [luxStrict]="strict"> </lux-autocomplete-ac>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxAutocompleteAcComponent]
 })
 class LuxAutoCompleteTwoWayBindingWithStringValuesComponent {
@@ -915,6 +919,7 @@ class LuxAutoCompleteTwoWayBindingWithStringValuesComponent {
       </div>
     </ng-template>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxAutocompleteAcComponent]
 })
 class LuxAutoCompleteWithCustomOptionTemplateComponent {
@@ -928,6 +933,7 @@ class LuxAutoCompleteWithCustomOptionTemplateComponent {
 
 @Component({
   template: ` <lux-autocomplete-ac luxLabel="Label" [luxOptions]="options" [luxOptionBlockSize]="8"></lux-autocomplete-ac> `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxAutocompleteAcComponent]
 })
 class LuxScrollComponent {
@@ -952,6 +958,7 @@ class LuxScrollComponent {
       <lux-autocomplete-ac luxLabel="Autocomplete" [luxOptions]="options" luxControlBinding="aufgaben"> </lux-autocomplete-ac>
     </form>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ReactiveFormsModule, LuxAutocompleteAcComponent]
 })
 class LuxAutoCompleteInFormAttributeComponent {
@@ -978,6 +985,7 @@ class LuxAutoCompleteInFormAttributeComponent {
   template: `
     <lux-autocomplete-ac luxLabel="Autocomplete" [luxOptions]="options" [(luxValue)]="selected" [luxStrict]="strict"> </lux-autocomplete-ac>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxAutocompleteAcComponent]
 })
 class LuxValueAttributeComponent {
@@ -998,6 +1006,7 @@ class LuxValueAttributeComponent {
   template: `
     <lux-autocomplete-ac luxLabel="Autocomplete" [luxOptions]="options" (luxOptionSelected)="setSelected($event)"> </lux-autocomplete-ac>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxAutocompleteAcComponent]
 })
 class LuxOptionSelectedComponent {
@@ -1022,6 +1031,7 @@ class LuxOptionSelectedComponent {
     <lux-autocomplete-ac luxLabel="Autocomplete" [luxOptions]="options" luxOptionLabelProp="label" [luxLookupDelay]="0">
     </lux-autocomplete-ac>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxAutocompleteAcComponent]
 })
 class MockAutocompleteComponent {
@@ -1049,6 +1059,7 @@ class MockAutocompleteComponent {
     >
     </lux-autocomplete-ac>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxAutocompleteAcComponent]
 })
 class MockPickValueComponent {
@@ -1081,6 +1092,7 @@ class MockPickValueComponent {
 
     <lux-button luxLabel="Speichern" [luxDisabled]="!formGroup.valid"></lux-button>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ReactiveFormsModule, LuxAutocompleteAcComponent, LuxButtonComponent]
 })
 class LuxAutoCompleteNotAnOptionComponent {
@@ -1111,6 +1123,7 @@ class LuxAutoCompleteNotAnOptionComponent {
       <lux-autocomplete-ac luxLabel="Autocomplete" [luxOptions]="options" luxControlBinding="aufgaben"></lux-autocomplete-ac>
     </form>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ReactiveFormsModule, LuxAutocompleteAcComponent]
 })
 class LuxAutoCompleteSingleOptionComponent {

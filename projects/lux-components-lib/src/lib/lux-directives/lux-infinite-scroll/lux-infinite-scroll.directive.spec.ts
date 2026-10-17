@@ -1,6 +1,6 @@
 // noinspection DuplicatedCode
 
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
@@ -195,6 +195,7 @@ describe('LuxInfiniteScrollDirective', () => {
       }
     </ul>
   </div>`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxInfiniteScrollDirective]
 })
 class MockComponent {
@@ -220,6 +221,7 @@ class MockComponent {
     (luxScrolled)="onMockEvent()"
     [luxImmediateCallback]="immediateCallback"
   ></div>`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxInfiniteScrollDirective]
 })
 class MockWithoutScrollBarAndImmediateCallbackComponent {

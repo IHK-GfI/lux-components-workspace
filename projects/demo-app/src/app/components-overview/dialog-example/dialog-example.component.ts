@@ -1,5 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { Component, Injector, OnDestroy, TemplateRef, ViewChild, inject } from '@angular/core';
+import { Component, Injector, OnDestroy, TemplateRef, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
 import {
   ILuxDialogPresetConfig,
   LuxAccordionComponent,
@@ -27,6 +27,7 @@ import { DIALOG_EXAMPLE_LOCAL_TOKEN } from './dialog-example-local.token';
 @Component({
   selector: 'app-dialog-example',
   templateUrl: './dialog-example.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxButtonComponent,
     LuxAccordionComponent,

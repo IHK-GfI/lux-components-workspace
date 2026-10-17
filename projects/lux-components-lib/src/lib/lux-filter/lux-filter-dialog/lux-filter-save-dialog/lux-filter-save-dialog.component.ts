@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild, inject } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
 import { AbstractControl, ValidatorFn } from '@angular/forms';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { LuxButtonComponent } from '../../../lux-action/lux-button/lux-button.component';
@@ -15,6 +15,7 @@ import { LuxFilterFormComponent } from '../../lux-filter-form/lux-filter-form.co
 @Component({
   selector: 'lux-filter-save-dialog',
   templateUrl: './lux-filter-save-dialog.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxDialogStructureComponent,
     LuxDialogTitleComponent,

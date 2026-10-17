@@ -1,8 +1,8 @@
 // noinspection DuplicatedCode
 
-import { HttpClient, HttpRequest, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { HttpClient, HttpRequest, provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
@@ -22,7 +22,12 @@ describe('LuxHttpErrorComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      providers: [provideNoopAnimations(), provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting(), provideLuxTranslocoTesting()],
+      providers: [
+        provideNoopAnimations(),
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+        provideLuxTranslocoTesting()
+      ]
     }).compileComponents();
   }));
 
@@ -248,6 +253,7 @@ describe('LuxHttpErrorComponent', () => {
 @Component({
   selector: 'lux-mock-http-error',
   template: '<lux-http-error></lux-http-error>',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxHttpErrorComponent]
 })
 class LuxMockHttpErrorComponent {

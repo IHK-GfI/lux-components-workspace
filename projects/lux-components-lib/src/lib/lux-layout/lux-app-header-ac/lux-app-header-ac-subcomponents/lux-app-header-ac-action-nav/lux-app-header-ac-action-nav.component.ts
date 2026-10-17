@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ContentChild, ContentChildren, QueryList, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ContentChild, ContentChildren, QueryList, TemplateRef, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { LuxUtil } from '../../../../lux-util/lux-util';
 import { LuxAppHeaderAcActionNavItemComponent } from './lux-app-header-ac-action-nav-item/lux-app-header-ac-action-nav-item.component';
 import { LuxAppHeaderAcSessionTimerComponent } from '../lux-app-header-ac-session-timer/lux-app-header-ac-session-timer';
@@ -6,6 +6,7 @@ import { LuxAppHeaderAcSessionTimerComponent } from '../lux-app-header-ac-sessio
 @Component({
   selector: 'lux-app-header-ac-action-nav',
   templateUrl: './lux-app-header-ac-action-nav.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxAppHeaderAcSessionTimerComponent]
 })
 export class LuxAppHeaderAcActionNavComponent implements AfterViewInit {

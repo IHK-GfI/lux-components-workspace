@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { LuxIconComponent } from '../../lux-icon/lux-icon/lux-icon.component';
 import { LuxBadgeColor, LuxBadgeSize } from '../../lux-util/lux-colors.enum';
 
@@ -7,6 +7,7 @@ import { LuxBadgeColor, LuxBadgeSize } from '../../lux-util/lux-colors.enum';
   selector: 'lux-badge',
   templateUrl: './lux-badge.component.html',
   styleUrls: ['./lux-badge.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [NgClass, LuxIconComponent]
 })
 export class LuxBadgeComponent {

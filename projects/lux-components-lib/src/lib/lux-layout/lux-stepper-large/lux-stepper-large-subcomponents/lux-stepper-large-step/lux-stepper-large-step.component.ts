@@ -1,10 +1,11 @@
-import { AfterViewInit, Component, Input, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Input, TemplateRef, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { LuxUtil } from '../../../../lux-util/lux-util';
 import { LuxStepperLargeClickEvent } from '../../lux-stepper-large-model/lux-stepper-large-click-event';
 import { ILuxStepperLargeStep, LuxVetoState } from '../../lux-stepper-large-model/lux-stepper-large-step.interface';
 
 @Component({
   selector: 'lux-stepper-large-step',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <ng-template #content>
       <ng-content></ng-content>
