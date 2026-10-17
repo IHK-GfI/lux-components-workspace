@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, EventEmitter, Input, Output, signal, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, input, output, signal } from '@angular/core';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { LuxButtonComponent } from '../../../lux-action/lux-button/lux-button.component';
 import { LuxAriaLabelDirective } from '../../../lux-directives/lux-aria/lux-aria-label.directive';
@@ -10,26 +10,22 @@ import { ILuxMessage } from '../lux-message-box-model/lux-message.interface';
 @Component({
   selector: 'lux-message',
   templateUrl: './lux-message.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxAriaRoleDirective, LuxButtonComponent, LuxAriaLabelDirective, LuxIconComponent, TranslocoPipe, NgClass]
 })
 export class LuxMessageComponent {
-  private _luxMessage?: ILuxMessage;
-
   readonly closing = signal(false);
 
-  @Output() luxMessageClosed = new EventEmitter<ILuxMessage>();
+  luxMessageClosed = output<ILuxMessage>();
 
-  @Input() set luxMessage(message: ILuxMessage | undefined) {
-    this._luxMessage = message;
-    this.closing.set(false);
+  readonly luxMessage = input<ILuxMessage | undefined>(undefined);
+
+  constructor() {
+    effect(() => {
+      this.luxMessage();
+      this.closing.set(false);
+    });
   }
-
-  get luxMessage(): ILuxMessage | undefined {
-    return this._luxMessage;
-  }
-
-  constructor() {}
 
   /**
    * Setzt das closing-Signal auf true – die CSS-Transition übernimmt das Ausblenden.
@@ -41,7 +37,7 @@ export class LuxMessageComponent {
 
   onTransitionEnd(event: TransitionEvent) {
     if (this.closing() && event.propertyName === 'opacity') {
-      this.luxMessageClosed.emit(this.luxMessage);
+      this.luxMessageClosed.emit(this.luxMessage()!);
     }
   }
 }

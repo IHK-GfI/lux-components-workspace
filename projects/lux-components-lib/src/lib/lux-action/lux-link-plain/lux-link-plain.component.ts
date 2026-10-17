@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { ChangeDetectorRef, Component, HostBinding, Input, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostBinding, effect, inject, input } from '@angular/core';
 import { Router } from '@angular/router';
 import { LuxAriaLabelDirective } from '../../lux-directives/lux-aria/lux-aria-label.directive';
 import { LuxTooltipDirective } from '../../lux-directives/lux-tooltip/lux-tooltip.directive';
@@ -10,45 +10,38 @@ import { LuxActionComponentBaseClass } from '../lux-action-model/lux-action-comp
   selector: 'lux-link-plain',
   templateUrl: './lux-link-plain.component.html',
   styleUrls: ['./lux-link-plain.component.scss'],
-  host: { '[class.lux-disabled]': 'luxDisabled' },
-  changeDetection: ChangeDetectionStrategy.Eager,
+  host: { '[class.lux-disabled]': 'luxDisabled()' },
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxAriaLabelDirective, NgClass, LuxIconComponent]
 })
-export class LuxLinkPlainComponent extends LuxActionComponentBaseClass implements OnInit {
+export class LuxLinkPlainComponent extends LuxActionComponentBaseClass {
   private router = inject(Router);
-  cdr = inject(ChangeDetectorRef);
   tooltipDirective?: LuxTooltipDirective;
 
   @HostBinding('class') classes = '';
-  @Input() luxHref = '';
-  @Input() luxBlank = false;
+  readonly luxHref = input('');
+  readonly luxBlank = input(false);
+  readonly luxCustomClass = input('');
 
-  private _customClass = '';
-  get luxCustomClass() {
-    return this._customClass;
-  }
-  @Input() set luxCustomClass(customClass: string) {
-    if (customClass) {
-      this._customClass = customClass;
+  constructor() {
+    super();
+
+    effect(() => {
       this.updateHostClasses();
-    }
-  }
-
-  ngOnInit() {
-    this.updateHostClasses();
+    });
   }
 
   private updateHostClasses() {
-    if (this.luxCustomClass) {
-      this.classes = this.luxCustomClass;
+    if (this.luxCustomClass()) {
+      this.classes = this.luxCustomClass();
     } else {
       this.classes = 'default-style';
     }
   }
 
   isExternal(): boolean {
-    if (!this.luxHref) return false;
-    const href = this.luxHref.trim();
+    if (!this.luxHref()) return false;
+    const href = this.luxHref().trim();
     return (
       href.startsWith('http://') ||
       href.startsWith('https://') ||
@@ -67,14 +60,14 @@ export class LuxLinkPlainComponent extends LuxActionComponentBaseClass implement
   redirectToHref($event: any) {
     this.luxClicked.emit($event);
 
-    if (!this.luxHref) return;
+    if (!this.luxHref()) return;
 
     $event.preventDefault();
-    const href = this.luxHref.trim();
+    const href = this.luxHref().trim();
 
     if (this.isExternal()) {
       // Externe Links: Öffne im aktuellen oder neuen Fenster
-      if (this.luxBlank || $event.ctrlKey || $event.metaKey || $event.which === 2) {
+      if (this.luxBlank() || $event.ctrlKey || $event.metaKey || $event.which === 2) {
         // noopener,noreferrer verhindert Reverse Tabnabbing (Zugriff der Zielseite auf window.opener)
         window.open(href, '_blank', 'noopener,noreferrer');
       } else {
@@ -82,7 +75,7 @@ export class LuxLinkPlainComponent extends LuxActionComponentBaseClass implement
       }
     } else {
       // Interne Links: Nutze Angular Router
-      if (this.luxBlank || $event.ctrlKey || $event.metaKey || $event.which === 2) {
+      if (this.luxBlank() || $event.ctrlKey || $event.metaKey || $event.which === 2) {
         const newRelativeUrl = this.router.createUrlTree([href]);
         const baseUrl = window.location.href.replace(this.router.url, '');
         window.open(baseUrl + newRelativeUrl, '_blank', 'noopener,noreferrer');

@@ -1,31 +1,31 @@
-import { Component, OnDestroy, inject, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnDestroy, signal } from '@angular/core';
 import { LuxIconComponent, LuxMediaQueryObserverService } from '@ihk-gfi/lux-components';
-import { Subscription } from 'rxjs';
 import { LUX_FILE_PREVIEW_DATA } from '../lux-file-preview-config';
 import { LuxFilePreviewData } from '../lux-file-preview-data';
 
 @Component({
   selector: 'lux-file-preview-toolbar',
   templateUrl: './lux-file-preview-toolbar.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxIconComponent]
 })
 export class LuxFilePreviewToolbarComponent implements OnDestroy {
   private mediaQueryService = inject(LuxMediaQueryObserverService);
   data = inject<LuxFilePreviewData>(LUX_FILE_PREVIEW_DATA);
 
-  mobileView: boolean;
-  subscription: Subscription;
+  mobileView = signal(this.mediaQueryService.activeMediaQuery === 'xs');
+
+  private unsubscribe: (() => void) | null = null;
 
   constructor() {
-    this.mobileView = this.mediaQueryService.activeMediaQuery === 'xs';
-
-    this.subscription = this.mediaQueryService.getMediaQueryChangedAsObservable().subscribe((query: string) => {
-      this.mobileView = query === 'xs';
+    const subscription = this.mediaQueryService.getMediaQueryChangedAsObservable().subscribe((query: string) => {
+      this.mobileView.set(query === 'xs');
     });
+
+    this.unsubscribe = () => subscription.unsubscribe();
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    this.unsubscribe?.();
   }
 }
