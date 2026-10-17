@@ -1,4 +1,6 @@
+import { CommonModule } from '@angular/common';
 import {
+  ChangeDetectionStrategy,
   Component,
   contentChild,
   effect,
@@ -7,23 +9,22 @@ import {
   input,
   model,
   output,
-  viewChild,
-  ChangeDetectionStrategy
+  signal,
+  viewChild
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import {
+  LuxAriaLabelDirective,
+  LuxAutofocusDirective,
+  LuxButtonComponent,
+  LuxDividerComponent,
+  LuxTextareaAcComponent
+} from '@ihk-gfi/lux-components';
+import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
+import { LuxChatController } from './lux-chat-controller';
 import { LuxChatData } from './lux-chat-data';
 import { LuxChatMessageData } from './lux-chat-message-data';
-import { LuxChatController } from './lux-chat-controller';
-import { CommonModule } from '@angular/common';
-import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
-import {
-  LuxDividerComponent,
-  LuxTextareaAcComponent,
-  LuxAriaLabelDirective,
-  LuxButtonComponent,
-  LuxAutofocusDirective
-} from '@ihk-gfi/lux-components';
 import { LuxChatRelativeUntilTimestamp } from './lux-chat-relative-until-timestamp.pipe';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { LuxChatEntryComponent } from './lux-chat-subcomponents/lux-chat-entry.component';
 import { LuxChatHeaderComponent } from './lux-chat-subcomponents/lux-chat-header.component';
 
@@ -43,7 +44,7 @@ const DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
     LuxChatRelativeUntilTimestamp,
     LuxAutofocusDirective
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './lux-chat.component.html'
 })
 export class LuxChatComponent extends LuxChatController {
@@ -61,50 +62,31 @@ export class LuxChatComponent extends LuxChatController {
   public luxChatOutput = output<string>();
   public chatClose = output<void>();
   public chatFullscreen = output<boolean>();
-  public _chatFullscreen = false;
+  public _chatFullscreen = signal(false);
 
   public luxChatHeaderComponent = contentChild(LuxChatHeaderComponent);
   public luxChatEntryComponent = contentChild(LuxChatEntryComponent);
 
-  public locale = 'de-DE';
+  public locale = signal('de-DE');
 
   constructor() {
     super();
 
     this.tService.langChanges$.pipe(takeUntilDestroyed()).subscribe((lang) => {
-      this.locale = this.parseMatLocale(lang);
+      this.locale.set(this.parseMatLocale(lang));
     });
 
-    //Init Chat Data with username
+    // Darstellungsdaten der Nachrichten (eigene Nachricht, Datumstrenner, Zeitangabe) ableiten.
+    // LuxChatData.messages ist signalbasiert, deshalb läuft dieser Effect bei jeder neuen Nachricht
+    // (addMessage() bzw. Zuweisung von messages) und bei einem neuen Nutzernamen erneut.
     effect(() => {
-      const _chatData = this.luxChatData();
-      const _userName = this.luxChatUserName();
+      const messages = this.luxChatData()?.messages ?? [];
+      const userName = this.luxChatUserName();
 
-      if (!_chatData?.messages) return;
-
-      for (const message of _chatData.messages) {
-        message.metadata['_isUser'] = message.user === _userName;
-      }
-    });
-
-    //Init Chat Data for time splits
-    effect(() => {
-      const _chatData = this.luxChatData();
-      if (!_chatData) return;
-
-      _chatData.messageAddedEvents.subscribe((message) => {
-        message.metadata['_isUser'] = message.user === this.luxChatUserName();
-
-        const _innerChatData = this.luxChatData();
-        if (!_innerChatData) return;
-
-        this.updateTimeSplits(message, _innerChatData.messages.length - 1);
-      });
-
-      for (let index = 0; index < _chatData.messages.length; index++) {
-        const message = _chatData.messages[index];
+      messages.forEach((message, index) => {
+        message.metadata['_isUser'] = message.user === userName;
         this.updateTimeSplits(message, index);
-      }
+      });
     });
   }
 
@@ -148,6 +130,11 @@ export class LuxChatComponent extends LuxChatController {
     //Prevent Enter key from being processed
     event.preventDefault();
 
+    // Wie beim Senden-Button (nur bei vorhandener Eingabe sichtbar) keine leere Nachricht ausgeben
+    if (!this.chatInput) {
+      return;
+    }
+
     this.luxChatOutput.emit(this.chatInput);
 
     this.chatInput = '';
@@ -168,8 +155,9 @@ export class LuxChatComponent extends LuxChatController {
   }
 
   public onFullscreenChatClicked(): void {
-    this._chatFullscreen = !this._chatFullscreen;
-    this.chatFullscreen.emit(this._chatFullscreen);
+    const fullscreen = !this._chatFullscreen();
+    this._chatFullscreen.set(fullscreen);
+    this.chatFullscreen.emit(fullscreen);
   }
 
   private scrollToBottom(): void {

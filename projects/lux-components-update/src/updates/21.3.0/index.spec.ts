@@ -6,6 +6,7 @@ import { appOptions, workspaceOptions } from '../../utility/test';
 import { Options } from '../../utility/types';
 import { UtilConfig } from '../../utility/util';
 import { update210300, updateIcons } from './index';
+import { lastValueFrom } from 'rxjs';
 
 describe('update210300', () => {
   let appTree: UnitTestTree;
@@ -32,7 +33,7 @@ describe('update210300', () => {
   });
 
   describe('[Rule] update210300', () => {
-    it('Sollte die Abhängigkeiten aktualisieren', (done) => {
+    it('Sollte die Abhängigkeiten aktualisieren', async () => {
       appTree.overwrite(
         '/package.json',
         `
@@ -61,23 +62,17 @@ describe('update210300', () => {
         `
       );
 
-      callRule(update210300(testOptions), appTree, context).subscribe(
-        () => {
-          expect(getDep(appTree, '@ihk-gfi/lux-components').version).not.toEqual('20.0.0');
-          expect(getDep(appTree, '@ihk-gfi/lux-components').version).toEqual('21.3.0');
+      await lastValueFrom(callRule(update210300(testOptions), appTree, context));
+      expect(getDep(appTree, '@ihk-gfi/lux-components').version).not.toEqual('20.0.0');
+      expect(getDep(appTree, '@ihk-gfi/lux-components').version).toEqual('21.3.0');
 
-          expect(getDep(appTree, '@ihk-gfi/lux-components-theme').version).not.toEqual('20.0.0');
-          expect(getDep(appTree, '@ihk-gfi/lux-components-theme').version).toEqual('21.3.0');
-
-          done();
-        },
-        (reason) => expect(reason).toBeUndefined()
-      );
+      expect(getDep(appTree, '@ihk-gfi/lux-components-theme').version).not.toEqual('20.0.0');
+      expect(getDep(appTree, '@ihk-gfi/lux-components-theme').version).toEqual('21.3.0');
     });
   });
 
   describe('[Rule] updateIcons', () => {
-    it('Sollte icons-and-fonts Pfad in styles.scss, app.config.ts und app.module.ts ersetzen', (done) => {
+    it('Sollte icons-and-fonts Pfad in styles.scss, app.config.ts und app.module.ts ersetzen', async () => {
       const oldPath = `icons-and-fonts/v1.10.0`;
       const newPath = `icons-and-fonts/v1.11.0`;
 
@@ -89,25 +84,19 @@ describe('update210300', () => {
       appTree.create(appConfigPath, appConfigContent);
       appTree.create(appModulePath, appModuleContent);
 
-      callRule(updateIcons(testOptions), appTree, context).subscribe(
-        () => {
-          const s = appTree.readContent(stylesPath);
-          const c = appTree.readContent(appConfigPath);
-          const m = appTree.readContent(appModulePath);
+      await lastValueFrom(callRule(updateIcons(testOptions), appTree, context));
+      const s = appTree.readContent(stylesPath);
+      const c = appTree.readContent(appConfigPath);
+      const m = appTree.readContent(appModulePath);
 
-          expect(s).toContain(newPath);
-          expect(s).not.toContain(oldPath);
+      expect(s).toContain(newPath);
+      expect(s).not.toContain(oldPath);
 
-          expect(c).toContain(newPath);
-          expect(c).not.toContain(oldPath);
+      expect(c).toContain(newPath);
+      expect(c).not.toContain(oldPath);
 
-          expect(m).toContain(newPath);
-          expect(m).not.toContain(oldPath);
-
-          done();
-        },
-        (reason) => expect(reason).toBeUndefined()
-      );
+      expect(m).toContain(newPath);
+      expect(m).not.toContain(oldPath);
     });
   });
 });

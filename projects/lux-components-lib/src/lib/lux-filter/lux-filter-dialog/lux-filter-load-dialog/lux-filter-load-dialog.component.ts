@@ -15,7 +15,7 @@ import { LuxFilterFormComponent } from '../../lux-filter-form/lux-filter-form.co
 @Component({
   selector: 'lux-filter-load-dialog',
   templateUrl: './lux-filter-load-dialog.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxDialogStructureComponent,
     LuxDialogTitleComponent,
@@ -36,7 +36,7 @@ export class LuxFilterLoadDialogComponent implements OnInit {
 
   ngOnInit() {
     this.component = this.luxDialogRef.data;
-    this.filterArr = this.component.luxStoredFilters ?? [];
+    this.filterArr = this.component.luxStoredFilters() ?? [];
   }
 
   onDelete(index: number) {

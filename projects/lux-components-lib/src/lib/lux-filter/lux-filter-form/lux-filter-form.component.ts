@@ -1,19 +1,20 @@
 import { NgClass, NgTemplateOutlet } from '@angular/common';
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  ContentChild,
-  ContentChildren,
-  EventEmitter,
-  HostListener,
-  Input,
   OnDestroy,
   OnInit,
-  Output,
-  QueryList,
+  computed,
+  contentChild,
+  contentChildren,
+  effect,
   inject,
-  ChangeDetectionStrategy
+  input,
+  model,
+  output,
+  signal
 } from '@angular/core';
 import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslocoPipe } from '@jsverse/transloco';
@@ -24,20 +25,19 @@ import { LuxMenuTriggerComponent } from '../../lux-action/lux-menu/lux-menu-subc
 import { LuxMenuComponent } from '../../lux-action/lux-menu/lux-menu.component';
 import { LuxAriaLabelDirective } from '../../lux-directives/lux-aria/lux-aria-label.directive';
 import { LuxTooltipDirective } from '../../lux-directives/lux-tooltip/lux-tooltip.directive';
-import { LuxChipsAcComponent } from '../../lux-form/lux-chips-ac/lux-chips-ac.component';
-import { LuxChipAcComponent } from '../../lux-form/lux-chips-ac/lux-chips-subcomponents/lux-chip-ac.component';
-import { LuxSelectAcComponent } from '../../lux-form/lux-select-ac/lux-select-ac.component';
+import { LuxChipComponent } from '../../lux-form/lux-chips/lux-chips-subcomponents/lux-chip.component';
+import { LuxChipsComponent } from '../../lux-form/lux-chips/lux-chips.component';
+import { LuxSelectComponent } from '../../lux-form/lux-select/lux-select.component';
 import { LuxAccordionComponent } from '../../lux-layout/lux-accordion/lux-accordion.component';
 import { LuxCardActionsComponent } from '../../lux-layout/lux-card/lux-card-subcomponents/lux-card-actions.component';
 import { LuxCardContentExpandedComponent } from '../../lux-layout/lux-card/lux-card-subcomponents/lux-card-content-expanded.component';
 import { LuxCardContentComponent } from '../../lux-layout/lux-card/lux-card-subcomponents/lux-card-content.component';
-import { LuxCardInfoComponent } from '../../lux-layout/lux-card/lux-card-subcomponents/lux-card-info.component';
 import { LuxCardComponent } from '../../lux-layout/lux-card/lux-card.component';
 import { LuxPanelActionComponent } from '../../lux-layout/lux-panel/lux-panel-subcomponents/lux-panel-action.component';
 import { LuxPanelContentComponent } from '../../lux-layout/lux-panel/lux-panel-subcomponents/lux-panel-content.component';
 import { LuxPanelHeaderTitleComponent } from '../../lux-layout/lux-panel/lux-panel-subcomponents/lux-panel-header-title.component';
 import { LuxPanelComponent } from '../../lux-layout/lux-panel/lux-panel.component';
-import { LuxLookupComboboxAcComponent } from '../../lux-lookup/lux-lookup-combobox-ac/lux-lookup-combobox-ac.component';
+import { LuxLookupComboboxComponent } from '../../lux-lookup/lux-lookup-combobox/lux-lookup-combobox.component';
 import {
   DIALOG_WIDTH_SMALL_PX,
   ILuxDialogConfig,
@@ -57,7 +57,10 @@ import { LuxFilterFormExtendedComponent } from './lux-filter-form-extended/lux-f
 @Component({
   selector: 'lux-filter-form',
   templateUrl: './lux-filter-form.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    '(document:keydown.shift.enter)': 'onShiftEnter()'
+  },
   imports: [
     LuxAccordionComponent,
     LuxPanelComponent,
@@ -66,7 +69,6 @@ import { LuxFilterFormExtendedComponent } from './lux-filter-form-extended/lux-f
     LuxPanelContentComponent,
     LuxPanelActionComponent,
     LuxCardComponent,
-    LuxCardInfoComponent,
     LuxCardContentComponent,
     LuxCardContentExpandedComponent,
     LuxCardActionsComponent,
@@ -78,182 +80,113 @@ import { LuxFilterFormExtendedComponent } from './lux-filter-form-extended/lux-f
     LuxMenuItemComponent,
     LuxMenuTriggerComponent,
     NgClass,
-    LuxChipsAcComponent,
+    LuxChipsComponent,
     LuxAriaLabelDirective,
-    LuxChipAcComponent,
+    LuxChipComponent,
     TranslocoPipe
   ]
 })
 export class LuxFilterFormComponent implements OnInit, AfterViewInit, OnDestroy {
-  private dialogService = inject(LuxDialogService);
-  private cdr = inject(ChangeDetectorRef);
-  private mediaQuery = inject(LuxMediaQueryObserverService);
+  readonly luxTitle = input('');
+  readonly luxButtonRaised = input(false);
+  readonly luxButtonFlat = input(false);
+  readonly luxButtonFilterLabel = input('');
+  readonly luxButtonFilterColor = input<LuxThemePalette>('primary');
+  readonly luxButtonResetLabel = input('');
+  readonly luxButtonResetColor = input<LuxThemePalette | undefined>(undefined);
+  readonly luxButtonSaveLabel = input('');
+  readonly luxButtonSaveColor = input<LuxThemePalette | undefined>(undefined);
+  readonly luxButtonLoadLabel = input('');
+  readonly luxButtonLoadColor = input<LuxThemePalette | undefined>(undefined);
+  readonly luxButtonDialogSave = input<LuxThemePalette>('primary');
+  readonly luxButtonDialogLoad = input<LuxThemePalette>('primary');
+  readonly luxButtonDialogDelete = input<LuxThemePalette>('warn');
+  readonly luxButtonDialogCancel = input<LuxThemePalette | undefined>(undefined);
+  readonly luxButtonDialogClose = input<LuxThemePalette | undefined>(undefined);
+  readonly luxDefaultFilterMessage = input('');
+  readonly luxShowChips = input(true);
+  readonly luxHideChipsBorder = input(false);
+  readonly luxHideMenu = input(false);
+  readonly luxStoredFilters = input<LuxFilter[]>([]);
+  readonly luxDisableShortcut = input(false);
+  readonly luxShowAsCard = input(false);
+  readonly luxExpandedLabelOpen = input('');
+  readonly luxExpandedLabelClose = input('');
+  readonly luxShowSaveAction = input(true);
+  readonly luxShowLoadAction = input(true);
+
+  readonly luxFilterExpanded = model(false);
+  readonly luxFilterValues = input<any>({});
+
+  readonly luxOnSave = output<LuxFilter>();
+  readonly luxOnLoad = output<string>();
+  readonly luxOnFilter = output<string>();
+  readonly luxOnDelete = output<LuxFilter>();
+  readonly luxOnReset = output<void>();
+
+  readonly formElementesQL = contentChildren(LuxFilterItemDirective, { descendants: true });
+  readonly extendedOptions = contentChild(LuxFilterFormExtendedComponent);
 
   dialogConfig: ILuxDialogConfig = {
     width: minWidth(DIALOG_WIDTH_SMALL_PX),
     height: 'auto',
     panelClass: []
   };
-
   formElementes: LuxFilterItemDirective[] = [];
-  @ContentChildren(LuxFilterItemDirective, { descendants: true }) formElementesQL!: QueryList<LuxFilterItemDirective>;
-  @ContentChild(LuxFilterFormExtendedComponent) extendedOptions?: LuxFilterFormExtendedComponent;
-
-  _luxFilterValues = {};
-  _luxFilterExpanded = false;
-
-  @Input() luxTitle = '';
-  @Input() luxButtonRaised = false;
-  @Input() luxButtonFlat = false;
-  @Input() luxButtonFilterLabel = '';
-  @Input() luxButtonFilterColor: LuxThemePalette = 'primary';
-  @Input() luxButtonResetLabel = '';
-  @Input() luxButtonResetColor?: LuxThemePalette;
-  @Input() luxButtonSaveLabel = '';
-  @Input() luxButtonSaveColor?: LuxThemePalette;
-  @Input() luxButtonLoadLabel = '';
-  @Input() luxButtonLoadColor?: LuxThemePalette;
-  @Input() luxButtonDialogSave: LuxThemePalette = 'primary';
-  @Input() luxButtonDialogLoad: LuxThemePalette = 'primary';
-  @Input() luxButtonDialogDelete: LuxThemePalette = 'warn';
-  @Input() luxButtonDialogCancel?: LuxThemePalette;
-  @Input() luxButtonDialogClose?: LuxThemePalette;
-  @Input() luxDefaultFilterMessage = '';
-  @Input() luxShowChips = true;
-  @Input() luxHideChipsBorder = false;
-  @Input() luxHideMenu = false;
-  @Input() luxStoredFilters: LuxFilter[] = [];
-  @Input() luxDisableShortcut = false;
-  @Input() luxShowAsCard = false;
-  @Input() set luxExpandedLabelOpen(label: string) {
-    if (label) {
-      this._luxExpandedLabelOpen = label;
-    }
-  }
-  get luxExpandedLabelOpen() {
-    return this._luxExpandedLabelOpen;
-  }
-  _luxExpandedLabelOpen = '';
-  @Input() set luxExpandedLabelClose(label: string) {
-    if (label) {
-      this._luxExpandedLabelClose = label;
-    }
-  }
-  get luxExpandedLabelClose() {
-    return this._luxExpandedLabelClose;
-  }
-  _luxExpandedLabelClose = '';
-
-  @Input()
-  get luxFilterExpanded() {
-    return this._luxFilterExpanded;
-  }
-
-  set luxFilterExpanded(expanded: boolean) {
-    this._luxFilterExpanded = expanded;
-
-    this.luxFilterExpandedChange.emit(expanded);
-  }
-
-  @Input()
-  get luxFilterValues() {
-    return this._luxFilterValues;
-  }
-
-  set luxFilterValues(filter: any) {
-    this._luxFilterValues = JSON.parse(JSON.stringify(filter));
-
-    if (this.initComplete) {
-      const newFilter = this.createFilterObject();
-
-      this.filterForm.patchValue(newFilter);
-
-      this.onFilter();
-    }
-  }
-
-  @Output() luxOnFilter = new EventEmitter<string>();
-  @Output() luxOnSave = new EventEmitter<LuxFilter>();
-  @Output() luxOnLoad = new EventEmitter<string>();
-  @Output() luxOnDelete = new EventEmitter<LuxFilter>();
-  @Output() luxOnReset = new EventEmitter<void>();
-  @Output() luxFilterExpandedChange = new EventEmitter<boolean>();
-
   filterForm: FormGroup;
   subscriptions: Subscription[] = [];
-  filterItems: LuxFilterItem<any>[] = [];
-  hasSaveAction = false;
-  hasLoadAction = false;
-  initComplete = false;
+  private registerFilterItemsTimeout?: ReturnType<typeof setTimeout>;
+  readonly filterItems = signal<LuxFilterItem<any>[]>([]);
+  readonly initComplete = signal(false);
   initFilterValue = null;
+  readonly isMobile = signal(false);
 
-  isMobile = false;
+  private dialogService = inject(LuxDialogService);
+  private cdr = inject(ChangeDetectorRef);
+  private mediaQuery = inject(LuxMediaQueryObserverService);
+  private lastAppliedFilterValues: any = undefined;
+
+  private readonly filterValuesSnapshot = computed(() => JSON.parse(JSON.stringify(this.luxFilterValues())));
 
   constructor() {
     this.filterForm = new FormGroup({});
+
+    // Reagiert auf spätere Änderungen von luxFilterValues (nach Abschluss der Initialisierung).
+    // Die initiale Anwendung übernimmt registerFilterItems(); der Reference-Guard verhindert
+    // eine doppelte Verarbeitung unabhängig davon, ob dieser Effect vor oder nach dem
+    // (deferred) setTimeout in registerFilterItems() zuerst läuft.
+    effect(() => {
+      const filter = this.luxFilterValues();
+      if (filter === this.lastAppliedFilterValues) return;
+      this.lastAppliedFilterValues = filter;
+
+      if (!this.initComplete()) return;
+
+      const newFilter = this.createFilterObject();
+      this.filterForm.patchValue(newFilter);
+      this.onFilter();
+    });
   }
 
   ngOnInit(): void {
-    this.initFilterValue = this.luxFilterValues;
-
-    if (this.luxOnSave.observed) {
-      this.hasSaveAction = true;
-    }
-
-    if (this.luxOnLoad.observed) {
-      this.hasLoadAction = true;
-    }
+    this.initFilterValue = this.luxFilterValues();
 
     this.subscriptions.push(
       this.mediaQuery.getMediaQueryChangedAsObservable().subscribe((query) => {
-        this.isMobile = query === 'xs' || query === 'sm';
+        this.isMobile.set(query === 'xs' || query === 'sm');
       })
     );
   }
 
-  private updateFilterChips() {
-    if (this.initComplete) {
-      this.filterItems = [];
-
-      this.formElementes.forEach((formItem) => {
-        if (formItem.filterItem && formItem.filterItem.binding && this.filterForm.get(formItem.filterItem.binding)) {
-          const value = this.filterForm.get(formItem.filterItem.binding)!.value;
-
-          if (
-            !formItem.filterItem.component.formControl.disabled &&
-            formItem.filterItem.defaultValues.findIndex((defaultValue) => defaultValue === value) === -1
-          ) {
-            if (Array.isArray(value)) {
-              let i = 0;
-              value.forEach((selected) => {
-                const newFilterItem = new LuxFilterItem(
-                  formItem.filterItem.label,
-                  formItem.filterItem.binding,
-                  formItem.filterItem.component
-                );
-                Object.assign(newFilterItem, formItem.filterItem);
-                newFilterItem.value = newFilterItem.renderFn(newFilterItem, selected);
-                newFilterItem.multiValueIndex = i++;
-                this.filterItems.push(newFilterItem);
-              });
-            } else {
-              formItem.filterItem.value = formItem.filterItem.renderFn(formItem.filterItem, value);
-              this.filterItems.push(formItem.filterItem);
-            }
-          }
-        }
-      });
-    }
-  }
-
   ngAfterViewInit(): void {
-    this.registerFilterItems(this.formElementesQL.toArray());
+    this.registerFilterItems(this.formElementesQL());
   }
 
   ngOnDestroy(): void {
     this.subscriptions.forEach((subscription) => {
       subscription.unsubscribe();
     });
+    clearTimeout(this.registerFilterItemsTimeout);
   }
 
   openSaveDialog() {
@@ -303,7 +236,7 @@ export class LuxFilterFormComponent implements OnInit, AfterViewInit, OnDestroy 
     });
 
     // Filter zuklappen.
-    this.luxFilterExpanded = false;
+    this.luxFilterExpanded.set(false);
 
     // Hier wird nur ein Event mit dem zu ladenden Filternamen verschickt.
     // Der Empfänger hat jetzt die Aufgabe, die entsprechenden Filterdaten zu laden und
@@ -329,12 +262,13 @@ export class LuxFilterFormComponent implements OnInit, AfterViewInit, OnDestroy 
 
   filterChipRemoved(indexRemoved: number) {
     // Ermittle den Filterchip, der entfernt werden soll.
-    const removedFilterItem: LuxFilterItem<any> = this.filterItems.splice(indexRemoved, 1)[0];
+    const filterItems = [...this.filterItems()];
+    const removedFilterItem: LuxFilterItem<any> = filterItems.splice(indexRemoved, 1)[0];
+    this.filterItems.set(filterItems);
 
     if (
-      (removedFilterItem.component instanceof LuxSelectAcComponent ||
-        removedFilterItem.component instanceof LuxLookupComboboxAcComponent) &&
-      removedFilterItem.component.luxMultiple
+      (removedFilterItem.component instanceof LuxSelectComponent || removedFilterItem.component instanceof LuxLookupComboboxComponent) &&
+      removedFilterItem.component.luxMultiple()
     ) {
       // Fall: Multiselect
       // Kopie erstellen und nicht nur das bestehende Array manipulieren.
@@ -352,7 +286,6 @@ export class LuxFilterFormComponent implements OnInit, AfterViewInit, OnDestroy 
     this.onFilter();
   }
 
-  @HostListener('document:keydown.shift.enter')
   onShiftEnter() {
     // Alle eventuell noch offenen Popups/Panels der Formularelemente schließen.
     //
@@ -366,23 +299,23 @@ export class LuxFilterFormComponent implements OnInit, AfterViewInit, OnDestroy 
     // besteht natürlich auch beim Datepicker, Timepicker, Select und den
     // Lookup-Komponenten. Aus diesem Grund werden hier zuerst alle geöffneten
     // Popups/Panels geschlossen. Im Anschluss wird wie gewohnt gefiltert.
-    if (!this.luxDisableShortcut) {
+    if (!this.luxDisableShortcut()) {
       this.formElementes.forEach((formComponent) => {
         if (formComponent) {
           if (formComponent.datepickerAuthentic && formComponent.datepickerAuthentic.matDatepicker) {
-            formComponent.datepickerAuthentic.matDatepicker.close();
+            formComponent.datepickerAuthentic.matDatepicker()?.close();
           } else if (formComponent.datetimepickerAuthentic && formComponent.datetimepickerAuthentic.dateTimeOverlayComponent) {
-            formComponent.datetimepickerAuthentic.dateTimeOverlayComponent.close();
+            formComponent.datetimepickerAuthentic.dateTimeOverlayComponent()?.close();
           } else if (formComponent.timepickerAuthentic && formComponent.timepickerAuthentic.matTimepicker) {
-            formComponent.timepickerAuthentic.matTimepicker.close();
+            formComponent.timepickerAuthentic.matTimepicker()?.close();
           } else if (formComponent.selectAuthentic && formComponent.selectAuthentic.matSelect) {
-            formComponent.selectAuthentic.matSelect.close();
+            formComponent.selectAuthentic.matSelect()?.close();
           } else if (formComponent.autoCompleteAuthentic) {
-            formComponent.autoCompleteAuthentic.matAutoComplete.closePanel();
+            formComponent.autoCompleteAuthentic.matAutoComplete()?.closePanel();
           } else if (formComponent.autoCompleteLookupAuthentic && formComponent.autoCompleteLookupAuthentic.matAutocompleteTrigger) {
-            formComponent.autoCompleteLookupAuthentic.matAutocompleteTrigger.closePanel();
+            formComponent.autoCompleteLookupAuthentic.matAutocompleteTrigger()?.closePanel();
           } else if (formComponent.selectLookupAuthentic) {
-            formComponent.selectLookupAuthentic.matSelect.close();
+            formComponent.selectLookupAuthentic.matSelect()?.close();
           }
         }
       });
@@ -400,7 +333,7 @@ export class LuxFilterFormComponent implements OnInit, AfterViewInit, OnDestroy 
     if (this.filterForm.valid) {
       if (changeExpandState) {
         // Filter zuklappen.
-        this.luxFilterExpanded = false;
+        this.luxFilterExpanded.set(false);
       }
 
       // Filterchips aktualisieren.
@@ -413,29 +346,30 @@ export class LuxFilterFormComponent implements OnInit, AfterViewInit, OnDestroy 
     }
   }
 
-  registerFilterItems(filterItemDirectives: LuxFilterItemDirective[]) {
+  registerFilterItems(filterItemDirectives: readonly LuxFilterItemDirective[]) {
     // An dieser Codestelle ist setTimeout nötig, wenn die Inhalte über eine LUX-Layout-Form-Row gesetzt werden.
     // D.h. initial gibt es keine Filteritems, aber dann werden die Filteritems über ngAfterContentInit hinzugefügt.
-    setTimeout(() => {
+    this.registerFilterItemsTimeout = setTimeout(() => {
       filterItemDirectives.forEach((item) => {
         this.filterForm.addControl(item.filterItem.binding, item.filterItem.component.formControl);
         this.formElementes.push(item);
       });
 
-      this.filterForm.patchValue(this.luxFilterValues);
+      this.filterForm.patchValue(this.luxFilterValues());
 
       // Der Filter ist jetzt vollständig. D.h. alle Formularelemente sind bekannt,
       // die zugehörigen Controls wurden erzeugt und die Werte gesetzt.
       // Jetzt ist die Initialisierung abgeschlossen und die Filterchips können
       // aktualisiert werden.
-      this.initComplete = true;
+      this.initComplete.set(true);
+      this.lastAppliedFilterValues = this.luxFilterValues();
 
       // Da die Initialisierung der Komponente verzögert stattfindet,
       // muss noch einmal geprüft werden, ob sich der initiale Filterwert
       // in der Zwischenzeit geändert hat.
       // Wenn sich der Filterwert geändert hat, muss das Filtern ausgelöst werden.
       // Wenn der Filterwert gleichgeblieben ist, müssen nur die Filterchips aktualisiert werden.
-      if (this.luxFilterValues !== this.initFilterValue) {
+      if (this.luxFilterValues() !== this.initFilterValue) {
         this.onFilterIntern(false);
       } else {
         this.updateFilterChips();
@@ -446,7 +380,7 @@ export class LuxFilterFormComponent implements OnInit, AfterViewInit, OnDestroy 
   private createFilterObject() {
     const newFilter: any = {};
 
-    if (this.formElementes && this._luxFilterValues) {
+    if (this.formElementes && this.filterValuesSnapshot()) {
       // Alle Filterfelder werden auf ihre Defaultwerte zurückgesetzt.
       //
       // Erklärung:
@@ -468,10 +402,46 @@ export class LuxFilterFormComponent implements OnInit, AfterViewInit, OnDestroy 
       });
 
       // Überschreiben der Defaultwerte mit den aktuellen Filterwerten.
-      Object.assign(newFilter, this._luxFilterValues);
+      Object.assign(newFilter, this.filterValuesSnapshot());
     }
 
     return newFilter;
   }
-}
 
+  private updateFilterChips() {
+    if (this.initComplete()) {
+      const newFilterItems: LuxFilterItem<any>[] = [];
+
+      this.formElementes.forEach((formItem) => {
+        if (formItem.filterItem && formItem.filterItem.binding && this.filterForm.get(formItem.filterItem.binding)) {
+          const value = this.filterForm.get(formItem.filterItem.binding)!.value;
+
+          if (
+            !formItem.filterItem.component.formControl.disabled &&
+            formItem.filterItem.defaultValues.findIndex((defaultValue) => defaultValue === value) === -1
+          ) {
+            if (Array.isArray(value)) {
+              let i = 0;
+              value.forEach((selected) => {
+                const newFilterItem = new LuxFilterItem(
+                  formItem.filterItem.label,
+                  formItem.filterItem.binding,
+                  formItem.filterItem.component
+                );
+                Object.assign(newFilterItem, formItem.filterItem);
+                newFilterItem.value = newFilterItem.renderFn(newFilterItem, selected);
+                newFilterItem.multiValueIndex = i++;
+                newFilterItems.push(newFilterItem);
+              });
+            } else {
+              formItem.filterItem.value = formItem.filterItem.renderFn(formItem.filterItem, value);
+              newFilterItems.push(formItem.filterItem);
+            }
+          }
+        }
+      });
+
+      this.filterItems.set(newFilterItems);
+    }
+  }
+}

@@ -4,7 +4,7 @@ import { openStable, screenshotSoft } from './vrt-helper';
 const BUTTON_THROTTLE_WAIT_MS = 650;
 
 /**
- * Zustände des Master-Detail-Beispiels (/components-overview/master-detail-ac).
+ * Zustände des Master-Detail-Beispiels (/components-overview/master-detail).
  * Jeder Test startet auf einer frisch geladenen Seite und nimmt die komplette
  * Master-Detail-Komponente auf.
  */
@@ -15,8 +15,8 @@ const BUTTON_THROTTLE_WAIT_MS = 650;
  * nach 2 s "Eintrag #2". Die Uhr wird deshalb vorgespult.
  */
 async function openMasterDetail(page: Page) {
-  const masterDetail = page.locator('lux-master-detail-ac');
-  await openStable(page, '/components-overview/master-detail-ac', masterDetail);
+  const masterDetail = page.locator('lux-master-detail');
+  await openStable(page, '/components-overview/master-detail', masterDetail);
   await page.clock.runFor(2000);
 
   await expect(masterDetail.locator('lux-list-item')).toHaveCount(15);
@@ -47,7 +47,7 @@ async function selectEntry(masterDetail: Locator, nr: number) {
 /** Führt einen Eintrag des Menüs im Master-Footer aus. */
 async function footerMenu(page: Page, masterDetail: Locator, item: string) {
   // lux-menu rendert neben dem sichtbaren Default-Trigger ein leeres div mit role="button" und gleichem Namen.
-  await masterDetail.locator('lux-master-footer-ac .lux-menu-trigger-default').getByRole('button', { name: 'Menü', exact: true }).click();
+  await masterDetail.locator('lux-master-footer .lux-menu-trigger-default').getByRole('button', { name: 'Menü', exact: true }).click();
   await expect(page.getByRole('menu')).toBeVisible();
   await page.getByRole('menuitem', { name: item, exact: true }).click();
   await expect(page.getByRole('menu')).toBeHidden();

@@ -10,13 +10,13 @@ import { marked } from 'marked';
   imports: [LuxHtmlComponent]
 })
 export class LuxMarkdownComponent {
-  luxSanitizeConfig = input<LuxSanitizeConfig | undefined>(undefined);
-  luxStyle = input('');
-  luxClass = input('');
-  luxData = input('', {
+  readonly luxSanitizeConfig = input<LuxSanitizeConfig | undefined>(undefined);
+  readonly luxStyle = input('');
+  readonly luxClass = input('');
+  readonly luxData = input('', {
     transform: (markdownData: string) => (markdownData ? (marked(markdownData, { async: false }) as string) : '')
   });
 
-  contentComponent = viewChild.required<LuxHtmlComponent>('content');
-  contentRef = viewChild.required<ElementRef>('content');
+  readonly contentComponent = viewChild.required<LuxHtmlComponent>('content');
+  readonly contentRef = viewChild.required<ElementRef>('content');
 }

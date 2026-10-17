@@ -3,11 +3,11 @@ import { luxMessage } from './lux-messages';
 
 /** Beschreibung eines Form-Controls für die komponentenübergreifenden Tests. */
 export interface FormControlSpec {
-  /** Name im Testtitel, z. B. "input-ac". */
+  /** Name im Testtitel, z. B. "input". */
   id: string;
   /** Route unter /components-overview/example/. */
   route: string;
-  /** Tag des Controls, z. B. "lux-input-ac". */
+  /** Tag des Controls, z. B. "lux-input". */
   tag: string;
   /** ARIA-Rolle des Elements, das den Namen (Label) trägt. */
   role: 'textbox' | 'combobox' | 'checkbox' | 'switch' | 'radiogroup' | 'slider';
@@ -17,6 +17,8 @@ export interface FormControlSpec {
   noRequiredOption?: boolean;
   /** Erwartete Meldung, wenn das Pflichtfeld leer verlassen wird. */
   requiredMessage: () => string;
+  /** Abweichende Meldung im Signal-Form-Beispiel, wenn dessen Schema eine eigene Meldung setzt (required(..., { message })). */
+  signalFormRequiredMessage?: string;
   /** Das bedienbare Element im Control (input, combobox, ...). */
   field: (control: Locator) => Locator;
   /** Leert das Control (falls nötig) und verlässt es wieder, sodass es "touched" ist. */
@@ -124,12 +126,13 @@ const switchField: FieldFn = (control) => control.getByRole('switch');
 
 export const FORM_CONTROLS: FormControlSpec[] = [
   {
-    id: 'input-ac',
-    route: 'input-ac',
-    tag: 'lux-input-ac',
+    id: 'input',
+    route: 'input',
+    tag: 'lux-input',
     role: 'textbox',
     label: 'Label',
     requiredMessage: () => luxMessage('util.error_message.required'),
+    signalFormRequiredMessage: 'Bitte einen Wert eingeben',
     field: inputField,
     leaveEmpty: clearAndBlur(inputField),
     enterValue: fillAndBlur(inputField, 'Hallo'),
@@ -138,9 +141,9 @@ export const FORM_CONTROLS: FormControlSpec[] = [
     requiredMarker: wrapperRequiredMarker
   },
   {
-    id: 'textarea-ac',
-    route: 'textarea-ac',
-    tag: 'lux-textarea-ac',
+    id: 'textarea',
+    route: 'textarea',
+    tag: 'lux-textarea',
     role: 'textbox',
     label: 'Label',
     requiredMessage: () => luxMessage('util.error_message.required'),
@@ -152,9 +155,9 @@ export const FORM_CONTROLS: FormControlSpec[] = [
     requiredMarker: wrapperRequiredMarker
   },
   {
-    id: 'datepicker-ac',
-    route: 'datepicker-ac',
-    tag: 'lux-datepicker-ac',
+    id: 'datepicker',
+    route: 'datepicker',
+    tag: 'lux-datepicker',
     role: 'textbox',
     label: 'Label',
     requiredMessage: () => luxMessage('datepicker.error_message.empty'),
@@ -166,9 +169,9 @@ export const FORM_CONTROLS: FormControlSpec[] = [
     requiredMarker: wrapperRequiredMarker
   },
   {
-    id: 'select-ac',
-    route: 'select-ac',
-    tag: 'lux-select-ac',
+    id: 'select',
+    route: 'select',
+    tag: 'lux-select',
     role: 'combobox',
     label: 'Label',
     requiredMessage: () => luxMessage('util.error_message.required'),
@@ -182,9 +185,9 @@ export const FORM_CONTROLS: FormControlSpec[] = [
     requiredMarker: wrapperRequiredMarker
   },
   {
-    id: 'checkbox-ac',
-    route: 'checkbox-ac',
-    tag: 'lux-checkbox-ac',
+    id: 'checkbox',
+    route: 'checkbox',
+    tag: 'lux-checkbox',
     role: 'checkbox',
     label: 'Labeltext',
     requiredMessage: () => luxMessage('form-checkable-base.error_message.required'),
@@ -197,9 +200,9 @@ export const FORM_CONTROLS: FormControlSpec[] = [
     requiredMarker: inlineRequiredMarker('mat-checkbox label')
   },
   {
-    id: 'toggle-ac',
-    route: 'toggle-ac',
-    tag: 'lux-toggle-ac',
+    id: 'toggle',
+    route: 'toggle',
+    tag: 'lux-toggle',
     role: 'switch',
     label: 'Label',
     requiredMessage: () => luxMessage('form-checkable-base.error_message.required'),
@@ -212,9 +215,9 @@ export const FORM_CONTROLS: FormControlSpec[] = [
     requiredMarker: inlineRequiredMarker('mat-slide-toggle label')
   },
   {
-    id: 'autocomplete-ac',
-    route: 'autocomplete-ac',
-    tag: 'lux-autocomplete-ac',
+    id: 'autocomplete',
+    route: 'autocomplete',
+    tag: 'lux-autocomplete',
     role: 'combobox',
     label: 'Label',
     requiredMessage: () => luxMessage('util.error_message.required'),
@@ -226,9 +229,9 @@ export const FORM_CONTROLS: FormControlSpec[] = [
     requiredMarker: wrapperRequiredMarker
   },
   {
-    id: 'radio-ac',
-    route: 'radio-button-ac',
-    tag: 'lux-radio-ac',
+    id: 'radio',
+    route: 'radio-button',
+    tag: 'lux-radio',
     role: 'radiogroup',
     label: 'Label',
     requiredMessage: () => luxMessage('util.error_message.required'),
@@ -241,9 +244,9 @@ export const FORM_CONTROLS: FormControlSpec[] = [
     requiredMarker: wrapperRequiredMarker
   },
   {
-    id: 'datetimepicker-ac',
-    route: 'datetimepicker-ac',
-    tag: 'lux-datetimepicker-ac',
+    id: 'datetimepicker',
+    route: 'datetimepicker',
+    tag: 'lux-datetimepicker',
     role: 'textbox',
     label: 'Label',
     requiredMessage: () => luxMessage('datetimepicker.error_message.empty'),
@@ -270,9 +273,9 @@ export const FORM_CONTROLS: FormControlSpec[] = [
     requiredMarker: wrapperRequiredMarker
   },
   {
-    id: 'lookup-combobox-ac',
-    route: 'lookup-combobox-ac',
-    tag: 'lux-lookup-combobox-ac',
+    id: 'lookup-combobox',
+    route: 'lookup-combobox',
+    tag: 'lux-lookup-combobox',
     role: 'combobox',
     label: 'Label',
     requiredMessage: () => luxMessage('util.error_message.required'),
@@ -284,9 +287,9 @@ export const FORM_CONTROLS: FormControlSpec[] = [
     requiredMarker: wrapperRequiredMarker
   },
   {
-    id: 'lookup-autocomplete-ac',
-    route: 'lookup-autocomplete-ac',
-    tag: 'lux-lookup-autocomplete-ac',
+    id: 'lookup-autocomplete',
+    route: 'lookup-autocomplete',
+    tag: 'lux-lookup-autocomplete',
     role: 'combobox',
     label: 'Label',
     requiredMessage: () => luxMessage('util.error_message.required'),
@@ -298,9 +301,9 @@ export const FORM_CONTROLS: FormControlSpec[] = [
     requiredMarker: wrapperRequiredMarker
   },
   {
-    id: 'slider-ac',
-    route: 'slider-ac',
-    tag: 'lux-slider-ac',
+    id: 'slider',
+    route: 'slider',
+    tag: 'lux-slider',
     role: 'slider',
     label: 'Label',
     noRequiredOption: true,

@@ -1,27 +1,27 @@
 import { NgClass } from '@angular/common';
-import { Component, HostBinding, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
   ILuxFileObject,
-  LuxAutocompleteAcComponent,
+  LuxAutocompleteComponent,
   LuxCardComponent,
   LuxCardContentComponent,
   LuxCardContentExpandedComponent,
-  LuxCheckboxAcComponent,
-  LuxDatepickerAcComponent,
-  LuxFileInputAcComponent,
+  LuxCheckboxComponent,
+  LuxDatepickerComponent,
+  LuxFileInputComponent,
   LuxFormHintComponent,
   LuxFormLabelComponent,
   LuxIconComponent,
-  LuxInputAcComponent,
-  LuxInputAcPrefixComponent,
-  LuxInputAcSuffixComponent,
-  LuxRadioAcComponent,
-  LuxSelectAcComponent,
-  LuxSliderAcComponent,
-  LuxTextareaAcComponent,
+  LuxInputComponent,
+  LuxInputPrefixComponent,
+  LuxInputSuffixComponent,
+  LuxRadioComponent,
+  LuxSelectComponent,
+  LuxSliderComponent,
+  LuxTextareaComponent,
   LuxTextboxComponent,
-  LuxToggleAcComponent
+  LuxToggleComponent
 } from '@ihk-gfi/lux-components';
 
 interface DummyForm {
@@ -41,7 +41,10 @@ interface DummyForm {
   selector: 'lux-baseline',
   templateUrl: './baseline.component.html',
   styleUrls: ['./baseline.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    '[class.show-frames]': 'showFrames()'
+  },
   imports: [
     LuxIconComponent,
     LuxTextboxComponent,
@@ -50,28 +53,28 @@ interface DummyForm {
     LuxCardComponent,
     NgClass,
     ReactiveFormsModule,
-    LuxAutocompleteAcComponent,
-    LuxCheckboxAcComponent,
-    LuxDatepickerAcComponent,
-    LuxFileInputAcComponent,
+    LuxAutocompleteComponent,
+    LuxCheckboxComponent,
+    LuxDatepickerComponent,
+    LuxFileInputComponent,
     LuxFormHintComponent,
     LuxFormLabelComponent,
-    LuxInputAcComponent,
-    LuxInputAcPrefixComponent,
-    LuxInputAcSuffixComponent,
-    LuxRadioAcComponent,
-    LuxSelectAcComponent,
-    LuxSliderAcComponent,
-    LuxTextareaAcComponent,
-    LuxToggleAcComponent
+    LuxInputComponent,
+    LuxInputPrefixComponent,
+    LuxInputSuffixComponent,
+    LuxRadioComponent,
+    LuxSelectComponent,
+    LuxSliderComponent,
+    LuxTextareaComponent,
+    LuxToggleComponent
   ]
 })
 export class BaselineComponent {
-  @HostBinding('class.show-frames') showFrames = false;
-  showAsColumn = false;
-  disabled = false;
-  readonly = false;
-  denseFormat = false;
+  readonly showFrames = signal(false);
+  readonly showAsColumn = signal(false);
+  readonly disabled = signal(false);
+  readonly readonly = signal(false);
+  readonly denseFormat = signal(false);
   form: FormGroup<DummyForm>;
 
   constructor() {

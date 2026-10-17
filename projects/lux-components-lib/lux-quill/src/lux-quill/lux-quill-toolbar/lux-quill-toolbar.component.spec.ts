@@ -1,3 +1,4 @@
+import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
@@ -139,7 +140,7 @@ describe('LuxQuillToolbarComponent', () => {
     button.click();
 
     // Nachbedingungen prüfen
-    expect(mousedown.defaultPrevented).toBeTrue();
+    expect(mousedown.defaultPrevented).toBe(true);
     expect(host.actions).toEqual([{ item: 'italic' }]);
   });
 
@@ -149,7 +150,7 @@ describe('LuxQuillToolbarComponent', () => {
     fixture.detectChanges();
 
     // Nachbedingungen prüfen
-    expect(controls().every((button) => button.disabled)).toBeTrue();
+    expect(controls().every((button) => button.disabled)).toBe(true);
     expect(fixture.nativeElement.querySelector('lux-quill-toolbar').getAttribute('aria-disabled')).toEqual('true');
   });
 
@@ -158,47 +159,45 @@ describe('LuxQuillToolbarComponent', () => {
       return fixture.debugElement.queryAll(By.directive(LuxTooltipDirective)).map((element) => element.injector.get(LuxTooltipDirective));
     }
 
-    /** Wartet auf den ResizeObserver (feuert vor dem nächsten Frame). */
-    async function waitForResize() {
-      await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    /**
+     * jsdom hat keine Layout-Engine (offsetTop ist immer 0) und keinen ResizeObserver. Die Zeilen der umbrechenden
+     * Toolbar werden daher über offsetTop vorgegeben und die Neubestimmung direkt ausgelöst, wie es sonst der
+     * ResizeObserver tut. Das tatsächliche Umbrechen im Browser lässt sich hier nicht prüfen.
+     */
+    function layoutRows(rowOf: (index: number) => number) {
+      controls().forEach((control, index) => vi.spyOn(control, 'offsetTop', 'get').mockReturnValue(rowOf(index) * 40));
+      const toolbar = fixture.debugElement.query(By.directive(LuxQuillToolbarComponent)).componentInstance as LuxQuillToolbarComponent;
+      (toolbar as any).updateRows();
       fixture.detectChanges();
     }
 
     it('Sollte Tooltips erst verzögert anzeigen', () => {
       // Nachbedingungen prüfen
       expect(tooltips().length).toBeGreaterThan(0);
-      expect(tooltips().every((tooltip) => tooltip.showDelay === LUX_QUILL_TOOLTIP_SHOW_DELAY)).toBeTrue();
+      expect(tooltips().every((tooltip) => tooltip.showDelay === LUX_QUILL_TOOLTIP_SHOW_DELAY)).toBe(true);
     });
 
     it('Sollte in einer einzeiligen Toolbar alle Tooltips nach oben öffnen', () => {
+      // Änderungen durchführen
+      layoutRows(() => 0);
+
       // Nachbedingungen prüfen
-      expect(new Set(controls().map((control) => control.offsetTop)).size)
-        .withContext('einzeilig')
-        .toEqual(1);
-      expect(tooltips().every((tooltip) => tooltip.position === 'above')).toBeTrue();
+      expect(tooltips().every((tooltip) => tooltip.position === 'above')).toBe(true);
     });
 
-    it('Sollte Tooltips unterer Zeilen nach unten öffnen und bei Größenänderung neu bestimmen', async () => {
-      // Änderungen durchführen
-      host.width.set('160px');
-      fixture.detectChanges();
-      await waitForResize();
+    it('Sollte Tooltips unterer Zeilen nach unten öffnen und bei Größenänderung neu bestimmen', () => {
+      // Änderungen durchführen: Ab dem dritten Control bricht die Toolbar um
+      layoutRows((index) => (index < 2 ? 0 : 1));
 
       // Nachbedingungen prüfen
-      const firstRowTop = Math.min(...controls().map((control) => control.offsetTop));
-      const expected = controls().map((control) => (control.offsetTop > firstRowTop + 2 ? 'below' : 'above'));
-      expect(expected).withContext('mehrzeilig').toContain('below');
+      const expected = controls().map((_control, index) => (index < 2 ? 'above' : 'below'));
+      expect(expected, 'mehrzeilig').toContain('below');
       expect(tooltips().map((tooltip) => tooltip.position)).toEqual(expected);
 
-      // Änderungen durchführen
-      host.width.set('600px');
-      fixture.detectChanges();
-      await waitForResize();
+      // Änderungen durchführen: wieder einzeilig
+      layoutRows(() => 0);
 
       // Nachbedingungen prüfen
-      expect(new Set(controls().map((control) => control.offsetTop)).size)
-        .withContext('wieder einzeilig')
-        .toEqual(1);
       expect(tooltips().map((tooltip) => tooltip.position)).toEqual(controls().map(() => 'above'));
     });
   });

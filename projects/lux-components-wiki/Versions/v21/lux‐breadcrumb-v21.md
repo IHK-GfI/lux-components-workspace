@@ -1,6 +1,6 @@
 # Lux-Breadcrumb
 
-![Beispielbild Lux-Breadcrumb](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v16/lux‐breadcrumb‐v16‐img-01.png)
+![Beispielbild Lux-Breadcrumb](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v21/lux‐breadcrumb-v21-img-01.png)
 
 - [Lux-Breadcrumb](#lux-breadcrumb)
   - [Overview / API](#overview--api)
@@ -78,7 +78,7 @@ Html
 
 ### Beispiel manuelle Navigation mit ngIf
 
-![Beispielbild](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v16/lux‐breadcrumb‐v16‐img‐02.png)
+![Beispielbild](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v21/lux‐breadcrumb-v21-img-02.png)
 
 Ts
 

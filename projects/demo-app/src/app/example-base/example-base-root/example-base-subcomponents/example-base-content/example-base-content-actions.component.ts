@@ -1,9 +1,8 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
   selector: 'example-base-content-actions',
-  template: '<ng-content select="lux-button"></ng-content>'
+  template: '<ng-content select="lux-button"></ng-content>',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ExampleBaseContentActionsComponent {
-  constructor() {}
-}
+export class ExampleBaseContentActionsComponent {}

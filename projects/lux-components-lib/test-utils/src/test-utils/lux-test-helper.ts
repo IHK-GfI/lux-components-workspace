@@ -1,45 +1,58 @@
 import { SPACE } from '@angular/cdk/keycodes';
 import { DebugElement } from '@angular/core';
-import { ComponentFixture, tick } from '@angular/core/testing';
+import { ComponentFixture } from '@angular/core/testing';
+import { vi } from 'vitest';
 
 export class LuxTestHelper {
   /**
-   * Wichtig: aus fakeAsync-Block heraus aufrufen, da hier tick() genutzt wird.
    * @param input
    * @param value
    * @param fixture
    */
-  public static setInputValue(input: any, value: any, fixture: any) {
+  public static async setInputValue(input: any, value: any, fixture: any): Promise<void> {
     if (input) {
       input.value = value;
       input.dispatchEvent(LuxTestHelper.createFakeEvent('input'));
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
     } else {
       console.error('UNIT-TEST FEHLER: input ist nicht definiert.');
     }
   }
 
   /**
-   * Wichtig: aus fakeAsync-Block heraus aufrufen, da hier tick() genutzt wird.
-   * Wartet asynchrone Aufrufe ab und ruft die ChangeDetection auf
+   * Wartet asynchrone Aufrufe ab und ruft die ChangeDetection auf.
+   * `tickDuration` wird, falls angegeben, als Wartezeit abgewartet.
+   * Sind Vitest-Fake-Timer aktiv (vi.useFakeTimers()), wird die virtuelle Zeit vorgespult statt real zu
+   * warten - das spart bei Specs mit vielen wait()-Aufrufen reale Wall-Clock-Zeit. Ohne Fake-Timer (Default)
+   * verhält sich wait() unverändert wie zuvor: ein echter setTimeout-Tick garantiert, dass auch Microtask-
+   * Ketten von ggf. nicht zone.js-gepatchten nativen Promises (z.B. vi.fn().mockResolvedValue()) durchlaufen
+   * sind, bevor es weitergeht - fixture.whenStable() allein wartet darauf nicht zuverlässig.
    * @param fixture
    * @param tickDuration
    */
-  public static wait(fixture: any, tickDuration?: number) {
+  public static async wait(fixture: any, tickDuration?: number): Promise<void> {
     fixture.detectChanges();
-    tick(tickDuration);
+    await fixture.whenStable();
+    if (vi.isFakeTimers()) {
+      if (tickDuration) {
+        await vi.advanceTimersByTimeAsync(tickDuration);
+      } else {
+        await vi.runAllTimersAsync();
+      }
+    } else {
+      await new Promise((resolve) => setTimeout(resolve, tickDuration ?? 0));
+    }
     fixture.detectChanges();
   }
 
   /**
-   * Wichtig: aus fakeAsync-Block heraus aufrufen, da hier tick() genutzt wird.
    * Sendet ein Klick-Event ab und wartet dann.
    * @param fixture
    * @param debugElement
    */
-  public static click(fixture: any, debugElement: DebugElement) {
+  public static async click(fixture: any, debugElement: DebugElement): Promise<void> {
     debugElement.triggerEventHandler('click', null);
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
   }
 
   /**
@@ -87,8 +100,6 @@ export class LuxTestHelper {
     }
   }
 
-  /** Steuerung und triggern von Overlays implementieren */
-
   /**
    * Inserts data into an input field, that has to update asynchronous before calling a callback-function
    * Allows to use RxJs Interval-Timers within the Target-Components.
@@ -97,20 +108,31 @@ export class LuxTestHelper {
    * @param element
    * @param callback
    */
-  public static typeInElementAsync(text: string, fixture: ComponentFixture<any>, element: HTMLInputElement, callback: () => void) {
-    fixture.whenStable().then(() => {
-      LuxTestHelper.typeInElement(element, text);
-      fixture.detectChanges();
+  public static async typeInElementAsync(
+    text: string,
+    fixture: ComponentFixture<any>,
+    element: HTMLInputElement,
+    callback: () => void | Promise<void>
+  ): Promise<void> {
+    if (vi.isFakeTimers()) {
+      await vi.runAllTimersAsync();
+    }
+    await fixture.whenStable();
+    LuxTestHelper.typeInElement(element, text);
+    fixture.detectChanges();
 
-      fixture.whenStable().then(() => {
-        LuxTestHelper.dispatchKeyboardEvent(element, 'keydown', SPACE);
-        fixture.detectChanges();
+    if (vi.isFakeTimers()) {
+      await vi.runAllTimersAsync();
+    }
+    await fixture.whenStable();
+    LuxTestHelper.dispatchKeyboardEvent(element, 'keydown', SPACE);
+    fixture.detectChanges();
 
-        fixture.whenStable().then(() => {
-          callback();
-        });
-      });
-    });
+    if (vi.isFakeTimers()) {
+      await vi.runAllTimersAsync();
+    }
+    await fixture.whenStable();
+    await callback();
   }
 
   /**
@@ -121,18 +143,12 @@ export class LuxTestHelper {
    * @param key
    */
   public static createKeyboardEvent(type: string, keyCode: number, target?: Element, key?: string) {
-    const event = document.createEvent('KeyboardEvent') as any;
-    // Firefox does not support `initKeyboardEvent`, but supports `initKeyEvent`.
-    const initEventFn = (event.initKeyEvent || event.initKeyboardEvent).bind(event);
-    const originalPreventDefault = event.preventDefault;
+    const event = new KeyboardEvent(type, { bubbles: true, cancelable: true, key });
 
-    initEventFn(type, true, true, window, 0, 0, 0, 0, 0, keyCode);
-
-    // Webkit Browsers don't set the keyCode when calling the init function.
+    // Webkit Browsers don't set the keyCode when calling the constructor.
     // See related bug https://bugs.webkit.org/show_bug.cgi?id=16735
     Object.defineProperties(event, {
       keyCode: { get: () => keyCode },
-      key: { get: () => key },
       target: { get: () => target }
     });
 

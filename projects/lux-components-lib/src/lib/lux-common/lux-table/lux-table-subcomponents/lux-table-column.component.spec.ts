@@ -1,5 +1,6 @@
+import { describe, it, beforeEach, expect, vi } from 'vitest';
 import { Component, signal } from '@angular/core';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { LuxTableColumnContentComponent } from './lux-table-column-content.component';
 import { LuxTableColumnFooterComponent } from './lux-table-column-footer.component';
@@ -7,20 +8,20 @@ import { LuxTableColumnHeaderComponent } from './lux-table-column-header.compone
 import { LuxTableColumnComponent } from './lux-table-column.component';
 
 describe('LuxTableColumnComponent', () => {
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({}).compileComponents();
-  }));
+  });
 
   describe('Defaultwerte', () => {
     let component: DefaultTestComponent;
     let fixture: ComponentFixture<DefaultTestComponent>;
     let columnComponent: LuxTableColumnComponent;
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(async () => {
       fixture = TestBed.createComponent(DefaultTestComponent);
       component = fixture.componentInstance;
       columnComponent = fixture.debugElement.query(By.directive(LuxTableColumnComponent)).componentInstance;
-    }));
+    });
 
     it('sollte erstellt werden', () => {
       fixture.detectChanges();
@@ -32,8 +33,8 @@ describe('LuxTableColumnComponent', () => {
       fixture.detectChanges();
       expect(columnComponent.luxColumnDef()).toBe('c1');
       expect(columnComponent.luxConfigLabel()).toBeUndefined();
-      expect(columnComponent.luxSortable()).toBeFalse();
-      expect(columnComponent.luxSticky()).toBeFalse();
+      expect(columnComponent.luxSortable()).toBe(false);
+      expect(columnComponent.luxSticky()).toBe(false);
       expect(columnComponent.luxResponsiveBehaviour()).toBe('');
       expect(columnComponent.luxResponsiveAt()).toBe('');
     });
@@ -46,7 +47,7 @@ describe('LuxTableColumnComponent', () => {
     });
 
     it('sollte change$ beim initialen Setzen der Inputs einmal auslösen', () => {
-      const emitSpy = jasmine.createSpy('emitSpy');
+      const emitSpy = vi.fn().mockName('emitSpy');
       const subscription = columnComponent.change$.subscribe(emitSpy);
       fixture.detectChanges();
       expect(emitSpy).toHaveBeenCalled();
@@ -59,26 +60,26 @@ describe('LuxTableColumnComponent', () => {
     let fixture: ComponentFixture<ConfiguredTestComponent>;
     let columnComponent: LuxTableColumnComponent;
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(async () => {
       fixture = TestBed.createComponent(ConfiguredTestComponent);
       component = fixture.componentInstance;
       columnComponent = fixture.debugElement.query(By.directive(LuxTableColumnComponent)).componentInstance;
       fixture.detectChanges();
-    }));
+    });
 
     it('sollte die gebundenen Inputs übernehmen', () => {
       expect(columnComponent.luxColumnDef()).toBe('c1');
       expect(columnComponent.luxConfigLabel()).toBe('Spalte 1');
-      expect(columnComponent.luxSortable()).toBeTrue();
-      expect(columnComponent.luxSticky()).toBeTrue();
+      expect(columnComponent.luxSortable()).toBe(true);
+      expect(columnComponent.luxSticky()).toBe(true);
       expect(columnComponent.luxResponsiveBehaviour()).toBe('c2');
       expect(columnComponent.luxResponsiveAt()).toBe('lux-xs');
     });
 
     it('sollte change$ auslösen, wenn sich ein Input ändert', () => {
-      const emitSpy = jasmine.createSpy('emitSpy');
+      const emitSpy = vi.fn().mockName('emitSpy');
       const subscription = columnComponent.change$.subscribe(emitSpy);
-      emitSpy.calls.reset();
+      emitSpy.mockClear();
 
       component.sortable.set(false);
       fixture.detectChanges();
@@ -90,7 +91,7 @@ describe('LuxTableColumnComponent', () => {
 
   it('sollte einen Fehler werfen, wenn luxColumnDef nicht gesetzt wird', () => {
     expect(() => {
-      const fixture = TestBed.createComponent(MissingColumnDefTestComponent);
+      const fixture = TestBed.createComponent(LuxTableColumnComponent);
       fixture.detectChanges();
     }).toThrowError();
   });
@@ -135,15 +136,3 @@ class ConfiguredTestComponent {
   sortable = signal(true);
   sticky = signal(true);
 }
-
-@Component({
-  template: `
-    <lux-table-column>
-      <lux-table-column-content>
-        <ng-template let-element>{{ element.c1 }}</ng-template>
-      </lux-table-column-content>
-    </lux-table-column>
-  `,
-  imports: [LuxTableColumnComponent, LuxTableColumnContentComponent]
-})
-class MissingColumnDefTestComponent {}

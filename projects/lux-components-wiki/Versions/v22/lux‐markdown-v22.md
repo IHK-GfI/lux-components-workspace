@@ -1,0 +1,72 @@
+# LUX-Markdown
+
+![Beispielbild LUX-Markdown](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v22/lux‐markdown-v22-img.png)
+
+- [LUX-Markdown](#lux-markdown)
+  - [Overview / API](#overview--api)
+    - [Allgemein](#allgemein)
+    - [@Input](#input)
+    - [@ViewChild](#viewchild)
+  - [Beispiel](#beispiel)
+
+## Overview / API
+
+Wichtig! Bevor die Komponente verwendet werden kann, muss die Dependency "marked" (Version ^15) in der package.json hinzugefügt
+werden (die LUX-Components führen sie nur als optionale Dependency).
+
+### Allgemein
+
+| Name     | Beschreibung                         |
+| -------- | ------------------------------------ |
+| selector | lux-markdown                         |
+| import   | @ihk-gfi/lux-components/lux-markdown |
+
+### @Input
+
+| Name              | Typ                                                 | Beschreibung                                                 |
+| ----------------- | --------------------------------------------------- | ------------------------------------------------------------ |
+| luxData           | string                                              | Daten im Markdown-Format                                     |
+| luxSanitizeConfig | [LuxSanitizeConfig](lux‐html-v22#luxsanitizeconfig) | Über dieses Property kann das Sanitizing beeinflusst werden. |
+| luxStyle          | string                                              | Über dieses Property können CSS-Styles gesetzt werden.       |
+| luxClass          | string                                              | Über dieses Property können CSS-Klassen gesetzt werden.      |
+
+### @ViewChild
+
+| Name             | Typ                                        | Beschreibung                                                                               |
+| ---------------- | ------------------------------------------ | ------------------------------------------------------------------------------------------ |
+| contentComponent | Signal\<[LuxHtmlComponent](lux‐html-v22)\> | Die Markdown-Daten werden in HTML transformiert und über die LuxHtmlComponent dargestellt. |
+| contentRef       | Signal\<ElementRef\>                       | Referenz auf das Element mit dem gerenderten Inhalt.                                       |
+
+## Beispiel
+
+![Beispielbild 01](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v22/lux‐markdown-v22-img-01.png)
+
+Ts
+
+```typescript
+readonly markdownData = `# Title
+## Subtitle
+Schau doch mal bei der [IHK-GfI](https://www.ihk-gfi.de) vorbei!
+
+### Tabelle
+| Name     | Beschreibung |
+| -------- | ------------ |
+| selector | lux-markdown |
+
+### Aufzählung
+1. A
+1. B
+    1. B1
+    1. B2
+1. C`;
+```
+
+Html
+
+```html
+<lux-card luxTitle="Markdown">
+  <lux-card-content>
+    <lux-markdown [luxData]="markdownData" />
+  </lux-card-content>
+</lux-card>
+```

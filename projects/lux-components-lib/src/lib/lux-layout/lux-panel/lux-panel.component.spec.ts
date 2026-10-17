@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { describe, it, beforeEach, expect } from 'vitest';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { LuxPanelContentComponent } from './lux-panel-subcomponents/lux-panel-content.component';
@@ -10,54 +11,53 @@ describe('LuxPanelComponent', () => {
   describe('Attribut "luxStickyHeader"', () => {
     let fixture: ComponentFixture<LuxPanelStickyHeaderComponent>;
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(async () => {
       fixture = TestBed.createComponent(LuxPanelStickyHeaderComponent);
       fixture.detectChanges();
-      tick();
-    }));
+    });
 
-    it('Sticky-Klasse und Offset-Variable prüfen', fakeAsync(() => {
+    it('Sticky-Klasse und Offset-Variable prüfen', async () => {
       // Vorbedingungen testen
       const panelEl = fixture.debugElement.query(By.css('.mat-expansion-panel'));
       expect(panelEl.classes['lux-panel-sticky-header']).toBeFalsy();
 
       // Änderungen durchführen
-      fixture.componentInstance.sticky = true;
-      fixture.componentInstance.offset = '64px';
-      LuxTestHelper.wait(fixture);
+      fixture.componentInstance.sticky.set(true);
+      fixture.componentInstance.offset.set('64px');
+      fixture.detectChanges();
 
       // Nachbedingungen testen
       expect(panelEl.classes['lux-panel-sticky-header']).toBeTruthy();
       expect(panelEl.nativeElement.style.getPropertyValue('--lux-panel-sticky-header-offset')).toBe('64px');
 
       // Änderungen durchführen
-      fixture.componentInstance.sticky = false;
-      LuxTestHelper.wait(fixture);
+      fixture.componentInstance.sticky.set(false);
+      fixture.detectChanges();
 
       // Nachbedingungen testen
       expect(panelEl.classes['lux-panel-sticky-header']).toBeFalsy();
 
       // Änderungen durchführen
-      fixture.componentInstance.offset = undefined;
-      LuxTestHelper.wait(fixture);
+      fixture.componentInstance.offset.set(undefined);
+      fixture.detectChanges();
 
       // Nachbedingungen testen
       expect(panelEl.nativeElement.style.getPropertyValue('--lux-panel-sticky-header-offset')).toBe('');
-    }));
+    });
   });
 });
 
 @Component({
   template: `
-    <lux-panel [luxExpanded]="true" [luxStickyHeader]="sticky" [luxStickyHeaderOffset]="offset">
+    <lux-panel [luxExpanded]="true" [luxStickyHeader]="sticky()" [luxStickyHeaderOffset]="offset()">
       <lux-panel-header-title>Titel 1</lux-panel-header-title>
       <lux-panel-content>Inhalt</lux-panel-content>
     </lux-panel>
   `,
   imports: [LuxPanelComponent, LuxPanelContentComponent, LuxPanelHeaderTitleComponent],
-  changeDetection: ChangeDetectionStrategy.Eager
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 class LuxPanelStickyHeaderComponent {
-  sticky = false;
-  offset?: string;
+  sticky = signal(false);
+  offset = signal<string | undefined>(undefined);
 }

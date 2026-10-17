@@ -1,14 +1,14 @@
 import { JsonPipe, NgClass, NgStyle } from '@angular/common';
-import { Component, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, signal, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import {
-    LuxSelectAcComponent,
-    LuxSnackbarService,
-    LuxStepperLargeComponent,
-    LuxStepperLargeSelectionEvent,
-    LuxStepperLargeStepComponent,
-    LuxThemeService,
-    LuxToggleAcComponent
+  LuxSelectComponent,
+  LuxSnackbarService,
+  LuxStepperLargeComponent,
+  LuxStepperLargeSelectionEvent,
+  LuxStepperLargeStepComponent,
+  LuxThemeService,
+  LuxToggleComponent
 } from '@ihk-gfi/lux-components';
 import { StepperLargeExampleDataService } from './stepper-large-example-data.service';
 import { StepperLargeExampleErrorMessageBoxComponent } from './stepper-large-example-error-message-box/stepper-large-example-error-message-box.component';
@@ -22,12 +22,12 @@ import { StepperLargeExternStepExampleComponent } from './steps/stepper-large-ex
   selector: 'lux-stepper-large-example',
   templateUrl: './stepper-large-example.component.html',
   styleUrls: ['./stepper-large-example.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxStepperLargeStepComponent,
     LuxStepperLargeComponent,
-    LuxToggleAcComponent,
-    LuxSelectAcComponent,
+    LuxToggleComponent,
+    LuxSelectComponent,
     NgStyle,
     NgClass,
     StepperLargeExampleStepPrevButtonComponent,
@@ -40,23 +40,22 @@ import { StepperLargeExternStepExampleComponent } from './steps/stepper-large-ex
   ]
 })
 export class StepperLargeExampleComponent {
+  readonly stepper = viewChild(LuxStepperLargeComponent);
+  readonly toggle = viewChild<LuxToggleComponent>('requiredCheck');
+
   dataService = inject(StepperLargeExampleDataService);
+  readonly allowed = signal(false);
+  readonly stepValidationActive = signal(true);
+  readonly currentStepIndex = signal(0);
+  options: any[] = ['100%', '800px', '1000px', '1200px'];
+  readonly maxWidth = signal(this.options[0]);
+  readonly completed = signal(true);
+  theme = '';
+  readonly luxA11YMode = signal(false);
+
   private router = inject(Router);
   private snackbar = inject(LuxSnackbarService);
   private themeService = inject(LuxThemeService);
-
-  @ViewChild(LuxStepperLargeComponent) stepper!: LuxStepperLargeComponent;
-  @ViewChild('requiredCheck') toggle!: LuxToggleAcComponent;
-
-  allowed = false;
-  stepValidationActive = true;
-  currentStepIndex = 0;
-  options: any[] = ['100%', '800px', '1000px', '1200px'];
-  maxWidth = this.options[0];
-  completed = true;
-  theme = '';
-  luxA11YMode = false;
-  showError = false;
 
   constructor() {
     this.theme = this.themeService.getTheme().name;
@@ -67,8 +66,8 @@ export class StepperLargeExampleComponent {
       `Event 'luxStepChanged': Von \nSchritt "${event.prevStep.luxTitle}" (index = ${event.prevIndex}) nach \nSchritt "${event.currentStep.luxTitle}" (index = ${event.currentIndex})`
     );
     console.log(`Stepper-Index': ${event.stepper.luxCurrentStepNumber}`);
-    if (this.currentStepIndex == 1) {
-      this.dataService.luxStepValidationActive = this.stepValidationActive;
+    if (this.currentStepIndex() == 1) {
+      this.dataService.luxStepValidationActive = this.stepValidationActive();
     }
     this.dataService.showErrorMessage.next(false);
   }
@@ -92,8 +91,7 @@ export class StepperLargeExampleComponent {
   }
 
   onStepNotComplete() {
-    this.toggle.formControl.markAsTouched();
-    this.showError = true;
+    this.toggle()?.formControl.markAsTouched();
 
     this.dataService.showErrorMessage.next(true);
   }

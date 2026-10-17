@@ -1,35 +1,36 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { TestBed } from '@angular/core/testing';
+import { beforeEach, describe, expect, it, Mock, vi } from 'vitest';
 import { Subject } from 'rxjs';
 import { provideLuxTranslocoTesting } from '../../../src/testing/transloco-test.provider';
 import { LuxLoadingService } from './lux-loading.service';
 
 describe('LuxLoadingService', () => {
   let service: LuxLoadingService;
-  let announceSpy: jasmine.Spy;
+  let announceSpy: Mock;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [provideLuxTranslocoTesting()]
     });
-    announceSpy = spyOn(TestBed.inject(LiveAnnouncer), 'announce').and.resolveTo();
+    announceSpy = vi.spyOn(TestBed.inject(LiveAnnouncer), 'announce').mockResolvedValue() as unknown as Mock;
     service = TestBed.inject(LuxLoadingService);
   });
 
   it('Sollte initial weder loading noch busy sein', () => {
-    expect(service.isLoading()).toBeFalse();
-    expect(service.isBusy()).toBeFalse();
+    expect(service.isLoading()).toBe(false);
+    expect(service.isBusy()).toBe(false);
   });
 
   it('Sollte bei show() loading sein', () => {
     service.show();
-    expect(service.isLoading()).toBeTrue();
+    expect(service.isLoading()).toBe(true);
   });
 
   it('Sollte nach hide() nicht mehr loading sein', () => {
     service.show();
     service.hide();
-    expect(service.isLoading()).toBeFalse();
+    expect(service.isLoading()).toBe(false);
   });
 
   it('Sollte loading bleiben, bis alle parallelen Blocks freigegeben sind', () => {
@@ -37,10 +38,10 @@ describe('LuxLoadingService', () => {
     const releaseB = service.block();
 
     releaseA();
-    expect(service.isLoading()).toBeTrue();
+    expect(service.isLoading()).toBe(true);
 
     releaseB();
-    expect(service.isLoading()).toBeFalse();
+    expect(service.isLoading()).toBe(false);
   });
 
   it('Sollte einen zweiten Aufruf derselben Release-Funktion ignorieren', () => {
@@ -49,26 +50,26 @@ describe('LuxLoadingService', () => {
 
     releaseA();
     releaseA();
-    expect(service.isLoading()).toBeTrue();
+    expect(service.isLoading()).toBe(true);
   });
 
   it('Sollte den Zähler bei überzähligen hide()-Aufrufen bei 0 klemmen', () => {
     service.hide();
     service.show();
-    expect(service.isLoading()).toBeTrue();
+    expect(service.isLoading()).toBe(true);
   });
 
   it('Sollte ein Observable von Subscribe bis Complete als blockierend erfassen', () => {
     const source = new Subject<void>();
     const tracked = source.pipe(service.trackBlocking());
 
-    expect(service.isLoading()).toBeFalse();
+    expect(service.isLoading()).toBe(false);
     const subscription = tracked.subscribe();
-    expect(service.isLoading()).toBeTrue();
+    expect(service.isLoading()).toBe(true);
 
     source.next();
     source.complete();
-    expect(service.isLoading()).toBeFalse();
+    expect(service.isLoading()).toBe(false);
     subscription.unsubscribe();
   });
 
@@ -77,7 +78,7 @@ describe('LuxLoadingService', () => {
     source.pipe(service.trackBlocking()).subscribe({ error: () => undefined });
 
     source.error(new Error('boom'));
-    expect(service.isLoading()).toBeFalse();
+    expect(service.isLoading()).toBe(false);
   });
 
   it('Sollte bei Unsubscribe freigeben', () => {
@@ -85,22 +86,22 @@ describe('LuxLoadingService', () => {
     const subscription = source.pipe(service.trackBlocking()).subscribe();
 
     subscription.unsubscribe();
-    expect(service.isLoading()).toBeFalse();
+    expect(service.isLoading()).toBe(false);
   });
 
   it('Sollte bei anzeigenden Vorgängen busy, aber nicht loading sein', () => {
     const release = service.busy();
 
-    expect(service.isBusy()).toBeTrue();
-    expect(service.isLoading()).toBeFalse();
+    expect(service.isBusy()).toBe(true);
+    expect(service.isLoading()).toBe(false);
 
     release();
-    expect(service.isBusy()).toBeFalse();
+    expect(service.isBusy()).toBe(false);
   });
 
   it('Sollte während blockierender Vorgänge auch busy sein', () => {
     service.show();
-    expect(service.isBusy()).toBeTrue();
+    expect(service.isBusy()).toBe(true);
   });
 
   it('Sollte einen überholten trackBusy-Request beim Unsubscribe freigeben (switchMap-Szenario)', () => {
@@ -109,13 +110,13 @@ describe('LuxLoadingService', () => {
 
     const firstSubscription = first.pipe(service.trackBusy()).subscribe();
     second.pipe(service.trackBusy()).subscribe();
-    expect(service.isBusy()).toBeTrue();
+    expect(service.isBusy()).toBe(true);
 
     firstSubscription.unsubscribe();
-    expect(service.isBusy()).toBeTrue();
+    expect(service.isBusy()).toBe(true);
 
     second.complete();
-    expect(service.isBusy()).toBeFalse();
+    expect(service.isBusy()).toBe(false);
   });
 
   it('Sollte im Leerlauf nichts ansagen', () => {
@@ -132,7 +133,7 @@ describe('LuxLoadingService', () => {
   it('Sollte Start und Ende blockierender Vorgänge mit übersetzten Texten ansagen', () => {
     service.show();
     TestBed.tick();
-    expect(announceSpy).toHaveBeenCalledOnceWith('Verarbeitung läuft.', 'polite');
+    expect(announceSpy).toHaveBeenCalledExactlyOnceWith('Verarbeitung läuft.', 'polite');
 
     service.hide();
     TestBed.tick();
@@ -148,7 +149,7 @@ describe('LuxLoadingService', () => {
     releaseA();
     TestBed.tick();
 
-    expect(announceSpy).toHaveBeenCalledOnceWith('Verarbeitung läuft.', 'polite');
+    expect(announceSpy).toHaveBeenCalledExactlyOnceWith('Verarbeitung läuft.', 'polite');
 
     releaseB();
     TestBed.tick();

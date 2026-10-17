@@ -1,6 +1,7 @@
+import { describe, it, beforeEach, expect } from 'vitest';
 // noinspection DuplicatedCode
 
-import { Component, inject as inject_1, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject as inject_1 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LuxErrorStoreService } from './lux-error-store.service';
 
@@ -19,24 +20,24 @@ describe('LuxErrorStoreService', () => {
     service.safeNewConfig(null);
     fixture.detectChanges();
 
-    expect(service.config.iconName).toEqual(LuxErrorStoreService.DEFAULT_CONFIG.iconName);
-    expect(service.config.iconSize).toEqual(LuxErrorStoreService.DEFAULT_CONFIG.iconSize);
-    expect(service.config.errorText).toEqual(LuxErrorStoreService.DEFAULT_CONFIG.errorText);
-    expect(service.config.homeRedirectText).toEqual(LuxErrorStoreService.DEFAULT_CONFIG.homeRedirectText);
-    expect(service.config.errorPageUrl).toEqual(LuxErrorStoreService.DEFAULT_CONFIG.errorPageUrl);
-    expect(service.config.skipLocationChange).toEqual(LuxErrorStoreService.DEFAULT_CONFIG.skipLocationChange);
+    expect(service.config().iconName).toEqual(LuxErrorStoreService.DEFAULT_CONFIG.iconName);
+    expect(service.config().iconSize).toEqual(LuxErrorStoreService.DEFAULT_CONFIG.iconSize);
+    expect(service.config().errorText).toEqual(LuxErrorStoreService.DEFAULT_CONFIG.errorText);
+    expect(service.config().homeRedirectText).toEqual(LuxErrorStoreService.DEFAULT_CONFIG.homeRedirectText);
+    expect(service.config().errorPageUrl).toEqual(LuxErrorStoreService.DEFAULT_CONFIG.errorPageUrl);
+    expect(service.config().skipLocationChange).toEqual(LuxErrorStoreService.DEFAULT_CONFIG.skipLocationChange);
   });
 
   it('Sollte bei "{}" die Defaultwerte setzen', () => {
     service.safeNewConfig({});
     fixture.detectChanges();
 
-    expect(service.config.iconName).toEqual(LuxErrorStoreService.DEFAULT_CONFIG.iconName);
-    expect(service.config.iconSize).toEqual(LuxErrorStoreService.DEFAULT_CONFIG.iconSize);
-    expect(service.config.errorText).toEqual(LuxErrorStoreService.DEFAULT_CONFIG.errorText);
-    expect(service.config.homeRedirectText).toEqual(LuxErrorStoreService.DEFAULT_CONFIG.homeRedirectText);
-    expect(service.config.errorPageUrl).toEqual(LuxErrorStoreService.DEFAULT_CONFIG.errorPageUrl);
-    expect(service.config.skipLocationChange).toEqual(LuxErrorStoreService.DEFAULT_CONFIG.skipLocationChange);
+    expect(service.config().iconName).toEqual(LuxErrorStoreService.DEFAULT_CONFIG.iconName);
+    expect(service.config().iconSize).toEqual(LuxErrorStoreService.DEFAULT_CONFIG.iconSize);
+    expect(service.config().errorText).toEqual(LuxErrorStoreService.DEFAULT_CONFIG.errorText);
+    expect(service.config().homeRedirectText).toEqual(LuxErrorStoreService.DEFAULT_CONFIG.homeRedirectText);
+    expect(service.config().errorPageUrl).toEqual(LuxErrorStoreService.DEFAULT_CONFIG.errorPageUrl);
+    expect(service.config().skipLocationChange).toEqual(LuxErrorStoreService.DEFAULT_CONFIG.skipLocationChange);
   });
 
   it('Sollte die Defaultwerte gezielt überschreiben', () => {
@@ -46,12 +47,12 @@ describe('LuxErrorStoreService', () => {
     });
     fixture.detectChanges();
 
-    expect(service.config.iconName).toEqual(LuxErrorStoreService.DEFAULT_CONFIG.iconName);
-    expect(service.config.iconSize).toEqual(LuxErrorStoreService.DEFAULT_CONFIG.iconSize);
-    expect(service.config.errorText).toEqual('Lorem ipsum');
-    expect(service.config.homeRedirectText).toEqual(LuxErrorStoreService.DEFAULT_CONFIG.homeRedirectText);
-    expect(service.config.errorPageUrl).toEqual('dolor/sit/amet/');
-    expect(service.config.skipLocationChange).toEqual(LuxErrorStoreService.DEFAULT_CONFIG.skipLocationChange);
+    expect(service.config().iconName).toEqual(LuxErrorStoreService.DEFAULT_CONFIG.iconName);
+    expect(service.config().iconSize).toEqual(LuxErrorStoreService.DEFAULT_CONFIG.iconSize);
+    expect(service.config().errorText).toEqual('Lorem ipsum');
+    expect(service.config().homeRedirectText).toEqual(LuxErrorStoreService.DEFAULT_CONFIG.homeRedirectText);
+    expect(service.config().errorPageUrl).toEqual('dolor/sit/amet/');
+    expect(service.config().skipLocationChange).toEqual(LuxErrorStoreService.DEFAULT_CONFIG.skipLocationChange);
   });
 
   it('Sollte alle Defaultwerte überschreiben', () => {
@@ -65,18 +66,18 @@ describe('LuxErrorStoreService', () => {
     });
     fixture.detectChanges();
 
-    expect(service.config.iconName).toEqual('lux-interface-user-single');
-    expect(service.config.iconSize).toEqual('2x');
-    expect(service.config.errorText).toEqual('Lorem ipsum');
-    expect(service.config.homeRedirectText).toEqual('Link');
-    expect(service.config.errorPageUrl).toEqual('dolor/sit/amet/');
-    expect(service.config.skipLocationChange).toBeFalse();
+    expect(service.config().iconName).toEqual('lux-interface-user-single');
+    expect(service.config().iconSize).toEqual('2x');
+    expect(service.config().errorText).toEqual('Lorem ipsum');
+    expect(service.config().homeRedirectText).toEqual('Link');
+    expect(service.config().errorPageUrl).toEqual('dolor/sit/amet/');
+    expect(service.config().skipLocationChange).toBe(false);
   });
 });
 
 @Component({
   template: ``,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: []
 })
 class MockComponent {

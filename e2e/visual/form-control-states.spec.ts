@@ -1,6 +1,6 @@
 import { expect, Page, test } from '@playwright/test';
 import { FORM_CONTROLS, FormControlSpec } from '../form/support/form-controls';
-import { EXAMPLE_IN_FORM, EXAMPLE_WITHOUT_FORM, FormExamplePage } from '../form/support/form-example';
+import { EXAMPLES, FormExamplePage } from '../form/support/form-example';
 import { openStable, screenshotExampleCard } from './vrt-helper';
 
 /**
@@ -14,7 +14,7 @@ const STATES: { name: string; apply: (example: FormExamplePage, spec: FormContro
     apply: async (example, spec) => {
       await example.options.useValidatorErrorMessages();
       await example.options.setSwitch('luxRequired', true);
-      for (const heading of [EXAMPLE_WITHOUT_FORM, EXAMPLE_IN_FORM]) {
+      for (const heading of EXAMPLES) {
         const section = example.section(heading, spec.tag);
         await spec.leaveEmpty(section.control);
         await expect(section.error).toBeVisible();
@@ -31,7 +31,7 @@ type StateFn = (example: FormExamplePage, page: Page) => Promise<void>;
 const fileTooLarge =
   (tag: string): StateFn =>
   async (example, page) => {
-    await example.options.setText('luxMaxSizeMB', '1');
+    await example.options.setText('luxMaxSizeMiB', '1');
     const controls = page.locator(`example-base-content ${tag}`);
     for (let i = 0; i < (await controls.count()); i++) {
       await controls
@@ -50,10 +50,10 @@ const switchOn =
 
 /** Controls, deren Beispielseiten nicht in FORM_CONTROLS passen, mit eigenen Zuständen. */
 const OTHER_CONTROLS: { id: string; route: string; states: Record<string, StateFn> }[] = [
-  { id: 'chips-ac', route: 'chips-ac', states: { disabled: switchOn('luxDisabled'), required: switchOn('luxRequired') } },
+  { id: 'chips', route: 'chips', states: { disabled: switchOn('luxDisabled'), required: switchOn('luxRequired') } },
   ...(
     [
-      ['file-input-ac', 'lux-file-input-ac'],
+      ['file-input', 'lux-file-input'],
       ['file-list', 'lux-file-list'],
       ['file-upload', 'lux-file-upload']
     ] as const

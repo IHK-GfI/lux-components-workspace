@@ -1,0 +1,38 @@
+<lux-form-control-wrapper
+  (click)="!isDisabled() && !isReadonly() ? textareaElement.focus() : null"
+  [luxFormComponent]="this"
+  [luxCounterLabel]="counterLabel()"
+  [luxHideCounterLabel]="luxHideCounterLabel()"
+  [luxNoLabels]="luxNoLabels()"
+  [luxNoBottomLabel]="luxNoBottomLabel()"
+  [luxNoTopLabel]="luxNoTopLabel()"
+  [luxLabelLongFormat]="luxLabelLongFormat()"
+  luxTagId="luxTextareaWrapper"
+>
+  <textarea
+    matInput
+    luxTagIdHandler
+    [luxNameAttr]="luxName()"
+    [luxTagId]="luxTagId()"
+    [placeholder]="luxPlaceholder()"
+    [value]="value() ?? ''"
+    [disabled]="isDisabled()"
+    [luxMaxLengthAttr]="luxMaxLength()"
+    [cdkTextareaAutosize]="true"
+    [cdkAutosizeMinRows]="luxMinRows()"
+    [cdkAutosizeMaxRows]="luxMaxRows()"
+    [required]="isRequired()"
+    [readonly]="isReadonly()"
+    [autocomplete]="luxAutocomplete()"
+    (input)="onInput($event)"
+    (blur)="onNativeBlur($event)"
+    (focus)="onFocus($event)"
+    (focusin)="onFocusIn($event)"
+    (focusout)="onFocusOut($event)"
+    [id]="uid()"
+    [luxAriaDescribedby]="describedBy()"
+    [luxAriaLabel]="luxAriaLabel()"
+    [luxAriaLabelledby]="luxAriaLabelledby()"
+    #textareaElement
+  ></textarea>
+</lux-form-control-wrapper>

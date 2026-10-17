@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, effect, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { LuxInputAcComponent, LuxSelectAcComponent, LuxToggleAcComponent } from '@ihk-gfi/lux-components';
+import { disabled, form, FormField, readonly, required } from '@angular/forms/signals';
+import { LuxInputComponent, LuxSelectComponent, LuxToggleComponent } from '@ihk-gfi/lux-components';
 import { LuxHtmlComponent } from '@ihk-gfi/lux-components/lux-html';
 import {
   LUX_QUILL_DEFAULT_TOOLBAR,
@@ -18,6 +19,7 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
 import { logResult } from '../../example-base/example-base-util/example-base-helper';
 import { ExampleFormDisableComponent } from '../../example-base/example-form-disable/example-form-disable.component';
 import { ExampleFormValueComponent } from '../../example-base/example-form-value/example-form-value.component';
+import { ExampleSignalFormValueComponent } from '../../example-base/example-signal-form-value/example-signal-form-value.component';
 import { ExampleValueComponent } from '../../example-base/example-value/example-value.component';
 
 const START_VALUE =
@@ -33,16 +35,18 @@ const START_VALUE =
     ReactiveFormsModule,
     LuxQuillComponent,
     LuxHtmlComponent,
-    LuxInputAcComponent,
-    LuxSelectAcComponent,
-    LuxToggleAcComponent,
+    LuxInputComponent,
+    LuxSelectComponent,
+    LuxToggleComponent,
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,
     ExampleBaseSimpleOptionsComponent,
     ExampleBaseAdvancedOptionsComponent,
     ExampleFormDisableComponent,
     ExampleFormValueComponent,
-    ExampleValueComponent
+    ExampleSignalFormValueComponent,
+    ExampleValueComponent,
+    FormField
   ]
 })
 export class QuillExampleComponent {
@@ -53,7 +57,7 @@ export class QuillExampleComponent {
     { label: 'document (Dokument)', value: 'document' }
   ];
 
-  // 'preset' statt null: lux-select-ac wertet null als "nichts ausgewählt" und zeigt dann keinen Text an.
+  // 'preset' statt null: lux-select wertet null als "nichts ausgewählt" und zeigt dann keinen Text an.
   readonly headingModeOptions: { label: string; value: LuxQuillHeadingMode | 'preset' }[] = [
     { label: 'Wie im Preset', value: 'preset' },
     { label: 'none', value: 'none' },
@@ -71,32 +75,41 @@ export class QuillExampleComponent {
 
   readonly toolbarOptions: LuxQuillToolbarItem[] = [...LUX_QUILL_DEFAULT_TOOLBAR];
 
+  // 1. Signal Form - der empfohlene Weg.
+  readonly signalModel = signal({ quillValue: START_VALUE });
+  readonly signalForm = form(this.signalModel, (path) => {
+    disabled(path.quillValue, { when: () => this.disabled() });
+    readonly(path.quillValue, { when: () => this.readonly() });
+    required(path.quillValue, { when: () => this.required() });
+  });
+
+  // 2. Reactive Form.
   readonly controlBinding = 'quillExample';
   readonly form = new FormGroup({
     quillExample: new FormControl<string>(START_VALUE, { nonNullable: true })
   });
 
-  showOutputEvents = signal(false);
-  preset = signal<LuxQuillPreset>('document');
-  headingMode = signal<LuxQuillHeadingMode | 'preset'>('preset');
-  headingLevels = signal('1,2');
-  toolbar = signal<LuxQuillToolbarItem[]>([...LUX_QUILL_DEFAULT_TOOLBAR]);
-  label = signal('Nachricht');
-  hint = signal('Optionaler Zusatztext');
-  placeholder = signal('Text eingeben');
-  errorMessage = signal('');
-  minHeight = signal('8rem');
-  maxHeight = signal('20rem');
-  required = signal(false);
-  readonly = signal(false);
-  disabled = signal(false);
-  dense = signal(false);
-  noTopLabel = signal(false);
-  noBottomLabel = signal(false);
+  readonly showOutputEvents = signal(false);
+  readonly preset = signal<LuxQuillPreset>('document');
+  readonly headingMode = signal<LuxQuillHeadingMode | 'preset'>('preset');
+  readonly headingLevels = signal('1,2');
+  readonly toolbar = signal<LuxQuillToolbarItem[]>([...LUX_QUILL_DEFAULT_TOOLBAR]);
+  readonly label = signal('Nachricht');
+  readonly hint = signal('Optionaler Zusatztext');
+  readonly placeholder = signal('Text eingeben');
+  readonly errorMessage = signal('');
+  readonly minHeight = signal('8rem');
+  readonly maxHeight = signal('20rem');
+  readonly required = signal(false);
+  readonly readonly = signal(false);
+  readonly disabled = signal(false);
+  readonly dense = signal(false);
+  readonly noTopLabel = signal(false);
+  readonly noBottomLabel = signal(false);
 
-  value = signal(START_VALUE);
+  readonly value = signal(START_VALUE);
 
-  config = computed<Partial<LuxQuillConfig>>(() => {
+  readonly config = computed<Partial<LuxQuillConfig>>(() => {
     const [level1, level2] = this.headingLevels().split(',').map(Number) as LuxQuillHeadingLevel[];
     const config: Partial<LuxQuillConfig> = { headingLevels: [level1, level2], toolbar: this.toolbar() };
     const headingMode = this.headingMode();

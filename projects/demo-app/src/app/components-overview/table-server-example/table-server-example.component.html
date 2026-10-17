@@ -1,32 +1,33 @@
 <example-base-structure
   exampleTitle="Tabelle (mit serverseitigen Daten)"
-  exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/lux%E2%80%90table-v21"
+  exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/lux%E2%80%90table-v22"
 >
   <example-base-content>
-    <div [ngStyle]="{ height: calculateProportions ? tableHeightPx + 'px' : 'unset' }">
+    <div [ngStyle]="{ height: calculateProportions() ? tableHeightPx() + 'px' : 'unset' }">
       <lux-table
-        [luxMinWidthPx]="minWidthPx"
-        [luxShowProgress]="showProgress"
+        [luxMinWidthPx]="minWidthPx()"
+        [luxShowProgress]="showProgress()"
         (luxLoadingChange)="onTableLoadingChange($event)"
-        [luxShowPagination]="pagination"
-        [luxColWidthsPercent]="columnWidthOption"
-        [luxShowFilter]="filter"
-        [luxFilterText]="filterText"
-        [luxPageSize]="pageSize"
-        [luxClasses]="cssClass"
-        [luxPageSizeOptions]="pageSizeOption"
-        [luxPagerFirstLastButton]="pagerFirstLastButton"
+        [luxShowPagination]="pagination()"
+        [luxColWidthsPercent]="columnWidthOption()"
+        [luxShowFilter]="filter()"
+        [luxFilterText]="filterText()"
+        [luxPageSize]="pageSize()"
+        [luxClasses]="cssClass()"
+        [luxPageSizeOptions]="pageSizeOption()"
+        [luxPagerFirstLastButton]="pagerFirstLastButton()"
         [luxMultiSelect]="multiSelect"
-        [luxMultiSelectOnlyCheckboxClick]="multiSelectOnlyCheckboxClick"
-        [luxMultiSelectDisabledProperty]="multiSelectDisabledProperty"
-        [luxNoDataText]="noDataText"
+        [luxMultiSelectOnlyCheckboxClick]="multiSelectOnlyCheckboxClick()"
+        [luxMultiSelectDisabledProperty]="multiSelectDisabledProperty()"
+        [luxNoDataText]="noDataText()"
         [luxHttpDAO]="httpDAO"
-        [luxSelected]="selected"
+        [luxSelected]="selected()"
+        [luxShowSelectedChangeCursor]="true"
         (luxSelectedChange)="onSelectedChange($event)"
         (luxSelectedAsArrayChange)="onSelectedAsArrayChange($event)"
         [luxCompareWith]="compareFn"
-        [luxHideBorders]="hideBorders"
-        [luxAutoPaginate]="autoPagination"
+        [luxHideBorders]="hideBorders()"
+        [luxAutoPaginate]="autoPagination()"
         #myTable
       >
         <lux-table-column
@@ -34,7 +35,7 @@
           [luxSortable]="nameConfig.sortable"
           [luxSticky]="nameConfig.sticky"
           [luxResponsiveAt]="nameConfig.responsiveAt"
-          [luxResponsiveBehaviour]="$safeNavigationMigration(nameConfig.responsiveBehaviour?.value)"
+          [luxResponsiveBehaviour]="nameConfig.responsiveBehaviour.value ?? ''"
         >
           <lux-table-column-header>
             <ng-template>Name</ng-template>
@@ -53,7 +54,7 @@
           [luxSortable]="symbolConfig.sortable"
           [luxSticky]="symbolConfig.sticky"
           [luxResponsiveAt]="symbolConfig.responsiveAt"
-          [luxResponsiveBehaviour]="$safeNavigationMigration(symbolConfig.responsiveBehaviour?.value)"
+          [luxResponsiveBehaviour]="symbolConfig.responsiveBehaviour.value ?? ''"
         >
           <lux-table-column-header>
             <ng-template>Symbol</ng-template>
@@ -72,7 +73,7 @@
           [luxSortable]="dateConfig.sortable"
           [luxSticky]="dateConfig.sticky"
           [luxResponsiveAt]="dateConfig.responsiveAt"
-          [luxResponsiveBehaviour]="$safeNavigationMigration(dateConfig.responsiveBehaviour?.value)"
+          [luxResponsiveBehaviour]="dateConfig.responsiveBehaviour.value ?? ''"
         >
           <lux-table-column-header>
             <ng-template>Datum</ng-template>
@@ -90,10 +91,10 @@
     </div>
   </example-base-content>
   <example-base-simple-options>
-    <lux-toggle-ac
+    <lux-toggle
       luxLabel="Globaler Ladezustand"
-      [luxChecked]="useGlobalLoading"
-      (luxCheckedChange)="onUseGlobalLoadingChange($event)"
+      [checked]="useGlobalLoading()"
+      (checkedChange)="onUseGlobalLoadingChange($event)"
       [luxNoLabels]="true"
     >
       <lux-form-hint
@@ -101,10 +102,10 @@
         Ladebalken unter dem App-Header zeigt ihn an. Damit nicht zwei Ladebalken angezeigt werden, wird luxShowProgress dabei
         abgeschaltet.</lux-form-hint
       >
-    </lux-toggle-ac>
-    <lux-toggle-ac luxLabel="luxShowProgress" [(luxChecked)]="showProgress" [luxDisabled]="useGlobalLoading" [luxNoLabels]="true">
+    </lux-toggle>
+    <lux-toggle luxLabel="luxShowProgress" [(checked)]="showProgress" [luxDisabled]="useGlobalLoading()" [luxNoLabels]="true">
       <lux-form-hint>Dieses Flag steuert, ob die interne Progressbar beim Laden angezeigt wird.</lux-form-hint>
-    </lux-toggle-ac>
+    </lux-toggle>
     <table-example-simple-options [tableExample]="this" class="lux-flex lux-flex-col lux-gap-4"></table-example-simple-options>
   </example-base-simple-options>
   <example-base-advanced-options>

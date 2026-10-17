@@ -1,3 +1,4 @@
+import { afterEach, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
@@ -51,7 +52,7 @@ describe('LuxQuillLinkDialogComponent', () => {
 
   async function click(selector: string) {
     const button: HTMLButtonElement = overlay.querySelector(`${selector} button`)!;
-    expect(button).withContext(selector).toBeTruthy();
+    expect(button, selector).toBeTruthy();
     button.click();
     fixture.detectChanges();
     await fixture.whenStable();

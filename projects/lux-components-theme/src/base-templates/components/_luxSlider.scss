@@ -1,6 +1,7 @@
 @use "@angular/material" as mat;
 
-lux-slider-ac {
+lux-slider-ac,
+lux-slider {
   @include mat.slider-overrides(
     (
       value-indicator-width: 20px,

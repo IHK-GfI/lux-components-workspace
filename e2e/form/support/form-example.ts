@@ -8,8 +8,30 @@ import { expect, Locator, Page } from '@playwright/test';
  * damit Umbauten an der Demo nur an einer Stelle nachgezogen werden müssen.
  */
 
-export const EXAMPLE_WITHOUT_FORM = 'Beispiel ohne Reactive-Form';
-export const EXAMPLE_IN_FORM = 'Beispiel in Reactive-Form';
+/** Beispielbereiche der Form-Controls (Testtitel). Die Überschriften auf der Seite stehen in HEADINGS. */
+export const EXAMPLE_SIGNAL_FORM = 'Signal Form';
+export const EXAMPLE_WITHOUT_FORM = 'Freistehend';
+export const EXAMPLE_IN_FORM = 'Reactive-Form';
+export const EXAMPLE_DEPRECATED = 'Freistehend (veraltet)';
+
+/** Alle Beispielbereiche, die jede Form-Control-Seite hat. */
+export const EXAMPLES = [EXAMPLE_SIGNAL_FORM, EXAMPLE_WITHOUT_FORM, EXAMPLE_IN_FORM, EXAMPLE_DEPRECATED];
+
+/** Beispielbereiche, deren Wertanzeige auch den Formularzustand (Valid, Dirty, Touched) zeigt. */
+export const FORM_EXAMPLES = [EXAMPLE_SIGNAL_FORM, EXAMPLE_IN_FORM];
+
+/**
+ * Überschriften der Beispielbereiche, z. B. "Signal Form — [formField]".
+ * "Freistehend" meint die aktuelle API ([(value)] bzw. [(checked)]),
+ * "Freistehend (veraltet)" die frühere ([(luxValue)], [(luxChecked)] bzw. [(luxSelected)]).
+ */
+const HEADINGS: Record<string, RegExp> = {
+  [EXAMPLE_SIGNAL_FORM]: /^Signal Form — \[formField\]$/,
+  [EXAMPLE_WITHOUT_FORM]: /^Freistehend — \[\((value|checked)\)\]$/,
+  // formControlName: lux-quill bindet als ControlValueAccessor (ohne luxControlBinding).
+  [EXAMPLE_IN_FORM]: /^Reactive-Form — (luxControlBinding|formControlName)$/,
+  [EXAMPLE_DEPRECATED]: /^Freistehend — \[\((luxValue|luxChecked|luxSelected)\)\]( @deprecated)?$/
+};
 
 export class FormExamplePage {
   readonly options: ExampleOptions;
@@ -30,8 +52,10 @@ export class FormExamplePage {
     return new FormExamplePage(page);
   }
 
-  /** Beispielbereich mit der Überschrift `heading` und dem Control mit dem Tag `tag`. */
-  section(heading: string, tag: string) {
+  /**
+   * Beispielbereich `heading` (EXAMPLE_* oder eine andere, exakte Überschrift) mit dem Control mit dem Tag `tag`.
+   */
+  section(heading: string | RegExp, tag: string) {
     return new ExampleSection(this.page, heading, tag);
   }
 }
@@ -41,8 +65,9 @@ export class ExampleSection {
   readonly root: Locator;
   readonly control: Locator;
 
-  constructor(page: Page, heading: string, tag: string) {
-    this.root = page.locator('example-base-content > div').filter({ has: page.getByRole('heading', { name: heading, exact: true }) });
+  constructor(page: Page, heading: string | RegExp, tag: string) {
+    const name = typeof heading === 'string' && HEADINGS[heading] ? HEADINGS[heading] : heading;
+    this.root = page.locator('example-base-content > div').filter({ has: page.getByRole('heading', { name, exact: true }) });
     this.control = this.root.locator(tag).first();
   }
 
@@ -62,15 +87,15 @@ export class ExampleSection {
     return this.control.locator('mat-hint');
   }
 
-  /** Aktueller Wert aus der Anzeige "Wert:" (example-value bzw. example-form-value). */
+  /** Aktueller Wert aus der Anzeige "Wert:" (example-value, example-form-value bzw. example-signal-form-value). */
   async value(): Promise<unknown> {
-    const text = await this.cell('example-value, example-form-value', 'Wert:');
+    const text = await this.cell('example-value, example-form-value, example-signal-form-value', 'Wert:');
     return parseDisplayedValue(text);
   }
 
-  /** Zustand des Reactive-Forms aus example-form-value. */
+  /** Zustand des Formulars aus example-form-value bzw. example-signal-form-value. */
   async formState() {
-    const read = async (label: string) => (await this.cell('example-form-value', label)) === 'true';
+    const read = async (label: string) => (await this.cell('example-form-value, example-signal-form-value', label)) === 'true';
     return { valid: await read('Valid:'), dirty: await read('Dirty:'), touched: await read('Touched:') };
   }
 
@@ -115,7 +140,7 @@ export class ExampleOptions {
     await field.blur();
   }
 
-  /** Wählt in einem lux-select-ac des Panels die Option mit dem angezeigten Text `option`. */
+  /** Wählt in einem lux-select des Panels die Option mit dem angezeigten Text `option`. */
   async select(label: string, option: string) {
     const field = this.card.getByRole('combobox', { name: label, exact: true });
     await this.reveal(field);
@@ -124,7 +149,7 @@ export class ExampleOptions {
     await expect(field).toContainText(option);
   }
 
-  /** Wählt einen Radio-Button (lux-radio-ac) im Panel. */
+  /** Wählt einen Radio-Button (lux-radio) im Panel. */
   async radio(name: string) {
     const radio = this.card.getByRole('radio', { name, exact: true });
     await this.reveal(radio);

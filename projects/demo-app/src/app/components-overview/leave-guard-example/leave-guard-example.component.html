@@ -1,19 +1,18 @@
 <example-base-structure
   exampleTitle="Leave-Guard"
-  exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/lux%E2%80%90leave%E2%80%90guard-v21"
+  exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/lux%E2%80%90leave%E2%80%90guard-v22"
 >
   <example-base-content class="lux-flex lux-flex-col lux-gap-4">
     <!-- Die Fortschrittsanzeige übernimmt der globale Ladebalken unter dem App-Header (LuxLoadingService.isBusy()) -->
     <div class="lux-highlight-section lux-flex lux-flex-col lux-gap-2">
       <h3>Daten speichern (blockierend)</h3>
-      <lux-input-ac
+      <lux-input
         luxLabel="Name"
         luxHint="Eine Eingabe erzeugt ungespeicherte Änderungen."
         luxAutocomplete="off"
-        [(luxValue)]="name"
+        [(value)]="name"
         [luxDisabled]="loading.isLoading()"
-      >
-      </lux-input-ac>
+      />
       <div class="lux-flex lux-gap-2 lux-flex-wrap">
         <lux-button
           luxLabel="Speichern"
@@ -23,8 +22,7 @@
           [luxLoading]="loading.isLoading()"
           [luxDisabled]="!dirty()"
           (luxClicked)="save()"
-        >
-        </lux-button>
+        />
         <lux-button
           luxLabel="Änderungen verwerfen"
           luxColor="primary"
@@ -32,21 +30,19 @@
           [luxStroked]="true"
           [luxDisabled]="!dirty() || loading.isLoading()"
           (luxClicked)="discard()"
-        >
-        </lux-button>
+        />
       </div>
     </div>
 
     <div class="lux-highlight-section lux-flex lux-flex-col lux-gap-2">
       <h3>Liste filtern (anzeigend)</h3>
-      <lux-input-ac
+      <lux-input
         luxLabel="Filterbegriff"
         luxHint="Filtert nach 600 ms Eingabepause; ein neuer Request überschreibt den laufenden."
         luxAutocomplete="off"
-        [luxValue]="filterTerm()"
-        (luxValueChange)="onFilterChange($event)"
-      >
-      </lux-input-ac>
+        [value]="filterTerm()"
+        (valueChange)="onFilterChange($event)"
+      />
     </div>
 
     <div class="lux-highlight-section lux-flex lux-flex-col lux-gap-2">
@@ -64,8 +60,7 @@
     <div class="lux-highlight-section lux-flex lux-flex-col lux-gap-2">
       <div class="lux-flex lux-items-center lux-justify-between">
         <h3>Protokoll</h3>
-        <lux-button luxLabel="Leeren" luxColor="primary" [luxStroked]="true" [luxDisabled]="log().length === 0" (luxClicked)="clearLog()">
-        </lux-button>
+        <lux-button luxLabel="Leeren" luxColor="primary" [luxStroked]="true" [luxDisabled]="log().length === 0" (luxClicked)="clearLog()" />
       </div>
       <ol reversed aria-label="Protokoll" aria-live="polite">
         @for (entry of log(); track $index) {
@@ -91,17 +86,17 @@
       </ol>
     </div>
     <div class="lux-highlight-section column">
-      <lux-toggle-ac
+      <lux-toggle
         luxLabel="Seite dauerhaft blockieren"
         luxTagId="leave-guard-permanent-block-toggle"
-        [luxChecked]="permanentlyBlocked()"
+        [checked]="permanentlyBlocked()"
         [luxNoTopLabel]="true"
-        (luxCheckedChange)="onPermanentBlockChange($event)"
+        (checkedChange)="onPermanentBlockChange($event)"
       >
         <lux-form-hint
           >Startet einen blockierenden Vorgang über <i>LuxLoadingService.block()</i>, der erst beim Ausschalten endet.</lux-form-hint
         >
-      </lux-toggle-ac>
+      </lux-toggle>
     </div>
   </example-base-simple-options>
 </example-base-structure>

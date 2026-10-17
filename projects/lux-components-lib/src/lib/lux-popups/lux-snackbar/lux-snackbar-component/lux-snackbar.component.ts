@@ -8,7 +8,7 @@ import { LuxSnackbarConfig } from '../lux-snackbar-config';
 @Component({
   selector: 'lux-snackbar',
   templateUrl: './lux-snackbar.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxIconComponent, MatButton]
 })
 export class LuxSnackbarComponent implements OnInit {

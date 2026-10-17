@@ -116,8 +116,8 @@ export function writeLinesToFile(tree: Tree, _context: SchematicContext, filePat
 
 function isIgnoredPath(filePath: string, ignoreSpecFiles = false): boolean {
   if (
-    ['/node_modules/', '/.idea/', '/coverage/', '/dist/', '/.git/', '/.angular/', '/.cache/', '/tmp/', '/out/', '/src-gen/'].some((segment) =>
-      filePath.includes(segment)
+    ['/node_modules/', '/.idea/', '/coverage/', '/dist/', '/.git/', '/.angular/', '/.cache/', '/tmp/', '/out/', '/src-gen/'].some(
+      (segment) => filePath.includes(segment)
     )
   ) {
     return true;
@@ -164,13 +164,21 @@ function visitWithPrune(tree: Tree, startDirPath: string, fileCallback: (filePat
  * @param callback(filePath, content)
  * @param filePathEndings Z.B. .html, .ts, src/styles.scss,...
  */
-export function iterateFilesAndModifyContent(tree: Tree, rootPath = '', verbose = false, callback: (filePath: string, content: string) => void, ...filePathEndings: string[]) {
+export function iterateFilesAndModifyContent(
+  tree: Tree,
+  rootPath = '',
+  verbose = false,
+  callback: (filePath: string, content: string) => void,
+  ...filePathEndings: string[]
+) {
   const normalizedRootPath = rootPath && rootPath.trim() ? rootPath.trim() : '/';
 
   if (verbose) {
-    logDebug(`Suche nach "${filePathEndings.length > 0 ? filePathEndings.join(', ') : 'allen'}" Dateien unter dem Pfad "${normalizedRootPath}"...`);
+    logDebug(
+      `Suche nach "${filePathEndings.length > 0 ? filePathEndings.join(', ') : 'allen'}" Dateien unter dem Pfad "${normalizedRootPath}"...`
+    );
   }
-  
+
   visitWithPrune(tree, normalizedRootPath, (filePath: string) => {
     // Endung der Datei mit erlaubten Endungen abgleichen
     let modifyFile = false;
@@ -180,7 +188,7 @@ export function iterateFilesAndModifyContent(tree: Tree, rootPath = '', verbose 
         break;
       }
     }
-    
+
     // Besitzt die Datei die richtige Endung?
     if (!modifyFile) {
       if (verbose) {
@@ -294,46 +302,51 @@ export function searchInComponentAndModifyModule(
   callback: (filePath: string, content: string) => void,
   ...filePathEndings: string[]
 ) {
-  visitWithPrune(tree, rootPath, (filePath: string) => {
-    // Endung der Datei mit erlaubten Endungen abgleichen
-    let modifyFile = false;
-    for (const fileEnding of filePathEndings) {
-      if (filePath.endsWith(fileEnding)) {
-        modifyFile = true;
-        break;
+  visitWithPrune(
+    tree,
+    rootPath,
+    (filePath: string) => {
+      // Endung der Datei mit erlaubten Endungen abgleichen
+      let modifyFile = false;
+      for (const fileEnding of filePathEndings) {
+        if (filePath.endsWith(fileEnding)) {
+          modifyFile = true;
+          break;
+        }
       }
-    }
-    // Besitzt die Datei die richtige Endung?
-    if (!modifyFile) {
-      return;
-    }
-    // Inhalt auslesen
-    const content = tree.read(filePath);
-    // Wenn die Datei keinen Inhalt hat, die nächste Datei aufrufen
-    if (!content) {
-      return;
-    }
-
-    let foundSearchString = '';
-    searchStrings.forEach((searchString: string) => {
-      if (!foundSearchString && content.toString().indexOf(searchString) > -1) {
-        foundSearchString = searchString;
+      // Besitzt die Datei die richtige Endung?
+      if (!modifyFile) {
+        return;
       }
-    });
+      // Inhalt auslesen
+      const content = tree.read(filePath);
+      // Wenn die Datei keinen Inhalt hat, die nächste Datei aufrufen
+      if (!content) {
+        return;
+      }
 
-    if (!foundSearchString) {
-      return;
-    }
+      let foundSearchString = '';
+      searchStrings.forEach((searchString: string) => {
+        if (!foundSearchString && content.toString().indexOf(searchString) > -1) {
+          foundSearchString = searchString;
+        }
+      });
 
-    // den Ordner der gefundenen Datei nehmen
-    const fileDir = filePath.substring(0, filePath.lastIndexOf('/'));
-    const modulePath: Path = findModule(tree, fileDir);
-    const moduleContent = tree.read(modulePath);
-    if (moduleContent) {
-      // Callback mit aktuellem Pfad + Inhalt der Datei aufrufen
-      callback(modulePath, moduleContent.toString());
-    }
-  }, true);
+      if (!foundSearchString) {
+        return;
+      }
+
+      // den Ordner der gefundenen Datei nehmen
+      const fileDir = filePath.substring(0, filePath.lastIndexOf('/'));
+      const modulePath: Path = findModule(tree, fileDir);
+      const moduleContent = tree.read(modulePath);
+      if (moduleContent) {
+        // Callback mit aktuellem Pfad + Inhalt der Datei aufrufen
+        callback(modulePath, moduleContent.toString());
+      }
+    },
+    true
+  );
 }
 
 /**

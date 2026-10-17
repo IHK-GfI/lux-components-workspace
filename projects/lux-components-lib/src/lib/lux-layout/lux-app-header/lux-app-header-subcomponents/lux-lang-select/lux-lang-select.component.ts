@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, OnInit } from '@angular/core';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { CookieService } from 'ngx-cookie-service';
 import { LuxMenuItemComponent } from '../../../../lux-action/lux-menu/lux-menu-subcomponents/lux-menu-item.component';
@@ -8,15 +8,12 @@ import { LuxLocale } from './lux-locale';
 @Component({
   selector: 'lux-lang-select',
   templateUrl: './lux-lang-select.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxMenuComponent, LuxMenuItemComponent, TranslocoPipe]
 })
 export class LuxLangSelectComponent implements OnInit {
-  private cookieService = inject(CookieService);
-  protected translocoService = inject(TranslocoService);
-
-  @Input() luxLocaleSupported = ['de'];
-  @Input() luxLocaleBaseHref = '';
+  readonly luxLocaleSupported = input(['de']);
+  readonly luxLocaleBaseHref = input('');
 
   cookieName = 'X-GFI-LANGUAGE';
   cookiePath = '/';
@@ -29,8 +26,11 @@ export class LuxLangSelectComponent implements OnInit {
 
   localeOptions: LuxLocale[] = [];
 
+  private cookieService = inject(CookieService);
+  protected translocoService = inject(TranslocoService);
+
   ngOnInit() {
-    this.luxLocaleSupported.forEach((locale) => {
+    this.luxLocaleSupported().forEach((locale) => {
       const foundLocale = this.allSupportedLocaleArr.find((item) => item.code === locale);
       if (foundLocale) {
         this.localeOptions.push(foundLocale);
@@ -51,5 +51,4 @@ export class LuxLangSelectComponent implements OnInit {
     this.cookieService.set(this.cookieName, locale.code, undefined, this.cookiePath);
     this.translocoService.setActiveLang(locale.code);
   }
-
 }

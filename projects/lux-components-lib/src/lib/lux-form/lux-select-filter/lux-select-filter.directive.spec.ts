@@ -1,27 +1,24 @@
+import { describe, it, beforeEach, afterEach, expect, vi } from 'vitest';
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ElementRef } from '@angular/core';
 import { MatSelect, MatSelectModule } from '@angular/material/select';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { LuxSelectFilterDirective } from './lux-select-filter.directive';
 import { LuxSelectFilterUtils } from './lux-select-filter.utils';
 
 @Component({
   selector: 'lux-test-component',
   template: `
-    <mat-select
-      [luxSelectFilter]="enableFilter"
-      [luxFilterLabelFn]="labelFn"
-
-      (luxFilterActiveChange)="onFilterActiveChange($event)"
-    >
+    <mat-select [luxSelectFilter]="enableFilter" [luxFilterLabelFn]="labelFn" (luxFilterActiveChange)="onFilterActiveChange($event)">
       @for (item of items; track item) {
         <mat-option [value]="item">{{ item }}</mat-option>
       }
     </mat-select>
   `,
   standalone: true,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatSelectModule, LuxSelectFilterDirective]
 })
 class TestComponent {
@@ -51,16 +48,33 @@ describe('LuxSelectFilterDirective', () => {
   let directive: LuxSelectFilterDirective;
 
   beforeEach(async () => {
+    vi.useFakeTimers();
     await TestBed.configureTestingModule({
       imports: [NoopAnimationsModule, TestComponent]
     }).compileComponents();
 
     fixture = TestBed.createComponent(TestComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
+    await LuxTestHelper.wait(fixture);
 
     const matSelect = fixture.debugElement.query((el) => el.componentInstance instanceof MatSelect);
     directive = matSelect?.injector.get(LuxSelectFilterDirective);
+  });
+
+  afterEach(async () => {
+    // Mehrere Tests planen über handleKeydown('Tab') einen verzögerten Fokuswechsel
+    // (setTimeout). Ohne explizites Zerstören der Fixture bleibt dieser Timer aktiv und kann
+    // während eines späteren Tests feuern und dort auf LuxSelectFilterUtils.focusNextFocusableElement
+    // gespotte Aufrufe verfälschen (isolate:false teilt den Ausführungskontext über Testdateien
+    // hinweg, siehe Vitest-Runner-Default).
+    // Erst alle ausstehenden Fake-Timer abarbeiten (noch im Fake-Modus, damit ein eventuelles
+    // clearTimeout() beim fixture.destroy() dieselbe Timer-Implementierung wie beim setTimeout()
+    // sieht), dann zerstören, dann erst auf echte Timer zurückschalten.
+    if (vi.isFakeTimers()) {
+      await vi.runAllTimersAsync();
+    }
+    fixture?.destroy();
+    vi.useRealTimers();
   });
 
   it('sollte erstellt werden', () => {
@@ -77,14 +91,14 @@ describe('LuxSelectFilterDirective', () => {
     directive.onFilterInput('deu');
 
     expect(directive.filteredItems.size).toBe(1);
-    expect(directive.filteredItems.has('Deutschland')).toBeTrue();
+    expect(directive.filteredItems.has('Deutschland')).toBe(true);
   });
 
   it('sollte case-insensitive filtern', () => {
     directive.setItems(['Deutschland', 'Belgien', 'Frankreich']);
     directive.onFilterInput('DEU');
 
-    expect(directive.filteredItems.has('Deutschland')).toBeTrue();
+    expect(directive.filteredItems.has('Deutschland')).toBe(true);
   });
 
   it('sollte alle Items zurückgeben bei leerem Filter', () => {
@@ -96,51 +110,50 @@ describe('LuxSelectFilterDirective', () => {
 
   it('sollte isFilterActive korrekt zurückgeben', () => {
     directive.filterValue = '';
-    expect(directive.isFilterActive()).toBeFalse();
+    expect(directive.isFilterActive()).toBe(false);
 
     directive.filterValue = 'test';
-    expect(directive.isFilterActive()).toBeTrue();
+    expect(directive.isFilterActive()).toBe(true);
 
     directive.filterValue = '   ';
-    expect(directive.isFilterActive()).toBeFalse();
+    expect(directive.isFilterActive()).toBe(false);
   });
 
   it('sollte isItemVisible korrekt prüfen', () => {
     directive.setItems(['Deutschland', 'Belgien']);
     directive.onFilterInput('deu');
 
-    expect(directive.isItemVisible('Deutschland')).toBeTrue();
-    expect(directive.isItemVisible('Belgien')).toBeFalse();
+    expect(directive.isItemVisible('Deutschland')).toBe(true);
+    expect(directive.isItemVisible('Belgien')).toBe(false);
   });
 
   it('sollte isIndexVisible korrekt prüfen', () => {
     directive.setItems(['Deutschland', 'Belgien']);
     directive.onFilterInput('deu');
 
-    expect(directive.isIndexVisible(0)).toBeTrue();
-    expect(directive.isIndexVisible(1)).toBeFalse();
+    expect(directive.isIndexVisible(0)).toBe(true);
+    expect(directive.isIndexVisible(1)).toBe(false);
   });
 
   it('sollte bei ArrowDown im Filter fortlaufend durch sichtbare Optionen navigieren', () => {
     const keyManager = {
       activeItemIndex: -1,
-      destroy: jasmine.createSpy('destroy'),
-      setActiveItem: jasmine.createSpy('setActiveItem').and.callFake((index: number) => {
-        keyManager.activeItemIndex = index;
-      })
+      destroy: vi.fn().mockName('destroy'),
+      setActiveItem: vi
+        .fn()
+        .mockName('setActiveItem')
+        .mockImplementation((index: number) => {
+          keyManager.activeItemIndex = index;
+        })
     };
     const firstOptionElement = document.createElement('div');
     const secondOptionElement = document.createElement('div');
 
-    spyOnProperty((directive as any).matSelect, 'panelOpen', 'get').and.returnValue(true);
+    vi.spyOn((directive as any).matSelect, 'panelOpen', 'get').mockReturnValue(true);
     (directive as any).matSelect._keyManager = keyManager;
-    (directive as any).matSelect._scrollOptionIntoView = jasmine.createSpy('scrollOptionIntoView');
+    (directive as any).matSelect._scrollOptionIntoView = vi.fn().mockName('scrollOptionIntoView');
     (directive as any).matSelect.options = {
-      toArray: () =>
-        [
-          { _getHostElement: () => firstOptionElement },
-          { _getHostElement: () => secondOptionElement }
-        ] as any[]
+      toArray: () => [{ _getHostElement: () => firstOptionElement }, { _getHostElement: () => secondOptionElement }] as any[]
     };
 
     directive.handleKeydown(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
@@ -155,23 +168,22 @@ describe('LuxSelectFilterDirective', () => {
   it('sollte bei ArrowUp im Filter fortlaufend nach oben navigieren', () => {
     const keyManager = {
       activeItemIndex: -1,
-      destroy: jasmine.createSpy('destroy'),
-      setActiveItem: jasmine.createSpy('setActiveItem').and.callFake((index: number) => {
-        keyManager.activeItemIndex = index;
-      })
+      destroy: vi.fn().mockName('destroy'),
+      setActiveItem: vi
+        .fn()
+        .mockName('setActiveItem')
+        .mockImplementation((index: number) => {
+          keyManager.activeItemIndex = index;
+        })
     };
     const firstOptionElement = document.createElement('div');
     const secondOptionElement = document.createElement('div');
 
-    spyOnProperty((directive as any).matSelect, 'panelOpen', 'get').and.returnValue(true);
+    vi.spyOn((directive as any).matSelect, 'panelOpen', 'get').mockReturnValue(true);
     (directive as any).matSelect._keyManager = keyManager;
-    (directive as any).matSelect._scrollOptionIntoView = jasmine.createSpy('scrollOptionIntoView');
+    (directive as any).matSelect._scrollOptionIntoView = vi.fn().mockName('scrollOptionIntoView');
     (directive as any).matSelect.options = {
-      toArray: () =>
-        [
-          { _getHostElement: () => firstOptionElement },
-          { _getHostElement: () => secondOptionElement }
-        ] as any[]
+      toArray: () => [{ _getHostElement: () => firstOptionElement }, { _getHostElement: () => secondOptionElement }] as any[]
     };
 
     directive.handleKeydown(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
@@ -186,15 +198,18 @@ describe('LuxSelectFilterDirective', () => {
   it('sollte bei PageDown ohne aktive Option material-konform ans sichtbare Ende springen', () => {
     const keyManager = {
       activeItemIndex: -1,
-      destroy: jasmine.createSpy('destroy'),
-      setActiveItem: jasmine.createSpy('setActiveItem').and.callFake((index: number) => {
-        keyManager.activeItemIndex = index;
-      })
+      destroy: vi.fn().mockName('destroy'),
+      setActiveItem: vi
+        .fn()
+        .mockName('setActiveItem')
+        .mockImplementation((index: number) => {
+          keyManager.activeItemIndex = index;
+        })
     };
 
-    spyOnProperty((directive as any).matSelect, 'panelOpen', 'get').and.returnValue(true);
+    vi.spyOn((directive as any).matSelect, 'panelOpen', 'get').mockReturnValue(true);
     (directive as any).matSelect._keyManager = keyManager;
-    (directive as any).matSelect._scrollOptionIntoView = jasmine.createSpy('scrollOptionIntoView');
+    (directive as any).matSelect._scrollOptionIntoView = vi.fn().mockName('scrollOptionIntoView');
     (directive as any).matSelect.options = {
       toArray: () =>
         Array.from({ length: 5 }, () => ({
@@ -210,15 +225,18 @@ describe('LuxSelectFilterDirective', () => {
   it('sollte bei PageUp ohne aktive Option material-konform an den sichtbaren Anfang springen', () => {
     const keyManager = {
       activeItemIndex: -1,
-      destroy: jasmine.createSpy('destroy'),
-      setActiveItem: jasmine.createSpy('setActiveItem').and.callFake((index: number) => {
-        keyManager.activeItemIndex = index;
-      })
+      destroy: vi.fn().mockName('destroy'),
+      setActiveItem: vi
+        .fn()
+        .mockName('setActiveItem')
+        .mockImplementation((index: number) => {
+          keyManager.activeItemIndex = index;
+        })
     };
 
-    spyOnProperty((directive as any).matSelect, 'panelOpen', 'get').and.returnValue(true);
+    vi.spyOn((directive as any).matSelect, 'panelOpen', 'get').mockReturnValue(true);
     (directive as any).matSelect._keyManager = keyManager;
-    (directive as any).matSelect._scrollOptionIntoView = jasmine.createSpy('scrollOptionIntoView');
+    (directive as any).matSelect._scrollOptionIntoView = vi.fn().mockName('scrollOptionIntoView');
     (directive as any).matSelect.options = {
       toArray: () =>
         Array.from({ length: 5 }, () => ({
@@ -234,15 +252,18 @@ describe('LuxSelectFilterDirective', () => {
   it('sollte bei Home und End zu den sichtbaren Grenzen navigieren', () => {
     const keyManager = {
       activeItemIndex: -1,
-      destroy: jasmine.createSpy('destroy'),
-      setActiveItem: jasmine.createSpy('setActiveItem').and.callFake((index: number) => {
-        keyManager.activeItemIndex = index;
-      })
+      destroy: vi.fn().mockName('destroy'),
+      setActiveItem: vi
+        .fn()
+        .mockName('setActiveItem')
+        .mockImplementation((index: number) => {
+          keyManager.activeItemIndex = index;
+        })
     };
 
-    spyOnProperty((directive as any).matSelect, 'panelOpen', 'get').and.returnValue(true);
+    vi.spyOn((directive as any).matSelect, 'panelOpen', 'get').mockReturnValue(true);
     (directive as any).matSelect._keyManager = keyManager;
-    (directive as any).matSelect._scrollOptionIntoView = jasmine.createSpy('scrollOptionIntoView');
+    (directive as any).matSelect._scrollOptionIntoView = vi.fn().mockName('scrollOptionIntoView');
     (directive as any).matSelect.options = {
       toArray: () =>
         Array.from({ length: 5 }, () => ({
@@ -260,10 +281,13 @@ describe('LuxSelectFilterDirective', () => {
   it('sollte bei Filteränderung aktive unsichtbare Option auf erste sichtbare setzen', () => {
     const keyManager = {
       activeItemIndex: 2,
-      destroy: jasmine.createSpy('destroy'),
-      setActiveItem: jasmine.createSpy('setActiveItem').and.callFake((index: number) => {
-        keyManager.activeItemIndex = index;
-      })
+      destroy: vi.fn().mockName('destroy'),
+      setActiveItem: vi
+        .fn()
+        .mockName('setActiveItem')
+        .mockImplementation((index: number) => {
+          keyManager.activeItemIndex = index;
+        })
     };
     const hiddenOption = document.createElement('div');
     const visibleOption = document.createElement('div');
@@ -271,9 +295,9 @@ describe('LuxSelectFilterDirective', () => {
     hiddenOption.style.display = 'none';
     secondHiddenOption.style.display = 'none';
 
-    spyOnProperty((directive as any).matSelect, 'panelOpen', 'get').and.returnValue(true);
+    vi.spyOn((directive as any).matSelect, 'panelOpen', 'get').mockReturnValue(true);
     (directive as any).matSelect._keyManager = keyManager;
-    (directive as any).matSelect._scrollOptionIntoView = jasmine.createSpy('scrollOptionIntoView');
+    (directive as any).matSelect._scrollOptionIntoView = vi.fn().mockName('scrollOptionIntoView');
     (directive as any).matSelect.options = {
       toArray: () =>
         [
@@ -292,25 +316,27 @@ describe('LuxSelectFilterDirective', () => {
   it('sollte Enter im Input die erste sichtbare Option selektieren', () => {
     const keyManager = {
       activeItemIndex: 0,
-      destroy: jasmine.createSpy('destroy'),
-      setActiveItem: jasmine.createSpy('setActiveItem').and.callFake((index: number) => {
-        keyManager.activeItemIndex = index;
-      })
+      destroy: vi.fn().mockName('destroy'),
+      setActiveItem: vi
+        .fn()
+        .mockName('setActiveItem')
+        .mockImplementation((index: number) => {
+          keyManager.activeItemIndex = index;
+        })
     };
     const hiddenOption = document.createElement('div');
     hiddenOption.style.display = 'none';
-    const visibleOption = { _getHostElement: () => document.createElement('div'), _selectViaInteraction: jasmine.createSpy('_selectViaInteraction') };
-    const closeSpy = jasmine.createSpy('close');
+    const visibleOption = {
+      _getHostElement: () => document.createElement('div'),
+      _selectViaInteraction: vi.fn().mockName('_selectViaInteraction')
+    };
+    const closeSpy = vi.fn().mockName('close');
 
-    spyOnProperty((directive as any).matSelect, 'panelOpen', 'get').and.returnValue(true);
+    vi.spyOn((directive as any).matSelect, 'panelOpen', 'get').mockReturnValue(true);
     (directive as any).matSelect._keyManager = keyManager;
     (directive as any).matSelect.close = closeSpy;
     (directive as any).matSelect.options = {
-      toArray: () =>
-        [
-          { _getHostElement: () => hiddenOption },
-          visibleOption
-        ] as any[]
+      toArray: () => [{ _getHostElement: () => hiddenOption }, visibleOption] as any[]
     };
 
     directive.handleKeydown(new KeyboardEvent('keydown', { key: 'Enter' }));
@@ -323,16 +349,25 @@ describe('LuxSelectFilterDirective', () => {
   it('sollte Enter im Panel die aktive sichtbare Option selektieren und im Single-Select schließen', () => {
     const keyManager = {
       activeItemIndex: 1,
-      destroy: jasmine.createSpy('destroy'),
-      setActiveItem: jasmine.createSpy('setActiveItem').and.callFake((index: number) => {
-        keyManager.activeItemIndex = index;
-      })
+      destroy: vi.fn().mockName('destroy'),
+      setActiveItem: vi
+        .fn()
+        .mockName('setActiveItem')
+        .mockImplementation((index: number) => {
+          keyManager.activeItemIndex = index;
+        })
     };
-    const firstOption = { _getHostElement: () => document.createElement('div'), _selectViaInteraction: jasmine.createSpy('_selectViaInteraction') };
-    const secondOption = { _getHostElement: () => document.createElement('div'), _selectViaInteraction: jasmine.createSpy('_selectViaInteraction') };
-    const closeSpy = jasmine.createSpy('close');
+    const firstOption = {
+      _getHostElement: () => document.createElement('div'),
+      _selectViaInteraction: vi.fn().mockName('_selectViaInteraction')
+    };
+    const secondOption = {
+      _getHostElement: () => document.createElement('div'),
+      _selectViaInteraction: vi.fn().mockName('_selectViaInteraction')
+    };
+    const closeSpy = vi.fn().mockName('close');
 
-    spyOnProperty((directive as any).matSelect, 'panelOpen', 'get').and.returnValue(true);
+    vi.spyOn((directive as any).matSelect, 'panelOpen', 'get').mockReturnValue(true);
     (directive as any).matSelect._keyManager = keyManager;
     (directive as any).matSelect.close = closeSpy;
     (directive as any).matSelect.options = {
@@ -349,23 +384,22 @@ describe('LuxSelectFilterDirective', () => {
   it('sollte bei initial aktiver erster Option mit ArrowDown direkt zur nächsten navigieren', () => {
     const keyManager = {
       activeItemIndex: 0,
-      destroy: jasmine.createSpy('destroy'),
-      setActiveItem: jasmine.createSpy('setActiveItem').and.callFake((index: number) => {
-        keyManager.activeItemIndex = index;
-      })
+      destroy: vi.fn().mockName('destroy'),
+      setActiveItem: vi
+        .fn()
+        .mockName('setActiveItem')
+        .mockImplementation((index: number) => {
+          keyManager.activeItemIndex = index;
+        })
     };
     const firstOptionElement = document.createElement('div');
     const secondOptionElement = document.createElement('div');
 
-    spyOnProperty((directive as any).matSelect, 'panelOpen', 'get').and.returnValue(true);
+    vi.spyOn((directive as any).matSelect, 'panelOpen', 'get').mockReturnValue(true);
     (directive as any).matSelect._keyManager = keyManager;
-    (directive as any).matSelect._scrollOptionIntoView = jasmine.createSpy('scrollOptionIntoView');
+    (directive as any).matSelect._scrollOptionIntoView = vi.fn().mockName('scrollOptionIntoView');
     (directive as any).matSelect.options = {
-      toArray: () =>
-        [
-          { _getHostElement: () => firstOptionElement },
-          { _getHostElement: () => secondOptionElement }
-        ] as any[]
+      toArray: () => [{ _getHostElement: () => firstOptionElement }, { _getHostElement: () => secondOptionElement }] as any[]
     };
 
     directive.handleKeydown(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
@@ -376,25 +410,25 @@ describe('LuxSelectFilterDirective', () => {
   it('sollte bei Arrow-Navigation den Fokus im Filter-Input lassen', () => {
     const keyManager = {
       activeItemIndex: 0,
-      destroy: jasmine.createSpy('destroy'),
-      setActiveItem: jasmine.createSpy('setActiveItem').and.callFake((index: number) => {
-        keyManager.activeItemIndex = index;
-      })
+      destroy: vi.fn().mockName('destroy'),
+      setActiveItem: vi
+        .fn()
+        .mockName('setActiveItem')
+        .mockImplementation((index: number) => {
+          keyManager.activeItemIndex = index;
+        })
     };
     const input = document.createElement('input');
     document.body.appendChild(input);
     input.focus();
     directive.setFilterInputRef(new ElementRef(input));
 
-    spyOnProperty((directive as any).matSelect, 'panelOpen', 'get').and.returnValue(true);
+    vi.spyOn((directive as any).matSelect, 'panelOpen', 'get').mockReturnValue(true);
     (directive as any).matSelect._keyManager = keyManager;
-    (directive as any).matSelect._scrollOptionIntoView = jasmine.createSpy('scrollOptionIntoView');
+    (directive as any).matSelect._scrollOptionIntoView = vi.fn().mockName('scrollOptionIntoView');
     (directive as any).matSelect.options = {
       toArray: () =>
-        [
-          { _getHostElement: () => document.createElement('div') },
-          { _getHostElement: () => document.createElement('div') }
-        ] as any[]
+        [{ _getHostElement: () => document.createElement('div') }, { _getHostElement: () => document.createElement('div') }] as any[]
     };
 
     directive.handleKeydown(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
@@ -406,19 +440,22 @@ describe('LuxSelectFilterDirective', () => {
   it('sollte bei ArrowDown im Option-Fokus nur sichtbare Optionen ansteuern', () => {
     const keyManager = {
       activeItemIndex: 0,
-      destroy: jasmine.createSpy('destroy'),
-      setActiveItem: jasmine.createSpy('setActiveItem').and.callFake((index: number) => {
-        keyManager.activeItemIndex = index;
-      })
+      destroy: vi.fn().mockName('destroy'),
+      setActiveItem: vi
+        .fn()
+        .mockName('setActiveItem')
+        .mockImplementation((index: number) => {
+          keyManager.activeItemIndex = index;
+        })
     };
     const firstVisibleOption = document.createElement('div');
     const hiddenOption = document.createElement('div');
     const thirdVisibleOption = document.createElement('div');
     firstVisibleOption.tabIndex = -1;
     hiddenOption.style.display = 'none';
-    spyOnProperty((directive as any).matSelect, 'panelOpen', 'get').and.returnValue(true);
+    vi.spyOn((directive as any).matSelect, 'panelOpen', 'get').mockReturnValue(true);
     (directive as any).matSelect._keyManager = keyManager;
-    (directive as any).matSelect._scrollOptionIntoView = jasmine.createSpy('scrollOptionIntoView');
+    (directive as any).matSelect._scrollOptionIntoView = vi.fn().mockName('scrollOptionIntoView');
     (directive as any).matSelect.options = {
       toArray: () =>
         [
@@ -433,165 +470,176 @@ describe('LuxSelectFilterDirective', () => {
     expect(keyManager.setActiveItem).toHaveBeenCalledWith(2);
   });
 
-  it('sollte Tab aus dem Filter-Input behandeln und schließen', fakeAsync(() => {
-    const closeSpy = jasmine.createSpy('close');
-    const focusNextSpy = spyOn(LuxSelectFilterUtils, 'focusNextFocusableElement');
-    spyOnProperty((directive as any).matSelect, 'panelOpen', 'get').and.returnValue(true);
+  it('sollte Tab aus dem Filter-Input behandeln und schließen', async () => {
+    const closeSpy = vi.fn().mockName('close');
+    const focusNextSpy = vi.spyOn(LuxSelectFilterUtils, 'focusNextFocusableElement').mockReturnValue(undefined);
+    vi.spyOn((directive as any).matSelect, 'panelOpen', 'get').mockReturnValue(true);
     (directive as any).matSelect.close = closeSpy;
     (directive as any).matSelect._elementRef = new ElementRef(document.createElement('div'));
 
     const fromInput = directive.handleKeydown(new KeyboardEvent('keydown', { key: 'Tab' }));
     (directive as any).onPanelClose();
-    tick();
+    await LuxTestHelper.wait(fixture);
 
-    expect(fromInput).toBeTrue();
+    expect(fromInput).toBe(true);
     expect(closeSpy).toHaveBeenCalled();
     expect(focusNextSpy).toHaveBeenCalled();
-  }));
+  });
 
-  it('sollte Shift+Tab aus dem Filter-Input rückwärts behandeln und schließen', fakeAsync(() => {
-    const closeSpy = jasmine.createSpy('close');
-    const focusPreviousSpy = spyOn(LuxSelectFilterUtils, 'focusPreviousFocusableElement');
-    spyOnProperty((directive as any).matSelect, 'panelOpen', 'get').and.returnValue(true);
+  it('sollte Shift+Tab aus dem Filter-Input rückwärts behandeln und schließen', async () => {
+    const closeSpy = vi.fn().mockName('close');
+    const focusPreviousSpy = vi.spyOn(LuxSelectFilterUtils, 'focusPreviousFocusableElement').mockReturnValue(undefined);
+    vi.spyOn((directive as any).matSelect, 'panelOpen', 'get').mockReturnValue(true);
     (directive as any).matSelect.close = closeSpy;
     (directive as any).matSelect._elementRef = new ElementRef(document.createElement('div'));
 
     const fromInput = directive.handleKeydown(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }));
     (directive as any).onPanelClose();
-    tick();
+    await LuxTestHelper.wait(fixture);
 
-    expect(fromInput).toBeTrue();
+    expect(fromInput).toBe(true);
     expect(closeSpy).toHaveBeenCalled();
     expect(focusPreviousSpy).toHaveBeenCalled();
-  }));
-
-  it('sollte Tab aus dem Panel nativ unbehandelt lassen', () => {
-    spyOnProperty((directive as any).matSelect, 'panelOpen', 'get').and.returnValue(true);
-    const fromPanel = directive.handleOptionKeydown(new KeyboardEvent('keydown', { key: 'Tab' }));
-
-    expect(fromPanel).toBeFalse();
   });
 
-  it('sollte nach nativem Tab aus dem Panel keinen Trigger-Fokus erzwingen', fakeAsync(() => {
-    const focusSpy = jasmine.createSpy('focus');
+  it('sollte Tab aus dem Panel nativ unbehandelt lassen', () => {
+    vi.spyOn((directive as any).matSelect, 'panelOpen', 'get').mockReturnValue(true);
+    const fromPanel = directive.handleOptionKeydown(new KeyboardEvent('keydown', { key: 'Tab' }));
+
+    expect(fromPanel).toBe(false);
+  });
+
+  it('sollte nach nativem Tab aus dem Panel keinen Trigger-Fokus erzwingen', async () => {
+    const focusSpy = vi.fn().mockName('focus');
     (directive as any).matSelect.focus = focusSpy;
-    spyOnProperty((directive as any).matSelect, 'panelOpen', 'get').and.returnValue(true);
+    vi.spyOn((directive as any).matSelect, 'panelOpen', 'get').mockReturnValue(true);
 
     directive.handleOptionKeydown(new KeyboardEvent('keydown', { key: 'Tab' }));
     (directive as any).onPanelClose();
-    tick();
+    await LuxTestHelper.wait(fixture);
 
     expect(focusSpy).not.toHaveBeenCalled();
-  }));
+  });
 
   it('sollte Escape nativ unbehandelt lassen', () => {
-    spyOnProperty((directive as any).matSelect, 'panelOpen', 'get').and.returnValue(true);
+    vi.spyOn((directive as any).matSelect, 'panelOpen', 'get').mockReturnValue(true);
 
     const handled = directive.handleKeydown(new KeyboardEvent('keydown', { key: 'Escape' }));
 
-    expect(handled).toBeFalse();
+    expect(handled).toBe(false);
   });
 
-  it('sollte beim Schließen den Trigger fokussieren, wenn der Fokus verloren ging', fakeAsync(() => {
-    const focusSpy = jasmine.createSpy('focus');
+  it('sollte beim Schließen den Trigger fokussieren, wenn der Fokus verloren ging', async () => {
+    const focusSpy = vi.fn().mockName('focus');
     (directive as any).matSelect.focus = focusSpy;
 
     (directive as any).onPanelClose();
-    tick();
+    await LuxTestHelper.wait(fixture);
 
     expect(focusSpy).toHaveBeenCalled();
-  }));
+  });
 
-  it('sollte externen Fokus beim Schließen nicht überschreiben', fakeAsync(() => {
-    const focusSpy = jasmine.createSpy('focus');
+  it('sollte externen Fokus beim Schließen nicht überschreiben', async () => {
+    const focusSpy = vi.fn().mockName('focus');
     const externalButton = document.createElement('button');
     document.body.appendChild(externalButton);
     externalButton.focus();
     (directive as any).matSelect.focus = focusSpy;
 
     (directive as any).onPanelClose();
-    tick();
+    await LuxTestHelper.wait(fixture);
 
     expect(document.activeElement).toBe(externalButton);
     expect(focusSpy).not.toHaveBeenCalled();
 
     document.body.removeChild(externalButton);
-  }));
+  });
 
-  it('sollte nach Tab-basiertem Schließen keinen Trigger-Fokus erzwingen', fakeAsync(() => {
-    const focusSpy = jasmine.createSpy('focus');
+  it('sollte nach Tab-basiertem Schließen keinen Trigger-Fokus erzwingen', async () => {
+    const focusSpy = vi.fn().mockName('focus');
     (directive as any).matSelect.focus = focusSpy;
-    spyOnProperty((directive as any).matSelect, 'panelOpen', 'get').and.returnValue(true);
+    vi.spyOn((directive as any).matSelect, 'panelOpen', 'get').mockReturnValue(true);
 
     directive.handleKeydown(new KeyboardEvent('keydown', { key: 'Tab' }));
     (directive as any).onPanelClose();
-    tick();
+    await LuxTestHelper.wait(fixture);
 
     expect(focusSpy).not.toHaveBeenCalled();
-  }));
+  });
 
   it('sollte Zeichen im Panel nicht in den Filter umleiten', () => {
     const keyManager = {
       activeItemIndex: 0,
-      destroy: jasmine.createSpy('destroy'),
-      setActiveItem: jasmine.createSpy('setActiveItem')
+      destroy: vi.fn().mockName('destroy'),
+      setActiveItem: vi.fn().mockName('setActiveItem')
     };
     directive.filterValue = 'ab';
 
-    spyOnProperty((directive as any).matSelect, 'panelOpen', 'get').and.returnValue(true);
+    vi.spyOn((directive as any).matSelect, 'panelOpen', 'get').mockReturnValue(true);
     (directive as any).matSelect._keyManager = keyManager;
 
     const handled = directive.handleOptionKeydown(new KeyboardEvent('keydown', { key: 'c' }));
 
-    expect(handled).toBeFalse();
+    expect(handled).toBe(false);
     expect(directive.filterValue).toBe('ab');
   });
 
-  it('sollte Tab-Navigation am aktiven Element ausrichten, wenn der Select-Host nicht fokussierbar ist', fakeAsync(() => {
-    const closeSpy = jasmine.createSpy('close');
-    const focusNextSpy = spyOn(LuxSelectFilterUtils, 'focusNextFocusableElement');
+  it('sollte Tab-Navigation am aktiven Element ausrichten, wenn der Select-Host nicht fokussierbar ist', async () => {
+    const closeSpy = vi.fn().mockName('close');
+    const focusNextSpy = vi.spyOn(LuxSelectFilterUtils, 'focusNextFocusableElement').mockReturnValue(undefined);
     const activeAnchor = document.createElement('button');
     document.body.appendChild(activeAnchor);
     activeAnchor.focus();
 
-    spyOnProperty((directive as any).matSelect, 'panelOpen', 'get').and.returnValue(true);
+    vi.spyOn((directive as any).matSelect, 'panelOpen', 'get').mockReturnValue(true);
     (directive as any).matSelect.close = closeSpy;
     (directive as any).matSelect._elementRef = new ElementRef(document.createElement('div'));
 
     directive.handleKeydown(new KeyboardEvent('keydown', { key: 'Tab' }));
     (directive as any).onPanelClose();
-    tick();
+    await LuxTestHelper.wait(fixture);
 
     expect(closeSpy).toHaveBeenCalled();
-    expect(focusNextSpy).toHaveBeenCalledWith(activeAnchor);
+    // Per Referenzgleichheit statt toHaveBeenCalledWith(): unter isolate:false könnten mehrere
+    // strukturell identische <button>-Elemente aus anderen Tests im Spiel sein, die
+    // toHaveBeenCalledWith() sonst fälschlich als Treffer werten würde.
+    const calledWithOwnAnchor = focusNextSpy.mock.calls.some((call) => call[0] === activeAnchor);
+    expect(calledWithOwnAnchor).toBe(true);
 
     document.body.removeChild(activeAnchor);
-  }));
+  });
 
-  it('sollte geplante Tab-Navigation bei Destroy abbrechen', fakeAsync(() => {
-    const closeSpy = jasmine.createSpy('close');
-    const focusNextSpy = spyOn(LuxSelectFilterUtils, 'focusNextFocusableElement');
+  it('sollte geplante Tab-Navigation bei Destroy abbrechen', async () => {
+    const closeSpy = vi.fn().mockName('close');
+    const focusNextSpy = vi.spyOn(LuxSelectFilterUtils, 'focusNextFocusableElement').mockReturnValue(undefined);
     const activeAnchor = document.createElement('button');
     document.body.appendChild(activeAnchor);
     activeAnchor.focus();
 
-    spyOnProperty((directive as any).matSelect, 'panelOpen', 'get').and.returnValue(true);
+    vi.spyOn((directive as any).matSelect, 'panelOpen', 'get').mockReturnValue(true);
     (directive as any).matSelect.close = closeSpy;
     (directive as any).matSelect._elementRef = new ElementRef(document.createElement('div'));
 
     directive.handleKeydown(new KeyboardEvent('keydown', { key: 'Tab' }));
     (directive as any).onPanelClose();
     directive.ngOnDestroy();
-    tick();
+    await LuxTestHelper.wait(fixture);
 
     expect(closeSpy).toHaveBeenCalled();
-    expect(focusNextSpy).not.toHaveBeenCalled();
+    // Gezielt per Referenzgleichheit auf den eigenen Anchor dieses Tests prüfen statt "gar nicht
+    // aufgerufen" bzw. toHaveBeenCalledWith(): unter isolate:false (Default dieses Vitest-Runners)
+    // teilen sich alle Spec-Dateien einen Ausführungskontext, wodurch andere (nicht per
+    // fixture.destroy() aufgeräumte) Tests ebenfalls verzögerte Aufrufe auf dieser statischen
+    // Utility-Funktion planen können - inklusive strukturell identischer (aber anderer) <button>-
+    // Elemente, die toHaveBeenCalledWith() sonst fälschlich als Treffer werten würde.
+    const calledWithOwnAnchor = focusNextSpy.mock.calls.some((call) => call[0] === activeAnchor);
+    expect(calledWithOwnAnchor).toBe(false);
 
     document.body.removeChild(activeAnchor);
-  }));
+  });
 
-  it('sollte bei Outside-Click keinen Trigger-Fokus erzwingen', fakeAsync(() => {
-    const focusSpy = jasmine.createSpy('focus');
+  it('sollte bei Outside-Click keinen Trigger-Fokus erzwingen', async () => {
+    const focusSpy = vi.fn().mockName('focus');
     const selectHost = document.createElement('div');
     const panel = document.createElement('div');
     const externalButton = document.createElement('button');
@@ -599,7 +647,7 @@ describe('LuxSelectFilterDirective', () => {
     document.body.appendChild(panel);
     document.body.appendChild(externalButton);
 
-    spyOnProperty((directive as any).matSelect, 'panelOpen', 'get').and.returnValue(true);
+    vi.spyOn((directive as any).matSelect, 'panelOpen', 'get').mockReturnValue(true);
     (directive as any).matSelect.focus = focusSpy;
     (directive as any).matSelect.panel = new ElementRef(panel);
     (directive as any).matSelect._elementRef = new ElementRef(selectHost);
@@ -608,7 +656,7 @@ describe('LuxSelectFilterDirective', () => {
     externalButton.focus();
     externalButton.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
     (directive as any).onPanelClose();
-    tick();
+    await LuxTestHelper.wait(fixture);
 
     expect(document.activeElement).toBe(externalButton);
     expect(focusSpy).not.toHaveBeenCalled();
@@ -617,9 +665,9 @@ describe('LuxSelectFilterDirective', () => {
     document.body.removeChild(externalButton);
     document.body.removeChild(panel);
     document.body.removeChild(selectHost);
-  }));
+  });
 
-  it('sollte im geöffneten Multiselect nach Mausklick auf eine Option wieder das Filter-Input fokussieren', fakeAsync(() => {
+  it('sollte im geöffneten Multiselect nach Mausklick auf eine Option wieder das Filter-Input fokussieren', async () => {
     const input = document.createElement('input');
     const panel = document.createElement('div');
     const option = document.createElement('div');
@@ -629,24 +677,24 @@ describe('LuxSelectFilterDirective', () => {
     document.body.appendChild(panel);
 
     directive.setFilterInputRef(new ElementRef(input));
-    spyOnProperty((directive as any).matSelect, 'panelOpen', 'get').and.returnValue(true);
-    spyOnProperty((directive as any).matSelect, 'multiple', 'get').and.returnValue(true);
+    vi.spyOn((directive as any).matSelect, 'panelOpen', 'get').mockReturnValue(true);
+    vi.spyOn((directive as any).matSelect, 'multiple', 'get').mockReturnValue(true);
     (directive as any).matSelect.panel = new ElementRef(panel);
 
     (directive as any).registerPanelKeydownListener();
     option.dispatchEvent(new MouseEvent('click', { bubbles: true }));
-    tick();
+    await LuxTestHelper.wait(fixture);
 
     expect(document.activeElement).toBe(input);
 
     directive.ngOnDestroy();
     document.body.removeChild(panel);
     document.body.removeChild(input);
-  }));
+  });
 
-  it('sollte den Refokus nach Multiselect-Klick ohne Scrollen ausführen', fakeAsync(() => {
+  it('sollte den Refokus nach Multiselect-Klick ohne Scrollen ausführen', async () => {
     const input = document.createElement('input');
-    const focusSpy = spyOn(input, 'focus').and.callThrough();
+    const focusSpy = vi.spyOn(input, 'focus');
     const panel = document.createElement('div');
     const option = document.createElement('div');
     option.classList.add('mat-mdc-option');
@@ -655,18 +703,18 @@ describe('LuxSelectFilterDirective', () => {
     document.body.appendChild(panel);
 
     directive.setFilterInputRef(new ElementRef(input));
-    spyOnProperty((directive as any).matSelect, 'panelOpen', 'get').and.returnValue(true);
-    spyOnProperty((directive as any).matSelect, 'multiple', 'get').and.returnValue(true);
+    vi.spyOn((directive as any).matSelect, 'panelOpen', 'get').mockReturnValue(true);
+    vi.spyOn((directive as any).matSelect, 'multiple', 'get').mockReturnValue(true);
     (directive as any).matSelect.panel = new ElementRef(panel);
 
     (directive as any).registerPanelKeydownListener();
     option.dispatchEvent(new MouseEvent('click', { bubbles: true }));
-    tick();
+    await LuxTestHelper.wait(fixture);
 
     expect(focusSpy).toHaveBeenCalledWith({ preventScroll: true });
 
     directive.ngOnDestroy();
     document.body.removeChild(panel);
     document.body.removeChild(input);
-  }));
+  });
 });

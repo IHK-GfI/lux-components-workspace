@@ -1,6 +1,6 @@
 <example-base-structure
   exampleTitle="List-Select"
-  exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/lux%E2%80%90list%E2%80%90select-v21"
+  exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/lux%E2%80%90list%E2%80%90select-v22"
 >
   <example-base-content>
     <div class="lux-flex lux-flex-col lux-gap-3">
@@ -37,7 +37,7 @@
               [luxLabel]="'Details anzeigen zu ' + item.title"
               [luxDisabled]="item.disabled ?? false"
               (luxClicked)="onAction('Details', item)"
-            ></lux-button>
+            />
           </ng-template>
         } @else if (actionType() === 'menu') {
           <ng-template luxListSelectAction let-item>
@@ -49,96 +49,96 @@
                   luxIconName="lux-interface-setting-menu-vertical"
                   [luxLabel]="'Aktionen zu ' + item.title"
                   [luxDisabled]="item.disabled ?? false"
-                ></lux-button>
+                />
               </lux-menu-trigger>
-              <lux-menu-item luxLabel="Bearbeiten" luxIconName="lux-interface-edit-pencil" (luxClicked)="onAction('Bearbeiten', item)"></lux-menu-item>
-              <lux-menu-item luxLabel="Löschen" luxIconName="lux-interface-delete-bin-2" (luxClicked)="onAction('Löschen', item)"></lux-menu-item>
+              <lux-menu-item luxLabel="Bearbeiten" luxIconName="lux-interface-edit-pencil" (luxClicked)="onAction('Bearbeiten', item)" />
+              <lux-menu-item luxLabel="Löschen" luxIconName="lux-interface-delete-bin-2" (luxClicked)="onAction('Löschen', item)" />
             </lux-menu>
           </ng-template>
         }
       </lux-list-select>
       <div class="lux-flex lux-gap-2 lux-flex-wrap">
-        <lux-button luxLabel="Liste leeren" [luxStroked]="true" (luxClicked)="clearItems()"></lux-button>
-        <lux-button luxLabel="Langen Eintrag hinzufügen" [luxStroked]="true" (luxClicked)="addItem()"></lux-button>
-        <lux-button luxLabel="Zurücksetzen" [luxStroked]="true" (luxClicked)="resetItems()"></lux-button>
+        <lux-button luxLabel="Liste leeren" [luxStroked]="true" (luxClicked)="clearItems()" />
+        <lux-button luxLabel="Langen Eintrag hinzufügen" [luxStroked]="true" (luxClicked)="addItem()" />
+        <lux-button luxLabel="Zurücksetzen" [luxStroked]="true" (luxClicked)="resetItems()" />
       </div>
     </div>
   </example-base-content>
 
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
-    <lux-toggle-ac
+    <lux-toggle
       luxLabel="Output-Events loggen"
       luxHint="(Console --> F12/CMD+ALT+I)"
-      [(luxChecked)]="showOutputEvents"
+      [(checked)]="showOutputEvents"
       [luxNoTopLabel]="true"
-    ></lux-toggle-ac>
-    <lux-select-ac
+    />
+    <lux-select
       luxLabel="luxMode"
       [luxOptions]="modeOptions"
       luxOptionLabelProp="label"
       [luxPickValue]="(item) => item.value"
-      [(luxSelected)]="mode"
-    ></lux-select-ac>
-    <lux-select-ac
+      [(value)]="mode"
+    />
+    <lux-select
       luxLabel="luxSize"
       [luxOptions]="sizeOptions"
       luxOptionLabelProp="label"
       [luxPickValue]="(item) => item.value"
-      [(luxSelected)]="size"
-    ></lux-select-ac>
-    <lux-toggle-ac luxLabel="luxShowSearch" [(luxChecked)]="showSearch" [luxNoTopLabel]="true"></lux-toggle-ac>
-    <lux-select-ac
+      [(value)]="size"
+    />
+    <lux-toggle luxLabel="luxShowSearch" [(checked)]="showSearch" [luxNoTopLabel]="true" />
+    <lux-select
       luxLabel="Aktions-Template (luxListSelectAction)"
       [luxOptions]="actionTypeOptions"
       luxOptionLabelProp="label"
       [luxPickValue]="(item) => item.value"
-      [(luxSelected)]="actionType"
-    ></lux-select-ac>
-    <lux-select-ac
+      [(value)]="actionType"
+    />
+    <lux-select
       luxLabel="luxActionPosition"
       [luxOptions]="actionPositionOptions"
       luxOptionLabelProp="label"
       [luxPickValue]="(item) => item.value"
-      [(luxSelected)]="actionPosition"
-    ></lux-select-ac>
-    <lux-toggle-ac luxLabel="luxShowPagination" [(luxChecked)]="showPagination" [luxNoTopLabel]="true"></lux-toggle-ac>
-    <lux-toggle-ac luxLabel="luxInfiniteScroll" [(luxChecked)]="infiniteScroll" [luxNoTopLabel]="true"></lux-toggle-ac>
-    <lux-toggle-ac
+      [(value)]="actionPosition"
+    />
+    <lux-toggle luxLabel="luxShowPagination" [(checked)]="showPagination" [luxNoTopLabel]="true" />
+    <lux-toggle luxLabel="luxInfiniteScroll" [(checked)]="infiniteScroll" [luxNoTopLabel]="true" />
+    <lux-toggle
       luxLabel="luxHttpDao (Server-Simulation)"
       luxHint="1 s Latenz, filtert/paginiert serverseitig"
-      [(luxChecked)]="useHttpDao"
+      [(checked)]="useHttpDao"
       [luxNoTopLabel]="true"
-    ></lux-toggle-ac>
-    <lux-toggle-ac luxLabel="luxDisabled" [(luxChecked)]="disabled" [luxNoTopLabel]="true"></lux-toggle-ac>
-    <lux-input-ac luxLabel="luxErrorMessage" [(luxValue)]="errorMessage"></lux-input-ac>
+    />
+    <lux-toggle luxLabel="luxDisabled" [(checked)]="disabled" [luxNoTopLabel]="true" />
+    <lux-input luxLabel="luxErrorMessage" [(value)]="errorMessage" />
   </example-base-simple-options>
   <example-base-advanced-options class="lux-flex lux-flex-col lux-gap-4">
-    <lux-select-ac
+    <lux-select
       luxLabel="luxSearchDelay"
       luxHint="Verzögerung, bis die Suche nach der Eingabe ausgelöst wird."
       [luxOptions]="searchDelayOptions"
       luxOptionLabelProp="label"
       [luxPickValue]="(item) => item.value"
-      [(luxSelected)]="searchDelay"
-    ></lux-select-ac>
-    <lux-select-ac
+      [(value)]="searchDelay"
+    />
+    <lux-select
       luxLabel="luxPageSize"
       luxHint="Seitengröße der Paginierung bzw. Nachladeschritt beim Infinite Scrolling."
       [luxOptions]="pageSizeOptions"
       luxOptionLabelProp="label"
       [luxPickValue]="(item) => item.value"
-      [(luxSelected)]="pageSize"
-    ></lux-select-ac>
-    <lux-input-ac luxLabel="luxPageIndex (aktuell)" [luxValue]="'' + pageIndex()" [luxReadonly]="true"></lux-input-ac>
-    <lux-toggle-ac
+      [(value)]="pageSize"
+    />
+    <lux-input luxLabel="luxPageIndex (aktuell)" [value]="'' + pageIndex()" [readonly]="true" />
+    <lux-toggle
       luxLabel="luxShowCounter"
       luxHint="Zähler „x von y ausgewählt“ im Header (nur Multi-Modus)."
-      [(luxChecked)]="showCounter"
+      [(checked)]="showCounter"
       [luxNoTopLabel]="true"
-    ></lux-toggle-ac>
-    <lux-input-ac luxLabel="luxSelectAllLabel" luxHint="Eigener Text für „Alle auswählen“." [(luxValue)]="selectAllLabel"></lux-input-ac>
-    <lux-input-ac luxLabel="luxTitleProp" luxHint="Property der Items, aus der der Titel gelesen wird." [(luxValue)]="titleProp"></lux-input-ac>
-    <lux-input-ac luxLabel="luxSubTitleProp" luxHint="Property der Items, aus der der Untertitel gelesen wird." [(luxValue)]="subTitleProp"></lux-input-ac>
-    <lux-input-ac luxLabel="luxMaxHeight" luxHint="Gesamthöhe der Komponente, die Liste scrollt innerhalb." [(luxValue)]="maxHeight"></lux-input-ac>
+    />
+    <lux-input luxLabel="luxSelectAllLabel" luxHint="Eigener Text für „Alle auswählen“." [(value)]="selectAllLabel" />
+    <lux-input luxLabel="luxTitleProp" luxHint="Property der Items, aus der der Titel gelesen wird." [(value)]="titleProp" />
+    <lux-input luxLabel="luxSubTitleProp" luxHint="Property der Items, aus der der Untertitel gelesen wird." [(value)]="subTitleProp" />
+    <lux-input luxLabel="luxMaxHeight" luxHint="Gesamthöhe der Komponente, die Liste scrollt innerhalb." [(value)]="maxHeight" />
   </example-base-advanced-options>
 </example-base-structure>

@@ -1,11 +1,10 @@
-import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, computed, input, ChangeDetectionStrategy } from '@angular/core';
 import {
   LuxFormHintComponent,
-  LuxInputAcComponent,
-  LuxInputAcSuffixComponent,
-  LuxSelectAcComponent,
-  LuxToggleAcComponent,
-  LuxUtil
+  LuxInputComponent,
+  LuxInputSuffixComponent,
+  LuxSelectComponent,
+  LuxToggleComponent
 } from '@ihk-gfi/lux-components';
 import { ExampleFormDisableComponent } from '../../../example-base/example-form-disable/example-form-disable.component';
 import { FileExampleComponent } from '../file-example.component';
@@ -14,25 +13,18 @@ import { FileListExampleComponent } from '../file-list-example/file-list-example
 @Component({
   selector: 'app-file-example-simple-options',
   templateUrl: './file-example-simple-options.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    LuxToggleAcComponent,
-    LuxSelectAcComponent,
-    LuxInputAcComponent,
+    LuxToggleComponent,
+    LuxSelectComponent,
+    LuxInputComponent,
     LuxFormHintComponent,
     ExampleFormDisableComponent,
-    LuxInputAcSuffixComponent
+    LuxInputSuffixComponent
   ]
 })
-export class FileExampleSimpleOptionsComponent implements OnInit {
-  @Input() fileExample!: FileExampleComponent;
+export class FileExampleSimpleOptionsComponent {
+  readonly fileExample = input.required<FileExampleComponent>();
 
-  isFileListExample = false;
-
-  constructor() {}
-
-  ngOnInit() {
-    this.isFileListExample = this.fileExample instanceof FileListExampleComponent;
-    LuxUtil.assertNonNull('fileExample', this.fileExample);
-  }
+  readonly isFileListExample = computed(() => this.fileExample() instanceof FileListExampleComponent);
 }

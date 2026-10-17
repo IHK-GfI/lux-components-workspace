@@ -1,7 +1,6 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, inject, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, output, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslocoPipe } from '@jsverse/transloco';
-import { Subscription } from 'rxjs';
-import { LuxComponentsConfigParameters } from '../lux-components-config/lux-components-config-parameters.interface';
 import { LuxComponentsConfigService } from '../lux-components-config/lux-components-config.service';
 import { LuxAriaLabelDirective } from '../lux-directives/lux-aria/lux-aria-label.directive';
 import { LuxImageComponent } from '../lux-icon/lux-image/lux-image.component';
@@ -11,13 +10,10 @@ import { LuxMediaQueryObserverService } from '../lux-util/lux-media-query-observ
   selector: 'lux-tenant-logo',
   templateUrl: './lux-tenant-logo.component.html',
   styleUrls: ['./lux-tenant-logo.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxImageComponent, LuxAriaLabelDirective, TranslocoPipe]
 })
-export class LuxTenantLogoComponent implements OnInit, OnDestroy {
-  private componentsConfigService = inject(LuxComponentsConfigService);
-  private queryObserver = inject(LuxMediaQueryObserverService);
-
+export class LuxTenantLogoComponent {
   /*
    * Statische Methoden, die beschreiben, wie (z.B.) die Url aufgebaut wird und sich diese je nach Media Query verändert
    * Kann eventuell durch konfigurierbare Breakpoints ersetzt werden in der Zukunft.
@@ -45,135 +41,82 @@ export class LuxTenantLogoComponent implements OnInit, OnDestroy {
     return baseUrl + tenantKey + '_' + tenantVariant + '.svg';
   }
 
-  private _luxTenantKey!: string;
+  readonly luxTenantKey = input.required<string>();
+  readonly luxTenantVariant = input<string | undefined>(undefined);
+  readonly luxTenantLogoHeight = input<string>('');
 
-  @Input()
-  public set luxTenantKey(luxTenantKey: string) {
-    this._luxTenantKey = luxTenantKey;
-    this.updateSrc();
-    this.updateAriaLabel();
-  }
+  readonly luxTenantLogoClicked = output<Event>();
 
-  public get luxTenantKey(): string {
-    return this._luxTenantKey;
-  }
+  private readonly componentsConfigService = inject(LuxComponentsConfigService);
+  private readonly queryObserver = inject(LuxMediaQueryObserverService);
+  private readonly config = toSignal(this.componentsConfigService.config, { initialValue: this.componentsConfigService.currentConfig });
+  private readonly mediaQuery = toSignal(this.queryObserver.getMediaQueryChangedAsObservable(), {
+    initialValue: this.queryObserver.activeMediaQuery
+  });
 
-  private _luxTenantVariant: string | undefined;
+  /** Zählt Ladefehler pro angefragter Logo-Identität (apiPath/Key/Variant) - wird bei neuer Identität implizit ignoriert, siehe currentAttempt(). */
+  private readonly errorState = signal<{ key: string; attempt: number } | undefined>(undefined);
 
-  @Input()
-  public set luxTenantVariant(luxTenantVariant: string | undefined) {
-    this._luxTenantVariant = luxTenantVariant;
-    this.updateSrc();
-  }
+  private readonly apiPath = computed(
+    () => this.config().tenantLogoLookupServiceUrl ?? LuxComponentsConfigService.DEFAULT_CONFIG.tenantLogoLookupServiceUrl
+  );
 
-  public get luxTenantVariant(): string | undefined {
-    return this._luxTenantVariant;
-  }
+  private readonly resolvedVariant = computed(() => {
+    const mediaQuery = this.mediaQuery();
+    if (!mediaQuery) return undefined;
+    return this.luxTenantVariant() || LuxTenantLogoComponent.getVariantByMediaQuery(mediaQuery);
+  });
 
-  public actualLuxTenantLogoHeight = '';
-  private _luxTenantLogoHeight = '';
+  private readonly identityKey = computed(() => {
+    const apiPath = this.apiPath();
+    const variant = this.resolvedVariant();
+    if (!apiPath || !variant) return undefined;
+    return `${apiPath}|${this.luxTenantKey()}|${variant}`;
+  });
 
-  @Input()
-  public set luxTenantLogoHeight(luxTenantLogoHeight: string) {
-    this._luxTenantLogoHeight = luxTenantLogoHeight;
+  private readonly currentAttempt = computed(() => {
+    const key = this.identityKey();
+    const state = this.errorState();
+    return key && state?.key === key ? state.attempt : 0;
+  });
 
-    this.updateHeight();
-  }
+  protected readonly hasTriedFallback = computed(() => this.currentAttempt() >= 1 && this.resolvedVariant() !== 'kurz');
+  protected readonly imageLoadError = computed(() => {
+    const attempt = this.currentAttempt();
+    return attempt >= 2 || (attempt >= 1 && this.resolvedVariant() === 'kurz');
+  });
 
-  public get luxTenantLogoHeight(): string {
-    return this._luxTenantLogoHeight;
-  }
+  protected readonly tenantLogoSrc = computed(() => {
+    const apiPath = this.apiPath();
+    if (!apiPath || !this.mediaQuery() || this.imageLoadError()) return undefined;
 
-  @Output() luxTenantLogoClicked = new EventEmitter<Event>();
-
-  private apiPath?: string;
-  private mediaQuery?: string;
-  private currentTenantKey?: string;
-  private currentVariant?: string;
-  protected hasTriedFallback = false;
-
-  protected tenantLogoSrc: string | undefined;
-  public luxTenantLogoAriaLabel?: string;
-  public luxTenantLogoAlt = 'Tenant Logo';
-  protected imageLoadError = false;
-
-  private subscriptions: Subscription[] = [];
-
-  ngOnInit(): void {
-    this.subscriptions.push(
-      this.componentsConfigService.config.subscribe((newConfig: LuxComponentsConfigParameters) => {
-        this.apiPath = newConfig.tenantLogoLookupServiceUrl ?? LuxComponentsConfigService.DEFAULT_CONFIG.tenantLogoLookupServiceUrl;
-        this.updateSrc();
-      })
-    );
-
-    this.subscriptions.push(
-      this.queryObserver.getMediaQueryChangedAsObservable().subscribe((mediaQuery) => {
-        this.mediaQuery = mediaQuery;
-        this.updateSrc();
-        this.updateHeight();
-      })
-    );
-  }
-
-  ngOnDestroy(): void {
-    this.subscriptions.forEach((sub) => sub.unsubscribe());
-  }
-
-  private updateSrc(): void {
-    if (!this.apiPath) return;
-    if (!this.mediaQuery) return;
-
-    // Setze Fallback-Flag zurück und clear error state bei neuer URL
-    this.hasTriedFallback = false;
-    this.imageLoadError = false;
-    this.currentTenantKey = this.luxTenantKey;
-    this.currentVariant = this.luxTenantVariant || LuxTenantLogoComponent.getVariantByMediaQuery(this.mediaQuery!);
-
-    this.tenantLogoSrc = LuxTenantLogoComponent.buildTenantLogoUrlFromMediaQuery(
-      this.apiPath,
-      this.luxTenantKey,
-      this.luxTenantVariant,
-      this.mediaQuery
-    );
-  }
-
-  private updateHeight(): void {
-    if (!this.luxTenantLogoHeight) {
-      if (!this.mediaQuery) return;
-      else if (this.mediaQuery === 'xs' || this.mediaQuery === 'sm') {
-        this.actualLuxTenantLogoHeight = '32px';
-      } else {
-        this.actualLuxTenantLogoHeight = '40px';
-      }
-    } else {
-      this.actualLuxTenantLogoHeight = this.luxTenantLogoHeight;
+    const tenantKey = this.luxTenantKey();
+    if (this.hasTriedFallback()) {
+      return LuxTenantLogoComponent.buildTenantLogoUrl(apiPath, tenantKey, 'kurz');
     }
-  }
+    return LuxTenantLogoComponent.buildTenantLogoUrlFromMediaQuery(apiPath, tenantKey, this.luxTenantVariant(), this.mediaQuery()!);
+  });
 
-  private updateAriaLabel(): void {
-    this.luxTenantLogoAriaLabel = 'Logo ' + this.luxTenantKey;
-    this.luxTenantLogoAlt = 'Logo ' + this.luxTenantKey;
-  }
+  protected readonly actualLuxTenantLogoHeight = computed(() => {
+    const height = this.luxTenantLogoHeight();
+    if (height) return height;
+
+    const mediaQuery = this.mediaQuery();
+    if (!mediaQuery) return '';
+    return mediaQuery === 'xs' || mediaQuery === 'sm' ? '32px' : '40px';
+  });
+
+  protected readonly luxTenantLogoAriaLabel = computed(() => 'Logo ' + this.luxTenantKey());
+  protected readonly luxTenantLogoAlt = computed(() => 'Logo ' + this.luxTenantKey());
 
   public onImageClicked(event: any): void {
     this.luxTenantLogoClicked.emit(event);
   }
 
   protected onImageError(): void {
-    // Wenn noch kein Fallback versucht wurde, versuche mit dem Standardlogo (nnn_kurz.svg)
-    if (this.currentVariant !== 'kurz' && !this.hasTriedFallback && this.currentTenantKey) {
-      this.hasTriedFallback = true;
-      const standardVariant = 'kurz';
-      this.tenantLogoSrc = LuxTenantLogoComponent.buildTenantLogoUrl(
-        this.apiPath || LuxComponentsConfigService.DEFAULT_CONFIG.tenantLogoLookupServiceUrl,
-        this.currentTenantKey,
-        standardVariant
-      );
-    } else {
-      // Fallback ist auch fehlgeschlagen - zeige Fehlermeldung
-      this.imageLoadError = true;
-      this.tenantLogoSrc = undefined;
-    }
+    const key = this.identityKey();
+    if (!key) return;
+
+    this.errorState.update((state) => ({ key, attempt: (state?.key === key ? state.attempt : 0) + 1 }));
   }
 }

@@ -20,6 +20,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AbstractControl, ControlValueAccessor, FormControl, NgControl, ValidationErrors, Validators } from '@angular/forms';
+import { FormField, ValidationError } from '@angular/forms/signals';
 import { MatError, MatHint } from '@angular/material/form-field';
 import {
   LuxConsoleService,
@@ -42,14 +43,19 @@ import {
   luxQuillRegisterFormats
 } from './lux-quill-formats';
 import { LUX_QUILL_RELEASE_KEYS, luxQuillKeyboardBindings, LuxQuillKeyboardState } from './lux-quill-keyboard';
-import { LuxQuillLinkDialogComponent, LuxQuillLinkDialogData, LuxQuillLinkDialogResult } from './lux-quill-link-dialog/lux-quill-link-dialog.component';
+import {
+  LuxQuillLinkDialogComponent,
+  LuxQuillLinkDialogData,
+  LuxQuillLinkDialogResult
+} from './lux-quill-link-dialog/lux-quill-link-dialog.component';
 import { LuxQuillToolbarAction, LuxQuillToolbarComponent } from './lux-quill-toolbar/lux-quill-toolbar.component';
 
 /**
  * Rich-Text-Editor auf Basis von Quill.js.
  *
  * Der Wert ist ein HTML-String (leerer Editor = ''). Die Komponente funktioniert ohne Formular
- * über [(value)] sowie in Reactive Forms bzw. mit ngModel (ControlValueAccessor).
+ * über [(value)], in Signal Forms über [formField] (FormValueControl-Vertrag) sowie in Reactive
+ * Forms bzw. mit ngModel (ControlValueAccessor).
  */
 @Component({
   selector: 'lux-quill',
@@ -72,7 +78,14 @@ export class LuxQuillComponent implements ControlValueAccessor, AfterContentInit
   private readonly dialogService = inject(LuxDialogService);
   private readonly logger = inject(LuxConsoleService);
   private readonly globalConfig = inject(LUX_QUILL_CONFIG, { optional: true });
-  private readonly ngControl = inject(NgControl, { self: true, optional: true });
+  /** [formField] (Signal Forms) am selben Element. */
+  private readonly formField = inject(FormField, { self: true, optional: true });
+  /**
+   * Reactive Forms bzw. ngModel. Bei [formField] bewusst nicht: FormField stellt am Element einen
+   * Interop-NgControl bereit. Würde sich die Komponente dort als ValueAccessor eintragen, fiele
+   * [formField] in den CVA-Pfad, und errors, touched, required sowie disabled kämen nicht an.
+   */
+  private readonly ngControl = this.formField ? null : inject(NgControl, { self: true, optional: true });
   private readonly fallbackId = `lux-quill-${LuxQuillComponent.nextId++}`;
 
   /** Id des Editors (contenteditable). Ohne Angabe wird eine eindeutige Id erzeugt. */
@@ -116,6 +129,16 @@ export class LuxQuillComponent implements ControlValueAccessor, AfterContentInit
    */
   readonly value = model<string>('');
 
+  // --- Signal-Forms-Vertrag (FormValueControl), wird von [formField] verdrahtet ---
+  // Die Namen sind bindend: Angular setzt die Inputs über ihren öffentlichen Namen (kein alias).
+  // Wie bei den übrigen LUX-FormControls werden sie mit den LUX-Aliasen (luxDisabled, luxRequired) verodert.
+  readonly disabled = input(false);
+  readonly required = input(false);
+  readonly touched = input(false);
+  readonly errors = input<readonly ValidationError.WithOptionalFieldTree[]>([]);
+  /** Meldet [formField], dass der Editor verlassen wurde (touched). */
+  readonly touch = output<void>();
+
   readonly luxFocusIn = output<FocusEvent>();
   readonly luxFocusOut = output<FocusEvent>();
   /** Liefert die Quill-Instanz nach jeder (Neu-)Erzeugung, z.B. für Erweiterungen. */
@@ -141,14 +164,24 @@ export class LuxQuillComponent implements ControlValueAccessor, AfterContentInit
   private readonly controlErrors = signal<ValidationErrors | null>(null);
   private readonly controlRequired = signal(false);
 
-  readonly isDisabled = computed(() => this.luxDisabled() || this.cvaDisabled());
+  readonly isDisabled = computed(() => this.luxDisabled() || this.disabled() || this.cvaDisabled());
   readonly isReadonly = computed(() => this.readonly());
-  readonly isRequired = computed(() => (this.ngControl ? this.controlRequired() : this.luxRequired()));
+  readonly isRequired = computed(() => {
+    if (this.formField) {
+      return this.required();
+    }
+    return this.ngControl ? this.controlRequired() : this.luxRequired();
+  });
   protected readonly indentEnabled = computed(() => this.config().toolbar.some((item) => item === 'indent' || item === 'outdent'));
   protected readonly linkEnabled = computed(() => this.config().toolbar.includes('link'));
-  protected readonly showError = computed(() => this.controlTouched() && !!this.controlErrors() && !this.isDisabled());
-  protected readonly errorText = computed(() => (this.showError() ? this.fetchErrorMessage(this.controlErrors()!) : ''));
-  protected readonly hintId = computed(() => (!this.luxNoBottomLabel() && !this.showError() && this.luxHint() ? this.uid() + '-hint' : null));
+  /** Touched und Fehler: bei [formField] aus den Vertrags-Inputs, sonst aus dem (internen oder Formular-)Control. */
+  private readonly stateTouched = computed(() => (this.formField ? this.touched() : this.controlTouched()));
+  private readonly stateErrors = computed(() => (this.formField ? LuxUtil.toLegacyValidationErrors(this.errors()) : this.controlErrors()));
+  protected readonly showError = computed(() => this.stateTouched() && !!this.stateErrors() && !this.isDisabled());
+  protected readonly errorText = computed(() => (this.showError() ? this.fetchErrorMessage(this.stateErrors()!) : ''));
+  protected readonly hintId = computed(() =>
+    !this.luxNoBottomLabel() && !this.showError() && this.luxHint() ? this.uid() + '-hint' : null
+  );
   protected readonly errorId = computed(() => (!this.luxNoBottomLabel() && this.showError() ? this.uid() + '-error' : null));
   protected readonly keyboardHintId = computed(() => (this.indentEnabled() && !this.isReadonly() ? this.uid() + '-keyboard-hint' : null));
   protected readonly labelledBy = computed(() => {
@@ -213,9 +246,11 @@ export class LuxQuillComponent implements ControlValueAccessor, AfterContentInit
     effect(() => {
       const required = this.luxRequired();
       untracked(() => {
-        if (this.ngControl) {
+        if (this.ngControl || this.formField) {
           if (required) {
-            this.logger.error('lux-quill: In Formularen bitte den Required-Validator statt luxRequired verwenden. luxRequired wird ignoriert.');
+            this.logger.error(
+              'lux-quill: In Formularen bitte den Required-Validator statt luxRequired verwenden. luxRequired wird ignoriert.'
+            );
           }
           return;
         }
@@ -536,7 +571,9 @@ export class LuxQuillComponent implements ControlValueAccessor, AfterContentInit
 
   /** Schlüssel einer Konfiguration: Ändert er sich, wird der Editor neu aufgebaut. */
   private configKey(config: LuxQuillConfig): string {
-    return JSON.stringify([config.headingMode, config.headingLevels, config.toolbar, config.formats]) + '|' + this.modulesId(config.modules);
+    return (
+      JSON.stringify([config.headingMode, config.headingLevels, config.toolbar, config.formats]) + '|' + this.modulesId(config.modules)
+    );
   }
 
   /** Module können Funktionen enthalten und werden deshalb über ihre Referenz verglichen. */
@@ -627,7 +664,9 @@ export class LuxQuillComponent implements ControlValueAccessor, AfterContentInit
   }
 
   private markAsTouched() {
-    if (this.ngControl) {
+    if (this.formField) {
+      this.ngZone.run(() => this.touch.emit());
+    } else if (this.ngControl) {
       this.ngZone.run(() => this.onTouched());
     } else {
       this.internalControl.markAsTouched();
@@ -660,6 +699,17 @@ export class LuxQuillComponent implements ControlValueAccessor, AfterContentInit
   }
 
   private fetchErrorMessage(errors: ValidationErrors): string {
+    if (this.formField) {
+      // Reihenfolge wie bei den übrigen LUX-FormControls: eigene Meldung, Callback, Meldung aus dem Schema, Standardtext.
+      return (
+        this.luxErrorMessage() ||
+        this.luxErrorCallback()?.(this.value(), errors) ||
+        this.errors().find((error) => !!error.message)?.message ||
+        LuxUtil.getErrorMessageForErrors(this.tService, errors) ||
+        this.tService.translate('luxc.quill.error_message.invalid')
+      );
+    }
+
     const value = this.control?.value;
     return (
       this.luxErrorMessage() ||
@@ -704,7 +754,9 @@ export class LuxQuillComponent implements ControlValueAccessor, AfterContentInit
 
   private checkA11yName() {
     if (!this.luxLabel() && !this.luxAriaLabel() && !this.luxAriaLabelledby()) {
-      this.logger.warn('A11y: lux-quill besitzt keinen zugänglichen Namen. Bitte luxLabel (ggf. mit luxNoTopLabel), luxAriaLabel oder luxAriaLabelledby setzen.');
+      this.logger.warn(
+        'A11y: lux-quill besitzt keinen zugänglichen Namen. Bitte luxLabel (ggf. mit luxNoTopLabel), luxAriaLabel oder luxAriaLabelledby setzen.'
+      );
     }
   }
 }

@@ -3,7 +3,10 @@ import { OverlayRef } from '@angular/cdk/overlay';
 export class LuxFilePreviewRef {
   private activeElement: HTMLElement | null;
 
-  constructor(private overlayRef: OverlayRef, activeElement?: HTMLElement | null) {
+  constructor(
+    private overlayRef: OverlayRef,
+    activeElement?: HTMLElement | null
+  ) {
     this.activeElement = activeElement || null;
   }
 

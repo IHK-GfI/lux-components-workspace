@@ -1,7 +1,8 @@
+import { describe, it, beforeEach, expect } from 'vitest';
 // noinspection DuplicatedCode
 
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatProgressBar } from '@angular/material/progress-bar';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { By } from '@angular/platform-browser';
@@ -54,18 +55,18 @@ describe('LuxProgressComponent', () => {
       expect(purple).toBeDefined();
     });
 
-    it('Sollte den Wert ändern (mode = determinate)', fakeAsync(() => {
+    it('Sollte den Wert ändern (mode = determinate)', async () => {
       // Vorbedingungen testen
       component.mode.set('determinate');
       const matProgress: MatProgressBar = fixture.debugElement.query(By.directive(MatProgressBar)).componentInstance;
-      LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
       expect(matProgress.value).toBe(0);
       // Änderungen durchführen
       component.value.set(10);
-      LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
       // Nachbedingungen prüfen
       expect(matProgress.value).toBe(10);
-    }));
+    });
   });
 
   describe('Als Spinner', () => {
@@ -86,7 +87,7 @@ describe('LuxProgressComponent', () => {
       expect(spinner).toBeDefined();
     });
 
-    it('Sollte die CSS-Klassen für Farben eintragen', fakeAsync(() => {
+    it('Sollte die CSS-Klassen für Farben eintragen', async () => {
       // Vorbedingungen testen
       component.type.set('Spinner');
       fixture.detectChanges();
@@ -104,29 +105,35 @@ describe('LuxProgressComponent', () => {
       // Nachbedingungen prüfen
       const purple = fixture.debugElement.query(By.css('.lux-bg-color-purple'));
       expect(purple).toBeDefined();
-    }));
+    });
 
-    it('Sollte den Wert ändern (mode = determinate)', fakeAsync(() => {
+    it('Sollte den Wert ändern (mode = determinate)', async () => {
       // Vorbedingungen testen
       component.type.set('Spinner');
       fixture.detectChanges();
 
       const matProgress: MatProgressBar = fixture.debugElement.query(By.directive(MatProgressSpinner)).componentInstance;
       component.mode.set('determinate');
-      LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
       expect(matProgress.value).toBe(0);
       // Änderungen durchführen
       component.value.set(10);
-      LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
       // Nachbedingungen prüfen
       expect(matProgress.value).toBe(10);
-    }));
+    });
   });
 });
 
 @Component({
   selector: 'lux-mock-progress-bar',
-  template: `<lux-progress [luxType]="type()" [luxMode]="mode()" [luxColor]="color()" [luxSize]="size()" [luxValue]="value()"></lux-progress>`,
+  template: `<lux-progress
+    [luxType]="type()"
+    [luxMode]="mode()"
+    [luxColor]="color()"
+    [luxSize]="size()"
+    [luxValue]="value()"
+  ></lux-progress>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxProgressComponent]
 })
@@ -134,6 +141,6 @@ class LuxMockProgressBarComponent {
   type = signal<LuxProgressType | undefined>(undefined);
   mode = signal<LuxProgressModeType | undefined>(undefined);
   color = signal<LuxProgressColor | undefined>(undefined);
-  size = signal<LuxProgressSizeType | undefined>(undefined);
+  size = signal<LuxProgressSizeType>('medium');
   value = signal(0);
 }

@@ -1,5 +1,6 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { describe, it, beforeEach, expect, vi } from 'vitest';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { of } from 'rxjs';
 import { LuxComponentsConfigService } from '../../lux-components-config/lux-components-config.service';
@@ -9,7 +10,7 @@ describe('LuxTagIdDirective', () => {
   let fixture: ComponentFixture<MockComponent>;
   let mockComp: MockComponent;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       providers: [
         {
@@ -18,16 +19,16 @@ describe('LuxTagIdDirective', () => {
         }
       ]
     }).compileComponents();
-  }));
+  });
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     fixture = TestBed.createComponent(MockComponent);
     mockComp = fixture.componentInstance;
-  }));
+  });
 
   it('Sollte die Tag-ID generieren', () => {
-    const spy = spyOn(console, 'warn');
-    mockComp.tagId = 'tagid-demo';
+    const spy = vi.spyOn(console, 'warn').mockReturnValue(undefined);
+    mockComp.tagId.set('tagid-demo');
     fixture.detectChanges();
 
     const tagId = fixture.debugElement.query(By.css('lux-component[data-luxtagid="lux-component#tagid-demo"]'));
@@ -38,18 +39,18 @@ describe('LuxTagIdDirective', () => {
 
 @Component({
   selector: 'lux-mock-component',
-  template: ` <lux-component luxTagIdHandler [luxTagId]="tagId"></lux-component> `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  template: ` <lux-component luxTagIdHandler [luxTagId]="tagId()"></lux-component> `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxTagIdDirective]
 })
 class MockComponent {
-  tagId: string | null = null;
+  readonly tagId = signal<string | undefined>(undefined);
 }
 
 @Component({
   selector: 'lux-component',
   template: ` <ng-content></ng-content> `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: []
 })
 class MockLuxComponent {}

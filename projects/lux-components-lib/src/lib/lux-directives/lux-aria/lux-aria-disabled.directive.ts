@@ -32,7 +32,7 @@ export class LuxAriaDisabledDirective extends LuxAriaBase<string> implements Aft
     return this.luxAriaDisabled();
   }
 
-  ngAfterViewChecked(): void {
+  override ngAfterViewChecked(): void {
     // Fremde Host-Bindings (z.B. MatMenuItem: aria-disabled = disabled) schreiben das
     // Attribut neu, sobald sich ihr eigener Wert ändert (etwa luxDisabled true -> false),
     // ohne dass sich der Wert dieser Direktive geändert hätte. Deshalb wird ein gesetzter

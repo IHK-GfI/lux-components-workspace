@@ -1,7 +1,8 @@
+import { describe, it, beforeEach, afterEach, expect, vi } from 'vitest';
 // noinspection DuplicatedCode
 
-import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { ComponentFixture, fakeAsync, flush, TestBed, waitForAsync } from '@angular/core/testing';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { LuxInfiniteScrollDirective } from './lux-infinite-scroll.directive';
@@ -9,7 +10,7 @@ import { LuxInfiniteScrollDirective } from './lux-infinite-scroll.directive';
 describe('LuxInfiniteScrollDirective', () => {
   const WAIT_TIME = LuxInfiniteScrollDirective.SCROLL_DEBOUNCE_TIME + 50;
 
-  const scrollTo = (px: number, src: HTMLElement, componentFixture: ComponentFixture<any>) => {
+  const scrollTo = async (px: number, src: HTMLElement, componentFixture: ComponentFixture<any>) => {
     src.scrollTop = px;
 
     let scrollEvent;
@@ -22,156 +23,179 @@ describe('LuxInfiniteScrollDirective', () => {
       scrollEvent.initEvent('scroll', true, true);
     }
 
-    spyOnProperty(scrollEvent, 'target', 'get').and.returnValue(src);
+    vi.spyOn(scrollEvent, 'target', 'get').mockReturnValue(src);
     document.dispatchEvent(scrollEvent);
 
-    LuxTestHelper.wait(componentFixture, WAIT_TIME);
-    flush();
+    await LuxTestHelper.wait(componentFixture, WAIT_TIME);
+    await vi.advanceTimersByTimeAsync(0);
   };
 
   describe('Mit Scrollbar', () => {
     let fixture: ComponentFixture<MockComponent>;
     let mockComp: MockComponent;
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(async () => {
+      vi.useFakeTimers();
       fixture = TestBed.createComponent(MockComponent);
       mockComp = fixture.componentInstance;
-    }));
+
+      // jsdom hat keine Layout-Engine: scrollHeight/clientHeight liefern immer 0, wodurch nie eine
+      // Scrollbar erkannt würde. Die Werte werden hier auf ein plausibles Szenario (Inhalt größer als
+      // sichtbarer Bereich) gesetzt, um das reale Browser-Verhalten unter Karma nachzubilden.
+      const el = fixture.debugElement.query(By.css('#toggleMasterFocus-element')).nativeElement;
+      Object.defineProperty(el, 'clientHeight', { configurable: true, value: 50 });
+      Object.defineProperty(el, 'scrollHeight', { configurable: true, value: 500 });
+    });
+
+    afterEach(async () => {
+      if (vi.isFakeTimers()) {
+        await vi.runAllTimersAsync();
+      }
+      vi.useRealTimers();
+    });
 
     it('Sollte erstellt werden', () => {
       expect(mockComp).toBeTruthy();
       fixture.detectChanges();
     });
 
-    it('Sollte luxScrolled nach Initialisierung emitten', fakeAsync(() => {
-      const spy = spyOn(mockComp, 'onMockEvent');
-      LuxTestHelper.wait(fixture);
+    it('Sollte luxScrolled nach Initialisierung emitten', async () => {
+      const spy = vi.spyOn(mockComp, 'onMockEvent').mockReturnValue(undefined);
+      fixture.detectChanges();
 
       expect(spy).toHaveBeenCalledTimes(1);
-    }));
+    });
 
-    it('Sollte luxScrolled ein zweites Mal emitten, wenn weit genug gescrollt worden ist', fakeAsync(() => {
+    it('Sollte luxScrolled ein zweites Mal emitten, wenn weit genug gescrollt worden ist', async () => {
       // Vorbedingungen testen
       const el = fixture.debugElement.query(By.css('#toggleMasterFocus-element'));
-      const spy = spyOn(mockComp, 'onMockEvent');
+      const spy = vi.spyOn(mockComp, 'onMockEvent').mockReturnValue(undefined);
       fixture.detectChanges();
 
       expect(spy).toHaveBeenCalledTimes(1);
 
       // Änderungen durchführen
-      scrollTo(50, el.nativeElement, fixture);
+      await scrollTo(50, el.nativeElement, fixture);
 
       // Nachbedingungen prüfen
       expect(spy).toHaveBeenCalledTimes(2);
-    }));
+    });
 
-    it('Sollte luxScrolled nicht emitten, wenn nach oben gescrollt worden ist', fakeAsync(() => {
+    it('Sollte luxScrolled nicht emitten, wenn nach oben gescrollt worden ist', async () => {
       // Vorbedingungen testen
       const el = fixture.debugElement.query(By.css('#toggleMasterFocus-element'));
-      const spy = spyOn(mockComp, 'onMockEvent');
+      const spy = vi.spyOn(mockComp, 'onMockEvent').mockReturnValue(undefined);
       fixture.detectChanges();
 
       expect(spy).toHaveBeenCalledTimes(1);
 
       // Änderungen durchführen
-      LuxTestHelper.wait(fixture, WAIT_TIME);
-      scrollTo(1000, el.nativeElement, fixture);
+      await LuxTestHelper.wait(fixture, WAIT_TIME);
+      await scrollTo(1000, el.nativeElement, fixture);
 
-      LuxTestHelper.wait(fixture, WAIT_TIME);
-      scrollTo(0, el.nativeElement, fixture);
+      await LuxTestHelper.wait(fixture, WAIT_TIME);
+      await scrollTo(0, el.nativeElement, fixture);
 
       // Nachbedingungen prüfen
       expect(spy).toHaveBeenCalledTimes(2);
-    }));
+    });
 
-    it('Sollte luxScrolled nicht emitten, wenn luxImmediateCallback = false ist', fakeAsync(() => {
+    it('Sollte luxScrolled nicht emitten, wenn luxImmediateCallback = false ist', async () => {
       // Vorbedingungen testen
-      mockComp.immediateCallback = false;
-      const spy = spyOn(mockComp, 'onMockEvent');
+      mockComp.immediateCallback.set(false);
+      const spy = vi.spyOn(mockComp, 'onMockEvent').mockReturnValue(undefined);
       fixture.detectChanges();
       expect(spy).toHaveBeenCalledTimes(0);
 
       // Änderungen durchführen
-      LuxTestHelper.wait(fixture, WAIT_TIME);
+      await LuxTestHelper.wait(fixture, WAIT_TIME);
 
       // Nachbedingungen prüfen
       expect(spy).toHaveBeenCalledTimes(0);
-    }));
+    });
 
-    it('Sollte luxScrolled nicht emitten, wenn luxImmediateCallback = true und luxIsLoading = true ist', fakeAsync(() => {
+    it('Sollte luxScrolled nicht emitten, wenn luxImmediateCallback = true und luxIsLoading = true ist', async () => {
       // Vorbedingungen testen
-      mockComp.immediateCallback = true;
-      mockComp.isLoading = true;
-      const spy = spyOn(mockComp, 'onMockEvent');
+      mockComp.immediateCallback.set(true);
+      mockComp.isLoading.set(true);
+      const spy = vi.spyOn(mockComp, 'onMockEvent').mockReturnValue(undefined);
       fixture.detectChanges();
       expect(spy).toHaveBeenCalledTimes(0);
 
       // Änderungen durchführen
-      LuxTestHelper.wait(fixture, WAIT_TIME);
+      await LuxTestHelper.wait(fixture, WAIT_TIME);
 
       // Nachbedingungen prüfen
       expect(spy).toHaveBeenCalledTimes(0);
-    }));
+    });
 
-    it('Sollte luxScrolled nicht emitten, wenn nach unten gescrollt wird und luxIsLoading = true ist', fakeAsync(() => {
+    it('Sollte luxScrolled nicht emitten, wenn nach unten gescrollt wird und luxIsLoading = true ist', async () => {
       // Vorbedingungen testen
-      mockComp.immediateCallback = true;
+      mockComp.immediateCallback.set(true);
       const el = fixture.debugElement.query(By.css('#toggleMasterFocus-element'));
-      const spy = spyOn(mockComp, 'onMockEvent');
+      const spy = vi.spyOn(mockComp, 'onMockEvent').mockReturnValue(undefined);
       fixture.detectChanges();
-      LuxTestHelper.wait(fixture, WAIT_TIME);
+      await LuxTestHelper.wait(fixture, WAIT_TIME);
 
       expect(spy).toHaveBeenCalledTimes(1);
 
       // Änderungen durchführen
-      mockComp.isLoading = true;
-      LuxTestHelper.wait(fixture, WAIT_TIME);
-      scrollTo(50, el.nativeElement, fixture);
+      mockComp.isLoading.set(true);
+      await LuxTestHelper.wait(fixture, WAIT_TIME);
+      await scrollTo(50, el.nativeElement, fixture);
 
       // Nachbedingungen prüfen
       expect(spy).toHaveBeenCalledTimes(1);
-    }));
+    });
   });
 
   describe('Ohne Scrollbar', () => {
     let fixture: ComponentFixture<MockWithoutScrollBarAndImmediateCallbackComponent>;
     let mockComp: MockWithoutScrollBarAndImmediateCallbackComponent;
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(async () => {
+      vi.useFakeTimers();
       fixture = TestBed.createComponent(MockWithoutScrollBarAndImmediateCallbackComponent);
       mockComp = fixture.componentInstance;
-    }));
+    });
 
-    it('Sollte luxScrolled nicht emitten wenn luxImmediateCallback = true ist', fakeAsync(() => {
+    afterEach(async () => {
+      if (vi.isFakeTimers()) {
+        await vi.runAllTimersAsync();
+      }
+      vi.useRealTimers();
+    });
+
+    it('Sollte luxScrolled nicht emitten wenn luxImmediateCallback = true ist', async () => {
       // Vorbedingungen testen
       const el = fixture.debugElement.query(By.css('#toggleMasterFocus-element'));
-      const spy = spyOn(mockComp, 'onMockEvent');
+      const spy = vi.spyOn(mockComp, 'onMockEvent').mockReturnValue(undefined);
 
-      LuxTestHelper.wait(fixture, WAIT_TIME);
+      await LuxTestHelper.wait(fixture, WAIT_TIME);
       expect(spy).toHaveBeenCalledTimes(0);
 
       // Änderungen durchführen
-      scrollTo(50, el.nativeElement, fixture);
+      await scrollTo(50, el.nativeElement, fixture);
 
       // Nachbedingungen prüfen
       expect(spy).toHaveBeenCalledTimes(0);
-    }));
+    });
 
-    it('Sollte luxScrolled nicht emitten wenn luxImmediateCallback = false ist', fakeAsync(() => {
+    it('Sollte luxScrolled nicht emitten wenn luxImmediateCallback = false ist', async () => {
       // Vorbedingungen testen
-      mockComp.immediateCallback = false;
+      mockComp.immediateCallback.set(false);
       const el = fixture.debugElement.query(By.css('#toggleMasterFocus-element'));
-      const spy = spyOn(mockComp, 'onMockEvent');
+      const spy = vi.spyOn(mockComp, 'onMockEvent').mockReturnValue(undefined);
 
-      LuxTestHelper.wait(fixture, WAIT_TIME);
+      await LuxTestHelper.wait(fixture, WAIT_TIME);
       expect(spy).toHaveBeenCalledTimes(0);
 
       // Änderungen durchführen
-      scrollTo(50, el.nativeElement, fixture);
+      await scrollTo(50, el.nativeElement, fixture);
 
       // Nachbedingungen prüfen
       expect(spy).toHaveBeenCalledTimes(0);
-    }));
+    });
   });
 });
 
@@ -185,24 +209,24 @@ describe('LuxInfiniteScrollDirective', () => {
     luxInfiniteScroll
     (luxScrolled)="onMockEvent()"
     [luxScrollPercent]="1"
-    [luxImmediateCallback]="immediateCallback"
-    [luxIsLoading]="isLoading"
+    [luxImmediateCallback]="immediateCallback()"
+    [luxIsLoading]="isLoading()"
   >
     Text
     <ul>
       @for (testText of testArr; track testText) {
-      <li>{{ testText }}</li>
+        <li>{{ testText }}</li>
       }
     </ul>
   </div>`,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxInfiniteScrollDirective]
 })
 class MockComponent {
   // Wird benutzt, um einen Y-Overflow und damit eine Scrollbar im Testelement zu forcieren
   testArr: string[] = [];
-  immediateCallback = true;
-  isLoading = false;
+  readonly immediateCallback = signal(true);
+  readonly isLoading = signal(false);
 
   constructor() {
     for (let i = 1; i <= 10; i++) {
@@ -219,13 +243,13 @@ class MockComponent {
     id="toggleMasterFocus-element"
     luxInfiniteScroll
     (luxScrolled)="onMockEvent()"
-    [luxImmediateCallback]="immediateCallback"
+    [luxImmediateCallback]="immediateCallback()"
   ></div>`,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxInfiniteScrollDirective]
 })
 class MockWithoutScrollBarAndImmediateCallbackComponent {
-  immediateCallback = true;
+  readonly immediateCallback = signal(true);
 
   public onMockEvent() {}
 }

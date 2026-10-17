@@ -1,9 +1,9 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
   selector: 'lux-panel-aria-header-custom',
   template: '<ng-content></ng-content>',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true
 })
 export class LuxPanelAriaHeaderCustomComponent {}

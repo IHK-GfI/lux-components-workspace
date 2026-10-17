@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { LuxIconComponent } from '../../lux-icon/lux-icon/lux-icon.component';
 import { LuxTextboxColor, LuxTextboxColors } from '../../lux-util/lux-colors.enum';
 
@@ -10,18 +10,12 @@ import { LuxTextboxColor, LuxTextboxColors } from '../../lux-util/lux-colors.enu
   imports: [NgClass, LuxIconComponent]
 })
 export class LuxTextboxComponent {
-  private _luxColor?: LuxTextboxColor;
+  readonly luxTitle = input('');
+  readonly luxIcon = input('');
 
-  @Input() luxTitle = '';
-  @Input() luxIcon = '';
-  @Input()
-  set luxColor(value: LuxTextboxColor | undefined) {
-    this._luxColor = LuxTextboxColors.find((entry) => entry === value) ?? undefined;
-  }
+  readonly luxColor = input<LuxTextboxColor | undefined, LuxTextboxColor | undefined>(undefined, {
+    transform: (value: LuxTextboxColor | undefined) => LuxTextboxColors.find((entry) => entry === value) ?? undefined
+  });
 
-  get luxColor(): LuxTextboxColor | undefined {
-    return this._luxColor;
-  }
-  @Input() luxHeading = 3;
-  constructor() {}
+  readonly luxHeading = input(3);
 }

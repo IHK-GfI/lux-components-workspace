@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { LuxDividerComponent } from '@ihk-gfi/lux-components';
 
 @Component({
@@ -6,7 +6,7 @@ import { LuxDividerComponent } from '@ihk-gfi/lux-components';
   template:
     '<div class="lux-mr-4 lux-ml-4"><lux-divider [luxInset]="true"></lux-divider><div class="lux-flex lux-justify-end lux-gap-4 lux-pt-4 lux-pb-4"><ng-content></ng-content></div></div>',
   standalone: true,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxDividerComponent]
 })
 export class LuxPanelAriaActionComponent {}

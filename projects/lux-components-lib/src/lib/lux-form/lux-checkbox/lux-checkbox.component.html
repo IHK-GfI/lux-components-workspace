@@ -1,0 +1,49 @@
+<lux-form-control-wrapper
+  [luxFormComponent]="this"
+  [luxNoInputRow]="true"
+  [luxIgnoreDefaultLabel]="true"
+  [luxNoLabels]="luxNoLabels()"
+  [luxNoBottomLabel]="luxNoBottomLabel()"
+  [luxNoTopLabel]="luxNoTopLabel()"
+  luxTagId="luxCheckboxWrapper"
+  (click)="markAsTouched()"
+>
+  <mat-checkbox
+    class="lux-checkbox"
+    [checked]="checked()"
+    [disabled]="isDisabled()"
+    (change)="onCheckboxChange($event)"
+    [disableRipple]="true"
+    [required]="isRequired()"
+    color="primary"
+    luxTagIdHandler
+    [luxTagId]="luxTagId()"
+    [id]="uid()"
+    [luxAriaDescribedby]="describedBy()"
+    luxAriaDescribedbySelector="input"
+    [luxAriaRequired]="isRequired()"
+    luxAriaRequiredSelector="input"
+    [luxAriaInvalid]="'' + isInvalid()"
+    luxAriaInvalidSelector="input"
+    [luxAriaLabel]="luxAriaLabel()"
+    luxAriaLabelSelector="input"
+    [luxAriaLabelledby]="luxAriaLabelledby()"
+    luxAriaLabelledbySelector="input"
+    (focusin)="onFocusIn($event)"
+    (focusout)="onFocusOut($event)"
+    tabIndex="{{ isReadonly() ? -1 : 0 }}"
+  >
+    @if (formLabelComponent() || luxLabel()) {
+      <span class="lux-form-label">
+        <!-- Texte im ng-container ohne Leerraum drumherum, sonst werden die Zeilenumbrüche als Leerzeichen gerendert. -->
+        @if (luxLabel()) {
+          <ng-container>&nbsp;{{ luxLabel() }}&nbsp;</ng-container>
+        } @else {
+          <!-- Nicht in die nächste Zeile verschieben, sonst bricht das Label an dem Leerzeichen um. -->
+          <ng-container *ngTemplateOutlet="formLabelComponent()?.templateRef() ?? null" />
+        }
+        <ng-container>{{ isRequired() ? '&nbsp;*' : '' }}</ng-container>
+      </span>
+    }
+  </mat-checkbox>
+</lux-form-control-wrapper>
