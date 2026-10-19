@@ -50,6 +50,8 @@
 | luxShowSections             | boolean                | Diese Property gibt an ob in dem Menü LuxDivider und Überschriften angezeigt werden können. Dafür muss die Property luxDisplayExtended auf False gesetzt werden. Das Menü unterstützt nicht eine horizontale Navigation außerhalb des Panels. Damit die einzelnen Elemente angezeigt werden muss an jedes Element #menuSection hinzugefügt werden. |
 | luxMenuPanelLarge           | boolean                | Über diese Property kann die Darstellung des Menü-Panels geändert werden. Dies funktioniert jedoch nur wenn luxShowSections auf true gesetzt wird. Die Icons werden größer angezeigt und die MenüItems können eine zweite Unterzeile haben. Damit die einzelnen Elemente angezeigt werden muss an jedes Element #menuSection hinzugefügt werden.   |
 
+Divider zwischen Menüeinträgen werden bei `luxDisplayExtended` automatisch als vertikale Trennlinien zwischen den Buttons angezeigt. Im Overflow-Menü bleiben sie als horizontale Trennlinien erhalten. Führende und abschließende Divider sowie Divider ohne sichtbare Einträge auf beiden Seiten werden ausgeblendet. Für die korrekte Reihenfolge müssen `lux-menu-item` und `lux-divider` jeweils mit `#menuSection` markiert sein.
+
 ## Components
 
 ### LuxMenuItemComponent

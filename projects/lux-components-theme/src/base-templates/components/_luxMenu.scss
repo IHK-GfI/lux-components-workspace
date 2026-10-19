@@ -31,6 +31,16 @@ lux-menu {
   padding: 4px 0;
   position: relative;
 
+  > .lux-menu-extended-divider {
+    height: var(--lux-theme-spacing-lg);
+    flex: 0 0 auto;
+
+    &.lux-vertical-divider {
+      margin-left: 0;
+      border-color: var(--lux-theme-dark-dividers);
+    }
+  }
+
   > lux-button {
     @include mat.button-overrides(
       (

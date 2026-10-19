@@ -57,6 +57,7 @@ import { LuxMenuTriggerComponent } from './lux-menu-subcomponents/lux-menu-trigg
     MatMenuTrigger,
     LuxIconComponent,
     LuxProgressComponent,
+    LuxDividerComponent,
     MatDivider,
     TranslocoPipe
   ]
@@ -74,9 +75,12 @@ export class LuxMenuComponent implements AfterViewInit, AfterContentInit, AfterV
   private readonly FONT_WEIGHT: number;
   private readonly FONT_FAMILY: string;
   private readonly BADGE_SIZE: number;
+  private readonly EXTENDED_DIVIDER_WIDTH = 9;
 
   // Alle verfügbaren MenuItems als Array
   private _menuItems: LuxMenuItemComponent[] = [];
+  extendedMenuEntries: (LuxMenuItemComponent | LuxDividerComponent)[] = [];
+  panelMenuEntries: (LuxMenuItemComponent | LuxDividerComponent)[] = [];
   private _menuItemsNotExtended: (
     | LuxMenuItemComponent
     | LuxDividerComponent
@@ -343,6 +347,8 @@ export class LuxMenuComponent implements AfterViewInit, AfterContentInit, AfterV
       this.menuItems.forEach((menuItem: LuxMenuItemComponent) => {
         menuItem.extended = false;
       });
+      this.updateMenuEntries();
+      this.cdr.detectChanges();
       return;
     }
 
@@ -394,9 +400,58 @@ export class LuxMenuComponent implements AfterViewInit, AfterContentInit, AfterV
     this.visibleMenuItems.sort((a, b) => (a.luxPrio ? a.luxPrio : 0) - (b.luxPrio ? b.luxPrio : 0));
 
     // wenn die Anzahl der extended dargestellten Items der Gesamtzahl entspricht blenden wir den Toggle aus
-    const extendedMenuItems = this.visibleMenuItems.filter((item: LuxMenuItemComponent) => item.extended);
-    this.hideToggle = extendedMenuItems.length === this.visibleMenuItems.length;
+    this.updateMenuEntries();
+    if (this.extendedMenuEntries.some((entry) => entry instanceof LuxDividerComponent)) {
+      let extendedItems = this.visibleMenuItems
+        .filter((item) => item.extended)
+        .sort((first, second) => Number(second.luxAlwaysVisible) - Number(first.luxAlwaysVisible));
+      const fits = () =>
+        extendedItems.reduce((width, item) => width + item.width, 0) +
+          this.extendedMenuEntries.filter((entry) => entry instanceof LuxDividerComponent).length * this.EXTENDED_DIVIDER_WIDTH <=
+        this.menuExtendedContainer.nativeElement.offsetWidth -
+          (extendedItems.length === this.visibleMenuItems.length ? 0 : menuTriggerWidth);
+
+      while (extendedItems.length && !fits()) {
+        extendedItems[extendedItems.length - 1].extended = false;
+        extendedItems = extendedItems.slice(0, -1);
+        this.updateMenuEntries();
+      }
+    }
+    this.hideToggle = this.visibleMenuItems.every((item) => item.extended);
     this.cdr.detectChanges();
+  }
+
+  private updateMenuEntries() {
+    const orderedItems = this.menuNotExtendedPanel
+      .toArray()
+      .filter(
+        (item): item is LuxMenuItemComponent | LuxDividerComponent =>
+          item instanceof LuxMenuItemComponent || item instanceof LuxDividerComponent
+      );
+    const visibleEntries = (extended: boolean) => {
+      const result: (LuxMenuItemComponent | LuxDividerComponent)[] = [];
+      for (const [index, item] of orderedItems.entries()) {
+        if (item instanceof LuxMenuItemComponent) {
+          if (!item.luxHidden && item.extended === extended) result.push(item);
+        } else if (
+          result.length &&
+          result[result.length - 1] instanceof LuxMenuItemComponent &&
+          orderedItems
+            .slice(index + 1)
+            .some((next) => next instanceof LuxMenuItemComponent && !next.luxHidden && next.extended === extended)
+        ) {
+          result.push(item);
+        }
+      }
+      return result;
+    };
+
+    this.panelMenuEntries = orderedItems.some((item) => item instanceof LuxDividerComponent)
+      ? visibleEntries(false)
+      : this.menuItems.filter((item) => !item.extended && !item.luxHidden);
+    this.extendedMenuEntries = orderedItems.some((item) => item instanceof LuxDividerComponent)
+      ? visibleEntries(true)
+      : this.visibleMenuItems;
   }
 
   /**
