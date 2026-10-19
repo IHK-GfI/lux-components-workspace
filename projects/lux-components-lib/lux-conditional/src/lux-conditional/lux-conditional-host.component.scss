@@ -39,9 +39,11 @@ lux-conditional {
   }
 
   // Ohne Höhenanimation würde der ausblendende Bereich kurz neben dem neuen stehen und das Layout springen lassen.
-  // display: none statt nur animation: none, weil Angular das Element erst im nächsten Animation Frame entfernt.
+  // animation: none, damit Angular nicht auf ein animationend wartet, das bei display: none nie kommt.
+  // display: none, weil Angular das Element erst im nächsten Animation Frame entfernt.
   .lux-conditional__panel--leave {
     display: none;
+    animation: none;
   }
 }
 
