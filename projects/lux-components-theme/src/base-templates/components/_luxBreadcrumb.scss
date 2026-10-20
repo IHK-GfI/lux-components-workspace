@@ -26,7 +26,7 @@ lux-breadcrumb {
     list-style: none;
 
     &.lux-breadcrumb-container-wrap {
-      flex-wrap: wrap;
+      display: block;
     }
   }
 
@@ -106,12 +106,18 @@ lux-breadcrumb {
       display: inline;
     }
 
+    .lux-breadcrumb-item {
+      margin-right: 9px;
+    }
+
     .lux-breadcrumb-item-title {
       overflow: visible;
       text-overflow: clip;
       white-space: normal;
       line-height: 1.75rem;
       vertical-align: bottom;
+      -webkit-box-decoration-break: clone;
+      box-decoration-break: clone;
     }
   }
 }

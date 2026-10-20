@@ -1,7 +1,7 @@
 import { expect, Locator, Page, test } from '@playwright/test';
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
-import { openStable } from './vrt-helper';
+import { openStable, screenshotSoft } from './vrt-helper';
 
 /**
  * Screenshot-Test für jede Beispielseite unter /components-overview/example/*.
@@ -72,3 +72,33 @@ for (const route of readExampleRoutes()) {
     await expect(target).toHaveScreenshot(`${route}.png`, { mask: MASKS[route]?.(page) ?? [] });
   });
 }
+
+test('example/breadcrumb-wrap', async ({ page }) => {
+  await openStable(page, '/components-overview/example/breadcrumb', page.locator('lux-breadcrumb').first());
+  await page.getByRole('switch', { name: 'Mehrzeilig (Umbruch)' }).click();
+  await page
+    .getByRole('textbox', { name: 'Name' })
+    .first()
+    .fill('Ein langer Breadcrumb-Eintrag mit mehreren Worten fuer den Umbruch und noch mehr Text');
+  await page.addStyleTag({ content: 'lux-breadcrumb:first-of-type .lux-breadcrumb-container { width: 500px; }' });
+
+  const breadcrumb = page.locator('lux-breadcrumb').first();
+  const items = breadcrumb.locator('li');
+  const title = items.nth(0).locator('a');
+  const lines = await title.evaluate((link) => Array.from(link.getClientRects(), (rect) => ({ y: rect.y, bottom: rect.bottom })));
+  const decoration = await title.evaluate((link) => {
+    const style = getComputedStyle(link);
+    return { break: style.boxDecorationBreak, paddingLeft: style.paddingLeft };
+  });
+  const iconBox = await items.nth(0).locator('lux-icon').boundingBox();
+  const secondBox = await items.nth(1).boundingBox();
+  expect(lines.length).toBeGreaterThan(1);
+  expect(decoration).toEqual({ break: 'clone', paddingLeft: '4px' });
+  expect(iconBox).not.toBeNull();
+  expect(secondBox).not.toBeNull();
+  expect(secondBox!.y).toBeGreaterThan(lines[0].y);
+  expect(secondBox!.y).toBeLessThan(lines.at(-1)!.bottom);
+  expect(secondBox!.x).toBeGreaterThan(iconBox!.x + iconBox!.width);
+
+  await screenshotSoft(page, breadcrumb, 'breadcrumb-wrap.png');
+});
