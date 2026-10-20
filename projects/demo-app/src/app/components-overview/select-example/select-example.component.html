@@ -258,36 +258,24 @@
       luxHint="Diese Property ermöglicht es, den Hint für die Component zu setzen."
       [(value)]="hint"
     />
-    <div class="lux-flex lux-items-center lux-gap-2">
-      <lux-toggle
-        class="lux-flex-auto"
-        luxLabel="luxNoTopLabel"
-        luxHint="Blendet das Label nur visuell aus. Es bleibt im DOM und der zugängliche Name bleibt erhalten."
-        [(checked)]="noTopLabel"
-        [luxNoTopLabel]="true"
-      />
-      <app-status-marker [markerType]="markerTypeUpdated" />
-    </div>
-    <div class="lux-flex lux-items-center lux-gap-2">
-      <lux-toggle
-        class="lux-flex-auto"
-        luxLabel="luxNoBottomLabel"
-        luxHint="Entfernt den unteren Bereich (Hint, Fehlermeldung, Counter) aus dem DOM."
-        [(checked)]="noBottomLabel"
-        [luxNoTopLabel]="true"
-      />
-      <app-status-marker [markerType]="markerTypeUpdated" />
-    </div>
-    <div class="lux-flex lux-items-center lux-gap-2">
-      <lux-toggle
-        class="lux-flex-auto"
-        luxLabel="luxNoLabels"
-        luxHint="Kombination aus luxNoTopLabel und luxNoBottomLabel."
-        [(checked)]="noLabels"
-        [luxNoTopLabel]="true"
-      />
-      <app-status-marker [markerType]="markerTypeUpdated" />
-    </div>
+    <lux-toggle
+      luxLabel="luxNoTopLabel"
+      luxHint="Blendet das Label nur visuell aus. Es bleibt im DOM und der zugängliche Name bleibt erhalten."
+      [(checked)]="noTopLabel"
+      [luxNoTopLabel]="true"
+    />
+    <lux-toggle
+      luxLabel="luxNoBottomLabel"
+      luxHint="Entfernt den unteren Bereich (Hint, Fehlermeldung, Counter) aus dem DOM."
+      [(checked)]="noBottomLabel"
+      [luxNoTopLabel]="true"
+    />
+    <lux-toggle
+      luxLabel="luxNoLabels"
+      luxHint="Kombination aus luxNoTopLabel und luxNoBottomLabel."
+      [(checked)]="noLabels"
+      [luxNoTopLabel]="true"
+    />
     <lux-toggle
       luxLabel="luxHintShowOnlyOnFocus"
       luxHint="Erlaubt es, den Hinweis nur einzublenden, wenn das Element den Fokus hat"
@@ -301,57 +289,38 @@
       [(value)]="placeholder"
     />
     <example-form-disable [form]="form" [controlBinding]="controlBinding" [(disabled)]="disabled" />
-    <div class="lux-flex lux-items-center lux-gap-2">
-      <lux-toggle
-        [(checked)]="enableFilter"
-        luxLabel="luxEnableFilter"
-        luxHint="Blendet ein Suchfeld im Dropdown ein und filtert clientseitig."
-        [luxNoTopLabel]="true"
-      />
-      <app-status-marker [markerType]="markerTypeNew" />
-    </div>
+    <lux-toggle
+      [(checked)]="enableFilter"
+      luxLabel="luxEnableFilter"
+      luxHint="Blendet ein Suchfeld im Dropdown ein und filtert clientseitig."
+      [luxNoTopLabel]="true"
+    />
     @if (enableFilter()) {
-      <div class="lux-flex lux-items-center lux-gap-2">
-        <lux-input
-          class="lux-flex-auto"
-          luxName="select_luxFilterPlaceholder"
-          luxLabel="luxFilterPlaceholder"
-          luxHint="Placeholder/Aria-Label des Filterfelds im Dropdown."
-          [(value)]="filterPlaceholder"
-        />
-        <app-status-marker [markerType]="markerTypeNew" />
-      </div>
-      <div class="lux-flex lux-items-center lux-gap-2">
-        <lux-input
-          class="lux-flex-auto"
-          luxName="select_luxFilterValue"
-          luxLabel="luxFilterValue"
-          luxHint="Initialer Filterwert. Bei aktivem Filter wird der Clear-Button eingeblendet."
-          [(value)]="filterValue"
-        />
-        <app-status-marker [markerType]="markerTypeNew" />
-      </div>
-      <div class="lux-flex lux-items-center lux-gap-2">
-        <lux-input
-          class="lux-flex-auto"
-          luxName="select_luxFilterClearAriaLabel"
-          luxLabel="luxFilterClearAriaLabel"
-          luxHint="Aria-Label/Label für den Clear-Button im Filterfeld."
-          [(value)]="filterClearAriaLabel"
-        />
-        <app-status-marker [markerType]="markerTypeNew" />
-      </div>
-      <div class="lux-flex lux-items-center lux-gap-2">
-        <lux-input
-          class="lux-flex-auto"
-          luxName="select_luxVisibleOptionCount"
-          luxLabel="luxVisibleOptionCount"
-          luxHint="Begrenzt die Anzahl der sichtbaren Optionen im Dropdown. 0 verwendet die Standardhöhe."
-          [(value)]="visibleOptionCount"
-          luxType="number"
-        />
-        <app-status-marker [markerType]="markerTypeNew" />
-      </div>
+      <lux-input
+        luxName="select_luxFilterPlaceholder"
+        luxLabel="luxFilterPlaceholder"
+        luxHint="Placeholder/Aria-Label des Filterfelds im Dropdown."
+        [(value)]="filterPlaceholder"
+      />
+      <lux-input
+        luxName="select_luxFilterValue"
+        luxLabel="luxFilterValue"
+        luxHint="Initialer Filterwert. Bei aktivem Filter wird der Clear-Button eingeblendet."
+        [(value)]="filterValue"
+      />
+      <lux-input
+        luxName="select_luxFilterClearAriaLabel"
+        luxLabel="luxFilterClearAriaLabel"
+        luxHint="Aria-Label/Label für den Clear-Button im Filterfeld."
+        [(value)]="filterClearAriaLabel"
+      />
+      <lux-input
+        luxName="select_luxVisibleOptionCount"
+        luxLabel="luxVisibleOptionCount"
+        luxHint="Begrenzt die Anzahl der sichtbaren Optionen im Dropdown. 0 verwendet die Standardhöhe."
+        [(value)]="visibleOptionCount"
+        luxType="number"
+      />
     }
     <lux-toggle
       [(checked)]="readonly"
@@ -359,16 +328,13 @@
       luxHint="Dieses Flag verhindert das Auswählen/die Interaktion mit dieser Component."
       [luxNoTopLabel]="true"
     />
-    <div class="lux-flex lux-items-center lux-gap-2">
-      <lux-toggle
-        [(checked)]="keepOptionOrder"
-        luxLabel="luxKeepOptionOrder"
-        luxHint="Behält die ursprüngliche Reihenfolge der Optionen bei. Selektierte Optionen werden nicht mehr an den Anfang der Liste sortiert."
-        [luxNoTopLabel]="true"
-      />
-      <app-status-marker [markerType]="markerTypeNew" />
-    </div>
-    <lux-toggle luxLabel="luxRequired" (checkedChange)="changeRequired($event)" [luxNoTopLabel]="true">
+    <lux-toggle
+      [(checked)]="keepOptionOrder"
+      luxLabel="luxKeepOptionOrder"
+      luxHint="Behält die ursprüngliche Reihenfolge der Optionen bei. Selektierte Optionen werden nicht mehr an den Anfang der Liste sortiert."
+      [luxNoTopLabel]="true"
+    />
+    <lux-toggle luxLabel="luxRequired" [checked]="required()" (checkedChange)="changeRequired($event)" [luxNoTopLabel]="true">
       <lux-form-hint>
         Markiert diese Component als Pflichtfeld. Dies funktioniert direkt nur in Components, die nicht in einer Reactive-Form sind.<br />
         <b>In diesem Beispiel wird stattdessen für die Reactive-Form Component der Validator.required für das Form-Control gesetzt.</b>

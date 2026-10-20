@@ -11,8 +11,6 @@ import {
   LuxSelectComponent,
   LuxToggleComponent
 } from '@ihk-gfi/lux-components';
-import { StatusMarkerComponent } from '../../../base/status-marker/status-marker.component';
-import { DemoMarkerType } from '../../../base/status-marker/status-marker.model';
 import { ExampleBaseContentComponent } from '../../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
@@ -44,7 +42,6 @@ import { LookupExampleComponent } from '../lookup-example.component';
     ExampleFormDisableComponent,
     ExampleBaseAdvancedOptionsComponent,
     JsonPipe,
-    StatusMarkerComponent,
     FormField
   ]
 })
@@ -63,7 +60,6 @@ export class LookupComboboxExampleComponent extends LookupExampleComponent imple
   });
   readonly plainValue = signal<any>(null);
   readonly multiValue = signal<LuxLookupTableEntry | LuxLookupTableEntry[] | null>(null);
-  readonly markerTypeNew = DemoMarkerType.New;
   readonly entryBlockSize = signal(25);
   readonly bLuxWithEmptyEntry = signal(true);
   readonly enableFilter = signal(true);

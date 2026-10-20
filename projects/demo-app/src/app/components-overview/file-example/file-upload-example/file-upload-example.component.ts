@@ -1,4 +1,14 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, inject, OnInit, signal, viewChild, viewChildren } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  linkedSignal,
+  OnInit,
+  signal,
+  viewChild,
+  viewChildren
+} from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { disabled, form, FormField, readonly, required, validate } from '@angular/forms/signals';
 import {
@@ -68,6 +78,11 @@ export class FileUploadExampleComponent
   readonly plainValue = signal<ILuxFileObject[] | null>(null);
 
   override readonly label = signal(`Zum Hochladen Datei hier ablegen oder `);
+  // Folgt luxMaxSizeMiB und luxAccept, bleibt aber über die Optionen frei editierbar.
+  override readonly hint = linkedSignal(
+    () =>
+      `Sie können Dateien der Typen ${LuxUtil.getAcceptTypesAsMessagePart(this.tService, this.accept())} mit einer Größe bis zu ${this.maxSize()} Megabytes hochladen.`
+  );
   readonly labelLink = signal(`Datei durchsuchen`);
   readonly labelLinkShort = signal(`Datei hochladen`);
   readonly uploadIcon = signal('lux-programming-cloud-upload');
@@ -95,9 +110,6 @@ export class FileUploadExampleComponent
     this.maxSize.set(10);
     this.capture.set('environment');
     this.accept.set('.pdf,.jpeg,.jpg,.png');
-    this.hint.set(
-      `Sie können Dateien der Typen ${LuxUtil.getAcceptTypesAsMessagePart(this.tService, this.accept())} mit einer Größe bis zu ${this.maxSize()} Megabytes hochladen.`
-    );
     super.ngOnInit();
   }
 

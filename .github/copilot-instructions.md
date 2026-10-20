@@ -34,6 +34,9 @@ applyTo: '**'
 - Update scripts are Angular schematics in projects/lux-components-update (see README).
 - Update Wiki-Doku of the lux-components-lib in folder projects\lux-components-wiki\Versions\<version>. Check if all Inputs and Outputs are documented.
 - Update the demo page of the component in the folder projects\demo-app\src\app\components-overview\<component-name>.
+- Mark new and changed features in the demo app with status markers while developing (all markers are removed at each major release):
+  - New or changed component: pass `DemoMarkerType.New` or `DemoMarkerType.Updated` to `create(...)` in [components-overview-navigation.service.ts](projects/demo-app/src/app/components-overview/components-overview-navigation.service.ts).
+  - New or changed option/input in an example: wrap the option and an `<app-status-marker [markerType]="..." />` in `<div class="lux-flex lux-items-center lux-gap-2">` and give the option `class="lux-flex-auto"`; expose the marker type as a field (e.g. `readonly markerTypeNew = DemoMarkerType.New;`) and import `StatusMarkerComponent`.
 - Make a spell check for changed .md files (e.g. README, Wiki-Doku).
 - If the Figma MCP server is available, use it (e.g. get_design_context) to read the Figma design before implementing or changing UI, and reuse existing library components and theme variables instead of copying generated code.
 

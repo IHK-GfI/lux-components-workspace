@@ -230,15 +230,12 @@
       [luxNumberAlignLeft]="true"
       [luxDisabled]="!displayExtended()"
     />
-    <div class="lux-flex lux-items-center lux-gap-2">
-      <lux-toggle
-        luxLabel="Deaktiviere LuxLoading"
-        luxHint="Verhindert das automatische Aktivieren von luxLoading für zwei Sekunden nach einem Klick auf ein Menü-Item."
-        [(checked)]="disableLuxLoading"
-        [luxNoTopLabel]="true"
-      />
-      <app-status-marker [markerType]="markerTypeNew" />
-    </div>
+    <lux-toggle
+      luxLabel="Deaktiviere LuxLoading"
+      luxHint="Verhindert das automatische Aktivieren von luxLoading für zwei Sekunden nach einem Klick auf ein Menü-Item."
+      [(checked)]="disableLuxLoading"
+      [luxNoTopLabel]="true"
+    />
   </example-base-simple-options>
   <example-base-advanced-options class="lux-flex lux-flex-col lux-gap-4">
     <h3>LuxMenuItemComponent</h3>
@@ -292,32 +289,25 @@
               [(checked)]="item.disabled"
               [luxNoTopLabel]="true"
             />
-            <div class="lux-flex lux-items-center lux-gap-2">
-              <lux-toggle
-                luxLabel="luxLoading"
-                [checked]="item.loading ?? false"
-                (checkedChange)="item.loading = $event"
-                [luxNoTopLabel]="true"
-              >
-                <lux-form-hint>Zeigt am erweiterten Button und im Menü-Panel einen Spinner und verhindert Klicks.</lux-form-hint>
-              </lux-toggle>
-              <app-status-marker [markerType]="markerTypeNew" />
-            </div>
-            <div class="lux-flex lux-items-center lux-gap-2">
-              <lux-toggle
-                class="lux-flex-auto"
-                luxLabel="luxDisabledAria"
-                [checked]="item.disabledAria ?? false"
-                (checkedChange)="item.disabledAria = $event"
-                [luxNoTopLabel]="true"
-              >
-                <lux-form-hint>
-                  Über dieses Flag wird der Eintrag wahrnehmbar deaktiviert (aria-disabled): Er bleibt sichtbar und fokussierbar, die Aktion
-                  wird aber nicht ausgeführt. Statt luxClicked wird luxClickNotAllowed emittiert (siehe Console-Log).
-                </lux-form-hint>
-              </lux-toggle>
-              <app-status-marker [markerType]="markerTypeNew" />
-            </div>
+            <lux-toggle
+              luxLabel="luxLoading"
+              [checked]="item.loading ?? false"
+              (checkedChange)="item.loading = $event"
+              [luxNoTopLabel]="true"
+            >
+              <lux-form-hint>Zeigt am erweiterten Button und im Menü-Panel einen Spinner und verhindert Klicks.</lux-form-hint>
+            </lux-toggle>
+            <lux-toggle
+              luxLabel="luxDisabledAria"
+              [checked]="item.disabledAria ?? false"
+              (checkedChange)="item.disabledAria = $event"
+              [luxNoTopLabel]="true"
+            >
+              <lux-form-hint>
+                Über dieses Flag wird der Eintrag wahrnehmbar deaktiviert (aria-disabled): Er bleibt sichtbar und fokussierbar, die Aktion
+                wird aber nicht ausgeführt. Statt luxClicked wird luxClickNotAllowed emittiert (siehe Console-Log).
+              </lux-form-hint>
+            </lux-toggle>
             <lux-toggle
               luxLabel="luxHidden"
               luxHint="Über dieses Flag wird der Eintrag ausgeblendet."
@@ -363,28 +353,17 @@
         </lux-panel>
       }
     </lux-accordion>
-    <div class="lux-flex lux-items-center lux-gap-2">
-      <h3>LuxMenuItemComponent (mit Sections)</h3>
-      <app-status-marker [markerType]="markerTypeUpdated" />
-    </div>
-    <div class="lux-flex lux-items-center lux-gap-2">
-      <lux-input
-        class="lux-flex-auto"
-        luxLabel="luxTitle"
-        luxHint="Diese Property ermöglicht es, den Titel (Benutzername) des Panel Headers zu ändern."
-        [(value)]="menuSectionHeaderTitle"
-      />
-      <app-status-marker [markerType]="markerTypeNew" />
-    </div>
-    <div class="lux-flex lux-items-center lux-gap-2">
-      <lux-input
-        class="lux-flex-auto"
-        luxLabel="luxSubtitle"
-        luxHint="Diese Property ermöglicht es, den Untertitel (Email) des Panel Headers zu ändern."
-        [(value)]="menuSectionHeaderSubtitle"
-      />
-      <app-status-marker [markerType]="markerTypeNew" />
-    </div>
+    <h3>LuxMenuItemComponent (mit Sections)</h3>
+    <lux-input
+      luxLabel="luxTitle"
+      luxHint="Diese Property ermöglicht es, den Titel (Benutzername) des Panel Headers zu ändern."
+      [(value)]="menuSectionHeaderTitle"
+    />
+    <lux-input
+      luxLabel="luxSubtitle"
+      luxHint="Diese Property ermöglicht es, den Untertitel (Email) des Panel Headers zu ändern."
+      [(value)]="menuSectionHeaderSubtitle"
+    />
     <lux-input
       luxLabel="luxTitle"
       luxHint="Diese Property ermöglicht es, die erste Überschrift im 1. Panel zu ändern."
@@ -437,28 +416,21 @@
               luxAutocomplete="off"
               [(value)]="item.buttonBadge"
             />
-            <div class="lux-flex lux-items-center lux-gap-2">
-              <lux-toggle
-                class="lux-flex-auto"
-                luxLabel="luxMenuItemSelected"
-                luxHint="Dieses Flag schaltet die Auswahl des Menu-Eintrags ein oder aus."
-                [checked]="item.selected ?? false"
-                (checkedChange)="item.selected = $event"
-                [luxNoTopLabel]="true"
-              />
-              <app-status-marker [markerType]="markerTypeNew" />
-            </div>
-            <div class="lux-flex lux-items-center lux-gap-2">
-              <lux-toggle
-                luxLabel="luxLoading"
-                [checked]="item.loading ?? false"
-                (checkedChange)="item.loading = $event"
-                [luxNoTopLabel]="true"
-              >
-                <lux-form-hint>Zeigt am erweiterten Button und im Menü-Panel einen Spinner und verhindert Klicks.</lux-form-hint>
-              </lux-toggle>
-              <app-status-marker [markerType]="markerTypeNew" />
-            </div>
+            <lux-toggle
+              luxLabel="luxMenuItemSelected"
+              luxHint="Dieses Flag schaltet die Auswahl des Menu-Eintrags ein oder aus."
+              [checked]="item.selected ?? false"
+              (checkedChange)="item.selected = $event"
+              [luxNoTopLabel]="true"
+            />
+            <lux-toggle
+              luxLabel="luxLoading"
+              [checked]="item.loading ?? false"
+              (checkedChange)="item.loading = $event"
+              [luxNoTopLabel]="true"
+            >
+              <lux-form-hint>Zeigt am erweiterten Button und im Menü-Panel einen Spinner und verhindert Klicks.</lux-form-hint>
+            </lux-toggle>
           </lux-panel-content>
         </lux-panel>
       }
@@ -486,15 +458,11 @@
               luxHint="Diese Property ermöglicht es, das Label eines Menu-Eintrags zu ändern."
               [(value)]="item.label"
             />
-            <div class="lux-flex lux-items-center lux-gap-2">
-              <lux-input
-                class="lux-flex-auto"
-                luxLabel="luxMenuItemSubtitle"
-                luxHint="Diese Property ermöglicht es, das Untertitel eines Menu-Eintrags zu ändern."
-                [(value)]="item.subtitle"
-              />
-              <app-status-marker [markerType]="markerTypeNew" />
-            </div>
+            <lux-input
+              luxLabel="luxMenuItemSubtitle"
+              luxHint="Diese Property ermöglicht es, das Untertitel eines Menu-Eintrags zu ändern."
+              [(value)]="item.subtitle"
+            />
             <lux-input luxLabel="luxMenuTooltip" luxHint="Wenn im Menü dargestellt" [(value)]="item.tooltipMenu" />
             <lux-input
               luxLabel="luxIconName"
@@ -531,17 +499,14 @@
               [(checked)]="item.selected"
               [luxNoTopLabel]="true"
             />
-            <div class="lux-flex lux-items-center lux-gap-2">
-              <lux-toggle
-                luxLabel="luxLoading"
-                [checked]="item.loading ?? false"
-                (checkedChange)="item.loading = $event"
-                [luxNoTopLabel]="true"
-              >
-                <lux-form-hint>Zeigt am erweiterten Button und im Menü-Panel einen Spinner und verhindert Klicks.</lux-form-hint>
-              </lux-toggle>
-              <app-status-marker [markerType]="markerTypeNew" />
-            </div>
+            <lux-toggle
+              luxLabel="luxLoading"
+              [checked]="item.loading ?? false"
+              (checkedChange)="item.loading = $event"
+              [luxNoTopLabel]="true"
+            >
+              <lux-form-hint>Zeigt am erweiterten Button und im Menü-Panel einen Spinner und verhindert Klicks.</lux-form-hint>
+            </lux-toggle>
           </lux-panel-content>
         </lux-panel>
       }
