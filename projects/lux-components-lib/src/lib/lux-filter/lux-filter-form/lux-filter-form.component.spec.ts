@@ -1,7 +1,9 @@
 import { ChangeDetectionStrategy, Component, inject, OnDestroy, signal, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormField, disabled, form, hidden, required } from '@angular/forms/signals';
 import { Subscription } from 'rxjs';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import { LuxA11yTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { LuxMediaQueryObserverService } from '../../lux-util/lux-media-query-observer.service';
 import { LuxFilter } from '../lux-filter-base/lux-filter';
 import { LuxFilterItem } from '../lux-filter-base/lux-filter-item';
@@ -32,7 +34,7 @@ describe('LuxFilterFormComponent', () => {
     fixture = TestBed.createComponent(TestFilterFormComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    await new Promise((resolve) => setTimeout(resolve));
     fixture.detectChanges();
   });
 
@@ -126,7 +128,7 @@ describe('LuxFilterFormComponent', () => {
     // formControl.disabled - jeder disable()/enable()-Aufruf (auch der eigene) stieß den Effect
     // dadurch erneut an und kam nie zur Ruhe.
     const inputItem = component.filterComponent().formElementes.find((f) => f.filterItem.binding === 'input')!;
-    const fc = inputItem.filterItem.component.formControl;
+    const fc = inputItem.filterItem.component.formControl!;
     const disableSpy = vi.spyOn(fc, 'disable');
     const enableSpy = vi.spyOn(fc, 'enable');
 
@@ -144,6 +146,219 @@ describe('LuxFilterFormComponent', () => {
     expect(enableSpy.mock.calls.length).toBeLessThan(5);
   });
 });
+
+describe('LuxFilterFormComponent with Signal Forms', () => {
+  let fixture: ComponentFixture<TestSignalFilterFormComponent>;
+  let component: TestSignalFilterFormComponent;
+
+  beforeAll(() => LuxA11yTestHelper.addA11yMatchers());
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      providers: [provideHttpClient(withXhr(), withInterceptorsFromDi()), provideHttpClientTesting(), provideLuxTranslocoTesting()]
+    }).compileComponents();
+    fixture = TestBed.createComponent(TestSignalFilterFormComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+    await new Promise((resolve) => setTimeout(resolve));
+    fixture.detectChanges();
+  });
+
+  it('uses the Signal Form for validation, values and chips', () => {
+    expect(component.filterForm().formElementes.length).toBe(3);
+    component.filterForm().onFilter();
+    expect(component.emitted()).toBeUndefined();
+    expect(component.form.input().touched()).toBe(true);
+
+    component.form.input().value.set('Test');
+    fixture.detectChanges();
+    component.filterForm().onFilter();
+    expect(component.emitted()).toEqual({ input: 'Test', toggle: false, multi: [] });
+    expect(
+      component
+        .filterForm()
+        .filterItems()
+        .map((item) => item.binding)
+    ).toEqual(['input']);
+
+    component.filterForm().filterChipRemoved(0);
+    expect(component.form.input().value()).toBe('');
+    expect(component.form.input().touched()).toBe(true);
+    expect(component.emitted()).toEqual({ input: 'Test', toggle: false, multi: [] });
+
+    component.filterForm().onReset();
+    expect(component.form().value()).toEqual({ input: '', toggle: false, multi: [] });
+  });
+
+  it('is accessible with a Signal Form', async () => {
+    await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+  });
+
+  it('removes only the selected chip from a Signal Form multi-select', () => {
+    component.form.input().value.set('Test');
+    component.form.multi().value.set(['One', 'Two']);
+    component.filterForm().onFilter();
+    expect(
+      component
+        .filterForm()
+        .filterItems()
+        .map((item) => item.value)
+    ).toEqual(['Test', 'One', 'Two']);
+
+    component.filterForm().filterChipRemoved(1);
+    expect(component.form.multi().value()).toEqual(['Two']);
+    expect(component.emitted()).toEqual({ input: 'Test', toggle: false, multi: ['Two'] });
+  });
+
+  it('applies replacement values and saves the Signal Form model', () => {
+    component.values.set({ input: 'Erster Wert', toggle: true });
+    fixture.detectChanges();
+    expect(component.form().value()).toEqual({ input: 'Erster Wert', toggle: true, multi: [] });
+    expect(component.emitted()).toEqual({ input: 'Erster Wert', toggle: true, multi: [] });
+
+    component.values.set({ input: 'Neuer Wert' });
+    fixture.detectChanges();
+    expect(component.form().value()).toEqual({ input: 'Neuer Wert', toggle: false, multi: [] });
+
+    component.filterForm().onSave('Testfilter');
+    expect(component.saved()?.data).toEqual({ input: 'Neuer Wert', toggle: false, multi: [] });
+  });
+});
+
+describe('LuxFilterFormComponent with Signal Forms (inaktive Felder)', () => {
+  let fixture: ComponentFixture<TestSignalFilterStateComponent>;
+  let component: TestSignalFilterStateComponent;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      providers: [provideHttpClient(withXhr(), withInterceptorsFromDi()), provideHttpClientTesting(), provideLuxTranslocoTesting()]
+    }).compileComponents();
+    fixture = TestBed.createComponent(TestSignalFilterStateComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+    await new Promise((resolve) => setTimeout(resolve));
+    fixture.detectChanges();
+  });
+
+  const chipBindings = () =>
+    component
+      .filterForm()
+      .filterItems()
+      .map((item) => item.binding);
+
+  it('lässt deaktivierte, ausgeblendete und nicht registrierte Felder aus Ergebnis und Chips weg', () => {
+    // Per Schema ausgeblendete Felder entfernt der Aufrufer per @if aus dem DOM (NG01916) - die
+    // Filter-Form kennt das Filterelement aber weiterhin.
+    component.regionHidden.set(true);
+    fixture.detectChanges();
+    component.filterForm().onFilter();
+
+    // status: per Schema deaktiviert, region: per Schema ausgeblendet, versteckt: luxFilterHidden
+    // (das leere Pflichtfeld blockiert das Filtern nicht), extra: kein luxFilterItem - wie bei
+    // FormGroup.value tauchen sie im Ergebnis nicht auf.
+    expect(component.emitted()).toEqual({ input: 'Test', datum: null });
+    expect(chipBindings()).toEqual(['input']);
+
+    component.filterForm().onSave('Testfilter');
+    expect(component.saved()?.data).toEqual({ input: 'Test', datum: null });
+  });
+
+  it('berücksichtigt Feldzustände aus dem Schema dynamisch', () => {
+    component.statusDisabled.set(false);
+    component.filterForm().onFilter();
+
+    expect(component.emitted()).toEqual({ input: 'Test', status: 'offen', region: 'Nord', datum: null });
+    expect(chipBindings()).toEqual(['input', 'status', 'region']);
+  });
+
+  it('filtert nicht, solange ein aktives Pflichtfeld leer ist', () => {
+    component.form.input().value.set('');
+    component.filterForm().onFilter();
+
+    expect(component.emitted()).toBeUndefined();
+    expect(component.form.input().touched()).toBe(true);
+  });
+
+  it('zeigt im Datum-Chip das neu gesetzte Datum', async () => {
+    component.values.set({ input: 'Test', datum: '2026-10-01T00:00:00.000Z' });
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    const chip = component
+      .filterForm()
+      .filterItems()
+      .find((item) => item.binding === 'datum');
+    expect(chip?.value).toBe('01.10.2026');
+  });
+});
+
+@Component({
+  template: `
+    <lux-filter-form
+      luxTitle="Signal-Filter"
+      [luxSignalForm]="form"
+      [luxFilterValues]="values()"
+      (luxOnFilter)="emitted.set($event)"
+      (luxOnSave)="saved.set($event)"
+    >
+      <lux-input luxLabel="Input" [formField]="form.input" luxFilterItem [luxFilterDefaultValues]="['']" />
+      <lux-input luxLabel="Status" [formField]="form.status" luxFilterItem [luxFilterDefaultValues]="['']" />
+      @if (!form.region().hidden()) {
+        <lux-input luxLabel="Region" [formField]="form.region" luxFilterItem [luxFilterDefaultValues]="['']" />
+      }
+      <lux-input luxLabel="Versteckt" [formField]="form.versteckt" luxFilterItem [luxFilterHidden]="true" [luxFilterDefaultValues]="['']" />
+      <lux-datepicker luxLabel="Datum" [formField]="form.datum" luxFilterItem [luxFilterDefaultValues]="[null]" />
+    </lux-filter-form>
+  `,
+  imports: [LuxFilterFormComponent, LuxFilterItemDirective, LuxInputComponent, LuxDatepickerComponent, FormField]
+})
+class TestSignalFilterStateComponent {
+  readonly statusDisabled = signal(true);
+  readonly regionHidden = signal(false);
+  readonly model = signal({
+    input: 'Test',
+    status: 'offen',
+    region: 'Nord',
+    versteckt: '',
+    datum: null as string | null,
+    extra: 'ohne Filterelement'
+  });
+  readonly form = form(this.model, (path) => {
+    required(path.input);
+    required(path.versteckt);
+    disabled(path.status, () => this.statusDisabled());
+    hidden(path.region, () => this.regionHidden());
+  });
+  readonly values = signal<Record<string, unknown>>({});
+  readonly emitted = signal<unknown>(undefined);
+  readonly saved = signal<LuxFilter | undefined>(undefined);
+  readonly filterForm = viewChild.required(LuxFilterFormComponent);
+}
+
+@Component({
+  template: `
+    <lux-filter-form
+      luxTitle="Signal-Filter"
+      [luxSignalForm]="form"
+      [luxFilterValues]="values()"
+      (luxOnFilter)="emitted.set($event)"
+      (luxOnSave)="saved.set($event)"
+    >
+      <lux-input luxLabel="Input" [formField]="form.input" luxFilterItem [luxFilterDefaultValues]="['']" />
+      <lux-toggle luxLabel="Toggle" [formField]="form.toggle" luxFilterItem />
+      <lux-select luxLabel="Mehrfach" [luxOptions]="['One', 'Two']" [luxMultiple]="true" [formField]="form.multi" luxFilterItem />
+    </lux-filter-form>
+  `,
+  imports: [LuxFilterFormComponent, LuxFilterItemDirective, LuxInputComponent, LuxToggleComponent, LuxSelectComponent, FormField]
+})
+class TestSignalFilterFormComponent {
+  readonly model = signal({ input: '', toggle: false, multi: [] as string[] });
+  readonly form = form(this.model, (path) => required(path.input));
+  readonly values = signal<Record<string, unknown>>({});
+  readonly emitted = signal<unknown>(undefined);
+  readonly saved = signal<LuxFilter | undefined>(undefined);
+  readonly filterForm = viewChild.required(LuxFilterFormComponent);
+}
 
 @Component({
   template: `
