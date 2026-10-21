@@ -182,6 +182,34 @@
         <h2 class="lux-highlight-section-label">Filter</h2>
         <pre tabindex="0">{{ currentFilter() | json }}</pre>
       </div>
+      <h2>Signal Form <app-status-marker [markerType]="markerTypeNew" /></h2>
+      <lux-filter-form
+        [luxSignalForm]="signalFilterForm"
+        (luxOnFilter)="signalFilterResult.set($event)"
+        luxTitle="Signal-Filter"
+        [luxHideMenu]="hideMenu()"
+        [luxShowChips]="showFilterChips()"
+        [luxHideChipsBorder]="hideChipsBorder()"
+        [luxButtonFlat]="buttonFlat()"
+        [luxButtonFilterColor]="buttonFilterColor()"
+        [luxButtonDialogSave]="buttonDialogSave()"
+        [luxButtonDialogLoad]="buttonDialogLoad()"
+        [luxButtonDialogDelete]="buttonDialogDelete()"
+        [luxButtonDialogCancel]="buttonDialogCancel()"
+        [luxButtonDialogClose]="buttonDialogClose()"
+        [luxDisableShortcut]="disableShortcut()"
+        [luxShowSaveAction]="false"
+        [luxShowLoadAction]="false"
+      >
+        <div class="lux-grid lux-grid-cols-2 lt-md:lux-grid-cols-1 lux-gap-4 lux-mt-4">
+          <lux-input luxLabel="Suchbegriff" [formField]="signalFilterForm.input" luxFilterItem [luxFilterDefaultValues]="['']" />
+          <lux-toggle luxLabel="Aktiv" [formField]="signalFilterForm.toggle" luxFilterItem />
+        </div>
+      </lux-filter-form>
+      <div class="lux-highlight-section column lux-ml-2 lux-mr-2">
+        <h2 class="lux-highlight-section-label">Signal-Filter</h2>
+        <pre tabindex="0">{{ signalFilterResult() | json }}</pre>
+      </div>
       <!-- Beispiel als Card -->
       <h2>Lux-Filter-Form in einer Card</h2>
       <lux-filter-form
@@ -260,31 +288,29 @@
               [luxFilterHidden]="datetimepickerHidden()"
               luxFilterItem
             />
-            <div>
-              <div class="lux-flex lux-gap-4 lt-sm:lux-flex-col lt-sm:lux-gap-0">
-                <lux-datepicker
-                  class="lux-flex-auto"
-                  luxLabel="Datepicker + Timepicker-Ac (Datum)"
-                  luxName="filter_datepicker_combined_ac"
-                  luxControlBinding="combinedDateTime"
-                  [luxFilterDisabled]="combinedDateTimeDisabled()"
-                  [luxFilterHidden]="combinedDateTimeHidden()"
-                  [luxReferenceControl]="combinedTimepickerAc"
-                  luxFilterItem
-                  #combinedDatepickerAc
-                />
-                <lux-timepicker
-                  class="lux-flex-auto"
-                  luxLabel="Datepicker + Timepicker-Ac (Uhrzeit)"
-                  luxName="filter_timepicker_combined_ac"
-                  luxControlBinding="combinedDateTime"
-                  [luxFilterDisabled]="combinedDateTimeDisabled()"
-                  [luxFilterHidden]="combinedDateTimeHidden()"
-                  [luxReferenceControl]="combinedDatepickerAc"
-                  luxFilterItem
-                  #combinedTimepickerAc
-                />
-              </div>
+            <div class="lux-grid lux-col-span-2 lt-md:lux-col-span-1 lux-grid-cols-2 lt-md:lux-grid-cols-1 lux-gap-4">
+              <lux-datepicker
+                class="lux-flex-auto"
+                luxLabel="Datepicker + Timepicker-Ac (Datum)"
+                luxName="filter_datepicker_combined_ac"
+                luxControlBinding="combinedDateTime"
+                [luxFilterDisabled]="combinedDateTimeDisabled()"
+                [luxFilterHidden]="combinedDateTimeHidden()"
+                [luxReferenceControl]="combinedTimepickerAc"
+                luxFilterItem
+                #combinedDatepickerAc
+              />
+              <lux-timepicker
+                class="lux-flex-auto"
+                luxLabel="Datepicker + Timepicker-Ac (Uhrzeit)"
+                luxName="filter_timepicker_combined_ac"
+                luxControlBinding="combinedDateTime"
+                [luxFilterDisabled]="combinedDateTimeDisabled()"
+                [luxFilterHidden]="combinedDateTimeHidden()"
+                [luxReferenceControl]="combinedDatepickerAc"
+                luxFilterItem
+                #combinedTimepickerAc
+              />
             </div>
             <lux-select
               luxLabel="Single-Select-Ac"

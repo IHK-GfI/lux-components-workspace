@@ -36,52 +36,72 @@ Filter (zugeklappt):
 | -------- | --------------- |
 | selector | lux-filter-form |
 
-> **Hinweis zu Signal Forms:** Die Filter-Form baut intern eine Reactive-Forms-`FormGroup` auf. Die Filter-Elemente werden daher weiterhin über `luxControlBinding` zusammen mit der Direktive `luxFilterItem` angebunden. Das ist innerhalb der Filter-Form so vorgesehen, auch wenn `luxControlBinding` für normale Formulare als veraltet gilt; eine Anbindung über `[formField]` wird von der Filter-Form nicht unterstützt.
+Die Filter-Form unterstützt zwei Modi: Ohne `[luxSignalForm]` werden Filter-Elemente weiterhin über `luxControlBinding` und `luxFilterItem` an eine interne Reactive-Forms-`FormGroup` angebunden. Mit `[luxSignalForm]` erhält die Filter-Form ein Angular Signal Form; jedes Filter-Element benötigt dann `[formField]` und `luxFilterItem`. Beide Modi dürfen nicht innerhalb einer Filter-Form gemischt werden.
+
+```typescript
+readonly filterModel = signal({ input: '', toggle: false });
+readonly filterForm = form(this.filterModel, (path) => required(path.input));
+```
+
+```html
+<lux-filter-form [luxSignalForm]="filterForm" (luxOnFilter)="onFilter($event)">
+  <lux-input luxLabel="Suchbegriff" [formField]="filterForm.input" luxFilterItem [luxFilterDefaultValues]="['']" />
+  <lux-toggle luxLabel="Aktiv" [formField]="filterForm.toggle" luxFilterItem />
+</lux-filter-form>
+```
+
+Die Formularwerte und die Validierung stammen im Signal-Modus direkt aus dem übergebenen Form. Wie im Reactive-Forms-Modus liefern `luxOnFilter` und `luxOnSave` nur die Werte der aktiven Filterelemente: Felder ohne `luxFilterItem`, per `luxFilterHidden` ausgeblendete und im Schema mit `disabled(path, ...)` bzw. `hidden(path, ...)` deaktivierte oder ausgeblendete Felder fehlen im Ergebnis, erzeugen keine Chips und blockieren das Filtern nicht. Bei ungültigem Filter markiert die Filter-Form das Signal Form als berührt.
+
+- Filterelemente müssen an direkte Felder des Signal Forms gebunden sein (`form.plz`, nicht `form.adresse.plz`).
+- `luxFilterValues` kann wie bisher Teilwerte übernehmen; nicht übergebene Felder werden bei späteren Änderungen auf ihren Filter-Standardwert zurückgesetzt. Ist dieser nicht angegeben (`undefined`), wird im Signal-Modus stattdessen der ursprüngliche Modellwert verwendet, damit die Feldstruktur erhalten bleibt.
+- Werte, die bereits im Modell stehen, gelten deshalb nicht als aktiver Filter (kein Chip, "Zurücksetzen" stellt sie wieder her). Startwerte eines Filters gehören in `luxFilterValues`.
+- Deaktivierungen werden im Formularschema mit `disabled(path, ...)` definiert; `luxFilterDisabled` ist im Signal-Modus nicht verfügbar.
 
 ### @Input
 
-| Name                    | Typ             | Beschreibung                                                                                                                   |
-| ----------------------- | --------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| luxTitle                | string          | Titel des Filters. Default: ''.                                                                                                |
-| luxButtonRaised         | boolean         | Gibt an, ob die Filter-Buttons hervorgehoben dargestellt werden. Default: false.                                               |
-| luxButtonFlat           | boolean         | Gibt an, ob die Filter-Buttons flach (gefüllt, ohne Schatten) dargestellt werden. Default: false.                              |
-| luxButtonFilterLabel    | string          | Bezeichnung des Filter-Buttons. Ohne Angabe wird ein Standardtext verwendet. Default: ''.                                      |
-| luxButtonFilterColor    | LuxThemePalette | Farbe des Filter-Buttons ('primary', 'accent', 'warn' oder `undefined`). Default: 'primary'.                                   |
-| luxButtonResetLabel     | string          | Bezeichnung des Reset-Buttons. Ohne Angabe wird ein Standardtext verwendet. Default: ''.                                       |
-| luxButtonResetColor     | LuxThemePalette | Farbe des Reset-Buttons. Default: undefined.                                                                                   |
-| luxButtonSaveLabel      | string          | Bezeichnung des Speichern-Buttons. Ohne Angabe wird ein Standardtext verwendet. Default: ''.                                   |
-| luxButtonSaveColor      | LuxThemePalette | Farbe des Speichern-Buttons. Default: undefined.                                                                               |
-| luxButtonLoadLabel      | string          | Bezeichnung des Laden-Buttons. Ohne Angabe wird ein Standardtext verwendet. Default: ''.                                       |
-| luxButtonLoadColor      | LuxThemePalette | Farbe des Laden-Buttons. Default: undefined.                                                                                   |
-| luxButtonDialogSave     | LuxThemePalette | Farbe des Speichern-Buttons im Dialog. Default: 'primary'.                                                                     |
-| luxButtonDialogLoad     | LuxThemePalette | Farbe des Laden-Buttons im Dialog. Default: 'primary'.                                                                         |
-| luxButtonDialogDelete   | LuxThemePalette | Farbe des Löschen-Buttons im Dialog. Default: 'warn'.                                                                          |
-| luxButtonDialogCancel   | LuxThemePalette | Farbe des Abbrechen-Buttons im Dialog. Default: undefined.                                                                     |
-| luxButtonDialogClose    | LuxThemePalette | Farbe des Schließen-Buttons im Dialog. Default: undefined.                                                                     |
-| luxDefaultFilterMessage | string          | Die Standardfilternachricht wird angezeigt, wenn der Filter unverändert ist. Default: ''.                                      |
-| luxShowChips            | boolean         | Gibt an, ob die Filterwerte im eingeklappten Zustand als Chips dargestellt werden. Default: true.                              |
-| luxHideChipsBorder      | boolean         | Gibt an, ob der Rahmen um die Chips ausgeblendet wird. Default: false.                                                         |
-| luxHideMenu             | boolean         | Gibt an, ob das Filtermenü im oberen Bereich ausgeblendet werden soll. Default: false.                                         |
-| luxStoredFilters        | LuxFilter[]     | Ein Array mit den vorhandenen Filtern. Default: [].                                                                            |
-| luxDisableShortcut      | boolean         | Property, die das Tastaturkürzel für das Auslösen des Filters unterdrückt. Default: false.                                     |
-| luxShowAsCard           | boolean         | Stellt die Filter-Form als Card dar. Default: false.                                                                           |
-| luxExpandedLabelOpen    | string          | Label (Tooltip/Aria-Label) des Buttons zum Aufklappen. Ohne Angabe wird ein Standardtext verwendet. Default: ''.               |
-| luxExpandedLabelClose   | string          | Label (Tooltip/Aria-Label) des Buttons zum Zuklappen. Ohne Angabe wird ein Standardtext verwendet. Default: ''.                |
-| luxShowSaveAction       | boolean         | Gibt an, ob im Filtermenü die Aktion zum Speichern eines Filters angezeigt wird. Default: true.                                |
-| luxShowLoadAction       | boolean         | Gibt an, ob im Filtermenü die Aktion zum Laden eines gespeicherten Filters angezeigt wird. Default: true.                      |
-| luxFilterExpanded       | boolean         | Gibt an, ob der Filter auf-/zugeklappt dargestellt wird. Two-Way-Binding über `[(luxFilterExpanded)]` möglich. Default: false. |
-| luxFilterValues         | any             | Die aktuellen Filterwerte als Objekt (Schlüssel = luxControlBinding der Filter-Elemente). Default: {}.                         |
+| Name                    | Typ             | Beschreibung                                                                                                                    |
+| ----------------------- | --------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| luxTitle                | string          | Titel des Filters. Default: ''.                                                                                                 |
+| luxButtonRaised         | boolean         | Gibt an, ob die Filter-Buttons hervorgehoben dargestellt werden. Default: false.                                                |
+| luxButtonFlat           | boolean         | Gibt an, ob die Filter-Buttons flach (gefüllt, ohne Schatten) dargestellt werden. Default: false.                               |
+| luxButtonFilterLabel    | string          | Bezeichnung des Filter-Buttons. Ohne Angabe wird ein Standardtext verwendet. Default: ''.                                       |
+| luxButtonFilterColor    | LuxThemePalette | Farbe des Filter-Buttons ('primary', 'accent', 'warn' oder `undefined`). Default: 'primary'.                                    |
+| luxButtonResetLabel     | string          | Bezeichnung des Reset-Buttons. Ohne Angabe wird ein Standardtext verwendet. Default: ''.                                        |
+| luxButtonResetColor     | LuxThemePalette | Farbe des Reset-Buttons. Default: undefined.                                                                                    |
+| luxButtonSaveLabel      | string          | Bezeichnung des Speichern-Buttons. Ohne Angabe wird ein Standardtext verwendet. Default: ''.                                    |
+| luxButtonSaveColor      | LuxThemePalette | Farbe des Speichern-Buttons. Default: undefined.                                                                                |
+| luxButtonLoadLabel      | string          | Bezeichnung des Laden-Buttons. Ohne Angabe wird ein Standardtext verwendet. Default: ''.                                        |
+| luxButtonLoadColor      | LuxThemePalette | Farbe des Laden-Buttons. Default: undefined.                                                                                    |
+| luxButtonDialogSave     | LuxThemePalette | Farbe des Speichern-Buttons im Dialog. Default: 'primary'.                                                                      |
+| luxButtonDialogLoad     | LuxThemePalette | Farbe des Laden-Buttons im Dialog. Default: 'primary'.                                                                          |
+| luxButtonDialogDelete   | LuxThemePalette | Farbe des Löschen-Buttons im Dialog. Default: 'warn'.                                                                           |
+| luxButtonDialogCancel   | LuxThemePalette | Farbe des Abbrechen-Buttons im Dialog. Default: undefined.                                                                      |
+| luxButtonDialogClose    | LuxThemePalette | Farbe des Schließen-Buttons im Dialog. Default: undefined.                                                                      |
+| luxDefaultFilterMessage | string          | Die Standardfilternachricht wird angezeigt, wenn der Filter unverändert ist. Default: ''.                                       |
+| luxShowChips            | boolean         | Gibt an, ob die Filterwerte im eingeklappten Zustand als Chips dargestellt werden. Default: true.                               |
+| luxHideChipsBorder      | boolean         | Gibt an, ob der Rahmen um die Chips ausgeblendet wird. Default: false.                                                          |
+| luxHideMenu             | boolean         | Gibt an, ob das Filtermenü im oberen Bereich ausgeblendet werden soll. Default: false.                                          |
+| luxStoredFilters        | LuxFilter[]     | Ein Array mit den vorhandenen Filtern. Default: [].                                                                             |
+| luxDisableShortcut      | boolean         | Property, die das Tastaturkürzel für das Auslösen des Filters unterdrückt. Default: false.                                      |
+| luxShowAsCard           | boolean         | Stellt die Filter-Form als Card dar. Default: false.                                                                            |
+| luxExpandedLabelOpen    | string          | Label (Tooltip/Aria-Label) des Buttons zum Aufklappen. Ohne Angabe wird ein Standardtext verwendet. Default: ''.                |
+| luxExpandedLabelClose   | string          | Label (Tooltip/Aria-Label) des Buttons zum Zuklappen. Ohne Angabe wird ein Standardtext verwendet. Default: ''.                 |
+| luxShowSaveAction       | boolean         | Gibt an, ob im Filtermenü die Aktion zum Speichern eines Filters angezeigt wird. Default: true.                                 |
+| luxShowLoadAction       | boolean         | Gibt an, ob im Filtermenü die Aktion zum Laden eines gespeicherten Filters angezeigt wird. Default: true.                       |
+| luxFilterExpanded       | boolean         | Gibt an, ob der Filter auf-/zugeklappt dargestellt wird. Two-Way-Binding über `[(luxFilterExpanded)]` möglich. Default: false.  |
+| luxFilterValues         | any             | Die aktuellen Filterwerte als Objekt (Schlüssel = luxControlBinding bzw. Name des Signal-Form-Felds). Default: {}.              |
+| luxSignalForm           | FieldTree       | Optionales Angular Signal Form für Filterfelder mit `[formField]`. Ohne Angabe bleibt der bisherige Reactive-Forms-Modus aktiv. |
 
 ### @Output
 
-| Name                    | Typ       | Beschreibung                                                                                                                                                          |
-| ----------------------- | --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| luxOnFilter             | any       | Output-Event welches ausgelöst wird, wenn der Filter-Button gedrückt wird. Als Daten wird ein Objekt mit den Filterwerten übergeben (im Code als `string` typisiert). |
-| luxOnSave               | LuxFilter | Output-Event welches ausgelöst wird, wenn ein neuer Filter gespeichert wird.                                                                                          |
-| luxOnLoad               | string    | Output-Event welches ausgelöst wird, wenn ein Filter geladen werden soll. Übergeben wird der Name des Filters.                                                        |
-| luxOnDelete             | LuxFilter | Output-Event welches ausgelöst wird, wenn ein Filter gelöscht werden soll.                                                                                            |
-| luxOnReset              | void      | Output-Event welches ausgelöst wird, wenn der aktuelle Filter zurückgesetzt werden soll.                                                                              |
-| luxFilterExpandedChange | boolean   | Output-Event welches ausgelöst wird, wenn der Filter ein-/ausgeklappt wird (Grundlage von `[(luxFilterExpanded)]`).                                                   |
+| Name                    | Typ       | Beschreibung                                                                                                        |
+| ----------------------- | --------- | ------------------------------------------------------------------------------------------------------------------- |
+| luxOnFilter             | Objekt    | Output-Event beim Filtern; liefert ein Objekt mit den aktuellen Filterwerten.                                       |
+| luxOnSave               | LuxFilter | Output-Event welches ausgelöst wird, wenn ein neuer Filter gespeichert wird.                                        |
+| luxOnLoad               | string    | Output-Event welches ausgelöst wird, wenn ein Filter geladen werden soll. Übergeben wird der Name des Filters.      |
+| luxOnDelete             | LuxFilter | Output-Event welches ausgelöst wird, wenn ein Filter gelöscht werden soll.                                          |
+| luxOnReset              | void      | Output-Event welches ausgelöst wird, wenn der aktuelle Filter zurückgesetzt werden soll.                            |
+| luxFilterExpandedChange | boolean   | Output-Event welches ausgelöst wird, wenn der Filter ein-/ausgeklappt wird (Grundlage von `[(luxFilterExpanded)]`). |
 
 ## Components
 
@@ -107,7 +127,7 @@ Ein LuxFilterLoadDialogComponent zeigt die vorhandenen Filter an und bietet eine
 
 ### LuxFilterItemDirective
 
-Über die LuxFilterItemDirective werden die Filteritems bestimmt. Die Direktive wird an ein LUX-Formularelement gesetzt, das über `luxControlBinding` angebunden ist.
+Über die LuxFilterItemDirective werden die Filteritems bestimmt. Die Direktive wird an ein LUX-Formularelement gesetzt, das je nach Modus über `luxControlBinding` oder `[formField]` angebunden ist.
 
 #### Allgemein
 
@@ -140,18 +160,20 @@ Ein LuxFilterLoadDialogComponent zeigt die vorhandenen Filter an und bietet eine
 
 Die statische Property `LuxFilterItem.DEFAULT_VALUES` (`[undefined, null, false, '']`) enthält die Standardwerte für `defaultValues`.
 
-| Name            | Typ                                             | Beschreibung                                                                                                      |
-| --------------- | ----------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| label           | string                                          | Eine Bezeichnung (z.B. Land).                                                                                     |
-| binding         | string                                          | Ein Binding (z.B. country).                                                                                       |
-| component       | LuxFilterableFormComponent\<T>                  | Die Formularkomponente (z.B. lux-input). Struktureller Typ mit `luxControlBinding`, `luxLabel` und `formControl`. |
-| value           | T                                               | Der Wert.                                                                                                         |
-| defaultValues   | any[]                                           | Die Defaultwerte. Default: `[...LuxFilterItem.DEFAULT_VALUES]`.                                                   |
-| color           | LuxThemePalette                                 | Eine Farbe. Default: 'primary'.                                                                                   |
-| disabled        | boolean                                         | Gibt an, ob das Filteritem deaktiviert ist. Default: false.                                                       |
-| hidden          | boolean                                         | Gibt an, ob das Filteritem ausgeblendet ist. Default: false.                                                      |
-| multiValueIndex | number                                          | Index des Werts bei Mehrfachauswahl (ein Chip je Wert). Default: -1.                                              |
-| renderFn        | (filter: LuxFilterItem\<T>, value: T) => string | Die Render-Funktion liefert die Bezeichnung für den Filterwert als Chip.                                          |
+| Name            | Typ                                             | Beschreibung                                                                                                                           |
+| --------------- | ----------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| label           | string                                          | Eine Bezeichnung (z.B. Land).                                                                                                          |
+| binding         | string                                          | Ein Binding (z.B. country).                                                                                                            |
+| component       | LuxFilterableFormComponent\<T>                  | Die Formularkomponente (z.B. lux-input). Struktureller Typ mit `luxControlBinding`, `luxLabel` und `formControl` für den Legacy-Modus. |
+| field?          | Field\<T>                                       | Das angebundene Signal-Form-Feld, falls `[luxSignalForm]` verwendet wird.                                                              |
+| resetValue      | T                                               | Der Resetwert des Filter-Elements; im Signal-Modus bei fehlendem expliziten Standardwert der ursprüngliche Modellwert.                 |
+| value           | T                                               | Der Wert.                                                                                                                              |
+| defaultValues   | any[]                                           | Die Defaultwerte. Default: `[...LuxFilterItem.DEFAULT_VALUES]`.                                                                        |
+| color           | LuxThemePalette                                 | Eine Farbe. Default: 'primary'.                                                                                                        |
+| disabled        | boolean                                         | Gibt an, ob das Filteritem deaktiviert ist. Default: false.                                                                            |
+| hidden          | boolean                                         | Gibt an, ob das Filteritem ausgeblendet ist. Default: false.                                                                           |
+| multiValueIndex | number                                          | Index des Werts bei Mehrfachauswahl (ein Chip je Wert). Default: -1.                                                                   |
+| renderFn        | (filter: LuxFilterItem\<T>, value: T) => string | Die Render-Funktion liefert die Bezeichnung für den Filterwert als Chip.                                                               |
 
 ## Beispiele
 

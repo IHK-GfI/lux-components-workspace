@@ -1,5 +1,6 @@
 import { JsonPipe } from '@angular/common';
 import { Component, OnDestroy, OnInit, inject, signal, ChangeDetectionStrategy } from '@angular/core';
+import { FormField, form, required } from '@angular/forms/signals';
 import {
   LuxAutocompleteComponent,
   LuxButtonComponent,
@@ -25,6 +26,8 @@ import {
   LuxUtil
 } from '@ihk-gfi/lux-components';
 import { Subscription } from 'rxjs';
+import { DemoMarkerType } from '../../base/status-marker/status-marker.model';
+import { StatusMarkerComponent } from '../../base/status-marker/status-marker.component';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
@@ -57,7 +60,9 @@ import { CustomFilterItemComponent } from './custom-filter-item.component';
     ExampleBaseSimpleOptionsComponent,
     ExampleBaseAdvancedOptionsComponent,
     JsonPipe,
-    CustomFilterItemComponent
+    CustomFilterItemComponent,
+    FormField,
+    StatusMarkerComponent
   ]
 })
 export class FilterExampleComponent implements OnInit, OnDestroy {
@@ -93,6 +98,10 @@ export class FilterExampleComponent implements OnInit, OnDestroy {
   readonly initFilterAc = signal<any>({});
   readonly currentFilter = signal<any>({});
   readonly currentFilterAc = signal<any>({});
+  readonly signalFilterModel = signal({ input: '', toggle: false });
+  readonly signalFilterForm = form(this.signalFilterModel, (path) => required(path.input));
+  readonly signalFilterResult = signal<Record<string, unknown>>({});
+  readonly markerTypeNew = DemoMarkerType.New;
   readonly replaceFilterJson = signal(`{
   "input": "Lorem ipsum",
   "datepicker": "${LuxUtil.newDateWithoutTime().toISOString()}",

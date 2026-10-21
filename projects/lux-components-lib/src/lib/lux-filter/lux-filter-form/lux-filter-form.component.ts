@@ -4,8 +4,10 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  Injector,
   OnDestroy,
   OnInit,
+  afterNextRender,
   computed,
   contentChild,
   contentChildren,
@@ -17,6 +19,7 @@ import {
   signal
 } from '@angular/core';
 import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import type { FieldTree } from '@angular/forms/signals';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { Subscription } from 'rxjs';
 import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.component';
@@ -117,10 +120,11 @@ export class LuxFilterFormComponent implements OnInit, AfterViewInit, OnDestroy 
 
   readonly luxFilterExpanded = model(false);
   readonly luxFilterValues = input<any>({});
+  readonly luxSignalForm = input<FieldTree<Record<string, any>> | undefined>(undefined);
 
   readonly luxOnSave = output<LuxFilter>();
   readonly luxOnLoad = output<string>();
-  readonly luxOnFilter = output<string>();
+  readonly luxOnFilter = output<Record<string, any>>();
   readonly luxOnDelete = output<LuxFilter>();
   readonly luxOnReset = output<void>();
 
@@ -143,6 +147,7 @@ export class LuxFilterFormComponent implements OnInit, AfterViewInit, OnDestroy 
 
   private dialogService = inject(LuxDialogService);
   private cdr = inject(ChangeDetectorRef);
+  private injector = inject(Injector);
   private mediaQuery = inject(LuxMediaQueryObserverService);
   private lastAppliedFilterValues: any = undefined;
 
@@ -163,7 +168,7 @@ export class LuxFilterFormComponent implements OnInit, AfterViewInit, OnDestroy 
       if (!this.initComplete()) return;
 
       const newFilter = this.createFilterObject();
-      this.filterForm.patchValue(newFilter);
+      this.applyFilterValues(newFilter);
       this.onFilter();
     });
   }
@@ -220,7 +225,7 @@ export class LuxFilterFormComponent implements OnInit, AfterViewInit, OnDestroy 
   onSave(filterName: string) {
     const newFilter = new LuxFilter();
     newFilter.name = filterName;
-    newFilter.data = JSON.parse(JSON.stringify(this.filterForm.value));
+    newFilter.data = JSON.parse(JSON.stringify(this.currentFilterValues()));
 
     this.onFilter();
 
@@ -232,7 +237,7 @@ export class LuxFilterFormComponent implements OnInit, AfterViewInit, OnDestroy 
     // dass der Aufrufer nicht alle Filterwerte überschreibt. Vielleicht sind auch neue
     // Filterwerte hinzugekommen, etc.
     this.formElementes.forEach((item) => {
-      this.filterForm.get(item.filterItem.binding)!.setValue(item.filterItem.defaultValues[0]);
+      this.setFilterValue(item.filterItem, item.filterItem.resetValue);
     });
 
     // Filter zuklappen.
@@ -247,7 +252,7 @@ export class LuxFilterFormComponent implements OnInit, AfterViewInit, OnDestroy 
   onReset() {
     // Hier werden alle Filter zurückgesetzt.
     this.formElementes.forEach((item) => {
-      this.filterForm.get(item.filterItem.binding)!.setValue(item.filterItem.defaultValues[0]);
+      this.setFilterValue(item.filterItem, item.filterItem.resetValue);
     });
 
     // Filtern...
@@ -272,14 +277,14 @@ export class LuxFilterFormComponent implements OnInit, AfterViewInit, OnDestroy 
     ) {
       // Fall: Multiselect
       // Kopie erstellen und nicht nur das bestehende Array manipulieren.
-      const newSelected = [...this.filterForm.get(removedFilterItem.binding)!.value];
+      const newSelected = [...this.getFilterValue(removedFilterItem)];
       // Gelöschten Wert entfernen.
       newSelected.splice(removedFilterItem.multiValueIndex, 1);
       // Das neue Array in das Formularcontrol setzen.
-      this.filterForm.get(removedFilterItem.binding)!.setValue(newSelected);
+      this.setFilterValue(removedFilterItem, newSelected);
     } else {
       // Fall: Wert (einfach)
-      this.filterForm.get(removedFilterItem.binding)!.setValue(removedFilterItem.defaultValues[0]);
+      this.setFilterValue(removedFilterItem, removedFilterItem.resetValue);
     }
 
     // Filtern...
@@ -330,7 +335,8 @@ export class LuxFilterFormComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   onFilterIntern(changeExpandState: boolean) {
-    if (this.filterForm.valid) {
+    const signalForm = this.luxSignalForm();
+    if (signalForm ? this.isSignalFormValid(signalForm) : this.filterForm.valid) {
       if (changeExpandState) {
         // Filter zuklappen.
         this.luxFilterExpanded.set(false);
@@ -340,9 +346,13 @@ export class LuxFilterFormComponent implements OnInit, AfterViewInit, OnDestroy 
       this.updateFilterChips();
 
       // Die Interessenten darüber informieren, dass gefiltert werden soll.
-      this.luxOnFilter.emit(JSON.parse(JSON.stringify(this.filterForm.value)));
+      this.luxOnFilter.emit(JSON.parse(JSON.stringify(this.currentFilterValues())));
     } else {
-      LuxUtil.showValidationErrors(this.filterForm);
+      if (signalForm) {
+        signalForm().markAsTouched();
+      } else {
+        LuxUtil.showValidationErrors(this.filterForm);
+      }
     }
   }
 
@@ -351,11 +361,32 @@ export class LuxFilterFormComponent implements OnInit, AfterViewInit, OnDestroy 
     // D.h. initial gibt es keine Filteritems, aber dann werden die Filteritems über ngAfterContentInit hinzugefügt.
     this.registerFilterItemsTimeout = setTimeout(() => {
       filterItemDirectives.forEach((item) => {
-        this.filterForm.addControl(item.filterItem.binding, item.filterItem.component.formControl);
+        if (this.luxSignalForm()) {
+          if (!item.filterItem.field || this.luxSignalForm()![item.filterItem.binding] !== item.filterItem.field) {
+            throw new Error(
+              `Das Filterfeld "${item.filterItem.binding}" muss mit [formField] an ein direktes Feld von luxSignalForm gebunden sein.`
+            );
+          }
+        } else {
+          if (item.filterItem.field) {
+            throw new Error(`Das Filterfeld "${item.filterItem.binding}" benötigt [luxSignalForm] am Filterformular.`);
+          }
+          const formControl = item.filterItem.component.formControl;
+          if (!formControl) {
+            throw new Error(`Das Filterfeld "${item.filterItem.binding}" hat kein FormControl.`);
+          }
+          this.filterForm.addControl(item.filterItem.binding, formControl);
+        }
         this.formElementes.push(item);
       });
 
-      this.filterForm.patchValue(this.luxFilterValues());
+      if (this.luxSignalForm()) {
+        if (this.luxFilterValues() && Object.keys(this.luxFilterValues()).length) {
+          this.applyFilterValues(this.luxFilterValues());
+        }
+      } else {
+        this.filterForm.patchValue(this.luxFilterValues());
+      }
 
       // Der Filter ist jetzt vollständig. D.h. alle Formularelemente sind bekannt,
       // die zugehörigen Controls wurden erzeugt und die Werte gesetzt.
@@ -397,7 +428,7 @@ export class LuxFilterFormComponent implements OnInit, AfterViewInit, OnDestroy 
           item.filterItem.defaultValues &&
           item.filterItem.defaultValues.length > 0
         ) {
-          newFilter[item.filterItem.binding] = item.filterItem.defaultValues[0];
+          newFilter[item.filterItem.binding] = item.filterItem.resetValue;
         }
       });
 
@@ -408,17 +439,88 @@ export class LuxFilterFormComponent implements OnInit, AfterViewInit, OnDestroy 
     return newFilter;
   }
 
+  private currentFilterValues(): Record<string, any> {
+    if (!this.luxSignalForm()) {
+      return this.filterForm.value;
+    }
+
+    // Wie FormGroup.value: Nur aktive Filterelemente liefern einen Wert - deaktivierte und ausgeblendete
+    // Felder sowie Modellfelder ohne luxFilterItem bleiben außen vor.
+    const values: Record<string, any> = {};
+    this.formElementes.forEach((item) => {
+      if (!this.isFilterItemInactive(item.filterItem)) {
+        values[item.filterItem.binding] = this.getFilterValue(item.filterItem);
+      }
+    });
+    return values;
+  }
+
+  private isSignalFormValid(signalForm: FieldTree<Record<string, any>>): boolean {
+    // Wie FormGroup.valid: Es zählen nur die aktiven Filterelemente (ein per luxFilterHidden
+    // ausgeblendetes Pflichtfeld blockiert das Filtern nicht) sowie Fehler direkt am Formular.
+    return (
+      signalForm().errors().length === 0 &&
+      this.formElementes.every((item) => this.isFilterItemInactive(item.filterItem) || item.filterItem.field!().valid())
+    );
+  }
+
+  private isFilterItemInactive(item: LuxFilterItem<any>): boolean {
+    if (item.hidden) {
+      return true;
+    }
+    return item.field ? item.field().disabled() || item.field().hidden() : !!item.component.formControl?.disabled;
+  }
+
+  private getFilterValue(item: LuxFilterItem<any>): any {
+    return item.field ? item.field().value() : this.filterForm.get(item.binding)!.value;
+  }
+
+  private setFilterValue(item: LuxFilterItem<any>, value: any): void {
+    if (item.field) {
+      item.field().value.set(value);
+    } else {
+      this.filterForm.get(item.binding)!.setValue(value);
+    }
+  }
+
+  private applyFilterValues(values: Record<string, any>): void {
+    if (this.luxSignalForm()) {
+      this.formElementes.forEach((item) => {
+        if (Object.prototype.hasOwnProperty.call(values, item.filterItem.binding)) {
+          this.setFilterValue(item.filterItem, values[item.filterItem.binding]);
+        }
+      });
+    } else {
+      this.filterForm.patchValue(values);
+    }
+  }
+
   private updateFilterChips() {
+    this.buildFilterChips();
+
+    if (this.luxSignalForm()) {
+      // Datum-/Zeit-Renderer lesen den formatierten Text aus dem Input-Element. Ein Signal-Form-Wert
+      // landet dort erst mit dem nächsten Rendern - die Chips daher danach noch einmal aufbauen.
+      afterNextRender(() => this.buildFilterChips(), { injector: this.injector });
+    }
+  }
+
+  private buildFilterChips() {
     if (this.initComplete()) {
       const newFilterItems: LuxFilterItem<any>[] = [];
 
       this.formElementes.forEach((formItem) => {
-        if (formItem.filterItem && formItem.filterItem.binding && this.filterForm.get(formItem.filterItem.binding)) {
-          const value = this.filterForm.get(formItem.filterItem.binding)!.value;
+        if (
+          formItem.filterItem &&
+          formItem.filterItem.binding &&
+          (formItem.filterItem.field || this.filterForm.get(formItem.filterItem.binding))
+        ) {
+          const value = this.getFilterValue(formItem.filterItem);
 
           if (
-            !formItem.filterItem.component.formControl.disabled &&
-            formItem.filterItem.defaultValues.findIndex((defaultValue) => defaultValue === value) === -1
+            !this.isFilterItemInactive(formItem.filterItem) &&
+            formItem.filterItem.defaultValues.findIndex((defaultValue) => defaultValue === value) === -1 &&
+            (!formItem.filterItem.field || formItem.filterItem.resetValue !== value)
           ) {
             if (Array.isArray(value)) {
               let i = 0;
