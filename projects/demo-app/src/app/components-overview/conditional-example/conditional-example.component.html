@@ -16,6 +16,7 @@
           [luxOptions]="employmentOptions"
           [(luxSelected)]="employment"
           [luxOrientationVertical]="false"
+          [luxNoBottomLabel]="true"
         ></lux-radio-ac>
 
         <lux-input-ac
@@ -46,12 +47,13 @@
           luxLabel="Abweichende Rechnungsadresse"
           luxTagId="conditional-billing-address"
           [(luxChecked)]="differentBillingAddress"
+          [luxNoLabels]="true"
         ></lux-checkbox-ac>
 
         <lux-card *luxConditional="differentBillingAddress(); announce: 'Rechnungsadresse'" luxTitle="Rechnungsadresse">
           <lux-card-content>
             <lux-input-ac luxLabel="Straße und Hausnummer" luxTagId="conditional-billing-street"></lux-input-ac>
-            <lux-input-ac luxLabel="PLZ" luxTagId="conditional-billing-zip"></lux-input-ac>
+            <lux-input-ac luxLabel="Postleitzahl" luxTagId="conditional-billing-zip"></lux-input-ac>
             <lux-input-ac luxLabel="Ort" luxTagId="conditional-billing-city"></lux-input-ac>
           </lux-card-content>
         </lux-card>

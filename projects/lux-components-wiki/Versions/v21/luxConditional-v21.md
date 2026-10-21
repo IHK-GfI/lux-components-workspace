@@ -62,9 +62,9 @@ import { LuxConditionalDirective } from '@ihk-gfi/lux-components/lux-conditional
 Bei reduzierter Bewegung entfällt die Ausblendanimation bewusst: Ohne Höhenanimation stünde der ausblendende Bereich kurz neben
 dem neuen und das Layout würde springen.
 
-Ob reduzierte Bewegung aktiv ist, entscheidet das Betriebssystem. Unter Windows ist sie aktiv, wenn
-"Einstellungen > Barrierefreiheit > Visuelle Effekte > Animationseffekte" ausgeschaltet ist (ältere Versionen: "Animationen in Windows anzeigen"),
-unter macOS bei "Bedienungshilfen > Anzeige > Bewegung reduzieren". Wer die volle Animation beim Testen nicht sieht, sollte dort zuerst nachsehen.
+Ob reduzierte Bewegung aktiv ist, entscheidet das Betriebssystem. Unter Windows ist sie aktiv, wenn die Animationen ausgeschaltet sind.
+Die Einstellung findet man am schnellsten über die Suche in den Windows-Einstellungen mit dem Begriff "Animation"
+(Windows 11: "Animationseffekte", Windows 10: "Animationen in Windows anzeigen"), unter macOS bei "Bedienungshilfen > Anzeige > Bewegung reduzieren". Wer die volle Animation beim Testen nicht sieht, sollte dort zuerst nachsehen.
 In den Chrome-DevTools lässt sich der Modus unter "Rendering > Emulate CSS media feature prefers-reduced-motion" umschalten.
 
 Die Animation nutzt `animate.enter` und `animate.leave` aus `@angular/core`, nicht das veraltete `@angular/animations`.
@@ -173,7 +173,7 @@ Die Card wird als Ganzes animiert.
 <lux-card *luxConditional="differentBillingAddress(); announce: 'Rechnungsadresse'" luxTitle="Rechnungsadresse">
   <lux-card-content>
     <lux-input-ac luxLabel="Straße und Hausnummer"></lux-input-ac>
-    <lux-input-ac luxLabel="PLZ"></lux-input-ac>
+    <lux-input-ac luxLabel="Postleitzahl"></lux-input-ac>
     <lux-input-ac luxLabel="Ort"></lux-input-ac>
   </lux-card-content>
 </lux-card>
