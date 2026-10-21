@@ -152,7 +152,7 @@ $flex-directions: (
   "row": row,
   "row-reverse": row-reverse,
   "col": column,
-  "col-revers": column-reverse
+  "col-reverse": column-reverse
 );
 @each $key, $val in $flex-directions {
   .lux-flex-#{$key} {
@@ -183,8 +183,8 @@ $flex-values: (
 }
 
 // Flex Grow / Shrink
-$steps: 0, 1, 2, 3, 4, 5;
-@each $step in $steps {
+$flex-grow-steps: 0, 1, 2, 3, 4, 5;
+@each $step in $flex-grow-steps {
   .lux-flex-grow-#{$step} {
     flex-grow: $step;
   }
@@ -241,7 +241,7 @@ $justify-self-values: (
   "center": center,
   "stretch": stretch
 );
-@each $key, $val in $justify-items-values {
+@each $key, $val in $justify-self-values {
   .lux-justify-self-#{$key} {
     justify-self: $val;
   }
@@ -331,9 +331,10 @@ $place-self-values: (
   "start": start,
   "end": end,
   "auto": auto,
+  "baseline": baseline,
   "stretch": stretch
 );
-@each $key, $val in $place-items-values {
+@each $key, $val in $place-self-values {
   .lux-place-self-#{$key} {
     place-self: $val;
   }
@@ -585,7 +586,7 @@ $row-steps: 1, 2, 3, 4, 5, 6;
   }
 
   // Flex Grow / Shrink
-  @each $step in $steps {
+  @each $step in $flex-grow-steps {
     .#{$bp}\:lux-flex-grow-#{$step} {
       flex-grow: $step;
     }
@@ -615,7 +616,7 @@ $row-steps: 1, 2, 3, 4, 5, 6;
   }
 
   // Justify self
-  @each $key, $val in $justify-items-values {
+  @each $key, $val in $justify-self-values {
     .#{$bp}\:lux-justify-self-#{$key} {
       justify-self: $val;
     }
@@ -657,7 +658,7 @@ $row-steps: 1, 2, 3, 4, 5, 6;
   }
 
   // Place - Self
-  @each $key, $val in $place-items-values {
+  @each $key, $val in $place-self-values {
     .#{$bp}\:lux-place-self-#{$key} {
       place-self: $val;
     }

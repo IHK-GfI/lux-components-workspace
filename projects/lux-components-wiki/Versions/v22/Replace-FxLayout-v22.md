@@ -6,6 +6,8 @@ Die Bibliothek flex-layout von Angular ist deprecated und wird nicht mehr weiter
 
 Die offiziellen Migrationsempfehlungen lauten: eigenes CSS verwenden oder auf das CSS-Framework Tailwind wechseln.
 
+Für `fxLayout="column-reverse"` die Klasse `lux-flex-col-reverse` verwenden. Die bisher irrtümlich erzeugte Schreibweise `lux-flex-col-revers` entfällt mit v22, auch mit Breakpoint-Präfix.
+
 Auf dieser Seite haben wir die Direktiven von Flex-Layout gesammelt und mögliche Ergänzungsregeln beigefügt.
 
 - [Austauschmöglichkeiten für Angular/Flex-Layout](#austauschmöglichkeiten-für-angularflex-layout)
