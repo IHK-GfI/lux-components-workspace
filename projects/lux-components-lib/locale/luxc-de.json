@@ -60,6 +60,10 @@
       "input.placeholder.lbl": "eingeben oder auswählen",
       "remove": "entfernen"
     },
+    "conditional": {
+      "shown": "Eingeblendet: {{labels}}",
+      "hidden": "Ausgeblendet: {{labels}}"
+    },
     "consent": {
       "always_active": "immer aktiv",
       "button_accept_all": "Alle akzeptieren",

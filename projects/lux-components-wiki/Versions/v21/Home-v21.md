@@ -131,6 +131,7 @@ Es wird empfohlen, das Layout mit den Komponenten aus dem [Layout](#layout) zu e
 - [luxAriaRole](luxAriaRole-v21)
 - [luxAutofocus](luxAutofocus-v21)
 - [luxBadgeNotification](luxBadgeNotification-v21)
+- [luxConditional](luxConditional-v21)
 - [luxInfiniteScroll](luxInfiniteScroll-v21)
 - [luxRipple](luxRipple-v21)
 - [luxTabIndex](luxTabIndex-v21)

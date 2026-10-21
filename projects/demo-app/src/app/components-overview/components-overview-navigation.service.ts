@@ -64,6 +64,7 @@ export class ComponentsOverviewNavigationService implements OnDestroy {
     this.create('common', 'Table-Server'),
     this.create('common', 'Textbox'),
     this.create('directive', 'Badge-Notification'),
+    this.create('directive', 'Conditional', DemoMarkerType.New),
     this.create('directive', 'Infinite-Scrolling'),
     this.create('directive', 'Ripple'),
     this.create('directive', 'Tabindex'),

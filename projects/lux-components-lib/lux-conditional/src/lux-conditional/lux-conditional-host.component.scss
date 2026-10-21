@@ -1,0 +1,83 @@
+// Werte nach UX-Pattern "Bedingte Formularbereiche"; LUX bietet noch keine Motion-Variablen
+$enter-duration: 220ms;
+$enter-easing: cubic-bezier(0, 0, 0, 1);
+$leave-duration: 160ms;
+$leave-easing: cubic-bezier(0.3, 0, 1, 1);
+$reduced-duration: 80ms;
+
+// Ohne Kapselung (siehe Komponente), deshalb Elementselektor statt :host und nur Klassen mit Präfix lux-conditional.
+lux-conditional {
+  display: contents;
+}
+
+// Höhe ohne JavaScript: das Panel animiert seine einzige Grid-Zeile zwischen 0fr und 1fr
+.lux-conditional__panel {
+  display: grid;
+  grid-template-rows: 1fr;
+}
+
+.lux-conditional__content {
+  min-height: 0;
+}
+
+.lux-conditional__panel--enter > .lux-conditional__content,
+.lux-conditional__panel--leave > .lux-conditional__content {
+  overflow: hidden;
+}
+
+.lux-conditional__panel--enter {
+  animation: lux-conditional-enter $enter-duration $enter-easing;
+}
+
+.lux-conditional__panel--leave {
+  animation: lux-conditional-leave $leave-duration $leave-easing forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lux-conditional__panel--enter {
+    animation: lux-conditional-fade-in $reduced-duration linear;
+  }
+
+  // Ohne Höhenanimation würde der ausblendende Bereich kurz neben dem neuen stehen und das Layout springen lassen.
+  // animation: none, damit Angular nicht auf ein animationend wartet, das bei display: none nie kommt.
+  // display: none, weil Angular das Element erst im nächsten Animation Frame entfernt.
+  .lux-conditional__panel--leave {
+    display: none;
+    animation: none;
+  }
+}
+
+@keyframes lux-conditional-enter {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+    grid-template-rows: 0fr;
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    grid-template-rows: 1fr;
+  }
+}
+
+@keyframes lux-conditional-leave {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+    grid-template-rows: 1fr;
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-4px);
+    grid-template-rows: 0fr;
+  }
+}
+
+@keyframes lux-conditional-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
