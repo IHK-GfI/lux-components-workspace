@@ -31,6 +31,19 @@ lux-menu {
   padding: 4px 0;
   position: relative;
 
+  // Weiterhin abschneiden, aber erst eine Outline-Breite außerhalb des Containers,
+  // damit Fokusringe von Trigger und Buttons am Rand vollständig sichtbar bleiben.
+  // Browser ohne overflow-clip-margin bleiben bei overflow: hidden (Fokusring am Rand dort weiterhin angeschnitten).
+  @supports (overflow-clip-margin: 1px) {
+    overflow: clip;
+    overflow-clip-margin: var(--lux-theme-outline-width, 4px);
+  }
+
+  // Ohne Extended-Modus enthält der Container nur den Trigger, hier muss nichts abgeschnitten werden.
+  &.lux-menu-collapsed {
+    overflow: visible;
+  }
+
   > lux-button {
     @include mat.button-overrides(
       (

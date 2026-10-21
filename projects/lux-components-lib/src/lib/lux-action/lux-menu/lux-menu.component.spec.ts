@@ -8,8 +8,8 @@ import { By } from '@angular/platform-browser';
 import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxThemePalette } from '../../lux-util/lux-colors.enum';
-import { LuxMenuItemComponent } from '../lux-menu/lux-menu-subcomponents/lux-menu-item.component';
-import { LuxMenuTriggerComponent } from '../lux-menu/lux-menu-subcomponents/lux-menu-trigger.component';
+import { LuxMenuItemComponent } from './lux-menu-subcomponents/lux-menu-item.component';
+import { LuxMenuTriggerComponent } from './lux-menu-subcomponents/lux-menu-trigger.component';
 import { LuxMenuComponent } from './lux-menu.component';
 
 describe('LuxMenuComponent', () => {
@@ -109,6 +109,17 @@ describe('LuxMenuComponent', () => {
 
     expect(defaultTriggerNode).toBeNull();
     expect(mockTriggerNode).not.toBeNull();
+  });
+
+  it('Sollte die Klasse lux-menu-collapsed nur im Nicht-Extended-Modus setzen', async () => {
+    let menuExtendedNode = fixture.debugElement.query(By.css('div.lux-menu-extended'));
+    expect(menuExtendedNode.nativeElement.classList).not.toContain('lux-menu-collapsed');
+
+    component.displayExtended.set(false);
+    fixture.detectChanges();
+
+    menuExtendedNode = fixture.debugElement.query(By.css('div.lux-menu-extended'));
+    expect(menuExtendedNode.nativeElement.classList).toContain('lux-menu-collapsed');
   });
 
   it('Sollte nur n (n = luxMaximumExtend) Menu-Items darstellen', async () => {
