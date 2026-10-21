@@ -46,6 +46,7 @@ import {
 import { LuxDialogService } from '../../lux-popups/lux-dialog/lux-dialog.service';
 import { LuxThemePalette } from '../../lux-util/lux-colors.enum';
 import { LuxMediaQueryObserverService } from '../../lux-util/lux-media-query-observer.service';
+import { luxOutputObserved } from '../../lux-util/lux-output-observed';
 import { LuxUtil } from '../../lux-util/lux-util';
 import { LuxFilter } from '../lux-filter-base/lux-filter';
 import { LuxFilterItem } from '../lux-filter-base/lux-filter-item';
@@ -112,8 +113,6 @@ export class LuxFilterFormComponent implements OnInit, AfterViewInit, OnDestroy 
   readonly luxShowAsCard = input(false);
   readonly luxExpandedLabelOpen = input('');
   readonly luxExpandedLabelClose = input('');
-  readonly luxShowSaveAction = input(true);
-  readonly luxShowLoadAction = input(true);
 
   readonly luxFilterExpanded = model(false);
   readonly luxFilterValues = input<any>({});
@@ -147,6 +146,9 @@ export class LuxFilterFormComponent implements OnInit, AfterViewInit, OnDestroy 
   private lastAppliedFilterValues: any = undefined;
 
   private readonly filterValuesSnapshot = computed(() => JSON.parse(JSON.stringify(this.luxFilterValues())));
+  // Die Speichern-/Laden-Aktionen werden nur angeboten, wenn auf luxOnSave bzw. luxOnLoad reagiert wird.
+  protected readonly luxOnSaveObserved = luxOutputObserved(this.luxOnSave);
+  protected readonly luxOnLoadObserved = luxOutputObserved(this.luxOnLoad);
 
   constructor() {
     this.filterForm = new FormGroup({});

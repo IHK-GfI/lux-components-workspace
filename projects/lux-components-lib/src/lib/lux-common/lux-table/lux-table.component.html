@@ -212,9 +212,9 @@
           MS     = luxMultiSelect
           CC     = luxMultiSelectOnlyCheckboxClick
           DIS    = rowData[luxMultiSelectDisabledProperty] === true
-          DBLobs = luxShowDoubleClickedCursor()
-          SGLobs = luxShowSingleClickedCursor()
-          SELobs = luxShowSelectedChangeCursor()
+          DBLobs = luxDoubleClickedObserved()
+          SGLobs = luxSingleClickedObserved()
+          SELobs = luxSelectedChangeObserved()
         -->
           <tr
             mat-row
@@ -226,14 +226,14 @@
               'lux-cursor-pointer':
                 (luxMultiSelect() &&
                   !luxMultiSelectOnlyCheckboxClick() &&
-                  !luxShowDoubleClickedCursor() &&
+                  !luxDoubleClickedObserved() &&
                   !(luxMultiSelectDisabledProperty() && rowData[luxMultiSelectDisabledProperty()!] === true)) ||
                 (!luxMultiSelect() &&
-                  !luxShowDoubleClickedCursor() &&
+                  !luxDoubleClickedObserved() &&
                   !(luxMultiSelectDisabledProperty() && rowData[luxMultiSelectDisabledProperty()!] === true) &&
-                  luxShowSelectedChangeCursor()) ||
-                (!luxMultiSelect() && luxShowSingleClickedCursor()) ||
-                (!luxMultiSelect() && luxShowDoubleClickedCursor())
+                  luxSelectedChangeObserved()) ||
+                (!luxMultiSelect() && luxSingleClickedObserved()) ||
+                (!luxMultiSelect() && luxDoubleClickedObserved())
             }"
             (dblclick)="onDoubleClick($event, rowData)"
             (click)="onSingleClick($event, rowData, i)"

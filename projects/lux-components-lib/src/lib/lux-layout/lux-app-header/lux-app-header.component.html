@@ -26,12 +26,12 @@
             style="padding: 6px 5px"
             luxAriaLabel="{{ luxAriaTitleIconLabel() || ('luxc.app-header.aria.title_icon.lbl' | transloco) }}"
             [luxIconName]="luxIconName()"
-            [ngClass]="{ 'lux-cursor-pointer': luxClickable(), focused: luxClickable() }"
+            [ngClass]="{ 'lux-cursor-pointer': luxClickedObserved(), focused: luxClickedObserved() }"
             (click)="onClicked($event)"
             (keydown.enter)="onClicked($event)"
             (keydown.space)="onClicked($event)"
-            [attr.role]="luxClickable() ? 'link' : null"
-            [attr.tabindex]="luxClickable() ? '0' : null"
+            [attr.role]="luxClickedObserved() ? 'link' : null"
+            [attr.tabindex]="luxClickedObserved() ? '0' : null"
           />
         }
         @if (luxImageSrc() && !sideNav() && !mobileView()) {
@@ -41,12 +41,12 @@
             [luxImageSrc]="luxImageSrc()!"
             [luxImageHeight]="luxImageHeight()"
             [luxImageWidth]="'auto'"
-            [ngClass]="{ 'lux-cursor-pointer': luxClickable(), focused: luxClickable() }"
+            [ngClass]="{ 'lux-cursor-pointer': luxClickedObserved(), focused: luxClickedObserved() }"
             (click)="onClicked($event)"
             (keydown.enter)="onClicked($event)"
             (keydown.space)="onClicked($event)"
-            [attr.role]="luxClickable() ? 'link' : null"
-            [attr.tabindex]="luxClickable() ? '0' : null"
+            [attr.role]="luxClickedObserved() ? 'link' : null"
+            [attr.tabindex]="luxClickedObserved() ? '0' : null"
           />
         }
         <span
@@ -59,9 +59,9 @@
           (click)="onClicked($event)"
           (keydown.enter)="onClicked($event)"
           (keydown.space)="onClicked($event)"
-          [attr.role]="luxClickable() ? 'link' : null"
-          [attr.tabindex]="luxClickable() ? '0' : null"
-          [ngClass]="{ 'lux-cursor-pointer': luxClickable(), focused: luxClickable() }"
+          [attr.role]="luxClickedObserved() ? 'link' : null"
+          [attr.tabindex]="luxClickedObserved() ? '0' : null"
+          [ngClass]="{ 'lux-cursor-pointer': luxClickedObserved(), focused: luxClickedObserved() }"
           >{{ mobileView() ? luxAppTitleShort() : luxAppTitle() }}</span
         >
       </span>

@@ -82,7 +82,7 @@
       [luxColor]="luxButtonResetColor()"
       (luxClicked)="onReset()"
     />
-    @if (luxShowSaveAction()) {
+    @if (luxOnSaveObserved()) {
       <lux-menu-item
         luxLabel="{{ luxButtonSaveLabel() || ('luxc.filter.save.btn' | transloco) }}"
         [luxAlwaysVisible]="false"
@@ -90,7 +90,7 @@
         (luxClicked)="openSaveDialog()"
       />
     }
-    @if (luxShowLoadAction()) {
+    @if (luxOnLoadObserved()) {
       <lux-menu-item
         luxLabel="{{ luxButtonLoadLabel() || ('luxc.filter.load.btn' | transloco) }}"
         [luxAlwaysVisible]="false"
