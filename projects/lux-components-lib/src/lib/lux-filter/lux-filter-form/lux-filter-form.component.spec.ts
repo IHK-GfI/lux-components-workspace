@@ -143,7 +143,38 @@ describe('LuxFilterFormComponent', () => {
     expect(disableSpy.mock.calls.length).toBeLessThan(5);
     expect(enableSpy.mock.calls.length).toBeLessThan(5);
   });
+
+  it('Sollte Speichern/Laden anbieten, wenn auf luxOnSave/luxOnLoad reagiert wird', () => {
+    const filterComponent = component.filterComponent();
+
+    expect(filterComponent['luxOnSaveObserved']()).toBe(true);
+    expect(filterComponent['luxOnLoadObserved']()).toBe(true);
+  });
+
+  it('Sollte Speichern/Laden nicht anbieten, wenn nicht auf luxOnSave/luxOnLoad reagiert wird', () => {
+    const plainFixture = TestBed.createComponent(TestFilterFormWithoutSaveLoadComponent);
+    plainFixture.detectChanges();
+    const filterComponent = plainFixture.componentInstance.filterComponent();
+
+    expect(filterComponent['luxOnSaveObserved']()).toBe(false);
+    expect(filterComponent['luxOnLoadObserved']()).toBe(false);
+  });
 });
+
+@Component({
+  template: `
+    <lux-filter-form (luxOnFilter)="onFilter()">
+      <lux-input luxLabel="Input" luxControlBinding="input" luxFilterItem />
+    </lux-filter-form>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [LuxFilterFormComponent, LuxFilterItemDirective, LuxInputComponent]
+})
+class TestFilterFormWithoutSaveLoadComponent {
+  readonly filterComponent = viewChild.required(LuxFilterFormComponent);
+
+  onFilter() {}
+}
 
 @Component({
   template: `

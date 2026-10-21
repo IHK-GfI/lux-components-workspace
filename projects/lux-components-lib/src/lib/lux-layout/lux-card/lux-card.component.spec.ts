@@ -100,6 +100,11 @@ describe('LuxCardComponent', () => {
       const card = fixture.debugElement.query(By.css('.lux-cursor-pointer'));
       expect(card).toBeNull();
     });
+
+    it('Tabindex darf ohne luxClicked-Listener nicht gesetzt sein', async () => {
+      const card = fixture.debugElement.query(By.css('.lux-card')).nativeElement as HTMLElement;
+      expect(card.getAttribute('tabindex')).toBeNull();
+    });
   });
 
   describe('Mit Card Action', () => {
@@ -115,6 +120,11 @@ describe('LuxCardComponent', () => {
     it('Style lux-cursor-pointer muss gesetzt sein', async () => {
       const card = fixture.debugElement.query(By.css('.lux-cursor-pointer'));
       expect(card).not.toBeNull();
+    });
+
+    it('Tabindex muss mit luxClicked-Listener gesetzt sein', async () => {
+      const card = fixture.debugElement.query(By.css('.lux-card')).nativeElement as HTMLElement;
+      expect(card.getAttribute('tabindex')).toEqual('0');
     });
   });
 
@@ -404,7 +414,7 @@ class NoCardActionComponent {}
 
 @Component({
   template: `
-    <lux-card luxTitle="Lorem ipsum" [luxClickable]="true" (luxClicked)="test()">
+    <lux-card luxTitle="Lorem ipsum" (luxClicked)="test()">
       <lux-card-content> Lorem ipsum </lux-card-content>
     </lux-card>
   `,
