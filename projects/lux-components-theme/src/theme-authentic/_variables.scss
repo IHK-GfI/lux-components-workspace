@@ -549,7 +549,7 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-progress-track-default: var(--lux-theme-primary-90);
   --lux-theme-progress-red: #c00013;
   --lux-theme-progress-track-red: var(--lux-theme-warn-90);
-  --lux-theme-progress-green: var(--lux-theme-custom-green);
+  --lux-theme-progress-green: var(--lux-theme-accent-50);
   --lux-theme-progress-track-green: var(--lux-theme-accent-95);
   --lux-theme-progress-purple: var(--lux-theme-custom-purple);
   --lux-theme-progress-track-purple: var(--lux-theme-custom-purple-90);
@@ -557,13 +557,13 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-progress-track-blue: var(--lux-theme-primary-90);
   --lux-theme-progress-gray: var(--lux-theme-custom-gray);
   --lux-theme-progress-track-gray: var(--lux-theme-neutral-90);
-  --lux-theme-progress-orange: var(--lux-theme-custom-orange);
-  --lux-theme-progress-track-orange: var(--lux-theme-custom-orange-90);
-  --lux-theme-progress-yellow: var(--lux-theme-custom-yellow);
+  --lux-theme-progress-orange: var(--lux-theme-custom-orange-50);
+  --lux-theme-progress-track-orange: var(--lux-theme-custom-orange-95);
+  --lux-theme-progress-yellow: var(--lux-theme-custom-yellow-50);
   --lux-theme-progress-track-yellow: var(--lux-theme-custom-yellow-90);
-  --lux-theme-progress-pink: var(--lux-theme-custom-pink);
+  --lux-theme-progress-pink: var(--lux-theme-custom-pink-50);
   --lux-theme-progress-track-pink: var(--lux-theme-custom-pink-90);
-  --lux-theme-progress-lightblue: var(--lux-theme-custom-lightblue);
+  --lux-theme-progress-lightblue: var(--lux-theme-custom-lightblue-50);
   --lux-theme-progress-track-lightblue: var(--lux-theme-custom-lightblue-90);
 
   // LUX-Progress Muted
@@ -572,7 +572,7 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-progress-muted-red: var(--lux-theme-warn-80);
   --lux-theme-progress-muted-track-red: var(--lux-theme-warn-95);
   --lux-theme-progress-muted-green: var(--lux-theme-accent-80);
-  --lux-theme-progress-muted-track-green: var(--lux-theme-accent-98);
+  --lux-theme-progress-muted-track-green: var(--lux-theme-accent-95);
   --lux-theme-progress-muted-purple: var(--lux-theme-custom-purple-80);
   --lux-theme-progress-muted-track-purple: var(--lux-theme-custom-purple-95);
   --lux-theme-progress-muted-blue: var(--lux-theme-primary-80);
