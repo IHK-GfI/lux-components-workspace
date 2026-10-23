@@ -30,6 +30,7 @@ export class LuxTooltipDirective extends MatTooltip implements OnChanges, AfterV
 
   private truncationWatcher?: LuxTooltipTruncationWatcher;
   private viewInitialized = false;
+  private addedTabindex = false;
 
   @HostListener('longpress') _handleLongPress() {
     super.show(this.luxTooltipShowDelay);
@@ -58,11 +59,9 @@ export class LuxTooltipDirective extends MatTooltip implements OnChanges, AfterV
       this.luxLinkPlain.tooltipDirective = this;
     }
     if (this.luxActionNavAc && this.luxActionNavAc.buttonComponent) {
-      
       this.luxActionNavAc.buttonComponent.tooltipDirective = this;
     }
     if (this.luxActionNav && this.luxActionNav.buttonComponent) {
-      
       this.luxActionNav.buttonComponent.tooltipDirective = this;
     }
     if (this.luxMenu && this.luxMenu.defaultTriggerComponent) {
@@ -92,16 +91,34 @@ export class LuxTooltipDirective extends MatTooltip implements OnChanges, AfterV
 
   override ngOnDestroy(): void {
     this.truncationWatcher?.disconnect();
+    this.syncTabindex();
     super.ngOnDestroy();
   }
 
   /** Startet bzw. stoppt die Truncation-Beobachtung passend zu luxTooltipIfTruncated. */
   private syncTruncationWatch(): void {
     if (this.luxTooltipIfTruncated) {
-      this.truncationWatcher ??= new LuxTooltipTruncationWatcher(this.elementRef.nativeElement, () => this.syncDisabledState());
+      this.truncationWatcher ??= new LuxTooltipTruncationWatcher(this.elementRef.nativeElement, () => {
+        this.syncDisabledState();
+        this.syncTabindex();
+      });
       this.truncationWatcher.connect();
     } else {
       this.truncationWatcher?.disconnect();
+    }
+    this.syncTabindex();
+  }
+
+  private syncTabindex(): void {
+    const element = this.elementRef.nativeElement;
+    const isTruncated = this.luxTooltipIfTruncated && (this.truncationWatcher?.isTruncated ?? false);
+
+    if (isTruncated && !element.hasAttribute('tabindex') && element.tabIndex < 0) {
+      element.setAttribute('tabindex', '0');
+      this.addedTabindex = true;
+    } else if (!isTruncated && this.addedTabindex) {
+      element.removeAttribute('tabindex');
+      this.addedTabindex = false;
     }
   }
 

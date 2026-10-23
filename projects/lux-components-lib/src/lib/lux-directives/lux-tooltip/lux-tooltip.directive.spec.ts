@@ -7,6 +7,7 @@ import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { LuxTooltipDirective } from './lux-tooltip.directive';
+import { LuxTooltipTruncationWatcher } from './lux-tooltip-truncation';
 
 describe('LuxTooltipDirective', () => {
   let overlayContainer: OverlayContainer;
@@ -33,6 +34,8 @@ describe('LuxTooltipDirective', () => {
   // Der Truncation-Watcher plant beim connect() eine erste Messung via setTimeout(0).
   // In fakeAsync muss dieser Timer geleert werden, bevor deterministisch gemessen wird.
   const flushTruncationWatch = () => tick(0);
+  const getTruncationWatcher = (directive: LuxTooltipDirective) =>
+    Reflect.get(directive, 'truncationWatcher') as LuxTooltipTruncationWatcher;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -108,7 +111,7 @@ describe('LuxTooltipDirective', () => {
     mockComp.label = 'Kurz';
     fixture.detectChanges();
     flushTruncationWatch();
-    const watcher = (tooltip as any).truncationWatcher;
+    const watcher = getTruncationWatcher(tooltip);
     Object.defineProperty(tooltipSpan, 'clientWidth', { configurable: true, value: 200 });
 
     // When the text overflows the host (fits -> truncated)
@@ -117,6 +120,15 @@ describe('LuxTooltipDirective', () => {
 
     // Then the tooltip becomes enabled
     expect(tooltip.disabled).toBe(false);
+    expect(tooltipSpan.getAttribute('tabindex')).toBe('0');
+
+    // Keyboard focus can now show the tooltip.
+    focusMonitor.focusVia(tooltipSpan, 'keyboard');
+    tick();
+    expect(tooltip._isTooltipVisible()).toBe(true);
+    expect(overlayContainerElement.textContent).toEqual('DEMO');
+    tooltipSpan.blur();
+    tick();
 
     // When the text fits again (truncated -> fits)
     Object.defineProperty(tooltipSpan, 'scrollWidth', { configurable: true, value: 180 });
@@ -124,6 +136,7 @@ describe('LuxTooltipDirective', () => {
 
     // Then the tooltip is disabled again
     expect(tooltip.disabled).toBe(true);
+    expect(tooltipSpan.hasAttribute('tabindex')).toBe(false);
 
     // When it overflows once more, the tooltip actually shows on hover
     Object.defineProperty(tooltipSpan, 'scrollWidth', { configurable: true, value: 260 });
@@ -135,13 +148,58 @@ describe('LuxTooltipDirective', () => {
     expect(overlayContainerElement.textContent).toEqual('DEMO');
   }));
 
+  it('should preserve a tabindex already set on the host', fakeAsync(() => {
+    // Given
+    mockComp.ifTruncated = true;
+    mockComp.initialTabindex = '-1';
+    fixture.detectChanges();
+    flushTruncationWatch();
+    const watcher = getTruncationWatcher(tooltip);
+    Object.defineProperty(tooltipSpan, 'clientWidth', { configurable: true, value: 200 });
+    Object.defineProperty(tooltipSpan, 'scrollWidth', { configurable: true, value: 260 });
+
+    // When
+    watcher.refresh();
+
+    // Then
+    expect(tooltipSpan.getAttribute('tabindex')).toBe('-1');
+
+    // When the text fits again
+    Object.defineProperty(tooltipSpan, 'scrollWidth', { configurable: true, value: 180 });
+    watcher.refresh();
+
+    // Then the template-provided tabindex remains untouched
+    expect(tooltipSpan.getAttribute('tabindex')).toBe('-1');
+  }));
+
+  it('should not add a tabindex to natively focusable hosts', fakeAsync(() => {
+    // Given
+    mockComp.ifTruncated = true;
+    fixture.detectChanges();
+    flushTruncationWatch();
+    const buttonDebug = fixture.debugElement.query(By.css('button'));
+    const button = buttonDebug.nativeElement as HTMLButtonElement;
+    const buttonTooltip = buttonDebug.injector.get<LuxTooltipDirective>(LuxTooltipDirective);
+    const watcher = getTruncationWatcher(buttonTooltip);
+    Object.defineProperty(button, 'clientWidth', { configurable: true, value: 20 });
+    Object.defineProperty(button, 'scrollWidth', { configurable: true, value: 100 });
+
+    // When the button text is truncated
+    watcher.refresh();
+
+    // Then its native focusability is preserved without adding an attribute
+    expect(watcher.isTruncated).toBe(true);
+    expect(button.tabIndex).toBe(0);
+    expect(button.hasAttribute('tabindex')).toBe(false);
+  }));
+
   it('should enable the tooltip when the text is truncated vertically (line-clamp)', fakeAsync(() => {
     // Given
     mockComp.message = 'DEMO';
     mockComp.ifTruncated = true;
     fixture.detectChanges();
     flushTruncationWatch();
-    const watcher = (tooltip as any).truncationWatcher;
+    const watcher = getTruncationWatcher(tooltip);
     // Kein horizontaler Überlauf (line-clamp kürzt nur vertikal)
     Object.defineProperty(tooltipSpan, 'clientWidth', { configurable: true, value: 200 });
     Object.defineProperty(tooltipSpan, 'scrollWidth', { configurable: true, value: 200 });
@@ -225,19 +283,20 @@ describe('LuxTooltipDirective', () => {
 @Component({
   selector: 'lux-mock-component',
   template: `<span
-    [style.display]="'block'"
-    [style.width.px]="hostWidth"
-    [style.overflow]="'hidden'"
-    [style.white-space]="'nowrap'"
-    [style.text-overflow]="'ellipsis'"
-    [luxTooltip]="message"
-    [luxTooltipHideDelay]="hideDelay"
-    [luxTooltipShowDelay]="showDelay"
-    [luxTooltipPosition]="position"
-    [luxTooltipDisabled]="disabled"
-    [luxTooltipIfTruncated]="ifTruncated"
-    >{{ label }}</span
-  >`,
+      [style.display]="'block'"
+      [style.width.px]="hostWidth"
+      [style.overflow]="'hidden'"
+      [style.white-space]="'nowrap'"
+      [style.text-overflow]="'ellipsis'"
+      [attr.tabindex]="initialTabindex"
+      [luxTooltip]="message"
+      [luxTooltipHideDelay]="hideDelay"
+      [luxTooltipShowDelay]="showDelay"
+      [luxTooltipPosition]="position"
+      [luxTooltipDisabled]="disabled"
+      [luxTooltipIfTruncated]="ifTruncated"
+      >{{ label }}</span
+    ><button [luxTooltip]="message" [luxTooltipIfTruncated]="ifTruncated">Button</button>`,
   imports: [LuxTooltipDirective]
 })
 class MockComponent {
@@ -249,6 +308,5 @@ class MockComponent {
   ifTruncated = false;
   hostWidth = 200;
   label = 'Ich bin ein Demotext';
-
-  constructor() {}
+  initialTabindex?: string;
 }

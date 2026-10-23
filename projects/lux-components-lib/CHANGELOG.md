@@ -55,6 +55,7 @@
 - Issue #290: Skeleton-Komponente nach LUX migrieren. (#332)
 - Issue #292: WYSIWYG-Editor quill.js als Komponente anbieten (#335)
 - Issue #293: lux-menu erweitern, die Divider auch im Extended-Menu anzeigen (#340)
+- Issue #296: luxTooltipIfTruncated macht gekürzte, nicht fokussierbare Elemente per Tastatur erreichbar.
 - Issue #315: lux-menu-item: luxLoading (Spinner) wie bei lux-button (#325)
 - Issue #316: lux-table: Progressbar bei HTTP-DAO ausblendbar machen
 - Issue #322: lux-leave-guard inkl. Global Blocking State bereitstellen (#330)
