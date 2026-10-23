@@ -1,94 +1,96 @@
 @use "@angular/material" as mat;
 
-@mixin lux-progress-spinner-size($size) {
-  // Bug: https://github.com/angular/components/issues/32097
-  // width und height können entfernt werden, wenn der Bug behoben ist
-  width: $size !important;
-  height: $size !important;
+$progressColorNames: ("red", "green", "purple", "blue", "gray", "orange", "yellow", "pink", "lightblue");
 
+// Größe und Strichstärke setzt LuxProgressComponent über [diameter] und [strokeWidth],
+// die Werte für den Track-Ring kommen als CSS-Variablen aus der Komponente.
+@mixin lux-progress-spinner-color($active-color, $track-color, $muted-active-color, $muted-track-color) {
+  --lux-progress-spinner-track-color: #{$track-color};
   @include mat.progress-spinner-overrides(
     (
-      size: $size,
-      active-indicator-width: $size
+      active-indicator-color: $active-color
     )
   );
+  &.lux-progress-muted {
+    --lux-progress-spinner-track-color: #{$muted-track-color};
+    @include mat.progress-spinner-overrides(
+      (
+        active-indicator-color: $muted-active-color
+      )
+    );
+  }
 }
 
 lux-progress {
+  .lux-progress-spinner-content {
+    display: grid;
+    justify-items: center;
+    width: fit-content;
+  }
+
+  // Spinner und Prozentwert liegen übereinander in derselben Zelle.
+  .lux-progress-spinner-content > * {
+    align-self: center;
+    grid-area: 1 / 1;
+  }
+
+  // Track-Ring nur, wenn eine Farbe bzw. luxMuted gesetzt ist (z. B. nicht im lux-button).
+  .lux-progress-spinner::before {
+    border: var(--lux-progress-spinner-stroke-width) solid var(--lux-progress-spinner-track-color);
+    border-radius: 50%;
+    content: "";
+    inset: var(--lux-progress-spinner-track-inset, 0);
+    pointer-events: none;
+    position: absolute;
+  }
+
+  .lux-progress-spinner-text {
+    color: var(--lux-theme-dark-primary-text);
+    font-family: var(--lux-theme-app-font-family);
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: normal;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+
+  .lux-progress-large .lux-progress-spinner-text {
+    font-size: var(--lux-theme-font-size-2xl);
+  }
+
+  // Im kleinen Spinner (24px) ist kein Platz für den Text, er steht deshalb darunter.
+  .lux-progress-small .lux-progress-spinner-text {
+    grid-area: 2 / 1;
+    margin-top: var(--lux-theme-spacing-xs);
+  }
+
+  // Standard ohne luxColor: nur die Muted-Variante wird eingefärbt.
+  .lux-progress-spinner.lux-progress-muted {
+    --lux-progress-spinner-track-color: var(--lux-theme-progress-muted-track-default);
+    @include mat.progress-spinner-overrides(
+      (
+        active-indicator-color: var(--lux-theme-progress-muted-default)
+      )
+    );
+  }
+
   // Farben
-  .lux-color-red {
-    @include mat.progress-spinner-overrides(
-      (
-        active-indicator-color: var(--lux-theme-custom-red)
-      )
-    );
-  }
-  .lux-color-green {
-    @include mat.progress-spinner-overrides(
-      (
-        active-indicator-color: var(--lux-theme-custom-green)
-      )
-    );
-  }
-  .lux-color-purple {
-    @include mat.progress-spinner-overrides(
-      (
-        active-indicator-color: var(--lux-theme-custom-purple)
-      )
-    );
-  }
-  .lux-color-blue {
-    @include mat.progress-spinner-overrides(
-      (
-        active-indicator-color: var(--lux-theme-custom-blue)
-      )
-    );
-  }
-  .lux-color-gray {
-    @include mat.progress-spinner-overrides(
-      (
-        active-indicator-color: var(--lux-theme-custom-gray)
-      )
-    );
-  }
-  .lux-color-orange {
-    @include mat.progress-spinner-overrides(
-      (
-        active-indicator-color: var(--lux-theme-custom-orange)
-      )
-    );
-  }
-  .lux-color-yellow {
-    @include mat.progress-spinner-overrides(
-      (
-        active-indicator-color: var(--lux-theme-custom-yellow)
-      )
-    );
+  @each $colorName in $progressColorNames {
+    .lux-color-#{$colorName} {
+      @include lux-progress-spinner-color(
+        var(--lux-theme-progress-#{$colorName}),
+        var(--lux-theme-progress-track-#{$colorName}),
+        var(--lux-theme-progress-muted-#{$colorName}),
+        var(--lux-theme-progress-muted-track-#{$colorName})
+      );
+    }
   }
 
-  .lux-color-pink {
-    @include mat.progress-spinner-overrides(
-      (
-        active-indicator-color: var(--lux-theme-custom-pink)
-      )
-    );
-  }
-  .lux-color-lightblue {
-    @include mat.progress-spinner-overrides(
-      (
-        active-indicator-color: var(--lux-theme-custom-lightblue)
-      )
-    );
-  }
-
-  // Größen
-  .lux-progress-small mat-progress-spinner {
-    @include lux-progress-spinner-size(24px);
-  }
-  .lux-progress-medium mat-progress-spinner {
-    @include lux-progress-spinner-size(48px);
-  }
-  .lux-progress-large mat-progress-spinner {
-    @include lux-progress-spinner-size(96px);
+  // Material zeichnet den Bogen im Hochkontrastmodus in CanvasText, der Ring muss sich davon abheben.
+  @media (forced-colors: active) {
+    .lux-progress-spinner::before {
+      border-color: GrayText;
+      forced-color-adjust: none;
+    }
   }
 }

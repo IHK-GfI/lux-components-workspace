@@ -1,76 +1,87 @@
 @use "@angular/material" as mat;
 
+$progressColorNames: ("red", "green", "purple", "blue", "gray", "orange", "yellow", "pink", "lightblue");
+
 lux-progress {
+  .lux-progress-content {
+    display: flex;
+    gap: var(--lux-theme-spacing-md);
+  }
+
+  .lux-progress-text-position-bottom,
+  .lux-progress-text-position-top {
+    flex-direction: column;
+    gap: var(--lux-theme-spacing-sm);
+  }
+
+  .lux-progress-text-position-left {
+    align-items: center;
+    flex-direction: row;
+  }
+
+  .lux-progress-text-position-left mat-progress-bar {
+    flex: 1 1 0;
+    min-width: 1px;
+  }
+
+  // Der Text steht im DOM hinter der Progressbar und wird für 'left' und 'top' nach vorn gezogen.
+  .lux-progress-text-position-left .lux-progress-text,
+  .lux-progress-text-position-top .lux-progress-text {
+    order: -1;
+  }
+
+  .lux-progress-text-position-top .lux-progress-text {
+    text-align: right;
+  }
+
+  .lux-progress-text {
+    color: var(--lux-theme-dark-primary-text);
+    font-family: var(--lux-theme-app-font-family);
+    font-size: var(--lux-theme-font-size-lg);
+    font-weight: 600;
+    line-height: normal;
+    overflow-wrap: anywhere;
+  }
+
+  .lux-progress-small .lux-progress-text {
+    font-size: var(--lux-theme-font-size-md);
+  }
+
+  // Standard ohne luxColor (z. B. lux-file-progress oder Anwendungen ohne Farbangabe)
+  .lux-progress-bar {
+    @include mat.progress-bar-overrides(
+      (
+        track-color: var(--lux-theme-progress-track-default)
+      )
+    );
+    &.lux-progress-muted {
+      @include mat.progress-bar-overrides(
+        (
+          active-indicator-color: var(--lux-theme-progress-muted-default),
+          track-color: var(--lux-theme-progress-muted-track-default)
+        )
+      );
+    }
+  }
+
   // Farben
-  @include mat.progress-bar-overrides(
-    (
-      track-color: #bcc8d5
-    )
-  );
-
-  .lux-color-red {
-    @include mat.progress-bar-overrides(
-      (
-        active-indicator-color: var(--lux-theme-custom-red)
-      )
-    );
-  }
-  .lux-color-green {
-    @include mat.progress-bar-overrides(
-      (
-        active-indicator-color: var(--lux-theme-custom-green)
-      )
-    );
-  }
-  .lux-color-purple {
-    @include mat.progress-bar-overrides(
-      (
-        active-indicator-color: var(--lux-theme-custom-purple)
-      )
-    );
-  }
-  .lux-color-blue {
-    @include mat.progress-bar-overrides(
-      (
-        active-indicator-color: var(--lux-theme-custom-blue)
-      )
-    );
-  }
-  .lux-color-gray {
-    @include mat.progress-bar-overrides(
-      (
-        active-indicator-color: var(--lux-theme-custom-gray)
-      )
-    );
-  }
-  .lux-color-orange {
-    @include mat.progress-bar-overrides(
-      (
-        active-indicator-color: var(--lux-theme-custom-orange)
-      )
-    );
-  }
-  .lux-color-yellow {
-    @include mat.progress-bar-overrides(
-      (
-        active-indicator-color: var(--lux-theme-custom-yellow)
-      )
-    );
-  }
-
-  .lux-color-pink {
-    @include mat.progress-bar-overrides(
-      (
-        active-indicator-color: var(--lux-theme-custom-pink)
-      )
-    );
-  }
-  .lux-color-lightblue {
-    @include mat.progress-bar-overrides(
-      (
-        active-indicator-color: var(--lux-theme-custom-lightblue)
-      )
-    );
+  @each $colorName in $progressColorNames {
+    .lux-color-#{$colorName} {
+      @include mat.progress-bar-overrides(
+        (
+          active-indicator-color: var(--lux-theme-progress-#{$colorName}),
+          track-color: var(--lux-theme-progress-track-#{$colorName})
+        )
+      );
+      &.lux-progress-muted {
+        @include mat.progress-bar-overrides(
+          (
+            active-indicator-color: var(--lux-theme-progress-muted-#{$colorName}),
+            track-color: var(--lux-theme-progress-muted-track-#{$colorName})
+          )
+        );
+      }
+    }
   }
 
   // Höhe
