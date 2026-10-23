@@ -11,6 +11,7 @@ lux-progress {
   .lux-progress-text-position-bottom,
   .lux-progress-text-position-top {
     flex-direction: column;
+    gap: var(--lux-theme-spacing-sm);
   }
 
   .lux-progress-text-position-left {
