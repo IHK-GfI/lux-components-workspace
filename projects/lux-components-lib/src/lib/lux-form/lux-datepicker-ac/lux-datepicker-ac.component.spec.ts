@@ -10,6 +10,7 @@ import { TranslocoService } from '@jsverse/transloco';
 import { of } from 'rxjs';
 import { delay } from 'rxjs/operators';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
+import { LuxThemeService } from '../../lux-theme/lux-theme.service';
 import { LuxConsoleService } from '../../lux-util/lux-console.service';
 import { LuxUtil } from '../../lux-util/lux-util';
 import { LuxValidationErrors, ValidatorFnType } from '../lux-form-model/lux-form-component-base.class';
@@ -715,6 +716,75 @@ describe('LuxDatepickerAcComponent', () => {
       calendar = overlayHelper.selectOneFromOverlay('mat-calendar');
       expect(calendar).toBeNull();
 
+      flush();
+    }));
+
+    it('sollte im Green-Theme im Mehrjahresmodus zum vorherigen Jahresbereich navigieren', fakeAsync(() => {
+      spyOn(TestBed.inject(LuxThemeService), 'getTheme').and.returnValue({ name: 'green', styleUrl: '' });
+      testComponent.value = '2026-06-10T00:00:00.000Z';
+      testComponent.opened = true;
+      LuxTestHelper.wait(fixture);
+
+      const periodButton = overlayHelper.selectOneFromOverlay('.lux-datepicker-year button');
+      periodButton.click();
+      LuxTestHelper.wait(fixture, 1);
+
+      let yearCells = overlayHelper.selectAllFromOverlay('.mat-calendar-body-cell');
+      expect(yearCells[0].textContent?.trim()).toEqual('2016');
+      expect(yearCells[23].textContent?.trim()).toEqual('2039');
+
+      const previousButton = overlayHelper.selectOneFromOverlay('.lux-datepicker-prev-month button');
+      previousButton.click();
+      LuxTestHelper.wait(fixture, 1);
+
+      yearCells = overlayHelper.selectAllFromOverlay('.mat-calendar-body-cell');
+      expect(yearCells[0].textContent?.trim()).toEqual('1992');
+      expect(yearCells[23].textContent?.trim()).toEqual('2015');
+
+      testComponent.opened = false;
+      LuxTestHelper.wait(fixture);
+      flush();
+    }));
+
+    it('sollte im Green-Theme über den Perioden-Button zwischen Monats- und Jahresansicht umschalten', fakeAsync(() => {
+      spyOn(TestBed.inject(LuxThemeService), 'getTheme').and.returnValue({ name: 'green', styleUrl: '' });
+      testComponent.value = '2026-06-10T00:00:00.000Z';
+      testComponent.opened = true;
+      LuxTestHelper.wait(fixture);
+
+      expect(overlayHelper.selectOneFromOverlay('mat-month-view')).not.toBeNull();
+
+      // Monatsansicht -> Mehrjahresansicht
+      overlayHelper.selectOneFromOverlay('.lux-datepicker-year button').click();
+      LuxTestHelper.wait(fixture, 1000);
+
+      expect(overlayHelper.selectOneFromOverlay('mat-multi-year-view')).not.toBeNull();
+      expect(overlayHelper.selectOneFromOverlay('mat-month-view')).toBeNull();
+
+      // Mehrjahresansicht -> Monatsansicht
+      overlayHelper.selectOneFromOverlay('.lux-datepicker-year button').click();
+      LuxTestHelper.wait(fixture, 1000);
+
+      expect(overlayHelper.selectOneFromOverlay('mat-month-view')).not.toBeNull();
+      expect(overlayHelper.selectOneFromOverlay('mat-multi-year-view')).toBeNull();
+
+      // Über die Jahresauswahl in die Jahresansicht wechseln
+      overlayHelper.selectOneFromOverlay('.lux-datepicker-year button').click();
+      LuxTestHelper.wait(fixture, 1000);
+      overlayHelper.selectAllFromOverlay('.mat-calendar-body-cell')[0].click();
+      LuxTestHelper.wait(fixture, 1000);
+
+      expect(overlayHelper.selectOneFromOverlay('mat-year-view')).not.toBeNull();
+
+      // Jahresansicht -> Monatsansicht
+      overlayHelper.selectOneFromOverlay('.lux-datepicker-year button').click();
+      LuxTestHelper.wait(fixture, 1000);
+
+      expect(overlayHelper.selectOneFromOverlay('mat-month-view')).not.toBeNull();
+      expect(overlayHelper.selectOneFromOverlay('mat-year-view')).toBeNull();
+
+      testComponent.opened = false;
+      LuxTestHelper.wait(fixture);
       flush();
     }));
 

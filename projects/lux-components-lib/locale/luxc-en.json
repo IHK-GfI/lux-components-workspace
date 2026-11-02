@@ -110,7 +110,11 @@
       "error_message.max": "Above the maximum value",
       "error_message.min": "Below the minimum value",
       "next.month.arialabel": "next month",
-      "prev.month.arialabel": "previous month"
+      "next.range.arialabel": "next year range",
+      "next.year.arialabel": "next year",
+      "prev.month.arialabel": "previous month",
+      "prev.range.arialabel": "previous year range",
+      "prev.year.arialabel": "previous year"
     },
     "datetimepicker": {
       "error_message.empty": "The date should not be empty",
