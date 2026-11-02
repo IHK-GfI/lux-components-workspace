@@ -16,6 +16,8 @@ const SKIP: Record<string, string> = {};
 
 /** Pro Seite zu maskierende Bereiche (z. B. dynamische Inhalte). */
 const MASKS: Record<string, (page: Page) => Locator[]> = {
+  // Die Karte reicht bis in den Footer. Dessen Links verschieben sich mit der Länge der Versionsnummer.
+  chat: (page) => [page.locator('lux-app-footer')],
   // Session-Ende des Session-Timers als Zeitstempel ("jetzt" + Laufzeit) – ändert sich bei jedem Aufruf.
   storage: (page) => [page.locator('example-base-content').getByText(/^\s*\d{13}\s*$/)]
 };
