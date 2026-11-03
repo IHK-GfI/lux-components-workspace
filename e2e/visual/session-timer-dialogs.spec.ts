@@ -12,7 +12,15 @@ test('session-timer: verlängerbarer Dialog', async ({ page }) => {
   await reachWarningThreshold(page);
 
   const dialog = page.getByRole('dialog');
-  await expect(dialog.locator('lux-dialog-structure[luxTagId="lux-session-timer-dialog-default"]')).toBeVisible();
+  const structure = dialog.locator('lux-dialog-structure[luxTagId="lux-session-timer-dialog-default"]');
+  await expect(structure).toBeVisible();
+  const icon = structure.locator('.lux-dialog-icon');
+  await expect(icon).toBeVisible();
+  const dialogBox = await structure.locator('.lux-dialog').boundingBox();
+  const iconBox = await icon.boundingBox();
+  expect(dialogBox).not.toBeNull();
+  expect(iconBox).not.toBeNull();
+  expect(Math.abs(iconBox!.x + iconBox!.width / 2 - (dialogBox!.x + dialogBox!.width / 2))).toBeLessThan(2);
   await screenshotSoft(page, dialog, 'session-timer-extendable.png');
 });
 
