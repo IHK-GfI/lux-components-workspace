@@ -204,6 +204,9 @@ export class LuxAppHeaderAcSessionTimerService {
 
     this.currentDialogRef.dialogClosed.subscribe((result: any) => {
       const confirmed = result === LuxSessionTimerBroadcastType.CONFIRMED;
+      this.dialogIsOpen = false;
+      this.dialogWasClosed = !confirmed;
+      this.currentDialogRef = null;
       this.broadcast(confirmed ? LuxSessionTimerBroadcastType.CONFIRMED : LuxSessionTimerBroadcastType.DECLINED);
     });
 
@@ -218,6 +221,9 @@ export class LuxAppHeaderAcSessionTimerService {
     this.currentDialogRef.componentInstance.setNotExtendableDialog();
 
     this.currentDialogRef.dialogClosed.subscribe((result: any) => {
+      this.dialogIsOpen = false;
+      this.dialogWasClosed = true;
+      this.currentDialogRef = null;
       this.broadcast(LuxSessionTimerBroadcastType.DECLINED);
     });
   }
