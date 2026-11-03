@@ -117,7 +117,8 @@ export abstract class TableExampleBaseClass implements OnDestroy {
     this._multiSelect.set(multiSelect);
 
     if (multiSelect) {
-      this._doubleClickActive.set(false);
+      // Über den Setter, damit auch der Listener abgemeldet wird. Ein angemeldeter luxDoubleClicked-Listener deaktiviert die Klick-Selektion.
+      this.doubleClickActive = false;
     } else {
       this.multiSelectOnlyCheckboxClick.set(false);
     }

@@ -331,9 +331,7 @@ export class LuxDatepickerComponent<T = any> extends LuxFormLegacyValueBase<T> i
       return null;
     }
 
-    return this.luxReferenceControl()
-      ? this.dateAdapter.parse(value, {})
-      : (this.dateAdapter as LuxDatepickerAdapter).toCalendarDay(value);
+    return this.luxReferenceControl() ? this.dateAdapter.parse(value, {}) : (this.dateAdapter as LuxDatepickerAdapter).toCalendarDay(value);
   }
 
   /**
@@ -383,6 +381,7 @@ export class LuxDatepickerComponent<T = any> extends LuxFormLegacyValueBase<T> i
         emitModelToViewChange: this.shouldEmitDirectly,
         emitViewToModelChange: this.shouldEmitDirectly
       });
+      this.bridge.noteSilentValue(isoValue as T);
       // Signal-Schreibzugriff - markiert diese OnPush-Komponente automatisch als zu prüfen, auch
       // wenn formControl.events wegen shouldEmitDirectly=false nicht feuert (kein manuelles
       // markForCheck() mehr nötig, siehe LuxLegacyFormBridge/LuxFormControlBase).

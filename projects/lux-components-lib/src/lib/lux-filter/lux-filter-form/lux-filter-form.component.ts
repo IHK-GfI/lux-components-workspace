@@ -16,7 +16,7 @@ import {
   output,
   signal
 } from '@angular/core';
-import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { Subscription } from 'rxjs';
 import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.component';
@@ -353,7 +353,7 @@ export class LuxFilterFormComponent implements OnInit, AfterViewInit, OnDestroy 
     // D.h. initial gibt es keine Filteritems, aber dann werden die Filteritems über ngAfterContentInit hinzugefügt.
     this.registerFilterItemsTimeout = setTimeout(() => {
       filterItemDirectives.forEach((item) => {
-        this.filterForm.addControl(item.filterItem.binding, item.filterItem.component.formControl);
+        this.addFilterControl(item.filterItem);
         this.formElementes.push(item);
       });
 
@@ -377,6 +377,25 @@ export class LuxFilterFormComponent implements OnInit, AfterViewInit, OnDestroy 
         this.updateFilterChips();
       }
     });
+  }
+
+  /**
+   * Teilen sich mehrere Filterelemente ein Binding (z.B. Datepicker und Timepicker), nimmt das Formular
+   * nur das Control des ersten auf. Werte, die das Formular setzt (Laden, Zurücksetzen, luxFilterValues),
+   * werden deshalb an die weiteren Controls weitergereicht.
+   *
+   * Bewusst über registerOnChange und nicht über valueChanges: valueChanges feuert auch bei einer reinen
+   * Revalidierung und würde mit dem Wert des ersten Controls z.B. eine eingetippte Uhrzeit überschreiben.
+   */
+  private addFilterControl(filterItem: LuxFilterItem<any>) {
+    const registeredControl = this.filterForm.get(filterItem.binding);
+    const control = filterItem.component.formControl;
+
+    if (!registeredControl) {
+      this.filterForm.addControl(filterItem.binding, control);
+    } else if (registeredControl !== control) {
+      (registeredControl as FormControl).registerOnChange((value: any) => control.setValue(value));
+    }
   }
 
   private createFilterObject() {

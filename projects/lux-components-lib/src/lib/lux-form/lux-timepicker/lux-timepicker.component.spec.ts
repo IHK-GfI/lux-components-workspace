@@ -50,6 +50,50 @@ describe('LuxTimepickerComponent', () => {
     expect(inputEl.value).toEqual('14:15');
   });
 
+  it('sollte die Anzeige leeren, wenn eine eingetippte Uhrzeit von außen zurückgesetzt wird', async () => {
+    const fixture: ComponentFixture<LuxTimepickerFormTestComponent> = TestBed.createComponent(LuxTimepickerFormTestComponent);
+    const testComponent = fixture.componentInstance;
+    const timepickerComponent = fixture.debugElement.query(By.directive(LuxTimepickerComponent))
+      .componentInstance as LuxTimepickerComponent;
+
+    await LuxTestHelper.wait(fixture);
+    const inputEl: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
+    LuxTestHelper.typeInElement(inputEl, '14:15');
+    inputEl.blur();
+    await LuxTestHelper.wait(fixture);
+    expect(testComponent.formControl.value).toBeTruthy();
+
+    testComponent.formControl.setValue(null);
+    await LuxTestHelper.wait(fixture);
+
+    expect(inputEl.value).toEqual('');
+    expect(timepickerComponent.value()).toBeFalsy();
+    expect(testComponent.formControl.errors).toBeNull();
+  });
+
+  it('sollte die Anzeige auch mit gemeinsamem Control leeren, wenn der Wert von außen zurückgesetzt wird', async () => {
+    const fixture: ComponentFixture<LuxTimepickerCombinedFormTestComponent> = TestBed.createComponent(
+      LuxTimepickerCombinedFormTestComponent
+    );
+    const testComponent = fixture.componentInstance;
+
+    await LuxTestHelper.wait(fixture);
+    const inputEls: HTMLInputElement[] = fixture.debugElement.queryAll(By.css('input')).map((debugEl) => debugEl.nativeElement);
+    expect(inputEls[1].value).toEqual('14:15');
+
+    testComponent.combinedControl.setValue(null);
+    await LuxTestHelper.wait(fixture);
+
+    expect(inputEls[0].value).toEqual('');
+    expect(inputEls[1].value).toEqual('');
+    expect(testComponent.combinedControl.errors).toBeNull();
+
+    // Ein Verlassen des Feldes darf die alte Uhrzeit nicht wiederherstellen.
+    inputEls[1].dispatchEvent(new Event('blur'));
+    await LuxTestHelper.wait(fixture);
+    expect(inputEls[1].value).toEqual('');
+  });
+
   it('sollte einen ISO-Wert ohne Zeitzoneninfo unabhängig von der lokalen Zeitzone auf dieselbe Uhrzeit abbilden', async () => {
     const fixture: ComponentFixture<LuxTimepickerFormTestComponent> = TestBed.createComponent(LuxTimepickerFormTestComponent);
     const testComponent = fixture.componentInstance;

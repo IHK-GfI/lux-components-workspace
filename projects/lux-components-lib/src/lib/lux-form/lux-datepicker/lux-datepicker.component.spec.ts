@@ -138,6 +138,20 @@ describe('LuxDatepickerComponent', () => {
       expect(datepickerComponent.value()).toEqual(utcNullifiedDate.toISOString());
     });
 
+    it('Sollte die Anzeige leeren, wenn ein eingetippter Wert von außen zurückgesetzt wird', async () => {
+      const inputEl: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
+      LuxTestHelper.typeInElement(inputEl, '10.06.2015');
+      LuxTestHelper.dispatchEvent(inputEl, new Event('focusout'));
+      await LuxTestHelper.wait(fixture);
+      expect(testComponent.formControl.value).toEqual('2015-06-10T00:00:00.000Z');
+
+      testComponent.formControl.setValue(null);
+      await LuxTestHelper.wait(fixture);
+
+      expect(inputEl.value).toEqual('');
+      expect(datepickerComponent.value()).toBeFalsy();
+    });
+
     it('Sollte den Wert aktualisieren', async () => {
       await LuxTestHelper.wait(fixture);
       // Vorbedingungen testen
@@ -1126,4 +1140,3 @@ class LuxDatepickerA11yComponent {
   readonly = signal(false);
   required = signal(false);
 }
-

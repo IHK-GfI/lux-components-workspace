@@ -329,6 +329,10 @@ export class LuxDatetimepickerComponent<T = any> extends LuxFormLegacyValueBase<
    * hier zusammen.
    */
   override emitValueChange(formValue: any) {
+    // Vor updateDateValue() lesen. Ist previousISO schon leer, stammt ein leerer Wert aus der eigenen
+    // Normalisierung (siehe updateDateValue()): Der nicht parsbare Text muss dann für die Fehlermeldung stehen bleiben.
+    const clearedFromOutside = !formValue && !!this.previousISO;
+
     this.updateDateValue(formValue);
 
     // NUR während das Feld NICHT fokussiert ist: Während echter Tastatureingabe läuft onInput() ->
@@ -354,6 +358,10 @@ export class LuxDatetimepickerComponent<T = any> extends LuxFormLegacyValueBase<
       // Rohwert unverändert in die Anzeige spiegelte - unabhängig davon, ob updateDateValue() ihn
       // selbst in ein ISO-Datum umwandeln konnte (z.B. ein Datum ohne Uhrzeit wie "10.07.2015").
       this.dateTimeInputValue = formValue;
+    } else if (clearedFromOutside) {
+      this.dateTimeInputValue = '';
+      // dateTimeValidator prüft den Text im Eingabefeld und hat beim Setzen des Werts noch den alten Text gesehen.
+      this.formControl.updateValueAndValidity({ emitEvent: false });
     }
   }
 
