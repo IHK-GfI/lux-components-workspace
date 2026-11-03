@@ -7,8 +7,12 @@
   tabindex="0"
   #tourHintContainer
 >
+  @if (arrowVisible) {
   <div class="arrow" [ngClass]="arrowClass"></div>
-  <ng-content></ng-content>
+  }
+  <div class="tour-hint-scroll-container">
+    <ng-content></ng-content>
+  </div>
 </div>
 }
 

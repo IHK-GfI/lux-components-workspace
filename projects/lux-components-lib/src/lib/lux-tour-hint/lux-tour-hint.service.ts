@@ -73,10 +73,21 @@ export class LuxTourHintService {
     });
 
     //The outer container for the modal
-    this.tourContainer = createComponent(LuxTourHintComponent, {
+    const tourContainer = createComponent(LuxTourHintComponent, {
       environmentInjector: this.injector,
       projectableNodes: [[innerComp.location.nativeElement]]
     });
+    this.tourContainer = tourContainer;
+
+    //Both generated components are attached to the application and would stay alive after closing otherwise
+    tourContainer.instance.onClosed = () => {
+      innerComp.destroy();
+      tourContainer.destroy();
+
+      if (this.tourContainer === tourContainer) {
+        this.tourContainer = undefined;
+      }
+    };
 
     //Add a keylistener for the tour-hint content so we can navigate the tour with arrow keys
     this.tourContainer.location.nativeElement.addEventListener('keydown', (e: any) => {

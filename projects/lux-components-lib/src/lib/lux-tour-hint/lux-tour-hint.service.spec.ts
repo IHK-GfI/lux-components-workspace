@@ -1,6 +1,6 @@
 ﻿import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnDestroy } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, waitForAsync } from '@angular/core/testing';
 import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../testing/transloco-test.provider';
@@ -302,6 +302,68 @@ describe('LuxTourHintService', () => {
       expect(document.body.getElementsByTagName('lux-tour-hint').length).toBe(1);
     }));
   });
+
+  describe('[Schließen]', () => {
+    const tourConfig = { targetId: 'test1', data: {} };
+
+    it('Sollte die generierten Komponenten zerstören', fakeAsync(() => {
+      MockCustomTourHintComponent.destroyCount = 0;
+      tourHintRef = testComponent.tourHintService.openComponent(MockCustomTourHintComponent, tourConfig, false);
+      LuxTestHelper.wait(fixture);
+
+      const containerDestroyed = jasmine.createSpy('containerDestroyed');
+      testComponent.tourHintService.tourContainer!.onDestroy(containerDestroyed);
+
+      /* ___Änderungen durchführen___ */
+      tourHintRef.close();
+      LuxTestHelper.wait(fixture);
+
+      /* ___Nachbedingungen testen___ */
+      expect(containerDestroyed).toHaveBeenCalledTimes(1);
+      expect(MockCustomTourHintComponent.destroyCount).toBe(1);
+      expect(testComponent.tourHintService.tourContainer).toBeUndefined();
+      expect(document.body.getElementsByTagName('lux-tour-hint').length).toBe(0);
+
+      //Ein zweites Schließen darf keinen Fehler verursachen
+      expect(() => tourHintRef.close()).not.toThrow();
+    }));
+
+    it('Sollte nur im geöffneten Zustand auf Resize reagieren', fakeAsync(() => {
+      const scrollSpy = spyOn(document.getElementById('test1')!, 'scrollIntoView');
+      tourHintRef = testComponent.tourHintService.open(tourConfig, false);
+      LuxTestHelper.wait(fixture);
+
+      /* ___Änderungen durchführen___ */
+      scrollSpy.calls.reset();
+      window.dispatchEvent(new Event('resize'));
+      LuxTestHelper.wait(fixture);
+
+      /* ___Nachbedingungen testen___ */
+      expect(scrollSpy).toHaveBeenCalledTimes(1);
+
+      /* ___Änderungen durchführen___ */
+      tourHintRef.close();
+      LuxTestHelper.wait(fixture);
+      scrollSpy.calls.reset();
+      window.dispatchEvent(new Event('resize'));
+      LuxTestHelper.wait(fixture);
+
+      /* ___Nachbedingungen testen___ */
+      expect(scrollSpy).not.toHaveBeenCalled();
+    }));
+
+    it('Sollte eine noch ausstehende Positionierung nicht mehr ausführen', fakeAsync(() => {
+      const scrollSpy = spyOn(document.getElementById('test1')!, 'scrollIntoView');
+
+      /* ___Änderungen durchführen___ */
+      tourHintRef = testComponent.tourHintService.open(tourConfig, false);
+      tourHintRef.close();
+      LuxTestHelper.wait(fixture);
+
+      /* ___Nachbedingungen testen___ */
+      expect(scrollSpy).not.toHaveBeenCalled();
+    }));
+  });
 });
 
 @Component({
@@ -331,6 +393,12 @@ class MockTourHintComponent {
   `,
   imports: []
 })
-class MockCustomTourHintComponent {
+class MockCustomTourHintComponent implements OnDestroy {
+  static destroyCount = 0;
+
   tourHintRef = inject(LuxTourHintRef);
+
+  ngOnDestroy() {
+    MockCustomTourHintComponent.destroyCount++;
+  }
 }

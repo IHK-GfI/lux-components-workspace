@@ -105,6 +105,7 @@ export class LuxTourHintRef<T = any> {
     }
 
     this.tourHintContainer?.close();
+    this.tourHintContainer = undefined;
 
     this._opened = false;
   }
