@@ -242,7 +242,7 @@
         "title": "Action in progress"
       },
       "unsaved": {
-        "confirm": "Discard and continue",
+        "confirm": "Discard & continue",
         "content": "There are unsaved changes. Continuing will discard these changes.",
         "decline": "Cancel",
         "title": "Unsaved changes"

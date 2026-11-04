@@ -97,7 +97,7 @@ describe('luxLeaveGuard', () => {
     expect(config.disableClose).toBeTrue();
     expect(config.width).toBe(DIALOG_WIDTH_MEDIUM);
     expect(config.defaultButton).toBe('decline');
-    expect(config.confirmAction?.label).toBe('Verwerfen und fortfahren');
+    expect(config.confirmAction?.label).toBe('Verwerfen & fortfahren');
     expect(config.confirmAction?.color).toBe('warn');
     expect(config.declineAction?.label).toBe('Abbrechen');
     expect(config.declineAction?.color).toBe('primary');
