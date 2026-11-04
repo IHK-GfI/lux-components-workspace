@@ -67,6 +67,23 @@ describe('LuxAppHeaderAcSessionTimerComponent', () => {
     expect(timerService.openDialog).toHaveBeenCalled();
   }));
 
+  it('sollte nach "Angemeldet bleiben" den Dialog beim nächsten Unterschreiten von 2 min erneut öffnen', fakeAsync(() => {
+    timerService.url = '/api/test/extend';
+    const openDialogSpy = spyOn(timerService, 'openDialog').and.callThrough();
+
+    timerService.resetTimer(121);
+    tick(2000);
+    expect(openDialogSpy).toHaveBeenCalledTimes(1);
+
+    const dialogRef = (timerService as any).currentDialogRef;
+    dialogRef.componentInstance.extendSession();
+    httpController.expectOne('/api/test/extend').flush({});
+    tick(0);
+
+    tick(2000);
+    expect(openDialogSpy).toHaveBeenCalledTimes(2);
+  }));
+
   it('sollte den Dialog nicht erneut öffnen, wenn dieser geschlossen wurde, aber wieder öffnen wenn startingSeconds erneut gesetzt werden', fakeAsync(() => {
     let dialogOpenCount = 0;
     const openDialogSpy = spyOn(timerService, 'openDialog').and.callFake(() => {

@@ -29,7 +29,8 @@ const MASKS: Record<string, (page: Page) => Locator[]> = {
  */
 const STYLES: Record<string, string> = {
   list: '.custom-list { max-height: 550px !important; }',
-  'infinite-scrolling': '.infinite-list { max-height: 550px !important; }'
+  'infinite-scrolling': '.infinite-list { max-height: 550px !important; }',
+  chat: 'lux-app-footer { visibility: hidden !important; }'
 };
 
 /**
