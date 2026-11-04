@@ -110,7 +110,11 @@
       "error_message.max": "Das Datum überschreitet den Maximalwert",
       "error_message.min": "Das Datum unterschreitet den Minimalwert",
       "next.month.arialabel": "nächster Monat",
-      "prev.month.arialabel": "vorheriger Monat"
+      "next.range.arialabel": "nächster Jahresbereich",
+      "next.year.arialabel": "nächstes Jahr",
+      "prev.month.arialabel": "vorheriger Monat",
+      "prev.range.arialabel": "vorheriger Jahresbereich",
+      "prev.year.arialabel": "vorheriges Jahr"
     },
     "datetimepicker": {
       "error_message.empty": "Das Datum darf nicht leer sein",
