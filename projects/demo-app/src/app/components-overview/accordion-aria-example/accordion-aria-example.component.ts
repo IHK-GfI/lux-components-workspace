@@ -9,6 +9,7 @@ import {
   LuxFormHintComponent,
   LuxRadioAcComponent,
   LuxInputAcComponent,
+  LuxTextareaAcComponent,
   LuxModeType,
   LuxDatepickerAcComponent,
   LuxAriaLabelDirective,
@@ -55,6 +56,7 @@ import { logResult } from '../../example-base/example-base-util/example-base-hel
     LuxFormHintComponent,
     LuxRadioAcComponent,
     LuxInputAcComponent,
+    LuxTextareaAcComponent,
     LuxDatepickerAcComponent,
     LuxAriaLabelDirective,
     LuxMenuComponent,
@@ -99,6 +101,9 @@ export class AccordionAriaExampleComponent {
   borderCheck = false;
   showHeaderButtons1Panel = true;
   showHeaderDatepicker2Panel = true;
+  showPanelInputs = false;
+  panelInputValue = '';
+  panelTextareaValue = '';
   headerDate2Panel: Date | undefined = new Date();
   stickyHeader = false;
   stickyHeaderOffset = '';

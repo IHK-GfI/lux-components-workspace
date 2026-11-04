@@ -5,6 +5,7 @@ import { LuxPanelAriaComponent } from './lux-panel-aria.component';
 import { LuxPanelAriaHeaderTitleComponent } from './lux-panel-aria-subcomponents/lux-panel-aria-header-title.component';
 import { LuxPanelAriaContentComponent } from './lux-panel-aria-subcomponents/lux-panel-aria-content.component';
 import { LuxPanelAriaHeaderCustomComponent } from './lux-panel-aria-subcomponents/lux-panel-aria-header-custom.component';
+import { LuxPanelAriaActionComponent } from './lux-panel-aria-subcomponents/lux-panel-aria-action.component';
 import { LuxA11yTestHelper } from '../../../test-utils/src/test-utils/lux-a11y-test-helper';
 import { LuxAccordionAriaComponent } from '../lux-accordion-aria/lux-accordion-aria.component';
 import { LuxPanelAriaHeaderDescriptionComponent } from './lux-panel-aria-subcomponents/lux-panel-aria-header-description.component';
@@ -20,6 +21,7 @@ describe('LuxPanelAriaComponent', () => {
         LuxPanelAriaHeaderTitleComponent,
         LuxPanelAriaContentComponent,
         LuxPanelAriaHeaderCustomComponent,
+        LuxPanelAriaActionComponent,
         LuxPanelAriaTestComponent
       ]
     });
@@ -282,6 +284,9 @@ describe('LuxPanelAriaComponent', () => {
   });
 
   it('sollte Tastatureingaben in Custom-Header-Actions nicht verhindern', () => {
+    const root = fixture.nativeElement as HTMLElement;
+    const keydownListener = jasmine.createSpy('keydown');
+    root.addEventListener('keydown', keydownListener);
     const actionButton = fixture.debugElement.query(By.css('.lux-expansion-panel-header-custom button'));
     const keydownEvent = new KeyboardEvent('keydown', { bubbles: true, cancelable: true, key: 'Enter' });
 
@@ -289,7 +294,44 @@ describe('LuxPanelAriaComponent', () => {
 
     expect(eventWasNotPrevented).toBeTrue();
     expect(keydownEvent.defaultPrevented).toBeFalse();
+    expect(keydownListener).toHaveBeenCalledWith(keydownEvent);
+    expect(root.querySelector('.lux-expansion-panel-header-toggle')!.getAttribute('aria-expanded')).toBe('false');
+    root.removeEventListener('keydown', keydownListener);
   });
+
+  it('sollte Tastatureingaben im Panelinhalt und in Aktionen unverändert weiterleiten', fakeAsync(() => {
+    const root = fixture.nativeElement as HTMLElement;
+    const header = root.querySelector<HTMLButtonElement>('.lux-expansion-panel-header-toggle')!;
+    header.click();
+    fixture.detectChanges();
+    tick();
+    fixture.detectChanges();
+
+    const keydownListener = jasmine.createSpy('keydown');
+    root.addEventListener('keydown', keydownListener);
+    const selectors = [
+      'lux-panel-aria-content input',
+      'lux-panel-aria-content textarea',
+      'lux-panel-aria-content [contenteditable]',
+      'lux-panel-aria-action button'
+    ];
+    const keys = [' ', 'Enter', 'Home', 'End', 'ArrowUp', 'ArrowDown', 'a'];
+
+    for (const selector of selectors) {
+      const target = root.querySelector<HTMLElement>(selector)!;
+      target.focus();
+      for (const key of keys) {
+        const event = new KeyboardEvent('keydown', { bubbles: true, cancelable: true, key });
+        expect(target.dispatchEvent(event)).withContext(`${selector}: ${key}`).toBeTrue();
+        expect(event.defaultPrevented).withContext(`${selector}: ${key}`).toBeFalse();
+        expect(keydownListener).withContext(`${selector}: ${key}`).toHaveBeenCalledWith(event);
+      }
+    }
+
+    root.removeEventListener('keydown', keydownListener);
+    expect(header.getAttribute('aria-expanded')).toBe('true');
+    expect(testComponent.expandedEvents).toEqual([true]);
+  }));
 
   it('sollte auch nicht-geslotteten Inhalt im Content-Bereich anzeigen', fakeAsync(() => {
     const plainFixture = TestBed.createComponent(LuxPanelAriaPlainContentTestComponent);
@@ -306,6 +348,34 @@ describe('LuxPanelAriaComponent', () => {
     const content = plainFixture.debugElement.query(By.css('.lux-expansion-panel-content'));
     expect(content).toBeTruthy();
     expect(content.nativeElement.textContent).toContain('Fallback Content');
+
+    const root = plainFixture.nativeElement as HTMLElement;
+    const keydownListener = jasmine.createSpy('keydown');
+    root.addEventListener('keydown', keydownListener);
+    const event = new KeyboardEvent('keydown', { bubbles: true, cancelable: true, key: ' ' });
+    expect(root.querySelector<HTMLInputElement>('input')!.dispatchEvent(event)).toBeTrue();
+    expect(keydownListener).toHaveBeenCalledWith(event);
+    root.removeEventListener('keydown', keydownListener);
+  }));
+
+  it('sollte Tastatureingaben in eigenständigen Panelinhalten weiterleiten', fakeAsync(() => {
+    const standaloneFixture = TestBed.createComponent(LuxPanelAriaStandaloneTestComponent);
+    standaloneFixture.detectChanges();
+    tick();
+    standaloneFixture.detectChanges();
+
+    const root = standaloneFixture.nativeElement as HTMLElement;
+    root.querySelector<HTMLButtonElement>('.lux-expansion-panel-header-toggle')!.click();
+    standaloneFixture.detectChanges();
+    tick();
+    standaloneFixture.detectChanges();
+
+    const keydownListener = jasmine.createSpy('keydown');
+    root.addEventListener('keydown', keydownListener);
+    const event = new KeyboardEvent('keydown', { bubbles: true, cancelable: true, key: ' ' });
+    expect(root.querySelector<HTMLInputElement>('input')!.dispatchEvent(event)).toBeTrue();
+    expect(keydownListener).toHaveBeenCalledWith(event);
+    root.removeEventListener('keydown', keydownListener);
   }));
 });
 
@@ -326,6 +396,7 @@ describe('LuxPanelAriaComponent A11y', () => {
         LuxPanelAriaHeaderDescriptionComponent,
         LuxPanelAriaHeaderCustomComponent,
         LuxPanelAriaContentComponent,
+        LuxPanelAriaActionComponent,
         LuxPanelAriaTestComponent
       ]
     });
@@ -370,7 +441,8 @@ describe('LuxPanelAriaComponent A11y', () => {
     LuxPanelAriaHeaderTitleComponent,
     LuxPanelAriaHeaderDescriptionComponent,
     LuxPanelAriaHeaderCustomComponent,
-    LuxPanelAriaContentComponent
+    LuxPanelAriaContentComponent,
+    LuxPanelAriaActionComponent
   ],
   template: `
     <lux-accordion-aria luxTogglePosition="before">
@@ -393,7 +465,15 @@ describe('LuxPanelAriaComponent A11y', () => {
         <lux-panel-aria-header-custom>
           <button type="button">Aktion</button>
         </lux-panel-aria-header-custom>
-        <lux-panel-aria-content>Content</lux-panel-aria-content>
+        <lux-panel-aria-content>
+          Content
+          <input aria-label="Eingabe" />
+          <textarea aria-label="Mehrzeilige Eingabe"></textarea>
+          <div contenteditable="true" role="textbox" aria-label="Editierbarer Inhalt"></div>
+        </lux-panel-aria-content>
+        <lux-panel-aria-action>
+          <button type="button">Inhaltsaktion</button>
+        </lux-panel-aria-action>
       </lux-panel-aria>
     </lux-accordion-aria>
   `
@@ -421,7 +501,7 @@ class LuxPanelAriaTestComponent {
     <lux-accordion-aria>
       <lux-panel-aria>
         <lux-panel-aria-header-title>Titel</lux-panel-aria-header-title>
-        <p>Fallback Content</p>
+        <p>Fallback Content <input aria-label="Fallback-Eingabe" /></p>
       </lux-panel-aria>
     </lux-accordion-aria>
   `
@@ -431,10 +511,11 @@ class LuxPanelAriaPlainContentTestComponent {}
 @Component({
   selector: 'lux-panel-aria-standalone-test',
   standalone: true,
-  imports: [LuxPanelAriaComponent, LuxPanelAriaHeaderTitleComponent],
+  imports: [LuxPanelAriaComponent, LuxPanelAriaHeaderTitleComponent, LuxPanelAriaContentComponent],
   template: `
     <lux-panel-aria luxColor="warn">
       <lux-panel-aria-header-title>Titel</lux-panel-aria-header-title>
+      <lux-panel-aria-content><input aria-label="Eigenständige Eingabe" /></lux-panel-aria-content>
     </lux-panel-aria>
   `
 })

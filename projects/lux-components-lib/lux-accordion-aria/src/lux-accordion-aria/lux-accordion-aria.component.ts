@@ -1,8 +1,6 @@
 import { NgClass } from '@angular/common';
-import { AccordionGroup } from '@angular/aria/accordion';
-import { Component, DestroyRef, OnDestroy, Signal, computed, contentChildren, inject, input } from '@angular/core';
+import { Component, DestroyRef, booleanAttribute, computed, contentChildren, inject, input } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
-import { Subject } from 'rxjs';
 import { LuxAccordionColor, LuxAccordionColors, LuxModeType } from '@ihk-gfi/lux-components';
 import { LuxPanelAriaHeaderCustomComponent } from '../lux-panel-aria/lux-panel-aria-subcomponents/lux-panel-aria-header-custom.component';
 import { LuxAccordionAriaBase, LuxAccordionAriaPanel, LuxAccordionAriaTogglePosition } from './lux-accordion-aria-base';
@@ -20,9 +18,6 @@ export type LuxAriaTogglePosition = LuxAccordionAriaTogglePosition;
   styleUrls: ['./lux-accordion-aria.component.scss'],
   standalone: true,
   imports: [NgClass],
-  // AccordionGroup as host directive so its ACCORDION_GROUP provider reaches projected lux-panel-aria content
-  // 'disabled' is forwarded under the luxDisabled name so the group's own state stays the single source of truth
-  hostDirectives: [{ directive: AccordionGroup, inputs: ['disabled: luxDisabled'] }],
   providers: [{ provide: LuxAccordionAriaBase, useExisting: LuxAccordionAriaComponent }],
   host: {
     class: 'lux-flex lux-flex-auto',
@@ -34,15 +29,13 @@ export class LuxAccordionAriaComponent extends LuxAccordionAriaBase {
   private static accordionIdCounter = 0;
   private readonly destroyRef = inject(DestroyRef);
   private readonly panels = new Set<LuxAccordionAriaPanel>();
-  // forwarded via hostDirectives inputs above, this is the single source of truth for the disabled state
-  private readonly accordionGroup = inject(AccordionGroup, { self: true });
 
   readonly id = `lux-accordion-aria-${LuxAccordionAriaComponent.accordionIdCounter++}`;
 
   luxMulti = input<LuxAccordionMulti>(false);
   luxMode = input<LuxModeType>('default');
   luxColor = input<LuxAccordionColor | undefined>('primary');
-  readonly luxDisabled: Signal<boolean | undefined> = this.accordionGroup.disabled;
+  readonly luxDisabled = input(false, { transform: booleanAttribute });
   luxHideToggle = input<boolean | undefined>(undefined);
   luxDynamicHeaderHeight = input<boolean | undefined>(undefined);
   luxExpandedHeaderHeight = input<string | undefined>(undefined);
