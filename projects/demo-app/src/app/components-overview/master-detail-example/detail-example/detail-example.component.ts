@@ -7,21 +7,12 @@ import {
   LuxSelectComponent,
   LuxToggleComponent
 } from '@ihk-gfi/lux-components';
-import { StatusMarkerComponent } from '../../../base/status-marker/status-marker.component';
 
 @Component({
   selector: 'detail-example',
   templateUrl: './detail-example.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    LuxDividerComponent,
-    LuxCardContentComponent,
-    LuxCardComponent,
-    LuxToggleComponent,
-    LuxSelectComponent,
-    LuxInputComponent,
-    StatusMarkerComponent
-  ]
+  imports: [LuxDividerComponent, LuxCardContentComponent, LuxCardComponent, LuxToggleComponent, LuxSelectComponent, LuxInputComponent]
 })
 export class DetailExampleComponent {
   readonly selectedDetail = input<any>();

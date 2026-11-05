@@ -17,6 +17,7 @@
         [luxNoLabels]="noLabels()"
         [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
         [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
+        #signalFormToggleComp
       >
       </lux-toggle>
       <example-signal-form-value [field]="signalForm.toggleValue"></example-signal-form-value>
@@ -36,6 +37,7 @@
         [luxNoTopLabel]="noTopLabel()"
         [luxNoBottomLabel]="noBottomLabel()"
         [luxNoLabels]="noLabels()"
+        #reactiveToggleComp
       >
       </lux-toggle>
       <example-form-value [form]="form" [controlBinding]="controlBinding"></example-form-value>
@@ -56,6 +58,7 @@
         [luxNoLabels]="noLabels()"
         [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
         [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
+        #plainValueToggleComp
       >
       </lux-toggle>
       <example-value [value]="plainChecked()"></example-value>
@@ -76,6 +79,7 @@
         [luxNoTopLabel]="noTopLabel()"
         [luxNoBottomLabel]="noBottomLabel()"
         [luxNoLabels]="noLabels()"
+        #defaultToggleComp
       >
       </lux-toggle>
       <example-value [value]="value()"></example-value>
@@ -96,36 +100,24 @@
       [(value)]="hint"
     >
     </lux-input>
-    <div class="lux-flex lux-items-center lux-gap-2">
-      <lux-toggle
-        class="lux-flex-auto"
-        luxLabel="luxNoTopLabel"
-        luxHint="Hat bei dieser Komponente keine sichtbare Auswirkung, da das Label neben dem Bedienelement steht. Es entfällt nur die leere obere Label-Zeile."
-        [(checked)]="noTopLabel"
-        [luxNoTopLabel]="true"
-      ></lux-toggle>
-      <app-status-marker [markerType]="markerTypeUpdated"></app-status-marker>
-    </div>
-    <div class="lux-flex lux-items-center lux-gap-2">
-      <lux-toggle
-        class="lux-flex-auto"
-        luxLabel="luxNoBottomLabel"
-        luxHint="Entfernt den unteren Bereich (Hint, Fehlermeldung, Counter) aus dem DOM."
-        [(checked)]="noBottomLabel"
-        [luxNoTopLabel]="true"
-      ></lux-toggle>
-      <app-status-marker [markerType]="markerTypeUpdated"></app-status-marker>
-    </div>
-    <div class="lux-flex lux-items-center lux-gap-2">
-      <lux-toggle
-        class="lux-flex-auto"
-        luxLabel="luxNoLabels"
-        luxHint="Kombination aus luxNoTopLabel und luxNoBottomLabel."
-        [(checked)]="noLabels"
-        [luxNoTopLabel]="true"
-      ></lux-toggle>
-      <app-status-marker [markerType]="markerTypeUpdated"></app-status-marker>
-    </div>
+    <lux-toggle
+      luxLabel="luxNoTopLabel"
+      luxHint="Hat bei dieser Komponente keine sichtbare Auswirkung, da das Label neben dem Bedienelement steht. Es entfällt nur die leere obere Label-Zeile."
+      [(checked)]="noTopLabel"
+      [luxNoTopLabel]="true"
+    ></lux-toggle>
+    <lux-toggle
+      luxLabel="luxNoBottomLabel"
+      luxHint="Entfernt den unteren Bereich (Hint, Fehlermeldung, Counter) aus dem DOM."
+      [(checked)]="noBottomLabel"
+      [luxNoTopLabel]="true"
+    ></lux-toggle>
+    <lux-toggle
+      luxLabel="luxNoLabels"
+      luxHint="Kombination aus luxNoTopLabel und luxNoBottomLabel."
+      [(checked)]="noLabels"
+      [luxNoTopLabel]="true"
+    ></lux-toggle>
     <lux-toggle
       luxName="toggle_luxHintShowOnlyOnFocus"
       luxLabel="luxHintShowOnlyOnFocus"
@@ -141,7 +133,7 @@
       [luxNoTopLabel]="true"
     >
     </lux-toggle>
-    <lux-toggle luxLabel="luxRequired" (checkedChange)="changeRequired($event)" [luxNoTopLabel]="true">
+    <lux-toggle luxLabel="luxRequired" [checked]="required()" (checkedChange)="changeRequired($event)" [luxNoTopLabel]="true">
       <lux-form-hint>
         Markiert diese Component als Pflichtfeld. Dies funktioniert direkt nur in Components, die nicht in einer Reactive-Form sind.<br />
         <b>In diesem Beispiel wird stattdessen für die Reactive-Form Component der Validator.required für das Form-Control gesetzt.</b>
@@ -174,4 +166,15 @@
       <pre tabindex="0" class="lux-label">{{ errorCallbackString }}</pre>
     }
   </example-base-advanced-options>
+  <example-base-options-actions>
+    <div class="lux-flex lux-flex-wrap lux-gap-4">
+      <lux-button
+        [luxStroked]="true"
+        luxLabel="Fehler anzeigen"
+        luxColor="primary"
+        (luxClicked)="showErrors(signalFormToggleComp, reactiveToggleComp, plainValueToggleComp, defaultToggleComp)"
+        class="lux-flex-none"
+      />
+    </div>
+  </example-base-options-actions>
 </example-base-structure>

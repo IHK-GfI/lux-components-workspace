@@ -1,11 +1,16 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormField, disabled, form, readonly, required } from '@angular/forms/signals';
-import { LuxAutofocusDirective, LuxFormHintComponent, LuxInputComponent, LuxToggleComponent } from '@ihk-gfi/lux-components';
-import { StatusMarkerComponent } from '../../base/status-marker/status-marker.component';
-import { DemoMarkerType } from '../../base/status-marker/status-marker.model';
+import {
+  LuxAutofocusDirective,
+  LuxButtonComponent,
+  LuxFormHintComponent,
+  LuxInputComponent,
+  LuxToggleComponent
+} from '@ihk-gfi/lux-components';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
+import { ExampleBaseOptionsActionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-options-actions.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
 import { ExampleBaseStructureComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-structure/example-base-structure.component';
 import { emptyErrorCallback, exampleErrorCallback } from '../../example-base/example-base-util/example-base-helper';
@@ -24,6 +29,7 @@ interface ToggleDummyForm {
   styleUrls: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
+    LuxButtonComponent,
     LuxToggleComponent,
     LuxInputComponent,
     LuxFormHintComponent,
@@ -37,7 +43,7 @@ interface ToggleDummyForm {
     ExampleBaseSimpleOptionsComponent,
     ExampleFormDisableComponent,
     ExampleBaseAdvancedOptionsComponent,
-    StatusMarkerComponent,
+    ExampleBaseOptionsActionsComponent,
     FormField
   ]
 })
@@ -63,7 +69,6 @@ export class ToggleExampleComponent {
   readonly noTopLabel = signal(true);
   readonly noBottomLabel = signal(false);
   readonly noLabels = signal(false);
-  readonly markerTypeUpdated = DemoMarkerType.Updated;
   readonly disabled = signal(false);
   readonly readonly = signal(false);
   readonly required = signal(false);
@@ -87,5 +92,21 @@ export class ToggleExampleComponent {
       this.form.get(this.controlBinding)!.setValidators(null);
     }
     this.form.get(this.controlBinding)!.updateValueAndValidity();
+  }
+
+  showErrors(...toggleComponents: LuxToggleComponent[]) {
+    this.signalModel.set({ toggleValue: false });
+    this.plainChecked.set(false);
+    this.value.set(false);
+    this.form.get(this.controlBinding)!.setValue(false);
+
+    this.changeRequired(true);
+
+    // Die Legacy-Brücke (formControl) steuert im Signal-Form-Betrieb nicht den echten Field-State.
+    this.signalForm.toggleValue().markAsTouched();
+
+    toggleComponents.forEach((comp: LuxToggleComponent) => {
+      comp.formControl.markAsTouched();
+    });
   }
 }

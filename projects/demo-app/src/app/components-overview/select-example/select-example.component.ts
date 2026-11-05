@@ -13,8 +13,6 @@ import {
   LuxToggleComponent,
   LuxTooltipDirective
 } from '@ihk-gfi/lux-components';
-import { StatusMarkerComponent } from '../../base/status-marker/status-marker.component';
-import { DemoMarkerType } from '../../base/status-marker/status-marker.model';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
 import { ExampleBaseOptionsActionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-options-actions.component';
@@ -59,7 +57,6 @@ interface SelectDummyForm {
     ExampleBaseAdvancedOptionsComponent,
     ExampleBaseOptionsActionsComponent,
     LuxTooltipDirective,
-    StatusMarkerComponent,
     JsonPipe,
     FormField
   ]
@@ -83,8 +80,6 @@ export class SelectExampleComponent {
   // 2. Freistehend, ohne jedes Formular.
   readonly plainValue = signal<any>(null);
 
-  readonly markerTypeNew = DemoMarkerType.New;
-  readonly markerTypeUpdated = DemoMarkerType.Updated;
   readonly useErrorMessage = signal(true);
   readonly useCompareWithFn = signal(false);
   readonly useValueFn = signal(false);

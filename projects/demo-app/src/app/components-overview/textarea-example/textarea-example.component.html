@@ -143,36 +143,24 @@
     </lux-input>
     <lux-input luxLabel="luxHint" luxHint="Diese Property ermöglicht es, den Hint für die Component zu setzen." [(value)]="hint">
     </lux-input>
-    <div class="lux-flex lux-items-center lux-gap-2">
-      <lux-toggle
-        class="lux-flex-auto"
-        luxLabel="luxNoTopLabel"
-        luxHint="Blendet das Label nur visuell aus. Es bleibt im DOM und der zugängliche Name bleibt erhalten."
-        [(checked)]="noTopLabel"
-        [luxNoTopLabel]="true"
-      ></lux-toggle>
-      <app-status-marker [markerType]="markerTypeUpdated"></app-status-marker>
-    </div>
-    <div class="lux-flex lux-items-center lux-gap-2">
-      <lux-toggle
-        class="lux-flex-auto"
-        luxLabel="luxNoBottomLabel"
-        luxHint="Entfernt den unteren Bereich (Hint, Fehlermeldung, Counter) aus dem DOM."
-        [(checked)]="noBottomLabel"
-        [luxNoTopLabel]="true"
-      ></lux-toggle>
-      <app-status-marker [markerType]="markerTypeUpdated"></app-status-marker>
-    </div>
-    <div class="lux-flex lux-items-center lux-gap-2">
-      <lux-toggle
-        class="lux-flex-auto"
-        luxLabel="luxNoLabels"
-        luxHint="Kombination aus luxNoTopLabel und luxNoBottomLabel."
-        [(checked)]="noLabels"
-        [luxNoTopLabel]="true"
-      ></lux-toggle>
-      <app-status-marker [markerType]="markerTypeUpdated"></app-status-marker>
-    </div>
+    <lux-toggle
+      luxLabel="luxNoTopLabel"
+      luxHint="Blendet das Label nur visuell aus. Es bleibt im DOM und der zugängliche Name bleibt erhalten."
+      [(checked)]="noTopLabel"
+      [luxNoTopLabel]="true"
+    ></lux-toggle>
+    <lux-toggle
+      luxLabel="luxNoBottomLabel"
+      luxHint="Entfernt den unteren Bereich (Hint, Fehlermeldung, Counter) aus dem DOM."
+      [(checked)]="noBottomLabel"
+      [luxNoTopLabel]="true"
+    ></lux-toggle>
+    <lux-toggle
+      luxLabel="luxNoLabels"
+      luxHint="Kombination aus luxNoTopLabel und luxNoBottomLabel."
+      [(checked)]="noLabels"
+      [luxNoTopLabel]="true"
+    ></lux-toggle>
     <lux-toggle
       luxLabel="luxHintShowOnlyOnFocus"
       luxHint="Erlaubt es, den Hinweis nur einzublenden, wenn das Element den Fokus hat"

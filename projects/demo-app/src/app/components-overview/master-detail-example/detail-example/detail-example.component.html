@@ -2,10 +2,7 @@
   <lux-card-content>
     <div class="lux-flex lux-flex-col">
       <div class="lux-grid lux-grid-cols-2 lt-lg:lux-grid-cols-1 lux-gap-8">
-        <div class="lux-flex lux-items-center">
-          <lux-toggle luxLabel="luxCustomHeader anzeigen" [(checked)]="masterDetailConfig()!.showCustomCardHeader" [luxNoLabels]="true" />
-          <app-status-marker />
-        </div>
+        <lux-toggle luxLabel="luxCustomHeader anzeigen" [(checked)]="masterDetailConfig()!.showCustomCardHeader" [luxNoLabels]="true" />
         <lux-input luxName="master-detail_titleDetail" luxLabel="Title" [luxNoBottomLabel]="true" [(value)]="selectedDetail().title" />
         <lux-input
           luxName="master-detail_subtitleDetail"
