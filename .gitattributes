@@ -1,0 +1,2 @@
+# Textdateien haben auf allen Systemen LF (passend zu "endOfLine": "lf" in der .prettierrc).
+* text=auto eol=lf
