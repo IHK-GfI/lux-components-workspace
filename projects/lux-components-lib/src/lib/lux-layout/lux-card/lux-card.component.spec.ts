@@ -350,6 +350,28 @@ describe('LuxCardComponent', () => {
       expect(fixture.debugElement.query(By.css('mat-card-header'))).not.toBeNull();
     });
 
+    it('Sollte ein projiziertes lux-icon im Header darstellen', async () => {
+      // Vorbedingungen testen
+      expect(fixture.debugElement.query(By.css('mat-card-header'))).toBeNull();
+
+      // Änderungen durchführen
+      component.testShowIcon.set(true);
+      await LuxTestHelper.wait(fixture);
+
+      // Nachbedingungen prüfen
+      expect(fixture.debugElement.query(By.css('mat-card-header'))).not.toBeNull();
+      const iconEl = fixture.debugElement.query(By.css('.lux-card-icon-container lux-icon'));
+      expect(iconEl).not.toBeNull();
+      expect(iconEl.componentInstance.luxIconName()).toEqual('lux-interface-validation-check');
+
+      // Änderungen durchführen
+      component.testShowIcon.set(false);
+      await LuxTestHelper.wait(fixture);
+
+      // Nachbedingungen prüfen
+      expect(fixture.debugElement.query(By.css('.lux-card-icon-container'))).toBeNull();
+    });
+
     it('Sollte Click-Events deaktivieren (luxDisabled)', async () => {
       // Vorbedingungen testen
       const spy = vi.spyOn(component, 'cardClicked').mockReturnValue(undefined);

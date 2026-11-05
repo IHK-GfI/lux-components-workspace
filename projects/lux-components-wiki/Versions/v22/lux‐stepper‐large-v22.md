@@ -116,23 +116,23 @@ Die Nutzereingaben werden in der Zusammenfassung klar gegliedert in Textform dar
 
 ### @Input
 
-| Name                    | Typ                       | Beschreibung                                                                                                                                                                                                                                                                                                                        |
-| ----------------------- | ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| luxPrevButtonConfig | LuxStepperLargeButtonInfo | Konfigurationsobjekt des Zurück-Buttons. Default: `LUX_STEPPER_LARGE_DEFAULT_PREV_BTN_CONF`. |
-| luxNextButtonConfig | LuxStepperLargeButtonInfo | Konfigurationsobjekt des Weiter-Buttons. Default: `LUX_STEPPER_LARGE_DEFAULT_NEXT_BTN_CONF`. |
-| luxFinButtonConfig | LuxStepperLargeButtonInfo | Konfigurationsobjekt des Abschließen-Buttons. Default: `LUX_STEPPER_LARGE_DEFAULT_FIN_BTN_CONF`. |
-| luxCurrentStepNumber | number | Der Index des aktuellen Schritts (0..n). Two-Way-Binding über `[(luxCurrentStepNumber)]` möglich. Default: 0. |
-| luxStepValidationActive | boolean | Über diese Property kann die Validierung der Schritte (de-)aktiviert werden. Wenn die Validierung deaktiviert wird, dann ist der Weiter-Button immer aktiv und nur die Veto-Funktionen können das Navigieren zum nächsten Schritt verhindern. Default: true. |
-| luxA11YMode | boolean | Diese Property verwendet bei aktivierter Validierung aria-disabled statt disabled bei den Weiter-Buttons. Dieses erfordert eine Anpassung beim Eventhandling (siehe [Empfohlene Umsetzung bei luxOnNextStepNotComplete](#empfohlene-umsetzung-bei-luxonnextstepnotcomplete)). Default: true. |
+| Name                    | Typ                       | Beschreibung                                                                                                                                                                                                                                                                                 |
+| ----------------------- | ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| luxPrevButtonConfig     | LuxStepperLargeButtonInfo | Konfigurationsobjekt des Zurück-Buttons. Default: `LUX_STEPPER_LARGE_DEFAULT_PREV_BTN_CONF`.                                                                                                                                                                                                 |
+| luxNextButtonConfig     | LuxStepperLargeButtonInfo | Konfigurationsobjekt des Weiter-Buttons. Default: `LUX_STEPPER_LARGE_DEFAULT_NEXT_BTN_CONF`.                                                                                                                                                                                                 |
+| luxFinButtonConfig      | LuxStepperLargeButtonInfo | Konfigurationsobjekt des Abschließen-Buttons. Default: `LUX_STEPPER_LARGE_DEFAULT_FIN_BTN_CONF`.                                                                                                                                                                                             |
+| luxCurrentStepNumber    | number                    | Der Index des aktuellen Schritts (0..n). Two-Way-Binding über `[(luxCurrentStepNumber)]` möglich. Default: 0.                                                                                                                                                                                |
+| luxStepValidationActive | boolean                   | Über diese Property kann die Validierung der Schritte (de-)aktiviert werden. Wenn die Validierung deaktiviert wird, dann ist der Weiter-Button immer aktiv und nur die Veto-Funktionen können das Navigieren zum nächsten Schritt verhindern. Default: true.                                 |
+| luxA11YMode             | boolean                   | Diese Property verwendet bei aktivierter Validierung aria-disabled statt disabled bei den Weiter-Buttons. Dieses erfordert eine Anpassung beim Eventhandling (siehe [Empfohlene Umsetzung bei luxOnNextStepNotComplete](#empfohlene-umsetzung-bei-luxonnextstepnotcomplete)). Default: true. |
 
 ### @Output
 
-| Name                       | Typ                           | Beschreibung                                                                                                                     |
-| -------------------------- | ----------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| luxStepperFinished         | void                          | Das Event wird gefeuert, wenn der Stepper erfolgreich abgeschlossen wurde.                                                       |
-| luxStepChanged             | LuxStepperLargeSelectionEvent | Das Event wird gefeuert, wenn der Schritt gewechselt wird.                                                                       |
-| luxCurrentStepNumberChange | number                        | Das Event wird gefeuert, wenn der Schritt gewechselt wird und ermöglicht das Two-Way-Binding.                                    |
-| luxOnNextStepNotComplete | number | Das Event wird gefeuert, wenn der luxA11YMode aktiviert ist und der User den Weiter-Button betätigt, bevor luxCompleted = true gilt. Übergeben wird der Index des Schritts. |
+| Name                       | Typ                           | Beschreibung                                                                                                                                                                |
+| -------------------------- | ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| luxStepperFinished         | void                          | Das Event wird gefeuert, wenn der Stepper erfolgreich abgeschlossen wurde.                                                                                                  |
+| luxStepChanged             | LuxStepperLargeSelectionEvent | Das Event wird gefeuert, wenn der Schritt gewechselt wird.                                                                                                                  |
+| luxCurrentStepNumberChange | number                        | Das Event wird gefeuert, wenn der Schritt gewechselt wird und ermöglicht das Two-Way-Binding.                                                                               |
+| luxOnNextStepNotComplete   | number                        | Das Event wird gefeuert, wenn der luxA11YMode aktiviert ist und der User den Weiter-Button betätigt, bevor luxCompleted = true gilt. Übergeben wird der Index des Schritts. |
 
 ## Components
 
@@ -185,13 +185,13 @@ Alle Inputs des Steps sind als `model()` umgesetzt, d.h. sie können auch per Tw
 
 #### @Input
 
-| Name         | Typ                                                                | Beschreibung                                                                                                                                                                                                                                                                        |
-| ------------ | ------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| luxTitle | string | Der Titel des Schritts, wird z.B. in der Navigationsleiste angezeigt. Default: ''. |
-| luxTouched | boolean | Gibt an, ob der Schritt bereits besucht wurde. Default: false. |
-| luxCompleted | boolean | Gibt an, ob der Schritt erfolgreich abgeschlossen wurde. Default: false. |
-| luxDisabled | boolean | Gibt an, ob der Schritt deaktiviert ist (z.B. für optionale oder abhängige Schritte). Default: false. |
-| luxVetoFn | (clickEvent: LuxStepperLargeClickEvent) => Promise\<LuxVetoState\> | Diese Funktion wird aufgerufen, wenn versucht wird, den Schritt zu wechseln. D.h. hier kann zusätzliche Logik (Validierung im Backend,...) ausgeführt werden. Als Rückgabewert liefert das Promise `LuxVetoState.navigationAccepted` oder `LuxVetoState.navigationRejected` zurück. Default: eine Funktion, die immer `navigationAccepted` liefert. |
+| Name         | Typ                                                                | Beschreibung                                                                                                                                                                                                                                                                                                                                        |
+| ------------ | ------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| luxTitle     | string                                                             | Der Titel des Schritts, wird z.B. in der Navigationsleiste angezeigt. Default: ''.                                                                                                                                                                                                                                                                  |
+| luxTouched   | boolean                                                            | Gibt an, ob der Schritt bereits besucht wurde. Default: false.                                                                                                                                                                                                                                                                                      |
+| luxCompleted | boolean                                                            | Gibt an, ob der Schritt erfolgreich abgeschlossen wurde. Default: false.                                                                                                                                                                                                                                                                            |
+| luxDisabled  | boolean                                                            | Gibt an, ob der Schritt deaktiviert ist (z.B. für optionale oder abhängige Schritte). Default: false.                                                                                                                                                                                                                                               |
+| luxVetoFn    | (clickEvent: LuxStepperLargeClickEvent) => Promise\<LuxVetoState\> | Diese Funktion wird aufgerufen, wenn versucht wird, den Schritt zu wechseln. D.h. hier kann zusätzliche Logik (Validierung im Backend,...) ausgeführt werden. Als Rückgabewert liefert das Promise `LuxVetoState.navigationAccepted` oder `LuxVetoState.navigationRejected` zurück. Default: eine Funktion, die immer `navigationAccepted` liefert. |
 
 ### @ViewChild
 
@@ -221,13 +221,12 @@ Alle Inputs des Steps sind als `model()` umgesetzt, d.h. sie können auch per Tw
 
 ### LuxStepperLargeButtonInfo
 
-| Name               | Typ                                 | Beschreibung                                                    |
-| ------------------ | ----------------------------------- | --------------------------------------------------------------- |
-| label? | string | Die Bezeichnung des Buttons. |
-| color? | LuxThemePalette | Die Farbe des Buttons ('primary', 'accent', 'warn' oder `undefined`). |
-| iconName? | string | Der Iconname. |
-| iconShowRight? | boolean | Gibt an, ob das Icon rechts von der Bezeichnung angezeigt wird. |
-| alignIconWithLabel? | boolean | Ohne Wirkung (wird von den Buttons nicht mehr ausgewertet). |
+| Name           | Typ             | Beschreibung                                                          |
+| -------------- | --------------- | --------------------------------------------------------------------- |
+| label?         | string          | Die Bezeichnung des Buttons.                                          |
+| color?         | LuxThemePalette | Die Farbe des Buttons ('primary', 'accent', 'warn' oder `undefined`). |
+| iconName?      | string          | Der Iconname.                                                         |
+| iconShowRight? | boolean         | Gibt an, ob das Icon rechts von der Bezeichnung angezeigt wird.       |
 
 Es gibt die folgenden Konstanten für die Standardkonfigurationen:
 
@@ -239,12 +238,12 @@ Ein leeres Label bedeutet, dass der Standardtext (Zurück/Weiter/Abschließen) v
 
 ### LuxStepperLargeClickEvent
 
-| Name     | Typ                                 | Beschreibung                                                                                |
-| -------- | ----------------------------------- | ------------------------------------------------------------------------------------------- |
-| stepper  | LuxStepperLargeComponent            | Die Stepperkomponente.                                                                      |
-| newIndex | number                              | Der neue Index zu dem navigiert wird, wenn kein Veto eingelegt wird. (Siehe `luxVetoFn`).   |
-| newStep  | ILuxStepperLargeStep                | Der neue Schritt zu dem navigiert wird, wenn kein Veto eingelegt wird. (Siehe `luxVetoFn`). |
-| source | LuxStepperLargeClickEventSourceType | Gibt die Quelle des Events an: 'nav' (Navigationsliste), 'prev_button', 'next_button' oder 'fin_button'. |
+| Name     | Typ                                 | Beschreibung                                                                                             |
+| -------- | ----------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| stepper  | LuxStepperLargeComponent            | Die Stepperkomponente.                                                                                   |
+| newIndex | number                              | Der neue Index zu dem navigiert wird, wenn kein Veto eingelegt wird. (Siehe `luxVetoFn`).                |
+| newStep  | ILuxStepperLargeStep                | Der neue Schritt zu dem navigiert wird, wenn kein Veto eingelegt wird. (Siehe `luxVetoFn`).              |
+| source   | LuxStepperLargeClickEventSourceType | Gibt die Quelle des Events an: 'nav' (Navigationsliste), 'prev_button', 'next_button' oder 'fin_button'. |
 
 ### LuxStepperLargeSelectionEvent
 

@@ -57,7 +57,6 @@ export class LuxCardComponent implements AfterViewInit {
   readonly luxTitleTooltip = input<string | undefined>();
   readonly luxSubTitle = input<string | undefined>();
   readonly luxSubTitleTooltip = input<string | undefined>();
-  readonly luxIconName = input<string | undefined>();
   readonly luxDisabled = input<boolean | undefined>();
   readonly luxTagId = input<string | undefined>();
   readonly luxTitleLineBreak = input(true);
