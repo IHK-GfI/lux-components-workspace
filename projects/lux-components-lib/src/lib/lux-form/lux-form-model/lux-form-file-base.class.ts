@@ -33,7 +33,7 @@ export abstract class LuxFormFileBase<T = any> extends LuxFormComponentBase<T> {
   @Input() luxUploadReportProgress = false;
   @Input() luxContentsAsBlob = false;
   @Input() luxTagId?: string;
-  @Input() luxMaxSizeMB = 10;
+  @Input() luxMaxSizeMiB = 10;
   @Input() luxMaxFileCount = 100;
   @Input() luxCapture = '';
   @Input() luxUploadUrl = '';
@@ -278,7 +278,7 @@ export abstract class LuxFormFileBase<T = any> extends LuxFormComponentBase<T> {
       }
 
       // Prüfen ob Dateigröße überschritten worden ist
-      if (this.getFileSizeInMB(file) > this.luxMaxSizeMB) {
+      if (this.getFileSizeInMiB(file) > this.luxMaxSizeMiB) {
         return Promise.reject({
           cause: LuxFileErrorCause.MaxSizeError,
           exception: this.getMaxSizeErrorMessage(file),
@@ -463,7 +463,7 @@ export abstract class LuxFormFileBase<T = any> extends LuxFormComponentBase<T> {
    * Berechnet die Größe der übergebenen Datei in MB.
    * @param file
    */
-  protected getFileSizeInMB(file: File) {
+  protected getFileSizeInMiB(file: File) {
     return file.size / 1_048_576;
   }
 
@@ -474,8 +474,8 @@ export abstract class LuxFormFileBase<T = any> extends LuxFormComponentBase<T> {
   protected getMaxSizeErrorMessage(file: File): string {
     return this.tService.translate('luxc.form-file-base.error_message.max_file_size', {
       fileName: file.name,
-      fileSizeInMB: (+this.getFileSizeInMB(file).toFixed(2)).toString(),
-      maxSizeMB: (+this.luxMaxSizeMB.toFixed(2)).toString()
+      fileSizeInMiB: (+this.getFileSizeInMiB(file).toFixed(2)).toString(),
+      maxSizeMiB: (+this.luxMaxSizeMiB.toFixed(2)).toString()
     });
   }
 
