@@ -1,10 +1,10 @@
 import { expect, test } from '@playwright/test';
 import { FORM_CONTROLS } from './support/form-controls';
-import { EXAMPLE_IN_FORM, EXAMPLE_WITHOUT_FORM, ExampleSection, FormExamplePage } from './support/form-example';
+import { EXAMPLE_IN_FORM, EXAMPLE_SIGNAL_FORM, EXAMPLES, ExampleSection, FORM_EXAMPLES, FormExamplePage } from './support/form-example';
 
 /**
  * Komponentenübergreifende Tests für alle Form-Controls,
- * jeweils für das Beispiel ohne und mit Reactive-Form.
+ * jeweils für die Beispiele mit Signal Form, freistehend (aktuelle und veraltete API) und mit Reactive-Form.
  */
 
 /** Objekte (z. B. Lookup-Einträge) werden nur in den angegebenen Feldern verglichen. */
@@ -24,7 +24,7 @@ for (const spec of FORM_CONTROLS) {
       await example.options.useValidatorErrorMessages();
     });
 
-    for (const heading of [EXAMPLE_WITHOUT_FORM, EXAMPLE_IN_FORM]) {
+    for (const heading of EXAMPLES) {
       if (!spec.noRequiredOption) {
         test(`${heading}: Required-Marker`, async () => {
           const marker = spec.requiredMarker(example.section(heading, spec.tag).control);
@@ -45,7 +45,8 @@ for (const spec of FORM_CONTROLS) {
 
           await spec.leaveEmpty(section.control);
 
-          await expect(section.error).toHaveText(spec.requiredMessage());
+          const expected = heading === EXAMPLE_SIGNAL_FORM && spec.signalFormRequiredMessage ? spec.signalFormRequiredMessage : spec.requiredMessage();
+          await expect(section.error).toHaveText(expected);
           await expect(section.wrapper).toHaveClass(/lux-form-control-error-authentic/);
         });
 
@@ -71,7 +72,7 @@ for (const spec of FORM_CONTROLS) {
         await spec.enterValue(section.control);
 
         await expectEnteredValue(section, spec.enteredValue);
-        if (heading === EXAMPLE_IN_FORM) {
+        if (FORM_EXAMPLES.includes(heading)) {
           await expect.poll(async () => (await section.formState()).dirty).toBe(true);
         }
       });

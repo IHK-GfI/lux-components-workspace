@@ -1,5 +1,5 @@
 import { DatePipe, LowerCasePipe, NgStyle } from '@angular/common';
-import { Component, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal, viewChild } from '@angular/core';
 import {
   LuxConsoleService,
   LuxFormHintComponent,
@@ -10,7 +10,7 @@ import {
   LuxTableColumnFooterComponent,
   LuxTableColumnHeaderComponent,
   LuxTableComponent,
-  LuxToggleAcComponent
+  LuxToggleComponent
 } from '@ihk-gfi/lux-components';
 import { LuxLoadingService } from '@ihk-gfi/lux-components/lux-loading';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
@@ -27,14 +27,14 @@ import { TestHttpDao } from './test-http-dao';
   selector: 'app-table-server-example',
   templateUrl: './table-server-example.component.html',
   styleUrls: ['./table-server-example.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxTableColumnContentComponent,
     LuxTableColumnHeaderComponent,
     LuxTableColumnComponent,
     LuxTableColumnFooterComponent,
     LuxTableComponent,
-    LuxToggleAcComponent,
+    LuxToggleComponent,
     LuxFormHintComponent,
     LuxMenuComponent,
     LuxMenuItemComponent,
@@ -51,18 +51,18 @@ import { TestHttpDao } from './test-http-dao';
   ]
 })
 export class TableServerExampleComponent extends TableExampleBaseClass {
+  readonly tableComponent = viewChild<LuxTableComponent<any>>('myTable');
+
+  httpDAO: TestHttpDao;
+  reloadCount = 0;
+  readonly showProgress = signal(true);
+  readonly useGlobalLoading = signal(false);
+
   private logger = inject(LuxConsoleService);
   private loading = inject(LuxLoadingService);
   private releaseTableLoading?: () => void;
   private tableLoading = false;
   private showProgressBeforeGlobalLoading = true;
-
-  @ViewChild('myTable') tableComponent!: LuxTableComponent;
-
-  httpDAO: TestHttpDao;
-  reloadCount = 0;
-  showProgress = true;
-  useGlobalLoading = false;
 
   constructor() {
     super();
@@ -80,16 +80,16 @@ export class TableServerExampleComponent extends TableExampleBaseClass {
    * Damit nie zwei Ladebalken gleichzeitig laufen, wird die interne Progressbar dabei deaktiviert.
    */
   onUseGlobalLoadingChange(useGlobalLoading: boolean) {
-    if (useGlobalLoading === this.useGlobalLoading) {
+    if (useGlobalLoading === this.useGlobalLoading()) {
       return;
     }
 
-    this.useGlobalLoading = useGlobalLoading;
+    this.useGlobalLoading.set(useGlobalLoading);
     if (useGlobalLoading) {
-      this.showProgressBeforeGlobalLoading = this.showProgress;
-      this.showProgress = false;
+      this.showProgressBeforeGlobalLoading = this.showProgress();
+      this.showProgress.set(false);
     } else {
-      this.showProgress = this.showProgressBeforeGlobalLoading;
+      this.showProgress.set(this.showProgressBeforeGlobalLoading);
     }
     this.syncGlobalLoading();
   }
@@ -103,12 +103,22 @@ export class TableServerExampleComponent extends TableExampleBaseClass {
     return this.httpDAO.data;
   }
 
+  setMultiSelectDisabled(disabled: boolean): void {
+    this.httpDAO.data.forEach((item, index) => {
+      if (index === 0 || index === 2) {
+        item.disabled = disabled;
+      }
+    });
+    // Erzwingt einen erneuten (gemockten) Server-Request, damit die Tabelle die geänderten Daten übernimmt.
+    this.getTableComponent().loadHttpDAOData();
+  }
+
   /**
    * Meldet den Ladezustand der Tabelle als anzeigenden Vorgang (busy) an den LuxLoadingService, solange dieser verwendet wird.
    * Wird während eines Ladevorgangs umgeschaltet, wird der laufende Vorgang übernommen bzw. freigegeben.
    */
   private syncGlobalLoading() {
-    const loading = this.useGlobalLoading && this.tableLoading;
+    const loading = this.useGlobalLoading() && this.tableLoading;
     if (loading && !this.releaseTableLoading) {
       this.releaseTableLoading = this.loading.busy();
     } else if (!loading && this.releaseTableLoading) {
@@ -118,7 +128,7 @@ export class TableServerExampleComponent extends TableExampleBaseClass {
   }
 
   getTableComponent(): LuxTableComponent<any> {
-    return this.tableComponent;
+    return this.tableComponent()!;
   }
 
   onSelectedChange(selected: Set<any>) {

@@ -1,6 +1,7 @@
-import { Component, inject, OnDestroy, ViewChild, ChangeDetectionStrategy } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { ChangeDetectionStrategy, Component, inject, OnDestroy, signal, viewChild } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Subscription } from 'rxjs';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { LuxMediaQueryObserverService } from '../../lux-util/lux-media-query-observer.service';
 import { LuxFilter } from '../lux-filter-base/lux-filter';
 import { LuxFilterItem } from '../lux-filter-base/lux-filter-item';
@@ -8,12 +9,12 @@ import { LuxFilterItem } from '../lux-filter-base/lux-filter-item';
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
-import { LuxAutocompleteAcComponent } from '../../lux-form/lux-autocomplete-ac/lux-autocomplete-ac.component';
-import { LuxDatepickerAcComponent } from '../../lux-form/lux-datepicker-ac/lux-datepicker-ac.component';
-import { LuxInputAcComponent } from '../../lux-form/lux-input-ac/lux-input-ac.component';
-import { LuxSelectAcComponent } from '../../lux-form/lux-select-ac/lux-select-ac.component';
+import { LuxAutocompleteComponent } from '../../lux-form/lux-autocomplete/lux-autocomplete.component';
+import { LuxDatepickerComponent } from '../../lux-form/lux-datepicker/lux-datepicker.component';
+import { LuxInputComponent } from '../../lux-form/lux-input/lux-input.component';
+import { LuxSelectComponent } from '../../lux-form/lux-select/lux-select.component';
 import { LuxTimepickerComponent } from '../../lux-form/lux-timepicker/lux-timepicker.component';
-import { LuxToggleAcComponent } from '../../lux-form/lux-toggle-ac/lux-toggle-ac.component';
+import { LuxToggleComponent } from '../../lux-form/lux-toggle/lux-toggle.component';
 import { LuxFilterItemDirective } from '../lux-filter-base/lux-filter-item.directive';
 import { LuxFilterFormComponent } from './lux-filter-form.component';
 
@@ -21,18 +22,19 @@ describe('LuxFilterFormComponent', () => {
   let component: TestFilterFormComponent;
   let fixture: ComponentFixture<TestFilterFormComponent>;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       providers: [provideHttpClient(withXhr(), withInterceptorsFromDi()), provideHttpClientTesting(), provideLuxTranslocoTesting()]
     }).compileComponents();
-  }));
+  });
 
-  beforeEach(fakeAsync(() => {
+  beforeEach(async () => {
     fixture = TestBed.createComponent(TestFilterFormComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-    tick(500);
-  }));
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    fixture.detectChanges();
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();
@@ -40,46 +42,46 @@ describe('LuxFilterFormComponent', () => {
 
   it('Sollte ohne Validierungsfehler filtern', () => {
     // Init
-    const spy = spyOn(component, 'onFilter').and.callThrough();
+    const spy = vi.spyOn(component, 'onFilter');
 
     // Vorbedingungen testen
-    expect(component.filterComponent.filterForm.get('input')!.value).toBeUndefined();
+    expect(component.filterComponent().filterForm.get('input')!.value).toBeUndefined();
 
     // Änderungen durchführen
-    component.initFilter = { input: 'Not empty' };
+    component.initFilter.set({ input: 'Not empty' });
     fixture.detectChanges();
 
     // Nachbedingungen prüfen
-    expect(component.filterComponent.filterForm.valid).toBeTrue();
+    expect(component.filterComponent().filterForm.valid).toBe(true);
     expect(spy).toHaveBeenCalledTimes(1);
   });
 
   it('Sollte mit Validierungsfehlern nicht filtern', () => {
     // Init
-    const spy = spyOn(component, 'onFilter').and.callThrough();
+    const spy = vi.spyOn(component, 'onFilter');
 
     // Vorbedingungen testen
-    expect(component.filterComponent.filterForm.get('input')!.value).toBeUndefined();
+    expect(component.filterComponent().filterForm.get('input')!.value).toBeUndefined();
 
     // Änderungen durchführen
     // Validierungsfehler: Das Feld 'input' ist required und darf somit nicht leer sein.
-    component.initFilter = { input: '' };
+    component.initFilter.set({ input: '' });
     fixture.detectChanges();
 
     // Nachbedingungen prüfen
-    expect(component.filterComponent.filterForm.valid).toBeFalse();
+    expect(component.filterComponent().filterForm.valid).toBe(false);
     expect(spy).toHaveBeenCalledTimes(0);
   });
 
   it('Sollte die Filterwerte vollständig ersetzen', () => {
     // Init
-    const spy = spyOn(component, 'onFilter').and.callThrough();
+    const spy = vi.spyOn(component, 'onFilter');
 
     // Vorbedingungen testen
-    expect(component.filterComponent.luxFilterValues).toEqual({});
+    expect(component.filterComponent().luxFilterValues()).toEqual({});
 
     // Änderungen durchführen
-    component.initFilter = { input: 'aaa' };
+    component.initFilter.set({ input: 'aaa' });
     fixture.detectChanges();
 
     // Nachbedingungen prüfen
@@ -87,31 +89,59 @@ describe('LuxFilterFormComponent', () => {
 
     // Änderungen durchführen.
     // Hier sollen die Filterwerte ersetzt werden.
-    component.initFilter = { autocomplete: component.autoCompleteOptions[0] };
+    component.initFilter.set({ autocomplete: component.autoCompleteOptions[0] });
     fixture.detectChanges();
 
     // Nachbedingungen prüfen
     expect(spy).toHaveBeenCalledTimes(1); // Es bleibt bei 1, weil das Pflichtfeld "input" nicht gefüllt ist.
-    expect(component.filterComponent.filterForm.get('autocomplete')!.value).toEqual(component.autoCompleteOptions[0]);
-    expect(component.filterComponent.filterForm.get('input')!.value).toBeUndefined();
+    expect(component.filterComponent().filterForm.get('autocomplete')!.value).toEqual(component.autoCompleteOptions[0]);
+    expect(component.filterComponent().filterForm.get('input')!.value).toBeUndefined();
   });
 
-  it('Sollte auch mit Datepicker-Timepicker-Kombination funktionieren', () => {
+  it('Sollte auch mit Datepicker-Timepicker-Kombination funktionieren', async () => {
     // Init
-    const spy = spyOn(component, 'onFilter').and.callThrough();
+    const spy = vi.spyOn(component, 'onFilter');
 
     // Vorbedingungen testen
-    expect(component.filterComponent.filterForm.get('combinedDateTime')!.value).toBeUndefined();
+    expect(component.filterComponent().filterForm.get('combinedDateTime')!.value).toBeUndefined();
 
     // Änderungen durchführen
-    component.initFilter = { input: 'Not empty', combinedDateTime: '2020-07-21T14:30:00.000Z' };
+    component.initFilter.set({ input: 'Not empty', combinedDateTime: '2020-07-21T14:30:00.000Z' });
     fixture.detectChanges();
+    // Datepicker/Timepicker verzögern ihren Value-Change-Emit per setTimeout (siehe
+    // notifyFormValueChangedTimeout), um ein ExpressionChangedAfterChecked zu vermeiden. Ohne
+    // dieses Warten wird die Fixture zerstört, bevor der Timeout feuert (NG0953).
+    await fixture.whenStable();
 
     // Nachbedingungen prüfen
-    expect(component.filterComponent.filterForm.valid).toBeTrue();
-    expect(component.filterComponent.filterForm.get('combinedDateTime')!.value).toEqual('2020-07-21T14:30:00.000Z');
+    expect(component.filterComponent().filterForm.valid).toBe(true);
+    expect(component.filterComponent().filterForm.get('combinedDateTime')!.value).toEqual('2020-07-21T14:30:00.000Z');
     expect(component.currentFilter.combinedDateTime).toEqual('2020-07-21T14:30:00.000Z');
     expect(spy).toHaveBeenCalledTimes(1);
+  });
+
+  it('Sollte luxFilterDisabled ohne Endlosschleife umschalten', async () => {
+    // formControl.disabled ist im Signal-Forms-Betrieb selbst signalgestützt. Ohne untracked() um
+    // die disable()/enable()-Aufrufe koppelte deren Read den Effect der Direktive an
+    // formControl.disabled - jeder disable()/enable()-Aufruf (auch der eigene) stieß den Effect
+    // dadurch erneut an und kam nie zur Ruhe.
+    const inputItem = component.filterComponent().formElementes.find((f) => f.filterItem.binding === 'input')!;
+    const fc = inputItem.filterItem.component.formControl;
+    const disableSpy = vi.spyOn(fc, 'disable');
+    const enableSpy = vi.spyOn(fc, 'enable');
+
+    component.inputDisabled.set(true);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    expect(fc.disabled).toBe(true);
+
+    component.inputDisabled.set(false);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    expect(fc.disabled).toBe(false);
+
+    expect(disableSpy.mock.calls.length).toBeLessThan(5);
+    expect(enableSpy.mock.calls.length).toBeLessThan(5);
   });
 });
 
@@ -120,41 +150,41 @@ describe('LuxFilterFormComponent', () => {
     <lux-filter-form
       (luxOnFilter)="onFilter($event)"
       [(luxFilterExpanded)]="expanded"
-      [luxFilterValues]="initFilter"
+      [luxFilterValues]="initFilter()"
       (luxOnSave)="onSave($event)"
       (luxOnLoad)="onLoad($event)"
       (luxOnReset)="onReset()"
       (luxOnDelete)="onDelete()"
-      [luxShowChips]="showFilterChips"
+      [luxShowChips]="showFilterChips()"
       [luxStoredFilters]="storedFilters"
       class="lux-ml-1 lux-mr-1 lux-mb-3"
     >
-      <lux-input-ac
+      <lux-input
         luxLabel="Input"
         luxName="filter_input"
         luxAutocomplete="off"
         luxControlBinding="input"
         [luxRequired]="true"
-        [luxFilterDisabled]="inputDisabled"
+        [luxFilterDisabled]="inputDisabled()"
         [luxFilterHidden]="inputHidden"
         luxFilterItem
-      ></lux-input-ac>
-      <lux-autocomplete-ac
+      ></lux-input>
+      <lux-autocomplete
         luxLabel="Autocomplete"
         [luxOptions]="autoCompleteOptions"
         luxControlBinding="autocomplete"
         [luxFilterDisabled]="autoCompleteDisabled"
         [luxFilterHidden]="autoCompleteHidden"
         luxFilterItem
-      ></lux-autocomplete-ac>
-      <lux-datepicker-ac
+      ></lux-autocomplete>
+      <lux-datepicker
         luxLabel="Datepicker"
         luxName="filter_datepicker"
         luxControlBinding="datepicker"
         [luxFilterDisabled]="datepickerDisabled"
         [luxFilterHidden]="datepickerHidden"
         luxFilterItem
-      ></lux-datepicker-ac>
+      ></lux-datepicker>
       <lux-timepicker
         luxLabel="Timepicker"
         luxName="filter_timepicker"
@@ -165,7 +195,7 @@ describe('LuxFilterFormComponent', () => {
       ></lux-timepicker>
       <div>
         <div>
-          <lux-datepicker-ac
+          <lux-datepicker
             luxLabel="Datepicker + Timepicker (Datum)"
             luxName="filter_datepicker_combined"
             luxControlBinding="combinedDateTime"
@@ -174,7 +204,7 @@ describe('LuxFilterFormComponent', () => {
             [luxReferenceControl]="combinedTimepicker"
             luxFilterItem
             #combinedDatepicker
-          ></lux-datepicker-ac>
+          ></lux-datepicker>
           <lux-timepicker
             luxLabel="Datepicker + Timepicker (Uhrzeit)"
             luxName="filter_timepicker_combined"
@@ -187,7 +217,7 @@ describe('LuxFilterFormComponent', () => {
           ></lux-timepicker>
         </div>
       </div>
-      <lux-select-ac
+      <lux-select
         luxLabel="Single-Select"
         luxControlBinding="singleSelect"
         luxOptionLabelProp="label"
@@ -198,8 +228,8 @@ describe('LuxFilterFormComponent', () => {
         [luxFilterHidden]="singleSelectHidden"
         luxFilterColor="accent"
         luxFilterItem
-      ></lux-select-ac>
-      <lux-select-ac
+      ></lux-select>
+      <lux-select
         luxLabel="Multi-Select"
         luxControlBinding="multiSelect"
         luxOptionLabelProp="label"
@@ -210,8 +240,8 @@ describe('LuxFilterFormComponent', () => {
         [luxFilterHidden]="multiSelectHidden"
         luxFilterColor="accent"
         luxFilterItem
-      ></lux-select-ac>
-      <lux-toggle-ac
+      ></lux-select>
+      <lux-toggle
         luxLabel="Toggle"
         luxControlBinding="toggle"
         [luxFilterRenderFn]="renderToggleFn"
@@ -219,25 +249,25 @@ describe('LuxFilterFormComponent', () => {
         [luxFilterHidden]="toggleSelectHidden"
         luxFilterColor="warn"
         luxFilterItem
-      ></lux-toggle-ac>
+      ></lux-toggle>
     </lux-filter-form>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxFilterFormComponent,
     LuxFilterItemDirective,
-    LuxToggleAcComponent,
-    LuxSelectAcComponent,
-    LuxInputAcComponent,
-    LuxAutocompleteAcComponent,
-    LuxDatepickerAcComponent,
+    LuxToggleComponent,
+    LuxSelectComponent,
+    LuxInputComponent,
+    LuxAutocompleteComponent,
+    LuxDatepickerComponent,
     LuxTimepickerComponent
   ]
 })
 class TestFilterFormComponent implements OnDestroy {
   private mediaQuery = inject(LuxMediaQueryObserverService);
 
-  @ViewChild(LuxFilterFormComponent) filterComponent!: LuxFilterFormComponent;
+  readonly filterComponent = viewChild.required(LuxFilterFormComponent);
 
   autoCompleteOptions: any[] = [
     { label: 'Auto A', value: 'a' },
@@ -257,17 +287,17 @@ class TestFilterFormComponent implements OnDestroy {
     { label: 'Multi 3', value: 3 }
   ];
 
-  initFilter: any = {};
-  currentFilter: any = this.initFilter;
+  initFilter = signal<any>({});
+  currentFilter: any = this.initFilter();
 
-  expanded = false;
-  showFilterChips = true;
+  expanded = signal(false);
+  showFilterChips = signal(true);
 
   storedFilters: LuxFilter[] = [];
 
   mediaQuerySubscription: Subscription;
 
-  inputDisabled = false;
+  inputDisabled = signal(false);
   inputHidden = false;
   autoCompleteDisabled = false;
   autoCompleteHidden = false;
@@ -286,7 +316,7 @@ class TestFilterFormComponent implements OnDestroy {
 
   constructor() {
     this.mediaQuerySubscription = this.mediaQuery.getMediaQueryChangedAsObservable().subscribe(() => {
-      this.showFilterChips = !this.mediaQuery.isSmallerOrEqual('xs');
+      this.showFilterChips.set(!this.mediaQuery.isSmallerOrEqual('xs'));
     });
   }
 
@@ -315,7 +345,7 @@ class TestFilterFormComponent implements OnDestroy {
   onReset() {}
 
   onLoad(filterName: string) {
-    this.initFilter = this.loadFilter(filterName);
+    this.initFilter.set(this.loadFilter(filterName));
   }
 
   private saveFilter(filter: LuxFilter) {

@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { LuxHttpErrorInterceptor } from './lux-http-error-interceptor';
 
 describe('LuxHttpErrorInterceptor', () => {

@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostBinding, HostListener, Input, OnDestroy, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, OnDestroy, OnInit, inject, input, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { LuxThemeService } from '../../lux-theme/lux-theme.service';
@@ -9,54 +9,57 @@ import { LuxAppFooterFixedService } from '../lux-app-footer/lux-app-footer-fixed
   selector: 'lux-app-content',
   templateUrl: './lux-app-content.component.html',
   styleUrls: ['./lux-app-content.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    '(window:resize)': 'windowResize()',
+    '[class.lux-app-footer-no-fixed]': 'getNoStickModeClass',
+    '[attr.role]': 'role()',
+    '[attr.aria-label]': 'label()'
+  },
   imports: [RouterOutlet]
 })
 export class LuxAppContentComponent implements OnInit, OnDestroy {
+  readonly luxAriaRoleMainLabel = input('');
+
+  themeService = inject(LuxThemeService);
+
+  role = signal<string | undefined>(undefined);
+  label = signal<string | undefined>(undefined);
+
+  fixedMode = signal(false);
+  themeName = signal('');
+  subscriptions: Subscription[] = [];
+
+  get getNoStickModeClass() {
+    return !this.fixedMode();
+  }
+
   private elementRef = inject(ElementRef);
   private appService = inject(LuxAppService);
   private footerService = inject(LuxAppFooterFixedService);
-  themeService = inject(LuxThemeService);
-
-  @Input() luxAriaRoleMainLabel = '';
-
-  @HostListener('window:resize') windowResize() {
-    this.appService.onResize();
-  }
-
-  @HostBinding('class.lux-app-footer-no-fixed') get getNoStickModeClass() {
-    return !this.fixedMode;
-  }
-
-  @HostBinding('attr.role') role?: string;
-  @HostBinding('attr.aria-label') label?: string;
-
-  fixedMode: boolean;
-  themeName: string;
-  subscriptions: Subscription[] = [];
 
   constructor() {
     this.appService.appContentEl = this.elementRef.nativeElement;
 
-    this.fixedMode = this.footerService.fixedMode;
+    this.fixedMode.set(this.footerService.fixedMode);
     this.subscriptions.push(
       this.footerService.fixedModeAsObservable.subscribe((fixedMode) => {
-        this.fixedMode = fixedMode;
+        this.fixedMode.set(fixedMode);
       })
     );
 
-    this.themeName = this.themeService.getTheme().name;
+    this.themeName.set(this.themeService.getTheme().name);
     this.subscriptions.push(
       this.themeService.getThemeAsObservable().subscribe((theme) => {
-        this.themeName = theme.name;
+        this.themeName.set(theme.name);
       })
     );
   }
 
   ngOnInit(): void {
-    if (this.luxAriaRoleMainLabel) {
-      this.role = 'main';
-      this.label = this.luxAriaRoleMainLabel;
+    if (this.luxAriaRoleMainLabel()) {
+      this.role.set('main');
+      this.label.set(this.luxAriaRoleMainLabel());
     }
   }
 
@@ -64,5 +67,9 @@ export class LuxAppContentComponent implements OnInit, OnDestroy {
     this.subscriptions.forEach((sub) => {
       sub.unsubscribe();
     });
+  }
+
+  windowResize() {
+    this.appService.onResize();
   }
 }

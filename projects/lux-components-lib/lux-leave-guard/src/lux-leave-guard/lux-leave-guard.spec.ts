@@ -4,6 +4,7 @@ import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { DIALOG_WIDTH_MEDIUM, ILuxDialogPresetConfig, LuxDialogService } from '@ihk-gfi/lux-components';
 import { LuxLoadingService } from '@ihk-gfi/lux-components/lux-loading';
 import { Observable, Subject } from 'rxjs';
+import { beforeEach, describe, expect, it, Mock, vi } from 'vitest';
 import { provideLuxTranslocoTesting } from '../../../src/testing/transloco-test.provider';
 import { luxLeaveGuard } from './lux-leave-guard';
 import { LuxLeaveGuardBase } from './lux-leave-guard-base';
@@ -22,7 +23,7 @@ describe('luxLeaveGuard', () => {
   let dialogConfirmed: Subject<void>;
   let dialogDeclined: Subject<void>;
   let dialogClosed: Subject<void>;
-  let openSpy: jasmine.Spy<(config?: ILuxDialogPresetConfig) => unknown>;
+  let openSpy: Mock<(config?: ILuxDialogPresetConfig) => unknown>;
   let loadingService: LuxLoadingService;
 
   const runGuard = (component: ILuxLeaveGuard): boolean | Observable<boolean> =>
@@ -39,13 +40,13 @@ describe('luxLeaveGuard', () => {
     return results;
   };
 
-  const lastConfig = (): ILuxDialogPresetConfig => openSpy.calls.mostRecent().args[0]!;
+  const lastConfig = (): ILuxDialogPresetConfig => openSpy.mock.lastCall![0]!;
 
   beforeEach(() => {
     dialogConfirmed = new Subject<void>();
     dialogDeclined = new Subject<void>();
     dialogClosed = new Subject<void>();
-    openSpy = jasmine.createSpy('open').and.returnValue({ dialogConfirmed, dialogDeclined, dialogClosed });
+    openSpy = vi.fn<(config?: ILuxDialogPresetConfig) => unknown>().mockReturnValue({ dialogConfirmed, dialogDeclined, dialogClosed });
 
     TestBed.configureTestingModule({
       providers: [provideLuxTranslocoTesting(), { provide: LuxDialogService, useValue: { open: openSpy } }]
@@ -54,7 +55,7 @@ describe('luxLeaveGuard', () => {
   });
 
   it('Sollte die Navigation ohne ungespeicherte Daten und ohne Ladezustand erlauben', () => {
-    expect(runGuard({ hasUnsavedData: () => false })).toBeTrue();
+    expect(runGuard({ hasUnsavedData: () => false })).toBe(true);
     expect(openSpy).not.toHaveBeenCalled();
   });
 
@@ -66,9 +67,11 @@ describe('luxLeaveGuard', () => {
 
     const config = lastConfig();
     expect(config.title).toBe('Aktion wird verarbeitet');
-    expect(config.content).toBe('Eine Aktion wird noch verarbeitet. Die Seite kann verlassen werden, sobald der Vorgang abgeschlossen ist.');
+    expect(config.content).toBe(
+      'Eine Aktion wird noch verarbeitet. Die Seite kann verlassen werden, sobald der Vorgang abgeschlossen ist.'
+    );
     expect(config.iconName).toBeUndefined();
-    expect(config.disableClose).toBeTrue();
+    expect(config.disableClose).toBe(true);
     expect(config.width).toBe(DIALOG_WIDTH_MEDIUM);
     expect(config.defaultButton).toBe('confirm');
     expect(config.confirmAction?.label).toBe('Schließen');
@@ -94,7 +97,7 @@ describe('luxLeaveGuard', () => {
     const config = lastConfig();
     expect(config.title).toBe('Ungespeicherte Änderungen');
     expect(config.content).toBe('Es liegen ungespeicherte Änderungen vor. Beim Fortfahren gehen diese Änderungen verloren.');
-    expect(config.disableClose).toBeTrue();
+    expect(config.disableClose).toBe(true);
     expect(config.width).toBe(DIALOG_WIDTH_MEDIUM);
     expect(config.defaultButton).toBe('decline');
     expect(config.confirmAction?.label).toBe('Verwerfen und fortfahren');
@@ -130,7 +133,7 @@ describe('luxLeaveGuard', () => {
   it('Sollte die Navigation bei rein anzeigenden Vorgängen nicht sperren', () => {
     loadingService.busy();
 
-    expect(runGuard({ hasUnsavedData: () => false })).toBeTrue();
+    expect(runGuard({ hasUnsavedData: () => false })).toBe(true);
     expect(openSpy).not.toHaveBeenCalled();
   });
 });
@@ -138,13 +141,8 @@ describe('luxLeaveGuard', () => {
 describe('LuxLeaveGuardBase', () => {
   let loadingService: LuxLoadingService;
   let component: TestGuardedComponent;
-  let karmaBeforeUnload: typeof window.onbeforeunload;
 
   beforeEach(() => {
-    // Karma meldet jedes beforeunload als "full page reload"; deshalb den Karma-Handler für die Tests parken.
-    karmaBeforeUnload = window.onbeforeunload;
-    window.onbeforeunload = null;
-
     TestBed.configureTestingModule({
       imports: [TestGuardedComponent],
       providers: [provideLuxTranslocoTesting()]
@@ -155,10 +153,6 @@ describe('LuxLeaveGuardBase', () => {
     fixture.detectChanges();
   });
 
-  afterEach(() => {
-    window.onbeforeunload = karmaBeforeUnload;
-  });
-
   const dispatchBeforeUnload = (): Event => {
     const event = new Event('beforeunload', { cancelable: true });
     window.dispatchEvent(event);
@@ -166,21 +160,21 @@ describe('LuxLeaveGuardBase', () => {
   };
 
   it('Sollte das Verlassen ohne ungespeicherte Daten und ohne Ladezustand nicht verhindern', () => {
-    expect(dispatchBeforeUnload().defaultPrevented).toBeFalse();
+    expect(dispatchBeforeUnload().defaultPrevented).toBe(false);
   });
 
   it('Sollte das Verlassen bei ungespeicherten Daten verhindern', () => {
     component.unsaved = true;
-    expect(dispatchBeforeUnload().defaultPrevented).toBeTrue();
+    expect(dispatchBeforeUnload().defaultPrevented).toBe(true);
   });
 
   it('Sollte das Verlassen während eines blockierenden Vorgangs verhindern', () => {
     loadingService.show();
-    expect(dispatchBeforeUnload().defaultPrevented).toBeTrue();
+    expect(dispatchBeforeUnload().defaultPrevented).toBe(true);
   });
 
   it('Sollte das Verlassen bei rein anzeigenden Vorgängen nicht verhindern', () => {
     loadingService.busy();
-    expect(dispatchBeforeUnload().defaultPrevented).toBeFalse();
+    expect(dispatchBeforeUnload().defaultPrevented).toBe(false);
   });
 });

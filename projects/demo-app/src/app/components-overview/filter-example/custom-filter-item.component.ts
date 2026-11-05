@@ -1,20 +1,20 @@
 import { AfterViewInit, Component, inject, input, viewChildren, ChangeDetectionStrategy } from '@angular/core';
-import { LuxFilterFormComponent, LuxFilterItemDirective, LuxInputAcComponent, LuxToggleAcComponent } from '@ihk-gfi/lux-components';
+import { LuxFilterFormComponent, LuxFilterItemDirective, LuxInputComponent, LuxToggleComponent } from '@ihk-gfi/lux-components';
 
 @Component({
   selector: 'app-custom-filter-item',
-  imports: [LuxInputAcComponent, LuxFilterItemDirective, LuxToggleAcComponent],
+  imports: [LuxInputComponent, LuxFilterItemDirective, LuxToggleComponent],
   templateUrl: './custom-filter-item.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'lux-grid lux-grid-cols-12 lt-md:lux-grid-cols-1 lux-gap-4 lux-mt-4 lux-items-center' }
 })
 export class CustomFilterItemComponent implements AfterViewInit {
-  filterDisabled = input<boolean>(true);
-  filterHidden = input<boolean>(false);
+  readonly filterDisabled = input<boolean>(true);
+  readonly filterHidden = input<boolean>(false);
 
-  filterFormComponent = inject(LuxFilterFormComponent);
+  readonly formElements = viewChildren(LuxFilterItemDirective);
 
-  formElements = viewChildren(LuxFilterItemDirective);
+  private filterFormComponent = inject(LuxFilterFormComponent);
 
   ngAfterViewInit(): void {
     this.filterFormComponent.registerFilterItems([...this.formElements()]);

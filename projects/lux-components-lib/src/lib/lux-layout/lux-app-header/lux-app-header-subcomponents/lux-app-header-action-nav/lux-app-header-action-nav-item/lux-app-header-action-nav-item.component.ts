@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, ContentChild, EventEmitter, Input, Output, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, contentChild, input, output, viewChild } from '@angular/core';
 import { LuxButtonComponent } from '../../../../../lux-action/lux-button/lux-button.component';
 import { LuxThemePalette } from '../../../../../lux-util/lux-colors.enum';
 import { LuxAppHeaderActionNavItemCustomComponent } from './lux-app-header-action-nav-item-custom.component';
@@ -7,20 +7,18 @@ import { LuxAppHeaderActionNavItemCustomComponent } from './lux-app-header-actio
 @Component({
   selector: 'lux-app-header-action-nav-item',
   templateUrl: './lux-app-header-action-nav-item.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [NgClass, LuxButtonComponent]
 })
 export class LuxAppHeaderActionNavItemComponent {
-  @Input() luxLabel = '';
-  @Input() luxIconName?: string;
-  @Input() luxColor: LuxThemePalette;
-  @Input() luxDisabled = false;
-  @Input() luxTagId?: string;
+  readonly luxLabel = input('');
+  readonly luxIconName = input<string | undefined>();
+  readonly luxColor = input<LuxThemePalette>();
+  readonly luxDisabled = input(false);
+  readonly luxTagId = input<string | undefined>();
 
-  @Output() luxClicked = new EventEmitter<Event>();
+  readonly luxClicked = output<Event>();
 
-  @ViewChild(LuxButtonComponent, { static: false }) buttonComponent?: LuxButtonComponent;
-  @ContentChild(LuxAppHeaderActionNavItemCustomComponent) customComponent?: LuxAppHeaderActionNavItemCustomComponent;
-
-  constructor() {}
+  readonly buttonComponent = viewChild(LuxButtonComponent);
+  readonly customComponent = contentChild(LuxAppHeaderActionNavItemCustomComponent);
 }

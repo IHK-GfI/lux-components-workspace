@@ -45,7 +45,11 @@ function isOutsideSelectContext(target: EventTarget | null, selectHost?: HTMLEle
   return !(selectHost?.contains(target) ?? false) && !(panelElement?.contains(target) ?? false);
 }
 
-function shouldRestoreTriggerFocus(activeElement: Element | null, selectHost?: HTMLElement | null, panelElement?: HTMLElement | null): boolean {
+function shouldRestoreTriggerFocus(
+  activeElement: Element | null,
+  selectHost?: HTMLElement | null,
+  panelElement?: HTMLElement | null
+): boolean {
   if (!isMeaningfullyFocusedElement(activeElement)) {
     return true;
   }

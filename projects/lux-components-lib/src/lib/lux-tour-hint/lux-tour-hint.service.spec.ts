@@ -1,15 +1,17 @@
-﻿import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, waitForAsync } from '@angular/core/testing';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { provideLuxTranslocoTesting } from '../../testing/transloco-test.provider';
 import { LuxConsentService } from '../lux-consent/lux-consent.service';
 import { LuxTourHintRef } from './lux-tour-hint-model/lux-tour-hint-ref.class';
 import { LuxTourHintService } from './lux-tour-hint.service';
 
 describe('LuxTourHintService', () => {
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
+    vi.useFakeTimers();
     const consentServiceMock = {
       hasConsent: () => true
     };
@@ -23,21 +25,28 @@ describe('LuxTourHintService', () => {
         provideLuxTranslocoTesting()
       ]
     }).compileComponents();
-  }));
+  });
+
+  afterEach(async () => {
+    if (vi.isFakeTimers()) {
+      await vi.runAllTimersAsync();
+    }
+    vi.useRealTimers();
+  });
 
   let fixture: ComponentFixture<MockTourHintComponent>;
   let testComponent: MockTourHintComponent;
   let tourHintRef: LuxTourHintRef;
 
-  beforeEach(fakeAsync(() => {
+  beforeEach(async () => {
     fixture = TestBed.createComponent(MockTourHintComponent);
 
     testComponent = fixture.componentInstance;
-    fixture.detectChanges();
-  }));
+    await LuxTestHelper.wait(fixture);
+  });
 
   describe('[LuxTourHintPresetComponent]', () => {
-    it('Sollte die Tour-Hint öffnen', fakeAsync(() => {
+    it('Sollte die Tour-Hint öffnen', async () => {
       const titleData = 'Hello';
       const contentData = 'World!';
 
@@ -52,7 +61,7 @@ describe('LuxTourHintService', () => {
           content: contentData
         }
       });
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       /* ___Nachbedingungen testen___ */
 
@@ -90,9 +99,9 @@ describe('LuxTourHintService', () => {
       const tourHintContent = tourHintContentList?.item(0);
       expect(tourHintContent).toBeTruthy();
       expect(tourHintContent?.textContent).toContain(contentData);
-    }));
+    });
 
-    it("Sollte die Tour-Hint öffnen und ein 'Nicht wieder anzeigen' - Toggel haben und keine Navigation.", fakeAsync(() => {
+    it("Sollte die Tour-Hint öffnen und ein 'Nicht wieder anzeigen' - Toggel haben und keine Navigation.", async () => {
       /* ___Vorbedingungen testen___ */
       expect(document.body.getElementsByTagName('lux-tour-hint').length).toBe(0);
 
@@ -107,7 +116,7 @@ describe('LuxTourHintService', () => {
         },
         true
       );
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       /* ___Nachbedingungen testen___ */
       expect(document.body.getElementsByTagName('lux-tour-hint').length).toBe(1);
@@ -119,9 +128,9 @@ describe('LuxTourHintService', () => {
       const dsaAction = tourHintActions?.getElementsByClassName('action-dont-show-again').item(0);
       expect(dsaAction).toBeTruthy();
       expect(dsaAction?.childElementCount).toBe(1);
-    }));
+    });
 
-    it("Sollte die Tour-Hint öffnen und kein 'Nicht wieder anzeigen' - Toggel haben und keine Navigation.", fakeAsync(() => {
+    it("Sollte die Tour-Hint öffnen und kein 'Nicht wieder anzeigen' - Toggel haben und keine Navigation.", async () => {
       /* ___Vorbedingungen testen___ */
       expect(document.body.getElementsByTagName('lux-tour-hint').length).toBe(0);
 
@@ -136,7 +145,7 @@ describe('LuxTourHintService', () => {
         },
         false
       );
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       /* ___Nachbedingungen testen___ */
       expect(document.body.getElementsByTagName('lux-tour-hint').length).toBe(1);
@@ -148,9 +157,9 @@ describe('LuxTourHintService', () => {
       const dsaAction = tourHintActions?.getElementsByClassName('action-dont-show-again').item(0);
       expect(dsaAction).toBeTruthy();
       expect(dsaAction?.childElementCount).toBe(0);
-    }));
+    });
 
-    it('Sollte die Tour-Hint öffnen eine Navigation anzeigen.', fakeAsync(() => {
+    it('Sollte die Tour-Hint öffnen eine Navigation anzeigen.', async () => {
       /* ___Vorbedingungen testen___ */
       expect(document.body.getElementsByTagName('lux-tour-hint').length).toBe(0);
 
@@ -178,7 +187,7 @@ describe('LuxTourHintService', () => {
           }
         }
       ]);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       /* ___Nachbedingungen testen___ */
       expect(document.body.getElementsByTagName('lux-tour-hint').length).toBe(1);
@@ -198,7 +207,7 @@ describe('LuxTourHintService', () => {
 
       /* ___Änderungen durchführen___ */
       tourHintRef.next();
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Check if navigation has 3 children, the "prev" - Button, the "step" - Label and "next" - Button
       expect(navigationContainer?.childElementCount).toBe(3);
@@ -208,16 +217,16 @@ describe('LuxTourHintService', () => {
 
       /* ___Änderungen durchführen___ */
       tourHintRef.next();
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Check if navigation has 2 children, the "prev" - Button and the "step" - Label
       expect(navigationContainer?.childElementCount).toBe(2);
       expect(navigationContainer.getElementsByClassName('action-nav-previous').length).toBe(1);
       expect(navigationContainer.getElementsByClassName('nav-label-step').length).toBe(1);
       expect(navigationContainer.getElementsByClassName('action-nav-next').length).toBe(0);
-    }));
+    });
 
-    it("Sollte die Tour-Hint nicht mehr öffnen, nachdem die Tour mit 'Nicht wieder anzeigen' geschlossen wurde.", fakeAsync(() => {
+    it("Sollte die Tour-Hint nicht mehr öffnen, nachdem die Tour mit 'Nicht wieder anzeigen' geschlossen wurde.", async () => {
       const tourConfig = {
         targetId: 'test1',
         data: {
@@ -231,47 +240,47 @@ describe('LuxTourHintService', () => {
 
       /* ___Änderungen durchführen___ */
       tourHintRef = testComponent.tourHintService.open(tourConfig);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       /* ___Nachbedingungen testen___ */
       expect(document.body.getElementsByTagName('lux-tour-hint').length).toBe(1);
 
       /* ___Änderungen durchführen___ */
       tourHintRef.close(false);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       /* ___Nachbedingungen testen___ */
       expect(document.body.getElementsByTagName('lux-tour-hint').length).toBe(0);
 
       /* ___Änderungen durchführen___ */
       tourHintRef = testComponent.tourHintService.open(tourConfig);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       /* ___Nachbedingungen testen___ */
       expect(document.body.getElementsByTagName('lux-tour-hint').length).toBe(1);
 
       /* ___Änderungen durchführen___ */
       tourHintRef.close(true);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       /* ___Nachbedingungen testen___ */
       expect(document.body.getElementsByTagName('lux-tour-hint').length).toBe(0);
 
       /* ___Änderungen durchführen___ */
       tourHintRef = testComponent.tourHintService.open(tourConfig);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       /* ___Nachbedingungen testen___ */
       expect(document.body.getElementsByTagName('lux-tour-hint').length).toBe(0);
 
       //For other tests
       testComponent.tourHintService.clearDSACacheForConfig(tourConfig);
-      LuxTestHelper.wait(fixture);
-    }));
+      await LuxTestHelper.wait(fixture);
+    });
   });
 
   describe('[Custom LuxTourHintComponent]', () => {
-    it('Sollte die Tour-Hint öffnen', fakeAsync(() => {
+    it('Sollte die Tour-Hint öffnen', async () => {
       /* ___Vorbedingungen testen___ */
       expect(document.body.getElementsByTagName('lux-tour-hint').length).toBe(0);
 
@@ -296,11 +305,11 @@ describe('LuxTourHintService', () => {
           }
         }
       ]);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       /* ___Nachbedingungen testen___ */
       expect(document.body.getElementsByTagName('lux-tour-hint').length).toBe(1);
-    }));
+    });
   });
 });
 
@@ -308,7 +317,7 @@ describe('LuxTourHintService', () => {
   template: ` <div id="test1">Test Div</div>
     <div id="test2">Another Test Div</div>
     <div id="test3">3rd Test Div</div>`,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: []
 })
 class MockTourHintComponent {
@@ -330,7 +339,7 @@ class MockTourHintComponent {
       <button (click)="tourHintRef.next()">Next</button>
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: []
 })
 class MockCustomTourHintComponent {

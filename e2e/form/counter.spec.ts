@@ -2,8 +2,8 @@ import { expect, test } from '@playwright/test';
 import { formControl } from './support/form-controls';
 import { EXAMPLE_WITHOUT_FORM, FormExamplePage } from './support/form-example';
 
-/** Zeichenzähler und Längenbegrenzung über luxMaxLength (input-ac, textarea-ac). */
-for (const spec of [formControl('input-ac'), formControl('textarea-ac')]) {
+/** Zeichenzähler und Längenbegrenzung über luxMaxLength (input, textarea). */
+for (const spec of [formControl('input'), formControl('textarea')]) {
   test(`${spec.id}: luxMaxLength begrenzt die Eingabe und zeigt den Zähler im Fokus`, async ({ page }) => {
     const example = await FormExamplePage.open(page, spec.route);
     await example.options.setText('luxMaxLength', '10');

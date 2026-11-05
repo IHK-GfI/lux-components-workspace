@@ -1,11 +1,12 @@
+import { describe, it, beforeAll, beforeEach, afterEach, expect, vi } from 'vitest';
 // noinspection DuplicatedCode
 
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatProgressBar } from '@angular/material/progress-bar';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { By } from '@angular/platform-browser';
-import { LuxA11yTestHelper, LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
+import { LuxA11yTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxProgressColor } from '../../lux-util/lux-colors.enum';
 import {
@@ -113,18 +114,18 @@ describe('LuxProgressComponent', () => {
       expect(purple).toBeDefined();
     });
 
-    it('Sollte den Wert ändern (mode = determinate)', fakeAsync(() => {
+    it('Sollte den Wert ändern (mode = determinate)', async () => {
       // Vorbedingungen testen
       component.mode.set('determinate');
       const matProgress: MatProgressBar = fixture.debugElement.query(By.directive(MatProgressBar)).componentInstance;
-      LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
       expect(matProgress.value).toBe(0);
       // Änderungen durchführen
       component.value.set(10);
-      LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
       // Nachbedingungen prüfen
       expect(matProgress.value).toBe(10);
-    }));
+    });
   });
 
   describe('Als Spinner', () => {
@@ -145,7 +146,7 @@ describe('LuxProgressComponent', () => {
       expect(spinner).toBeDefined();
     });
 
-    it('Sollte die CSS-Klassen für Farben eintragen', fakeAsync(() => {
+    it('Sollte die CSS-Klassen für Farben eintragen', async () => {
       // Vorbedingungen testen
       component.type.set('Spinner');
       fixture.detectChanges();
@@ -163,23 +164,23 @@ describe('LuxProgressComponent', () => {
       // Nachbedingungen prüfen
       const purple = fixture.debugElement.query(By.css('.lux-bg-color-purple'));
       expect(purple).toBeDefined();
-    }));
+    });
 
-    it('Sollte den Wert ändern (mode = determinate)', fakeAsync(() => {
+    it('Sollte den Wert ändern (mode = determinate)', async () => {
       // Vorbedingungen testen
       component.type.set('Spinner');
       fixture.detectChanges();
 
       const matProgress: MatProgressBar = fixture.debugElement.query(By.directive(MatProgressSpinner)).componentInstance;
       component.mode.set('determinate');
-      LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
       expect(matProgress.value).toBe(0);
       // Änderungen durchführen
       component.value.set(10);
-      LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
       // Nachbedingungen prüfen
       expect(matProgress.value).toBe(10);
-    }));
+    });
 
     it('zeigt den gerundeten Prozentwert nur bei determinate und luxShowText', () => {
       component.type.set('Spinner');
@@ -269,15 +270,26 @@ describe('LuxProgressComponent', () => {
   });
 
   describe('Live-Ansage', () => {
-    it('befüllt die Live-Region erst nach dem Rendern und leert sie bei determinate', fakeAsync(() => {
-      // Eigene Instanz innerhalb von fakeAsync, damit der Timer der Ansage kontrollierbar ist.
+    beforeEach(() => {
+      vi.useFakeTimers();
+    });
+
+    afterEach(async () => {
+      if (vi.isFakeTimers()) {
+        await vi.runAllTimersAsync();
+      }
+      vi.useRealTimers();
+    });
+
+    it('befüllt die Live-Region erst nach dem Rendern und leert sie bei determinate', async () => {
+      // Eigene Instanz unter Fake-Timern, damit der Timer der Ansage kontrollierbar ist.
       const announceFixture = TestBed.createComponent(LuxMockProgressBarComponent);
       const region = () => announceFixture.nativeElement.querySelector('[role="status"]').textContent.trim();
 
       // Region steht zunächst leer im DOM, damit Screenreader die Änderung erkennen.
       announceFixture.detectChanges();
       expect(region()).toBe('');
-      tick(100);
+      await vi.advanceTimersByTimeAsync(100);
       announceFixture.detectChanges();
       expect(region()).not.toBe('');
 
@@ -289,10 +301,10 @@ describe('LuxProgressComponent', () => {
       announceFixture.componentInstance.mode.set('indeterminate');
       announceFixture.detectChanges();
       expect(region()).toBe('');
-      tick(100);
+      await vi.advanceTimersByTimeAsync(100);
       announceFixture.detectChanges();
       expect(region()).not.toBe('');
-    }));
+    });
   });
 
   describe('Ohne luxColor', () => {
@@ -352,7 +364,7 @@ class LuxMockProgressBarComponent {
   type = signal<LuxProgressType | undefined>(undefined);
   mode = signal<LuxProgressModeType | undefined>(undefined);
   color = signal<LuxProgressColor | undefined>(undefined);
-  size = signal<LuxProgressSizeType | undefined>(undefined);
+  size = signal<LuxProgressSizeType>('medium');
   value = signal(0);
   muted = signal(false);
   showText = signal(false);

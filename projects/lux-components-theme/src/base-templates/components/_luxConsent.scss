@@ -1,6 +1,7 @@
 lux-consent-dialog {
   // Größere Schrift für die Hinweistexte der Toggle
-  lux-toggle-ac lux-form-control-wrapper .lux-form-control-wrapper .lux-form-control-misc-authentic {
+  lux-toggle-ac lux-form-control-wrapper .lux-form-control-wrapper .lux-form-control-misc-authentic,
+  lux-toggle lux-form-control-wrapper .lux-form-control-wrapper .lux-form-control-misc-authentic {
     font-size: 0.875rem;
   }
 

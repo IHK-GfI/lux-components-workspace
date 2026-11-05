@@ -5,7 +5,6 @@ import {
   LuxButtonComponent,
   LuxCardComponent,
   LuxCardContentComponent,
-  LuxConsoleService,
   LuxDialogActionsComponent,
   LuxDialogContentComponent,
   LuxDialogRef,
@@ -13,8 +12,8 @@ import {
   LuxDialogStructureComponent,
   LuxDialogTitleComponent,
   LuxFileUploadComponent,
-  LuxTextareaAcComponent,
-  LuxToggleAcComponent
+  LuxTextareaComponent,
+  LuxToggleComponent
 } from '@ihk-gfi/lux-components';
 import { logResult } from '../../../example-base/example-base-util/example-base-helper';
 import { DIALOG_EXAMPLE_LOCAL_TOKEN } from '../dialog-example-local.token';
@@ -23,7 +22,7 @@ import { DIALOG_EXAMPLE_LOCAL_TOKEN } from '../dialog-example-local.token';
   selector: 'app-dialog-component-example',
   templateUrl: './dialog-component-example.component.html',
   styleUrls: ['./dialog-component-example.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxDialogActionsComponent,
     LuxDialogContentComponent,
@@ -33,15 +32,13 @@ import { DIALOG_EXAMPLE_LOCAL_TOKEN } from '../dialog-example-local.token';
     LuxCardContentComponent,
     LuxCardComponent,
     LuxAriaLabelDirective,
-    LuxToggleAcComponent,
-    LuxTextareaAcComponent,
+    LuxToggleComponent,
+    LuxTextareaComponent,
     LuxFileUploadComponent
   ]
 })
 export class DialogComponentExampleComponent {
   luxDialogRef = inject<LuxDialogRef<{ showOutputEvents: boolean }>>(LuxDialogRef);
-  consoleLogger = inject(LuxConsoleService);
-  private dialogService = inject(LuxDialogService);
   log = logResult;
 
   /**
@@ -63,6 +60,8 @@ export class DialogComponentExampleComponent {
       color: 'primary'
     }
   };
+
+  private dialogService = inject(LuxDialogService);
 
   openInfoDialog() {
     const dialogRef = this.dialogService.open({ ...this.dialogConfig, disableClose: this.luxDialogRef._matDialogRef.disableClose });

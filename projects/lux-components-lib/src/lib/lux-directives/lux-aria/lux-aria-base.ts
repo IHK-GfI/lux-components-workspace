@@ -1,7 +1,7 @@
-import { AfterViewInit, Directive, ElementRef, inject, Renderer2 } from '@angular/core';
+import { AfterViewChecked, AfterViewInit, Directive, ElementRef, inject, Renderer2 } from '@angular/core';
 
 @Directive()
-export abstract class LuxAriaBase<T> implements AfterViewInit {
+export abstract class LuxAriaBase<T> implements AfterViewInit, AfterViewChecked {
   protected init = false;
   protected elementRef = inject(ElementRef);
   protected renderer = inject(Renderer2);
@@ -10,6 +10,13 @@ export abstract class LuxAriaBase<T> implements AfterViewInit {
   ngAfterViewInit(): void {
     this.init = true;
 
+    this.renderAria();
+  }
+
+  // Signal-Inputs lösen kein ngOnChanges aus; stattdessen wird bei jedem Check-Zyklus
+  // (z.B. nach einer Änderung eines Inputs) neu gerendert. renderAria() ist ein reiner
+  // Attribut-Sync und damit auch bei wiederholtem Aufruf unkritisch.
+  ngAfterViewChecked(): void {
     this.renderAria();
   }
 

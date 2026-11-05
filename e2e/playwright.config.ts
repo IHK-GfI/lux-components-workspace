@@ -74,7 +74,7 @@ export default defineConfig({
     ...['Etc/GMT+12', 'Pacific/Kiritimati'].map((timezoneId) => ({
       name: `form-tz-${timezoneId.replace(/\W+/g, '-')}`,
       testDir: './form',
-      testMatch: /(datepicker-ac|datetimepicker-ac|timepicker)\.spec\.ts/,
+      testMatch: /(datepicker|datetimepicker|timepicker)\.spec\.ts/,
       dependencies: ['setup'],
       use: { ...desktop, timezoneId }
     }))

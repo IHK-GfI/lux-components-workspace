@@ -1,4 +1,4 @@
-import { DestroyRef, Directive, ElementRef, EventEmitter, inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { DestroyRef, Directive, ElementRef, inject, input, OnDestroy, OnInit, output } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatSelect } from '@angular/material/select';
 import { handleSelectFilterKeyboard } from './lux-select-filter-keyboard';
@@ -13,23 +13,11 @@ import { LuxSelectFilterUtils } from './lux-select-filter.utils';
   standalone: true
 })
 export class LuxSelectFilterDirective<T = any> implements OnInit, OnDestroy {
-  private readonly matSelect = inject(MatSelect);
-  private readonly destroyRef = inject(DestroyRef);
-  private readonly internalSelect = this.matSelect as unknown as MatSelectInternal;
-  private readonly timers: TimeoutMap = {};
-  private readonly filterState = new LuxSelectFilterState<T>(() => this.luxSelectFilter, () => this.luxFilterLabelFn);
-  private readonly focusController = new LuxSelectFilterFocusController();
-  private readonly navigator = new LuxSelectFilterNavigator(this.matSelect, this.internalSelect, (panel) => this.getFilterHeight(panel));
-  private panelElement?: HTMLElement;
-  private lastPanelElement?: HTMLElement;
+  readonly luxSelectFilter = input(false);
+  readonly luxFilterLabelFn = input<((item: T, index: number) => string) | undefined>(undefined);
 
-  private readonly panelKeydownHandler = (event: KeyboardEvent) => this.handleOptionKeydown(event);
-  private readonly documentPointerdownHandler = (event: PointerEvent) => this.handleDocumentPointerdown(event);
-  private readonly panelClickHandler = (event: MouseEvent) => this.handlePanelClick(event);
+  readonly luxFilterActiveChange = output<boolean>();
 
-  @Input() luxSelectFilter = false;
-  @Input() luxFilterLabelFn?: (item: T, index: number) => string;
-  @Output() luxFilterActiveChange = new EventEmitter<boolean>();
   filterInputRef?: ElementRef<HTMLInputElement>;
 
   get filterValue(): string {
@@ -47,6 +35,23 @@ export class LuxSelectFilterDirective<T = any> implements OnInit, OnDestroy {
   get filteredIndexes(): Set<number> {
     return this.filterState.filteredIndexes;
   }
+
+  private readonly matSelect = inject(MatSelect);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly internalSelect = this.matSelect as unknown as MatSelectInternal;
+  private readonly timers: TimeoutMap = {};
+  private readonly filterState = new LuxSelectFilterState<T>(
+    () => this.luxSelectFilter(),
+    () => this.luxFilterLabelFn()
+  );
+  private readonly focusController = new LuxSelectFilterFocusController();
+  private readonly navigator = new LuxSelectFilterNavigator(this.matSelect, this.internalSelect, (panel) => this.getFilterHeight(panel));
+  private panelElement?: HTMLElement;
+  private lastPanelElement?: HTMLElement;
+
+  private readonly panelKeydownHandler = (event: KeyboardEvent) => this.handleOptionKeydown(event);
+  private readonly documentPointerdownHandler = (event: PointerEvent) => this.handleDocumentPointerdown(event);
+  private readonly panelClickHandler = (event: MouseEvent) => this.handlePanelClick(event);
 
   ngOnInit(): void {
     this.matSelect.openedChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((open) => {
@@ -101,7 +106,7 @@ export class LuxSelectFilterDirective<T = any> implements OnInit, OnDestroy {
   }
 
   private onPanelOpen(): void {
-    if (!this.luxSelectFilter) {
+    if (!this.luxSelectFilter()) {
       return;
     }
 
@@ -115,7 +120,7 @@ export class LuxSelectFilterDirective<T = any> implements OnInit, OnDestroy {
   }
 
   private onPanelClose(): void {
-    if (!this.luxSelectFilter) {
+    if (!this.luxSelectFilter()) {
       return;
     }
 

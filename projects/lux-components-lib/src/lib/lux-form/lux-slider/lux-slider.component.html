@@ -1,0 +1,45 @@
+<lux-form-control-wrapper
+  [luxNoInputRow]="true"
+  [luxFormComponent]="this"
+  [luxNoLabels]="luxNoLabels()"
+  [luxNoBottomLabel]="luxNoBottomLabel()"
+  [luxNoTopLabel]="luxNoTopLabel()"
+  [luxLabelLongFormat]="luxLabelLongFormat()"
+  luxTagId="luxSliderWrapper"
+>
+  <mat-slider
+    [luxTabIndex]="isReadonly() ? '-1' : '0'"
+    [luxPotentialChildren]="['input']"
+    luxTagIdHandler
+    [luxTagId]="luxTagId()"
+    [color]="luxColor()"
+    [max]="luxMax()"
+    [min]="luxMin()"
+    [step]="luxStep()"
+    [discrete]="luxShowThumbLabel()"
+    [displayWith]="luxDisplayWith()"
+    [disabled]="isDisabled()"
+    class="lux-slider-ac"
+    [luxAriaDescribedby]="describedBy()"
+    [luxAriaInvalid]="'' + isInvalid()"
+    [luxAriaLabel]="luxAriaLabel() ?? luxLabel()"
+    luxAriaLabelSelector="input"
+    [luxAriaLabelledby]="luxAriaLabelledby()"
+    luxAriaLabelledbySelector="input"
+    (focusin)="onFocusIn($event)"
+    (focusout)="onFocusOut($event)"
+    tabIndex="-1"
+    #ngSlider
+    ><input
+      [id]="uid()"
+      matSliderThumb
+      [ngClass]="{ 'lux-readonly': isReadonly() }"
+      [value]="value()"
+      (valueChange)="onChange($event)"
+      #ngSliderThumb="matSliderThumb"
+      (input)="onInput(ngSliderThumb.value)"
+      (keydown)="onKeyDown($event)"
+      [readOnly]="isReadonly()"
+    />
+  </mat-slider>
+</lux-form-control-wrapper>

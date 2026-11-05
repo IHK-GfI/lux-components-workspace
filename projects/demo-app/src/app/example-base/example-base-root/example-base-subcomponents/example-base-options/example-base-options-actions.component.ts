@@ -1,10 +1,8 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
   selector: 'example-base-options-actions',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>'
 })
-export class ExampleBaseOptionsActionsComponent {
-  constructor() {}
-}
+export class ExampleBaseOptionsActionsComponent {}

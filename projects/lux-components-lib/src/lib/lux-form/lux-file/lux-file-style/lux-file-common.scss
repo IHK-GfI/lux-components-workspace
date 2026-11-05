@@ -1,4 +1,3 @@
-
 /* Gemeinsames Stylen der einzelnen File-Components */
 :host {
   display: flex;
@@ -7,7 +6,7 @@
   &.lux-file-highlight {
     // Pseudo-Element zum Highlighten des Drop-Bereichs
     &:after {
-      content: '';
+      content: "";
       position: absolute;
       top: 0;
       left: 0;

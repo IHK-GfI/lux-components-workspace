@@ -1,3 +1,4 @@
+import { describe, it, beforeEach, expect } from 'vitest';
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
@@ -27,16 +28,15 @@ describe('LuxLangSelectComponent', () => {
     cookieService = TestBed.inject(CookieService) as any;
   });
 
-  it('should create', (done) => {
+  it('should create', async () => {
     fixture = TestBed.createComponent(LuxLangSelectComponent);
     component = fixture.componentInstance;
-    component.luxLocaleSupported = ['de', 'en'];
+    fixture.componentRef.setInput('luxLocaleSupported', ['de', 'en']);
     fixture.detectChanges();
-    fixture.whenStable().then(() => {
+    await fixture.whenStable().then(() => {
       const transloco = TestBed.inject(TranslocoService);
       expect(component).toBeTruthy();
       expect(['de', 'en']).toContain(transloco.getActiveLang());
-      done();
     });
   });
 });

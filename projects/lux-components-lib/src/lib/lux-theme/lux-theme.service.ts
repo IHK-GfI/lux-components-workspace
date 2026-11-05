@@ -97,7 +97,7 @@ export class LuxThemeService {
         }
       }
     } else {
-      this.storageService.removeItem(this.storageKeyThemeName)
+      this.storageService.removeItem(this.storageKeyThemeName);
     }
 
     // Wenn kein Theme hinterlegt wurde, nimm das erste verfügbare Theme.

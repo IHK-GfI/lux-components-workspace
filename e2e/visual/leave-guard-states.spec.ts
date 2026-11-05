@@ -86,6 +86,10 @@ test('leave-guard-states/filtern-laeuft', async ({ page }) => {
   await expect(page.getByRole('progressbar', { name: 'Verarbeitung läuft.' })).toBeVisible();
   // Anzeigend: die Seite bleibt bedienbar.
   await expect(nameInput(page)).toBeEnabled();
+  // Der Fokusrahmen hängt am focused-Signal des Felds; bei angehaltener Uhr braucht die Change Detection
+  // nach dem Verlassen des Felds noch einen Frame (deutlich kürzer als der Filter-Request).
+  await page.locator('example-base-content').getByRole('textbox', { name: 'Filterbegriff', exact: true }).blur();
+  await page.clock.runFor(100);
 
   await screenshotWithGlobalProgressSoft(page, exampleCard(page), 'leave-guard-filtern-laeuft.png');
 });

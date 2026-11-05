@@ -1,3 +1,5 @@
+import { describe, it, beforeEach, afterEach, expect, vi } from 'vitest';
+import type { Mock } from 'vitest';
 import { TestBed } from '@angular/core/testing';
 import { CookieService } from 'ngx-cookie-service';
 import { ILuxConsentConfig } from './lux-consent-config.interface';
@@ -10,15 +12,18 @@ describe('LuxConsentService (config overrides)', () => {
   const overrideKey = 'consent-override-key';
   let cookieStore: Map<string, string>;
   let service: LuxConsentService;
-  let openSpy: jasmine.Spy;
+  let openSpy: Mock;
 
   beforeEach(() => {
     cookieStore = new Map<string, string>();
-    openSpy = jasmine.createSpy('open').and.callFake((onClosed?: () => void, _onError?: (error: unknown) => void) => {
-      if (onClosed) {
-        onClosed();
-      }
-    });
+    openSpy = vi
+      .fn()
+      .mockName('open')
+      .mockImplementation((onClosed?: () => void, _onError?: (error: unknown) => void) => {
+        if (onClosed) {
+          onClosed();
+        }
+      });
 
     const cookieServiceMock = {
       check: (key: string) => cookieStore.has(key),
@@ -67,7 +72,7 @@ describe('LuxConsentService (config overrides)', () => {
   it('uses DI config by default', () => {
     service.acceptAll();
 
-    expect(cookieStore.has(baseKey)).toBeTrue();
+    expect(cookieStore.has(baseKey)).toBe(true);
     expect(sessionStorage.getItem(baseKey)).toBeNull();
   });
 
@@ -91,18 +96,24 @@ describe('LuxConsentService (config overrides)', () => {
     service.openIfNeeded({ cookieKey: overrideKey });
 
     expect(openSpy).not.toHaveBeenCalled();
-    expect(service.hasConsent(LuxConsentPurpose.Preferences)).toBeFalse();
+    expect(service.hasConsent(LuxConsentPurpose.Preferences)).toBe(false);
   });
 
   it('clears runtime override after open error', () => {
-    openSpy.and.callFake((_onClosed?: () => void, onError?: (error: unknown) => void) => {
-      onError?.(new Error('dialog import failed'));
+    // Der Service loggt einen fehlgeschlagenen Dialog-Import bewusst per console.error (siehe
+    // lux-consent.service.ts). Ohne Spy landet der volle Error-Stacktrace in der Testausgabe und
+    // sieht dort wie ein echter Testfehler aus, obwohl der Fehlerpfad hier gezielt geprüft wird.
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockReturnValue(undefined);
+    const dialogError = new Error('dialog import failed');
+    openSpy.mockImplementation((_onClosed?: () => void, onError?: (error: unknown) => void) => {
+      onError?.(dialogError);
     });
 
     service.open({ cookieKey: overrideKey });
     service.acceptAll();
 
-    expect(cookieStore.has(baseKey)).toBeTrue();
+    expect(cookieStore.has(baseKey)).toBe(true);
+    expect(consoleErrorSpy).toHaveBeenCalledWith('Konnte den Consent-Dialog nicht öffnen.', dialogError);
   });
 
   it('acceptAll stores only essential and purposes with entries', () => {
@@ -122,7 +133,9 @@ describe('LuxConsentService (config overrides)', () => {
     const saved = cookieStore.get(baseKey);
     expect(saved).toBeTruthy();
 
-    const parsed = JSON.parse(saved!) as { purposes: LuxConsentPurpose[] };
+    const parsed = JSON.parse(saved!) as {
+      purposes: LuxConsentPurpose[];
+    };
     expect(parsed.purposes).toEqual([LuxConsentPurpose.Essential, LuxConsentPurpose.Marketing]);
   });
 
@@ -160,6 +173,6 @@ describe('LuxConsentService (config overrides)', () => {
       ]
     });
 
-    expect(cookieStore.has(overrideKey)).toBeFalse();
+    expect(cookieStore.has(overrideKey)).toBe(false);
   });
 });

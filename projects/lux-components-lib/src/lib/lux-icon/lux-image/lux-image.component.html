@@ -1,22 +1,22 @@
 <div>
-  @if (!isObserved) {
+  @if (!luxClickable()) {
     <img
-      [src]="luxImageSrc"
+      [src]="resolvedImageSrc()"
       class="lux-image"
-      [alt]="luxAlt"
-      [ngStyle]="{ width: luxImageWidth, height: luxImageHeight }"
+      [alt]="luxAlt()"
+      [ngStyle]="{ width: luxImageWidth(), height: luxImageHeight() }"
       (error)="onImageError($event)"
     />
   } @else {
     <img
-      [src]="luxImageSrc"
+      [src]="resolvedImageSrc()"
       (click)="clicked($event)"
       (keydown.enter)="clicked($event)"
       (keydown.space)="clicked($event)"
       [attr.tabindex]="0"
       class="lux-image lux-clickable"
-      [alt]="luxAlt"
-      [ngStyle]="{ width: luxImageWidth, height: luxImageHeight }"
+      [alt]="luxAlt()"
+      [ngStyle]="{ width: luxImageWidth(), height: luxImageHeight() }"
       (error)="onImageError($event)"
     />
   }

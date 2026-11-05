@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Signal, signal } from '@angular/core';
 import { ILuxErrorPageConfig } from '../lux-error-interfaces/lux-error-page-config.interface';
 import { ILuxError } from '../lux-error-interfaces/lux-error.interface';
 
@@ -24,68 +24,55 @@ export class LuxErrorStoreService {
     skipLocationChange: true
   };
 
-  private _config: ILuxErrorPageConfig = {};
-  private _error: ILuxError | null = null;
-  private _lastErrors: ILuxError[] = [];
+  /** Die aktuelle Konfiguration der Fehlerseite. */
+  readonly config: Signal<ILuxErrorPageConfig>;
+  /** Der aktuelle Fehler. */
+  readonly error: Signal<ILuxError | null>;
+  /** Ein Array der zuletzt aufgetretenen Fehler. */
+  readonly lastErrors: Signal<ILuxError[]>;
 
-  /**
-   * Gibt die aktuelle Konfiguration zurück.
-   * @returns ILuxErrorPageConfig
-   */
-  get config() {
-    return this._config;
+  private readonly configSignal = signal<ILuxErrorPageConfig>({});
+  private readonly errorSignal = signal<ILuxError | null>(null);
+  private readonly lastErrorsSignal = signal<ILuxError[]>([]);
+
+  constructor() {
+    this.config = this.configSignal.asReadonly();
+    this.error = this.errorSignal.asReadonly();
+    this.lastErrors = this.lastErrorsSignal.asReadonly();
   }
-
-  /**
-   * Gibt ein Array der letzten Fehler zurück.
-   * @returns Array<ILuxError[]>
-   */
-  get lastErrors() {
-    return Array.of(this._lastErrors);
-  }
-
-  /**
-   * Gibt den aktuellen Fehler zurück.
-   * @returns ILuxError
-   */
-  get error(): ILuxError | null {
-    return this._error;
-  }
-
-  /**
-   * Sichert den Fehler in der Property und fügt ihn der "lastErrors"-Liste hinzu.
-   * @param newError
-   */
-  set error(newError: ILuxError | null) {
-    this._error = newError;
-
-    if (newError) {
-      this._lastErrors.push(newError);
-    }
-  }
-
-  constructor() {}
 
   /**
    * Initialisiert den Service.
    */
-  init() {
-    this._lastErrors = [];
-    this._error = null;
-    this._config = {};
+  init(): void {
+    this.lastErrorsSignal.set([]);
+    this.errorSignal.set(null);
+    this.configSignal.set({});
     this.safeNewConfig(LuxErrorStoreService.DEFAULT_CONFIG);
+  }
+
+  /**
+   * Sichert den Fehler und fügt ihn der "lastErrors"-Liste hinzu.
+   * @param newError
+   */
+  setError(newError: ILuxError | null): void {
+    this.errorSignal.set(newError);
+
+    if (newError) {
+      this.lastErrorsSignal.update((errors) => [...errors, newError]);
+    }
   }
 
   /**
    * Diese Methode sichert die übergebene Konfiguration.
    * @param luxErrorPageConfig
    */
-  safeNewConfig(luxErrorPageConfig: ILuxErrorPageConfig | null) {
+  safeNewConfig(luxErrorPageConfig: ILuxErrorPageConfig | null): void {
     const newConfig: ILuxErrorPageConfig = {};
 
     Object.assign(newConfig, LuxErrorStoreService.DEFAULT_CONFIG);
     Object.assign(newConfig, luxErrorPageConfig ?? {});
 
-    this._config = newConfig;
+    this.configSignal.set(newConfig);
   }
 }

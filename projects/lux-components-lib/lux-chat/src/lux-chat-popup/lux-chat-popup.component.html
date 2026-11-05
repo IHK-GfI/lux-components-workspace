@@ -17,7 +17,7 @@
     @if (luxChatOpened()) {
       <div
         class="lux-chat-popup-inner-container"
-        [ngClass]="{ 'lux-chat-popup-inner-container-fullscreen': mobileView || luxFullScreen() }"
+        [ngClass]="{ 'lux-chat-popup-inner-container-fullscreen': mobileView() || luxFullScreen() }"
       >
         <ng-content></ng-content>
       </div>

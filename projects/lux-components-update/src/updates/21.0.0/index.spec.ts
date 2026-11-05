@@ -5,6 +5,7 @@ import { updatePackageJson } from '.';
 import { getDep } from '../../utility/dependencies';
 import { appOptions, workspaceOptions } from '../../utility/test';
 import { UtilConfig } from '../../utility/util';
+import { lastValueFrom } from 'rxjs';
 
 describe('update210000', () => {
   let appTree: UnitTestTree;
@@ -35,21 +36,14 @@ describe('update210000', () => {
   });
 
   describe('[Rule] updatePackageJson', () => {
-    it('Sollte die Abhängigkeiten aktualisieren', (done) => {
+    it('Sollte die Abhängigkeiten aktualisieren', async () => {
       appTree.overwrite('/package.json', packageJson01);
+      const successTree: Tree = await lastValueFrom(callRule(updatePackageJson(testOptions), appTree, context));
+      expect(getDep(successTree, '@ihk-gfi/lux-components').version).not.toEqual('19.4.0');
+      expect(getDep(successTree, '@ihk-gfi/lux-components').version).toEqual('21.0.0');
 
-      callRule(updatePackageJson(testOptions), appTree, context).subscribe({
-        next: (successTree: Tree) => {
-          expect(getDep(successTree, '@ihk-gfi/lux-components').version).not.toEqual('19.4.0');
-          expect(getDep(successTree, '@ihk-gfi/lux-components').version).toEqual('21.0.0');
-
-          expect(getDep(successTree, '@ihk-gfi/lux-components-theme').version).not.toEqual('19.2.0');
-          expect(getDep(successTree, '@ihk-gfi/lux-components-theme').version).toEqual('21.0.0');
-
-          done();
-        },
-        error: (reason) => expect(reason).toBeUndefined()
-      });
+      expect(getDep(successTree, '@ihk-gfi/lux-components-theme').version).not.toEqual('19.2.0');
+      expect(getDep(successTree, '@ihk-gfi/lux-components-theme').version).toEqual('21.0.0');
     });
   });
 });

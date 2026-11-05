@@ -49,7 +49,12 @@ export class LuxSelectFilterNavigator {
 
     const currentActiveIndex = this.getActiveOptionIndex(keyManager);
     const currentVisiblePos = visibleOptionIndexes.indexOf(currentActiveIndex);
-    const nextVisiblePos = currentVisiblePos < 0 ? (step === 1 ? 0 : visibleOptionIndexes.length - 1) : clampVisiblePosition(currentVisiblePos + step, visibleOptionIndexes.length);
+    const nextVisiblePos =
+      currentVisiblePos < 0
+        ? step === 1
+          ? 0
+          : visibleOptionIndexes.length - 1
+        : clampVisiblePosition(currentVisiblePos + step, visibleOptionIndexes.length);
 
     this.activateVisibleOptionByPosition(keyManager, visibleOptionIndexes, nextVisiblePos);
   }
@@ -133,11 +138,7 @@ export class LuxSelectFilterNavigator {
     panel?.style.removeProperty('--lux-select-filter-offset');
   }
 
-  private activateVisibleOptionByPosition(
-    keyManager: InternalKeyManager,
-    visibleOptionIndexes: number[],
-    targetVisiblePos: number
-  ): void {
+  private activateVisibleOptionByPosition(keyManager: InternalKeyManager, visibleOptionIndexes: number[], targetVisiblePos: number): void {
     const targetIndex = visibleOptionIndexes[clampVisiblePosition(targetVisiblePos, visibleOptionIndexes.length)];
     keyManager.setActiveItem(targetIndex);
     this.scrollOptionIntoView(targetIndex);

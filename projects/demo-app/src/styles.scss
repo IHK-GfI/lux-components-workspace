@@ -42,3 +42,8 @@ $basepath: "https://cdn.gfi.ihk.de/lux-components/icons-and-fonts/v1.11.0/";
     align-self: flex-start;
   }
 }
+
+.deprecated {
+  font-style: italic;
+  text-decoration: line-through;
+}

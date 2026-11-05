@@ -1,7 +1,8 @@
-# Image zum Ausführen der Karma-Tests der lux-components-lib in verschiedenen Zeitzonen.
+# Image zum Ausführen der Vitest-Tests der lux-components-lib in verschiedenen Zeitzonen.
 #
-# Hintergrund: Chrome unter Windows ignoriert die Umgebungsvariable TZ und der CI-Runner läuft in UTC.
-# In diesem Container (Linux + Chromium) wirkt TZ, sodass Zeitzonenfehler bei Datumswerten auffallen
+# Hintergrund: Der CI-Runner läuft in UTC. Die Tests laufen unter Vitest in Node (jsdom), dort wirkt die
+# Umgebungsvariable TZ. Dieser Container (Linux mit tzdata und vollständigen ICU-Daten) führt dieselben Tests
+# nacheinander in mehreren Zeitzonen aus, sodass Zeitzonenfehler bei Datumswerten auffallen
 # (z.B. lokale Zeit statt UTC, Umstellung auf Sommer- bzw. Winterzeit).
 #
 # Das Image enthält nur die Umgebung. Der Workspace wird beim Start eingebunden, sodass immer der aktuelle
@@ -26,19 +27,13 @@
 ARG BASE_IMAGE=node:24-alpine
 FROM ${BASE_IMAGE}
 
-# Chromium für Karma, tzdata für die Zeitzonen (TZ) und icu-data-full für Intl bzw. toLocale*String()
-RUN apk add --no-cache chromium tzdata icu-data-full
+# tzdata für die Zeitzonen (TZ) und icu-data-full für Intl bzw. toLocale*String()
+RUN apk add --no-cache tzdata icu-data-full
 
-ENV CHROME_BIN=/usr/bin/chromium-browser \
-    NG_CLI_ANALYTICS=false \
+ENV NG_CLI_ANALYTICS=false \
     NPM_CONFIG_UPDATE_NOTIFIER=false
 
-# Unter Podman auf Windows läuft der Container im WSL-Kernel der Podman-Maschine. Die Karma-Launcher erkennen
-# dadurch fälschlicherweise WSL und rufen wslpath auf. Der Stub gibt die Pfade unverändert zurück.
-RUN printf '#!/bin/sh\nfor a in "$@"; do case "$a" in -*) ;; *) echo "$a" ;; esac; done\n' > /usr/local/bin/wslpath \
-    && chmod +x /usr/local/bin/wslpath
-
-COPY karma.conf.js run-tests.sh /opt/lux-timezone-tests/
+COPY run-tests.sh /opt/lux-timezone-tests/
 
 # Zeilenenden normalisieren, da ein Checkout unter Windows CRLF liefern kann
 RUN sed -i 's/\r$//' /opt/lux-timezone-tests/run-tests.sh \

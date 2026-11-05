@@ -1,0 +1,56 @@
+# LUX-Divider
+
+![Beispielbild LUX-Divider](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v22/lux‐divider-v22-img.png)
+
+- [LUX-Divider](#lux-divider)
+  - [Overview / API](#overview--api)
+    - [Allgemein](#allgemein)
+    - [@Input](#input)
+  - [Beispiele](#beispiele)
+    - [1. Horizontal Divider](#1-horizontal-divider)
+    - [2. Vertical Divider](#2-vertical-divider)
+
+## Overview / API
+
+### Allgemein
+
+| Name     | Beschreibung |
+| -------- | ------------ |
+| selector | lux-divider  |
+
+### @Input
+
+| Name        | Typ     | Beschreibung                                                                                                                          |
+| ----------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| luxInset    | boolean | Bestimmt, ob der Divider über die komplette Breite der aktuellen Komponente geht oder nur mit einem leichten Versatz. Default: false. |
+| luxVertical | boolean | Bestimmt, ob der Divider vertikal oder horizontal dargestellt wird. Default: false.                                                   |
+
+## Beispiele
+
+### 1. Horizontal Divider
+
+![Beispielbild 01](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v22/lux‐divider-v22-img-01.png)
+
+Html
+
+```html
+<div class="lux-flex lux-flex-col">
+  <p>Lorem ipsum</p>
+  <lux-divider />
+  <p>Dolor sit amet</p>
+</div>
+```
+
+### 2. Vertical Divider
+
+![Beispielbild 02](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v22/lux‐divider-v22-img-02.png)
+
+Html
+
+```html
+<div class="lux-flex">
+  <p>Lorem ipsum</p>
+  <lux-divider [luxVertical]="true" />
+  <p>Dolor sit amet</p>
+</div>
+```

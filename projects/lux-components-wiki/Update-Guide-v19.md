@@ -63,12 +63,12 @@ Der LUX-Tour-Hinweis nutzt den Local Storage, um zu speichern, ob ein Hinweis ni
 
 Die LUX-Table nutzt den Local Storage, um zu speichern, welche Tabellen ausgeblendet wurden, aber nur, wenn das Feature "Spalten ausblenden" (siehe Property "luxShowColumnSelector") verwendet wird.
 
-|            |                                                                                                                                                                                                                                                                                       |
-| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Key        | Legt die Fachanwendung fest                                                                                                                                                                                                                                                           |
-| Key-Präfix | Wird von der Fachanwendung festgelegt über die Property "luxColumnStorageKey"                                                                                                                                                                                                         |
-| Wert       | String-Array mit den Spalten-Ids                                                                                                                                                                                                                                                      |
-| Beispiel   | lux.app.demo.table=\["name", "symbol"\]                                                                                                                                                                                                                                               |
+|            |                                                                                                                                                                                                                                                                                      |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Key        | Legt die Fachanwendung fest                                                                                                                                                                                                                                                          |
+| Key-Präfix | Wird von der Fachanwendung festgelegt über die Property "luxColumnStorageKey"                                                                                                                                                                                                        |
+| Wert       | String-Array mit den Spalten-Ids                                                                                                                                                                                                                                                     |
+| Beispiel   | lux.app.demo.table=\["name", "symbol"\]                                                                                                                                                                                                                                              |
 | Auswirkung | Hat nur Auswirkungen, wenn die Tabelle das Feature "Spalten ausblenden" (siehe Property "luxShowColumnSelector") verwendet. Wenn der Local Storage nicht mehr verwendet werden darf, werden die ausgeblendeten Spalten nach jedem Neuladen der Tabellen-Komponente wieder angezeigt. |
 
 ## Versionen
@@ -183,16 +183,16 @@ Bitte zuerst die vollständige Anleitung lesen und danach mit dem Update beginne
 
 1. In der Datei _angular.json_ alle Vorkommen von _ngx-build-plus:_ in _@angular-devkit/build-angular:_ ersetzen.
 
-   ![angular.json](Versions/v19/updater-angular-json.png)
+   ![angular.json](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v19/updater-angular-json.png)
 
 1. Angular auf 19 aktualisieren:
 
    `ng update @angular/core@19 @angular/cli@19 --allow-dirty --force`
 
    Die Rückfrage nach dem _use-application-builder_ bestätigen.
-   ![application-builder](updater-question-app-builder.png)
+   ![application-builder](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v19/updater-question-app-builder.png)
    Die Rückfrage nach dem _provide-initializer_ bestätigen.
-   ![initializer](updater-question-initializer.png)
+   ![initializer](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v19/updater-question-initializer.png)
 
    `ng update @angular/cdk@19 @angular/material@19 @angular-eslint/schematics@19 --allow-dirty --force`
 

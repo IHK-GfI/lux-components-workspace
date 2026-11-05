@@ -5,12 +5,12 @@ import { HttpResponse } from '@angular/common/http';
 
 @Injectable()
 export class MockAppHeaderAcLuxSessionTimerService extends LuxAppHeaderAcSessionTimerService {
+  private readonly configServiceLocal = inject(LuxComponentsConfigService);
+
   constructor() {
     super();
     this.resetTimer(1800);
   }
-
-  private readonly configServiceLocal = inject(LuxComponentsConfigService);
 
   override extendSessionTimer(): Observable<HttpResponse<any>> {
     this.url = this.configServiceLocal.currentConfig.sessionTimerConfig?.url ?? '';

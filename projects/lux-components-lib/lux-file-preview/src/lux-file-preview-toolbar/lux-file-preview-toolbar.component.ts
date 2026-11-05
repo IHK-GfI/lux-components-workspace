@@ -10,8 +10,9 @@ import { LuxFilePreviewData } from '../lux-file-preview-data';
   imports: [LuxIconComponent]
 })
 export class LuxFilePreviewToolbarComponent implements OnDestroy {
-  private mediaQueryService = inject(LuxMediaQueryObserverService);
   data = inject<LuxFilePreviewData>(LUX_FILE_PREVIEW_DATA);
+
+  private mediaQueryService = inject(LuxMediaQueryObserverService);
 
   mobileView = signal(this.mediaQueryService.activeMediaQuery === 'xs');
 

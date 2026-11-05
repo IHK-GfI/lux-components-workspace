@@ -1,12 +1,12 @@
-import { ChangeDetectionStrategy, Component, computed, linkedSignal, model, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, linkedSignal, signal } from '@angular/core';
 import {
   LuxButtonComponent,
-  LuxInputAcComponent,
+  LuxInputComponent,
   LuxMenuComponent,
   LuxMenuItemComponent,
   LuxMenuTriggerComponent,
-  LuxSelectAcComponent,
-  LuxToggleAcComponent
+  LuxSelectComponent,
+  LuxToggleComponent
 } from '@ihk-gfi/lux-components';
 import {
   ILuxListSelectHttpDao,
@@ -59,9 +59,9 @@ const ALLE_ADRESSEN: DemoAdresse[] = [
     LuxMenuComponent,
     LuxMenuItemComponent,
     LuxMenuTriggerComponent,
-    LuxSelectAcComponent,
-    LuxToggleAcComponent,
-    LuxInputAcComponent,
+    LuxSelectComponent,
+    LuxToggleComponent,
+    LuxInputComponent,
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,
     ExampleBaseSimpleOptionsComponent,
@@ -69,7 +69,7 @@ const ALLE_ADRESSEN: DemoAdresse[] = [
   ]
 })
 export class ListSelectExampleComponent {
-  log = logResult;
+  readonly log = logResult;
 
   readonly alleAdressen = signal<DemoAdresse[]>(ALLE_ADRESSEN);
 
@@ -107,33 +107,33 @@ export class ListSelectExampleComponent {
     { label: 'Langsam (1000 ms)', value: 1000 }
   ];
 
-  mode = model<LuxListSelectMode>('multi');
-  size = model<LuxListSelectSize>('default');
-  showCounter = model(true);
-  selectAllLabel = model('Alle Adressen');
-  titleProp = model('title');
-  subTitleProp = model('subTitle');
-  showOutputEvents = model(false);
-  showPagination = model(false);
-  infiniteScroll = model(false);
-  actionType = model<'none' | 'button' | 'menu'>('none');
-  actionPosition = model<LuxListSelectActionPosition>('right');
-  disabled = model(false);
-  errorMessage = model<string>('');
-  maxHeight = model('420px');
-  pageSize = model(5);
+  readonly mode = signal<LuxListSelectMode>('multi');
+  readonly size = signal<LuxListSelectSize>('default');
+  readonly showCounter = signal(true);
+  readonly selectAllLabel = signal('Alle Adressen');
+  readonly titleProp = signal('title');
+  readonly subTitleProp = signal('subTitle');
+  readonly showOutputEvents = signal(false);
+  readonly showPagination = signal(false);
+  readonly infiniteScroll = signal(false);
+  readonly actionType = signal<'none' | 'button' | 'menu'>('none');
+  readonly actionPosition = signal<LuxListSelectActionPosition>('right');
+  readonly disabled = signal(false);
+  readonly errorMessage = signal<string>('');
+  readonly maxHeight = signal('420px');
+  readonly pageSize = signal(5);
 
-  showSearch = model(false);
-  searchDelay = model(300);
-  searchValue = model('');
-  useHttpDao = model(false);
+  readonly showSearch = signal(false);
+  readonly searchDelay = signal(300);
+  readonly searchValue = signal('');
+  readonly useHttpDao = signal(false);
 
-  pageIndex = model(0);
-  selected = signal<DemoAdresse[]>([]);
+  readonly pageIndex = signal(0);
+  readonly selected = signal<DemoAdresse[]>([]);
 
   // Sucheingabe sowie ein Wechsel des Modus (Server-DAO an/aus, Infinite Scroll an/aus) setzen
   // den client-seitig geladenen Ausschnitt auf den Initialwert zurück.
-  loadedCount = linkedSignal({
+  readonly loadedCount = linkedSignal({
     source: () => ({ search: this.searchValue(), dao: this.useHttpDao(), infinite: this.infiniteScroll() }),
     computation: () => INITIAL_LOADED_COUNT
   });
@@ -141,7 +141,7 @@ export class ListSelectExampleComponent {
   // Bei Aktivierung des Toggles wird ein neues DAO-Objekt gebunden (Server-Simulation), bei
   // Deaktivierung liefert der Computed wieder "undefined" -> die Komponente fällt zurück auf
   // luxItems und ihre eigene Client-Filterung/-Slicing.
-  httpDao = computed<ILuxListSelectHttpDao<DemoAdresse> | undefined>(() =>
+  readonly httpDao = computed<ILuxListSelectHttpDao<DemoAdresse> | undefined>(() =>
     this.useHttpDao() ? new ListSelectExampleHttpDao(this.alleAdressen()) : undefined
   );
 
@@ -150,7 +150,7 @@ export class ListSelectExampleComponent {
   // die Komponente dagegen NICHT selbst - die aufrufende Seite liefert weiterhin nur den bisher
   // geladenen Ausschnitt über luxItems und erweitert ihn in onScrolled() (siehe Wiki-Beispiel
   // "Infinite Scrolling"). Ist ein DAO gebunden, übernimmt dieser Paging/Scrolling serverseitig.
-  visibleItems = computed(() => {
+  readonly visibleItems = computed(() => {
     if (this.infiniteScroll() && !this.useHttpDao()) {
       return this.alleAdressen().slice(0, this.loadedCount());
     }

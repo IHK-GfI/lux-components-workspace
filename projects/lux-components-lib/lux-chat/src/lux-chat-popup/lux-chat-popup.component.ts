@@ -1,61 +1,63 @@
 import { NgClass } from '@angular/common';
-import { Component, inject, OnDestroy, model, effect, contentChild, DestroyRef, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, contentChild, effect, inject, model, signal, untracked } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatFabButton } from '@angular/material/button';
 import { LuxIconComponent, LuxMediaQueryObserverService } from '@ihk-gfi/lux-components';
 import { TranslocoPipe } from '@jsverse/transloco';
-import { Unsubscribable } from 'rxjs';
 import { LuxChatController } from '../lux-chat/lux-chat-controller';
-import { outputToObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
+
+/** Auf kleinen Bildschirmen (xs, sm) wird das Popup immer im Vollbild dargestellt. */
+function isMobileQuery(query: string): boolean {
+  return query === 'xs' || query === 'sm';
+}
 
 @Component({
   selector: 'lux-chat-popup',
   imports: [NgClass, LuxIconComponent, MatFabButton, TranslocoPipe],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './lux-chat-popup.component.html'
 })
 export class LuxChatPopupComponent {
   private queryService = inject(LuxMediaQueryObserverService);
-  private destroyRef = inject(DestroyRef);
 
   private childChat = contentChild(LuxChatController);
 
   public luxChatOpened = model(false);
   public luxFullScreen = model(false);
-  public mobileView = false;
+  public mobileView = signal(isMobileQuery(this.queryService.activeMediaQuery));
 
   constructor() {
-    this.mobileView = this.queryService.activeMediaQuery === 'xs' || this.queryService.activeMediaQuery === 'sm';
-
     this.queryService
       .getMediaQueryChangedAsObservable()
       .pipe(takeUntilDestroyed())
-      .subscribe((query) => {
-        this.mobileView = query === 'xs' || query === 'sm';
-      });
+      .subscribe((query) => this.mobileView.set(isMobileQuery(query)));
 
+    // Vollbildzustand an den Chat weitergeben (steuert u.a. das Icon im Standard-Header des Chats).
     effect(() => {
-      const fullscreen = this.luxFullScreen();
+      this.childChat()?._chatFullscreen.set(this.luxFullScreen());
+    });
+
+    // Den Chat einmal je Chat-Instanz verdrahten. Bewusst getrennt vom Effect oben, der bei jedem
+    // Umschalten des Vollbildmodus erneut läuft und sonst jedes Mal weitere Subscriptions anlegen würde.
+    effect((onCleanup) => {
       const childChat = this.childChat();
+      if (!childChat) {
+        return;
+      }
 
-      if (childChat) {
-        childChat._chatFullscreen = fullscreen;
-
+      untracked(() => {
         if (!childChat.chatPopupMode()) {
           childChat.chatPopupMode.set(true);
         }
+      });
 
-        outputToObservable(childChat.chatClose)
-          .pipe(takeUntilDestroyed(this.destroyRef))
-          .subscribe(() => {
-            this.luxChatOpened.set(false);
-          });
+      const closeSubscription = childChat.chatClose.subscribe(() => this.luxChatOpened.set(false));
+      const fullscreenSubscription = childChat.chatFullscreen.subscribe((value) => this.luxFullScreen.set(value));
 
-        outputToObservable(childChat.chatFullscreen)
-          .pipe(takeUntilDestroyed(this.destroyRef))
-          .subscribe((value) => {
-            this.luxFullScreen.set(value);
-          });
-      }
+      onCleanup(() => {
+        closeSubscription.unsubscribe();
+        fullscreenSubscription.unsubscribe();
+      });
     });
   }
 

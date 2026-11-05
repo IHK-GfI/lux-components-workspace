@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
+import { AbstractControl, ValidationErrors } from '@angular/forms';
+import { form, FormField, required, validate } from '@angular/forms/signals';
 import {
   LuxAutofocusDirective,
   LuxButtonComponent,
@@ -8,8 +9,7 @@ import {
   LuxDialogRef,
   LuxDialogStructureComponent,
   LuxDialogTitleComponent,
-  LuxInputAcComponent,
-  LuxValidationErrors
+  LuxInputComponent
 } from '@ihk-gfi/lux-components';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 
@@ -43,15 +43,18 @@ export function luxQuillNormalizeUrl(url: string): string {
   return 'https://' + trimmed;
 }
 
+/** true, wenn die (normalisierte) URL leer oder ein erlaubter http(s)-, mailto- bzw. tel-Link ist. */
+function isAllowedUrl(value: string): boolean {
+  const url = luxQuillNormalizeUrl(value);
+  return !url || ALLOWED_URL.test(url);
+}
+
 /**
  * Erlaubt http(s)-, mailto- und tel-Links. Leere Werte prüft der Required-Validator.
+ * Validator für Reactive Forms; der Link-Dialog selbst nutzt dieselbe Prüfung in seinem Signal Form.
  */
 export function luxQuillUrlValidator(control: AbstractControl): ValidationErrors | null {
-  const url = luxQuillNormalizeUrl(control.value);
-  if (!url) {
-    return null;
-  }
-  return ALLOWED_URL.test(url) ? null : { [LUX_QUILL_URL_ERROR]: true };
+  return isAllowedUrl(control.value) ? null : { [LUX_QUILL_URL_ERROR]: true };
 }
 
 @Component({
@@ -59,7 +62,7 @@ export function luxQuillUrlValidator(control: AbstractControl): ValidationErrors
   templateUrl: './lux-quill-link-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    ReactiveFormsModule,
+    FormField,
     TranslocoPipe,
     LuxAutofocusDirective,
     LuxButtonComponent,
@@ -67,40 +70,41 @@ export function luxQuillUrlValidator(control: AbstractControl): ValidationErrors
     LuxDialogTitleComponent,
     LuxDialogContentComponent,
     LuxDialogActionsComponent,
-    LuxInputAcComponent
+    LuxInputComponent
   ]
 })
 export class LuxQuillLinkDialogComponent implements OnInit {
   private readonly tService = inject(TranslocoService);
   protected readonly dialogRef = inject<LuxDialogRef<LuxQuillLinkDialogData>>(LuxDialogRef);
-  protected data: LuxQuillLinkDialogData = { url: '', hasLink: false, askForText: false };
+  protected readonly data = signal<LuxQuillLinkDialogData>({ url: '', hasLink: false, askForText: false });
 
-  protected readonly form = new FormGroup({
-    url: new FormControl<string>('', { nonNullable: true, validators: [Validators.required, luxQuillUrlValidator] }),
-    text: new FormControl<string>('', { nonNullable: true })
+  protected readonly model = signal({ url: '', text: '' });
+  protected readonly linkForm = form(this.model, (path) => {
+    required(path.url);
+    validate(path.url, ({ value }) =>
+      isAllowedUrl(value()) ? undefined : { kind: LUX_QUILL_URL_ERROR, message: this.tService.translate('luxc.quill.link.url_invalid') }
+    );
+    required(path.text, { when: () => this.data().askForText });
   });
-
-  protected readonly urlErrorCallback = (_value: unknown, errors: LuxValidationErrors) =>
-    errors[LUX_QUILL_URL_ERROR] ? this.tService.translate('luxc.quill.link.url_invalid') : undefined;
 
   ngOnInit() {
     // Der LuxDialogService übergibt die Daten erst nach dem Erzeugen der Komponente (dialogRef.init()).
-    this.data = this.dialogRef.data ?? this.data;
-    this.form.controls.url.setValue(this.data.url);
-    if (this.data.askForText) {
-      this.form.controls.text.setValidators(Validators.required);
-    }
+    const data = this.dialogRef.data ?? this.data();
+    this.data.set(data);
+    this.model.update((model) => ({ ...model, url: data.url }));
   }
 
   apply() {
-    this.form.markAllAsTouched();
-    if (this.form.invalid) {
+    this.linkForm.url().markAsTouched();
+    this.linkForm.text().markAsTouched();
+    if (this.linkForm().invalid()) {
       return;
     }
 
-    const result: LuxQuillLinkDialogResult = { action: 'apply', url: luxQuillNormalizeUrl(this.form.controls.url.value) };
-    if (this.data.askForText) {
-      result.text = this.form.controls.text.value.trim();
+    const { url, text } = this.model();
+    const result: LuxQuillLinkDialogResult = { action: 'apply', url: luxQuillNormalizeUrl(url) };
+    if (this.data().askForText) {
+      result.text = text.trim();
     }
     this.dialogRef.closeDialog(result);
   }

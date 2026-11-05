@@ -1,0 +1,305 @@
+# Konfiguration
+
+- [Konfiguration](#konfiguration)
+  - [Overview / API](#overview--api)
+    - [Allgemein](#allgemein)
+  - [Services](#services)
+    - [LuxComponentsConfigService](#luxcomponentsconfigservice)
+  - [Classes / Interfaces](#classes--interfaces)
+    - [LuxComponentsConfigParameters](#luxcomponentsconfigparameters)
+      - [appFooter](#appfooter)
+      - [buttonConfiguration](#buttonconfiguration)
+      - [rippleConfiguration](#rippleconfiguration)
+      - [labelConfiguration](#labelconfiguration)
+      - [viewConfiguration](#viewconfiguration)
+      - [sessionTimerConfig](#sessiontimerconfig)
+      - [tenantLogoLookupServiceUrl](#tenantlogolookupserviceurl)
+        - [Logos mit der App ausliefern](#logos-mit-der-app-ausliefern)
+        - [Logos über ein CDN laden](#logos-über-ein-cdn-laden)
+      - [iconBasePath](#iconbasepath)
+        - [Icons mit der App ausliefern](#icons-mit-der-app-ausliefern)
+        - [Icons über ein CDN laden](#icons-über-ein-cdn-laden)
+  - [Beispiele](#beispiele)
+    - [1. Config](#1-config)
+
+## Overview / API
+
+### Allgemein
+
+Über die Provider-Funktion `provideLuxComponentsConfig` werden LuxComponents-weite Einstellungen
+festgelegt. Diese gelten dann für die gesamte Applikation.
+
+| Name     | Beschreibung                                                      |
+| -------- | ----------------------------------------------------------------- |
+| provider | provideLuxComponentsConfig(config: LuxComponentsConfigParameters) |
+
+## Services
+
+### LuxComponentsConfigService
+
+Dieser Service wird von den Components benutzt, um die Standardkonfiguration zu nutzen, sollte es keine vom Entwickler übergebene Konfiguration geben.
+Des Weiteren bietet er die Möglichkeit, sich zu abonnieren, und so aktualisierte Konfigurationsobjekte zu erhalten.
+
+Dieser Service sollte dann vom Entwickler genutzt werden, wenn die Konfiguration zur Laufzeit der Applikation angepasst werden soll.
+
+| Name der Property/Funktion                                 | Typ/Rückgabewert                             | Beschreibung                                                                                                                                                                                                                                       |
+| ---------------------------------------------------------- | -------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| DEFAULT_CONFIG (Property)                                  | LuxComponentsConfigParameters                | Statisches Readonly-Objekt, welches die Standardkonfiguration beinhaltet. Wenn keine Konfiguration übergeben wird, wird diese benutzt. Wenn die übergebene Konfiguration bestimmte Werte nicht setzt, werden diese aus der DEFAULT_CONFIG geladen. |
+| config (Getter)                                            | Observable \<LuxComponentsConfigParameters\> | Gibt ein Observable zurück, welches das aktuelle/neueste Konfigurationsobjekt beinhaltet.                                                                                                                                                          |
+| currentConfig (Getter)                                     | LuxComponentsConfigParameters                | Gibt direkt das aktuelle Konfigurationsobjekt zurück.                                                                                                                                                                                              |
+| isLabelUppercaseForSelector(selector: string)              | boolean                                      | Gibt zurück, ob die Labels für bestimmte Komponenten uppercase dargestellt werden sollen und ob das auch auf die Komponente mit dem übergebenen Selektor zutrifft.                                                                                 |
+| updateConfiguration(config: LuxComponentsConfigParameters) | void                                         | Ersetzt die aktuelle Konfiguration mit der übergebenen. Auch hier wird bei fehlenden Werten die Standard-Konfiguration zu Rate gezogen.                                                                                                            |
+
+## Classes / Interfaces
+
+### LuxComponentsConfigParameters
+
+| Property                      | Typ     | Beschreibung                                                                                                                                                                                |
+| ----------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| generateLuxTagIds?            | boolean | Bestimmt, ob die LuxTagIds (und dazugehörenden) Warnungen generiert werden.                                                                                                                 |
+| displayLuxConsoleLogs?        | boolean | Bestimmt, ob die Ausgaben des LuxConsoleService in die Developer-Console des Browsers geschrieben werden.                                                                                   |
+| lookupServiceUrl?             | string  | Bestimmt den Basepfad des Lookup-Services für die LookupComponents.                                                                                                                         |
+| labelConfiguration?           | Object  | Bestimmt, ob die Labels für LuxButtons, LuxLinks, LuxMenuItems, LuxStepper, LuxSideNavItem und LuxTabs immer Uppercase dargestellt werden. Siehe [labelConfiguration](#labelconfiguration). |
+| cardExpansionAnimationActive? | boolean | Flag, um die Ausklappanimationen von LuxCards zu aktivieren bzw. zu deaktivieren.                                                                                                           |
+| rippleConfiguration?          | Object  | Bestimmt die globalen Einstellungen für die Animationen der LuxRipple-Direktiven. Siehe [rippleConfiguration](#rippleconfiguration).                                                        |
+| iconBasePath?                 | string  | Bestimmt den Basepfad der LUX-Icons.                                                                                                                                                        |
+| tenantLogoLookupServiceUrl?   | string  | Bestimmt den Basepfad der Tenantlogos.                                                                                                                                                      |
+| appFooter?                    | Object  | Einstellungen des Footers. Siehe [appFooter](#appfooter).                                                                                                                                   |
+| buttonConfiguration?          | Object  | Globale Einstellungen für die Buttons. Siehe [buttonConfiguration](#buttonconfiguration).                                                                                                   |
+| viewConfiguration?            | Object  | Zentrierte Darstellung von App-Header-Ac und App-Footer. Siehe [viewConfiguration](#viewconfiguration).                                                                                     |
+| sessionTimerConfig?           | Object  | Einstellungen für den Session-Timer. Siehe [sessionTimerConfig](#sessiontimerconfig).                                                                                                       |
+
+#### appFooter
+
+| Property      | Typ     | Beschreibung                                                     |
+| ------------- | ------- | ---------------------------------------------------------------- |
+| fixedDesktop? | boolean | Gibt an, ob der Footer in der Desktopansicht fixiert sein soll.  |
+| fixedMobile?  | boolean | Gibt an, ob der Footer in der mobilen Ansicht fixiert sein soll. |
+
+Wichtig!
+
+Wenn der Footer _nicht_ fixiert ist, kann es auf Seiten mit wenig Inhalt dazu kommen, dass der Footer hochrutscht (siehe Abbildung unten).
+D.h. alle Seiten sollten so gebaut werden, dass der Footer auf Seiten mit wenig Inhalt trotzdem am unteren Rand angezeigt wird.
+
+![Verrutschter App-Footer](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v22/lux‐app‐footer-v22-img-03.png)
+
+#### buttonConfiguration
+
+| Property        | Typ    | Beschreibung                                                        |
+| --------------- | ------ | ------------------------------------------------------------------- |
+| throttleTimeMs? | number | Verhindert, dass ein Button mehrfach hintereinander ausgelöst wird. |
+
+#### rippleConfiguration
+
+| Property      | Typ     | Beschreibung                                                                                          |
+| ------------- | ------- | ----------------------------------------------------------------------------------------------------- |
+| enterDuration | number  | Definiert die Dauer der Eingangsanimationen.                                                          |
+| exitDuration  | number  | Definiert die Dauer der Ausgangsanimationen.                                                          |
+| color?        | string  | Enthält die Farbe (beliebiger CSS-gültiger Wert) der Ripples.                                         |
+| centered?     | boolean | Bestimmt, ob die Animationen vom Zentrum der Ripple-Targets ausgehen oder vom Mausklick.              |
+| radius?       | number  | Bestimmt den Radius der Animationen. Wenn 0 ist, werden die Begrenzungen der Ripple-Targets genommen. |
+| disabled?     | boolean | Deaktiviert die LuxRipples.                                                                           |
+| unbounded?    | boolean | Bestimmt, ob die Animationen über die Ripple-Targets hinausgehen oder nicht.                          |
+
+#### labelConfiguration
+
+| Property     | Typ      | Beschreibung                                                                                                                                                                               |
+| ------------ | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| allUppercase | boolean  | Bestimmt, ob die Labels für LuxButtons, LuxLinks, LuxMenuItems, LuxStepper, LuxSideNavItem und LuxTabs immer Uppercase dargestellt werden.                                                 |
+| notAppliedTo | string[] | Definiert, ob alle o.g. Komponenten ihre Labels uppercase darstellen. Hier können Ausnahmen eingetragen werden. Dazu einfach den Selektor der Komponente hier eintragen. (z.B. 'lux-link') |
+
+#### viewConfiguration
+
+| Property      | Typ     | Beschreibung                                                                                                                  |
+| ------------- | ------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| centeredView  | boolean | Bestimmt, ob der Inhalt App-Headers-Ac und des App-Footers begrenzt und zentriert angezeigt wird, default = false.            |
+| centeredWidth | string  | Definiert die Max-Width (default = 1500px) des Inhalts des App-Header-Ac und des App-Footers, falls centeredView = true gilt. |
+
+#### sessionTimerConfig
+
+| Property                           | Typ    | Beschreibung                                                                                                     |
+| ---------------------------------- | ------ | ---------------------------------------------------------------------------------------------------------------- |
+| url?                               | string | URL, die zum Verlängern der Session aufgerufen wird.                                                             |
+| httpSessionTimeHeaderName?         | string | Name des HTTP-Headers mit der Restlaufzeit der Session. Default: `X-GfI-Session-Time`.                           |
+| httpSessionProlongationHeaderName? | string | Name des HTTP-Headers, der angibt, ob die Session verlängert werden darf. Default: `X-GfI-Session-Prolongation`. |
+| localStorageKeyName?               | string | Schlüssel im Local Storage für die Endzeit der Session. Default: `lux-components-session-endtime`.               |
+
+Siehe auch [LUX-Session-Timer](lux‐session‐timer-v22).
+
+#### tenantLogoLookupServiceUrl
+
+##### Logos mit der App ausliefern
+
+In der Konfiguration in der _app.config.ts_ muss der Logo-Ordner eingetragen werden:
+
+```ts
+const myConfiguration: LuxComponentsConfigParameters = {
+  ...
+  tenantLogoLookupServiceUrl: '/assets/tenant-logos/',
+  ...
+};
+```
+
+Die Logos müssen in den _src/assets/tenant-logos_-Ordner kopiert und mit der App ausgeliefert werden.
+
+##### Logos über ein CDN laden
+
+In der Konfiguration in der _app.config.ts_ muss der Logo-Ordner eingetragen werden:
+
+```ts
+const myConfiguration: LuxComponentsConfigParameters = {
+  ...
+  tenantLogoLookupServiceUrl: 'https://[my-domain].de/tenant-logos/',
+  ...
+};
+```
+
+D.h. die Logos müssen nicht mit der App ausgeliefert werden. Sie werden direkt vom CDN-Server geladen.
+
+#### iconBasePath
+
+##### Icons mit der App ausliefern
+
+Damit die Icons mit der App ausgeliefert werden können, müssen folgende Einstellungen vorgenommen werden.
+
+Abhängigkeit in der _package.json_ hinzufügen:
+
+```json
+"dependencies": {
+  "@ihk-gfi/lux-components-icons-and-fonts": "x.x.x",
+}
+```
+
+Die _assets_-Abschnitte in der _angular.json_ ergänzen:
+
+```json
+"assets": [
+  ...
+  {
+    "glob": "**/*",
+    "input": "./node_modules/@ihk-gfi/lux-components-icons-and-fonts/assets/icons/",
+    "output": "./assets/icons"
+  },
+  {
+    "glob": "**/*",
+    "input": "./node_modules/@ihk-gfi/lux-components-icons-and-fonts/assets/logos/",
+    "output": "./assets/logos"
+  },
+  {
+    "glob": "**/*",
+    "input": "./node_modules/@ihk-gfi/lux-components-icons-and-fonts/assets/fonts/",
+    "output": "./assets/fonts"
+  },
+  ...
+]
+```
+
+Den folgenden Code in der _styles.scss_ ergänzen:
+
+```scss
+@use "@ihk-gfi/lux-components-theme/src/base-templates/common/luxfonts" as luxfonts;
+
+$basepath: "/";
+
+@include luxfonts.web-fonts($basepath);
+```
+
+##### Icons über ein CDN laden
+
+Damit die Icons über ein CDN geladen werden können, müssen folgende Einstellungen vorgenommen werden.
+
+Abhängigkeit in der _package.json_ hinzufügen, falls noch nicht vorhanden:
+
+```json
+"dependencies": {
+  "@ihk-gfi/lux-components-icons-and-fonts": "x.x.x",
+}
+```
+
+Änderungen in den _assets_-Abschnitten in der _angular.json_:
+
+Die folgenden Einträge können gelöscht werden:
+
+```json
+"assets": [
+  ...
+  {
+    "glob": "**/*",
+    "input": "./node_modules/@ihk-gfi/lux-components-icons-and-fonts/assets/icons/",
+    "output": "./assets/icons"
+  },
+  {
+    "glob": "**/*",
+    "input": "./node_modules/@ihk-gfi/lux-components-icons-and-fonts/assets/logos/",
+    "output": "./assets/logos"
+  },
+  {
+    "glob": "**/*",
+    "input": "./node_modules/@ihk-gfi/lux-components-icons-and-fonts/assets/fonts/",
+    "output": "./assets/fonts"
+  },
+  ...
+]
+```
+
+Die Konfiguration in der _app.config.ts_ muss wie folgt angepasst werden:
+
+```ts
+const myConfiguration: LuxComponentsConfigParameters = {
+  ...
+  iconBasePath: 'https://[my-domain].de/lux-components/icons-and-fonts/v1.11.0/',
+  ...
+};
+```
+
+Derselbe Pfad muss in der _styles.scss_ eingesetzt werden:
+
+```scss
+@use "@ihk-gfi/lux-components-theme/src/base-templates/common/luxfonts" as luxfonts;
+
+$basepath: "https://[my-domain]/lux-components/icons-and-fonts/v1.11.0/";
+
+@include luxfonts.web-fonts($basepath);
+```
+
+D.h. die Icons und Fonts müssen nicht mit der App ausgeliefert werden. Sie werden direkt vom CDN-Server geladen.
+
+Im CDN müssen die Icons in den Unterordner _assets_ angelegt werden.
+Z.B. _`https://[my-domain].de/lux-components/icons-and-fonts/v1.11.0/assets/icons/Interface-Essentials/Validation/interface-validation-check-circle--checkmark-addition-circle-success-check-validation-add-form.svg`_
+
+**_Wichtig!_** Falls eine CSP (Content Security Policy) den Zugriff auf Icon-Ressourcen einschränkt, muss diese um die CDN-Url (z.B. https://[my-domain].de ) erweitert werden.
+Z.B. in Spring-Boot-Projekten kann die CSP (siehe _http - security - csp - connect-src_) über die Konfigurationsdateien _application.yml_, _application-dev.yml_,... festgelegt werden.
+
+## Beispiele
+
+### 1. Config
+
+In der Datei `app.config.ts` wird die Konfiguration über `provideLuxComponentsConfig` bei den Providern eingetragen.
+Wird keine Konfiguration übergeben, wird eine Standardkonfiguration verwendet (siehe LuxComponentsConfigService).
+
+Ts
+
+```typescript
+const myConfiguration: LuxComponentsConfigParameters = {
+  generateLuxTagIds: environment.generateLuxTagIds,
+  displayLuxConsoleLogs: false,
+  lookupServiceUrl: "/lookup/",
+  labelConfiguration: {
+    allUppercase: true,
+    notAppliedTo: ["lux-menu-item", "lux-side-nav-item"],
+  },
+  cardExpansionAnimationActive: true,
+  viewConfiguration: {
+    centeredView: true,
+    centeredWidth: '1000px',
+  }
+};
+
+export const appConfig: ApplicationConfig = {
+  providers: [
+    // ...
+    provideLuxComponentsConfig(myConfiguration),
+    // ...
+  ]
+};
+```

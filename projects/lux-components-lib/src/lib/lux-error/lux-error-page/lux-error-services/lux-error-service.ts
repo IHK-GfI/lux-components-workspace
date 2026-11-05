@@ -11,8 +11,8 @@ import { LuxErrorStoreService } from './lux-error-store.service';
   providedIn: 'root'
 })
 export class LuxErrorService {
-  private router = inject(Router);
-  private errorStore = inject(LuxErrorStoreService);
+  private readonly router = inject(Router);
+  private readonly errorStore = inject(LuxErrorStoreService);
 
   constructor() {
     this.errorStore.init();
@@ -30,7 +30,7 @@ export class LuxErrorService {
     // potentielle alte Route zu LuxErrorPageComponent entfernen
     this.router.config = this.router.config.filter((entry) => entry.component !== LuxErrorPageComponent);
     // neue Route eintragen
-    this.router.config.unshift({ path: this.errorStore.config.errorPageUrl, component: LuxErrorPageComponent });
+    this.router.config.unshift({ path: this.errorStore.config().errorPageUrl, component: LuxErrorPageComponent });
   }
 
   /**
@@ -41,9 +41,9 @@ export class LuxErrorService {
    */
   navigateToErrorPage(error?: ILuxError): Observable<any> {
     if (error) {
-      this.errorStore.error = error;
+      this.errorStore.setError(error);
     }
-    const { errorPageUrl, skipLocationChange } = this.errorStore.config;
+    const { errorPageUrl, skipLocationChange } = this.errorStore.config();
 
     LuxUtil.assertNonNull('errorPageUrl', errorPageUrl);
 

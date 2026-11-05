@@ -1,4 +1,4 @@
-import { Directive, Input } from '@angular/core';
+import { Directive, input } from '@angular/core';
 import { LuxAriaBase } from './lux-aria-base';
 
 @Directive({
@@ -6,26 +6,15 @@ import { LuxAriaBase } from './lux-aria-base';
 })
 export class LuxAriaHiddenDirective extends LuxAriaBase<boolean> {
   protected ariaTagName = 'aria-hidden';
-  _luxAriaHidden?: boolean;
 
-  @Input() luxAriaHiddenSelector?: string;
-
-  @Input()
-  get luxAriaHidden() {
-    return this._luxAriaHidden;
-  }
-
-  set luxAriaHidden(hidden: boolean | undefined) {
-    this._luxAriaHidden = hidden;
-
-    this.renderAria();
-  }
+  readonly luxAriaHiddenSelector = input<string>();
+  readonly luxAriaHidden = input<boolean>();
 
   getSelector(): string | undefined {
-    return this.luxAriaHiddenSelector;
+    return this.luxAriaHiddenSelector();
   }
 
   getValue(): boolean | undefined {
-    return this._luxAriaHidden;
+    return this.luxAriaHidden();
   }
 }

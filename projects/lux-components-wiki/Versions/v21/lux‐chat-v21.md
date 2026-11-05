@@ -52,6 +52,8 @@ Enthält alle Daten über einen Chatverlauf.
 | --------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | addMessage(message: LuxChatMessageData): void | Fügt eine Nachricht dem Chatobjekt hinzu. Das Hinzufügen von Nachrichten soll hierüber erfolgen, damit die LuxChatComponent auf neue Einträge reagieren kann. |
 
+Die LuxChatComponent erkennt Änderungen an derselben LuxChatData-Instanz, wenn `title`, `createdAt` oder `messages` neu zugewiesen werden (z.B. `chatData.title = 'Neu'`) oder eine Nachricht über `addMessage()` hinzukommt. Ein direktes `chatData.messages.push(...)` und Änderungen innerhalb einzelner Nachrichten werden dagegen nicht erkannt.
+
 ### LuxChatMessageData
 
 Enthält alle Daten über eine Chatnachricht

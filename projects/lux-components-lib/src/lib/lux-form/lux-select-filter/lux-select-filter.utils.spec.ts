@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { LuxSelectFilterUtils } from './lux-select-filter.utils';
 
 describe('LuxSelectFilterUtils', () => {
@@ -67,5 +68,4 @@ describe('LuxSelectFilterUtils', () => {
       document.body.removeChild(host);
     });
   });
-
 });

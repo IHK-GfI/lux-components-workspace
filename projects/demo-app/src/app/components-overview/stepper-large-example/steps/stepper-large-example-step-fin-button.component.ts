@@ -1,11 +1,11 @@
 import { Component, OnDestroy, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
-  LuxInputAcComponent,
+  LuxInputComponent,
   LuxStepperLargeClickEvent,
   LuxStepperLargeStepComponent,
   LuxThemePalette,
-  LuxToggleAcComponent,
+  LuxToggleComponent,
   LuxUtil,
   LuxVetoState
 } from '@ihk-gfi/lux-components';
@@ -25,45 +25,42 @@ interface StepperLargeFinButtonDummyForm {
   selector: 'app-stepper-large-example-step-fin-button',
   templateUrl: './stepper-large-example-step-fin-button.component.html',
   providers: [{ provide: LuxStepperLargeStepComponent, useExisting: StepperLargeExampleStepFinButtonComponent }],
-  changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [LuxToggleAcComponent, LuxInputAcComponent, ReactiveFormsModule, StepperLargeExampleErrorMessageBoxComponent]
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [LuxToggleComponent, LuxInputComponent, ReactiveFormsModule, StepperLargeExampleErrorMessageBoxComponent]
 })
 export class StepperLargeExampleStepFinButtonComponent extends LuxStepperLargeStepComponent implements OnInit, OnDestroy {
-  dataService = inject(StepperLargeExampleDataService);
-
   form: FormGroup<StepperLargeFinButtonDummyForm>;
-  showErrorMessage = false;
-
   subscriptions: Subscription[] = [];
+
+  private dataService = inject(StepperLargeExampleDataService);
 
   constructor() {
     super();
 
+    const finButtonConfig = this.dataService.finButtonConfig();
     this.form = new FormGroup<StepperLargeFinButtonDummyForm>({
-      label: new FormControl<string>(this.dataService.finButtonConfig.label ? this.dataService.finButtonConfig.label : 'Abschließen', { validators: Validators.required, nonNullable: true }),
-      iconName: new FormControl<string | undefined>(this.dataService.finButtonConfig.iconName, { nonNullable: true }),
-      color: new FormControl<LuxThemePalette | undefined>(this.dataService.finButtonConfig.color, { nonNullable: true }),
-      iconShowRight: new FormControl<boolean | undefined>(this.dataService.finButtonConfig.iconShowRight, { nonNullable: true }),
-      alignIconWithLabel: new FormControl<boolean | undefined>(this.dataService.finButtonConfig.alignIconWithLabel, { nonNullable: true })
+      label: new FormControl<string>(finButtonConfig.label ? finButtonConfig.label : 'Abschließen', {
+        validators: Validators.required,
+        nonNullable: true
+      }),
+      iconName: new FormControl<string | undefined>(finButtonConfig.iconName, { nonNullable: true }),
+      color: new FormControl<LuxThemePalette | undefined>(finButtonConfig.color, { nonNullable: true }),
+      iconShowRight: new FormControl<boolean | undefined>(finButtonConfig.iconShowRight, { nonNullable: true }),
+      alignIconWithLabel: new FormControl<boolean | undefined>(finButtonConfig.alignIconWithLabel, { nonNullable: true })
     });
   }
 
   ngOnInit(): void {
-    this.luxTitle = 'Konfiguration: Abschließen-Button';
-    this.luxVetoFn = this.createVetoPromise;
+    this.luxTitle.set('Konfiguration: Abschließen-Button');
+    this.luxVetoFn.set(this.createVetoPromise.bind(this));
 
     this.form.get('alignIconWithLabel')!.disable();
 
-    this.luxCompleted = this.form.valid;
+    this.luxCompleted.set(this.form.valid);
 
     this.subscriptions.push(
       this.form.statusChanges.subscribe(() => {
-        this.luxCompleted = this.form.valid;
-      })
-    );
-    this.subscriptions.push(
-      this.dataService.showErrorMessage.subscribe((value) => {
-        this.showErrorMessage = value;
+        this.luxCompleted.set(this.form.valid);
       })
     );
   }
@@ -78,21 +75,21 @@ export class StepperLargeExampleStepFinButtonComponent extends LuxStepperLargeSt
       // - Die Daten aus dem Step in seine Datenstruktur übertragen.
       // - Über die resolve-Methode zurückmelden, ob zum nächsten Schritt navigiert werden darf.
       setTimeout(() => {
-        if (!event.newStep.luxTouched) {
+        if (!event.newStep.luxTouched()) {
           // Prüfen, ob das Formular valide ist.
           if (this.form.valid) {
             // Hier werden die Daten aus dem Formular in den Datenservice übertragen.
-            this.dataService.finButtonConfig = this.form.value;
+            this.dataService.finButtonConfig.set(this.form.value);
 
             // Als letztes wird der Step als valide gekennzeichnet.
-            this.luxCompleted = true;
+            this.luxCompleted.set(true);
           } else {
             // Das Formular ist noch nicht valide und deswegen wird der Step
             // als noch nicht fertig gekennzeichnet.
-            this.luxCompleted = false;
+            this.luxCompleted.set(false);
           }
           if (this.dataService.luxStepValidationActive) {
-            resolve(this.luxCompleted ? LuxVetoState.navigationAccepted : LuxVetoState.navigationRejected);
+            resolve(this.luxCompleted() ? LuxVetoState.navigationAccepted : LuxVetoState.navigationRejected);
           } else {
             resolve(LuxVetoState.navigationAccepted);
           }

@@ -18,10 +18,13 @@ lux-form-control-wrapper {
   }
 }
 
-lux-input-ac {
+lux-input-ac,
+lux-input {
   // Theming des Prefix- und Suffix-Containers
   lux-input-ac-prefix,
-  lux-input-ac-suffix {
+  lux-input-ac-suffix,
+  lux-input-prefix,
+  lux-input-suffix {
     display: flex;
     white-space: nowrap;
   }

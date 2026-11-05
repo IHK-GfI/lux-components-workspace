@@ -1,17 +1,26 @@
 import { JsonPipe, NgClass } from '@angular/common';
-import { Component, effect, input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, effect, input, signal, ChangeDetectionStrategy, ElementRef } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import {
   LuxAriaLabelDirective,
   LuxButtonComponent,
-  LuxFormComponentBase,
-  LuxInputAcComponent,
+  LuxInputComponent,
   LuxTableColumnComponent,
   LuxTableColumnContentComponent,
   LuxTableColumnHeaderComponent,
   LuxTableComponent,
   LuxUtil
 } from '@ihk-gfi/lux-components';
+
+/**
+ * Der Ausschnitt einer LUX-FormComponent, den dieses Beispiel braucht.
+ *
+ * Bewusst strukturell statt LuxFormComponentBase: Die auf Signal Forms umgestellten Controls
+ * (z.B. lux-input) erben von LuxFormControlBase und nicht mehr von LuxFormComponentBase.
+ */
+interface LuxEditableFormComponent {
+  formControlWrapperComponentRef: () => ElementRef | undefined;
+}
 
 interface AddressForm {
   streetName: FormControl<string | null>;
@@ -31,26 +40,25 @@ interface TableForm {
     LuxTableColumnComponent,
     LuxTableComponent,
     LuxAriaLabelDirective,
-    LuxInputAcComponent,
+    LuxInputComponent,
     JsonPipe,
     NgClass
   ],
   templateUrl: './table-edit-with-form-example.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './table-edit-with-form-example.component.scss'
 })
 export class TableEditWithFormExampleComponent {
-  validationEnabled = input<boolean>(false);
+  readonly validationEnabled = input<boolean>(false);
 
   addressInitData = [
     { streetName: 'Hauptstraße', nr: '24' },
     { streetName: 'Hörder Hafenstraße', nr: '5' }
   ];
-  initAdressData = false;
 
-  editRow = -1;
+  readonly editRow = signal(-1);
   myTableForm!: FormGroup<TableForm>;
-  dataSource!: FormGroup<AddressForm>[];
+  readonly dataSource = signal<FormGroup<AddressForm>[]>([]);
 
   constructor() {
     this.myTableForm = new FormGroup<TableForm>({
@@ -66,7 +74,7 @@ export class TableEditWithFormExampleComponent {
       );
     });
 
-    this.dataSource = this.getAddressFormArray().controls;
+    this.dataSource.set(this.getAddressFormArray().controls);
 
     effect(() => {
       this.getAddressFormArray().controls.forEach((formGroup: FormGroup<AddressForm>) => {
@@ -84,8 +92,8 @@ export class TableEditWithFormExampleComponent {
         })
       );
 
-      this.dataSource = [...this.getAddressFormArray().controls];
-      this.editRow = this.dataSource.length - 1;
+      this.dataSource.set([...this.getAddressFormArray().controls]);
+      this.editRow.set(this.dataSource().length - 1);
     }
     LuxUtil.stopEventPropagation(event);
   }
@@ -95,23 +103,23 @@ export class TableEditWithFormExampleComponent {
       // Markiert alle Controls als touched, damit Validierungsfehler angezeigt werden
       event.rowItem.markAllAsTouched();
 
-      if (this.editRow === event.rowIndex) {
+      if (this.editRow() === event.rowIndex) {
         if (event.rowItem.valid) {
           this.stopEditMode();
         }
       } else {
-        this.editRow = event.rowIndex;
+        this.editRow.set(event.rowIndex);
       }
     } else {
-      if (this.editRow !== event.rowIndex) {
+      if (this.editRow() !== event.rowIndex) {
         if (this.isEditMode()) {
-          if (this.dataSource[this.editRow].valid) {
+          if (this.dataSource()[this.editRow()].valid) {
             // Nur wechseln, wenn die aktuell editierte Zeile valide ist
-            this.editRow = event.rowIndex;
+            this.editRow.set(event.rowIndex);
           }
         } else {
           // Einfach wechseln, da gerade keine Zeile editiert wird
-          this.editRow = event.rowIndex;
+          this.editRow.set(event.rowIndex);
         }
       } else {
         // Wenn es dieselbe Zeile, nicht ändern.
@@ -120,7 +128,7 @@ export class TableEditWithFormExampleComponent {
     LuxUtil.stopEventPropagation(event.event);
   }
 
-  onStopEditMode(event: Event, element: LuxFormComponentBase, rowItem: FormGroup) {
+  onStopEditMode(event: Event, element: LuxEditableFormComponent, rowItem: FormGroup) {
     if (this.isEditMode() && !this.checkIfTargetIsInEditRow(element, event)) {
       if (rowItem.valid) {
         // Das Editieren nur beenden, wenn die Zeile valide ist und das Event-Target außerhalb der Zeile liegt
@@ -131,12 +139,12 @@ export class TableEditWithFormExampleComponent {
 
   onEscape() {
     if (this.isEditMode()) {
-      if (this.isRowValid(this.editRow)) {
+      if (this.isRowValid(this.editRow())) {
         this.stopEditMode();
       } else {
         // Der Edit-Modus bleibt aktiv.
         // Markiert alle Controls als touched, damit Validierungsfehler angezeigt werden
-        this.dataSource[this.editRow].markAllAsTouched();
+        this.dataSource()[this.editRow()].markAllAsTouched();
       }
     } else {
       this.stopEditMode();
@@ -144,11 +152,11 @@ export class TableEditWithFormExampleComponent {
   }
 
   private isRowValid(rowIndex: number): boolean {
-    return this.dataSource[rowIndex].valid;
+    return this.dataSource()[rowIndex].valid;
   }
 
-  private checkIfTargetIsInEditRow(element: LuxFormComponentBase<any>, event: Event) {
-    return element.formControlWrapperComponentRef?.nativeElement.contains(event.target);
+  private checkIfTargetIsInEditRow(element: LuxEditableFormComponent, event: Event) {
+    return element.formControlWrapperComponentRef()?.nativeElement.contains(event.target);
   }
 
   private isEnterKey(event: { event: Event; rowItem: FormGroup; rowIndex: number }) {
@@ -156,7 +164,7 @@ export class TableEditWithFormExampleComponent {
   }
 
   private stopEditMode() {
-    this.editRow = -1;
+    this.editRow.set(-1);
   }
 
   private createFormControlStreet(streetName: string | null): FormControl<string | null> {
@@ -168,7 +176,7 @@ export class TableEditWithFormExampleComponent {
   }
 
   private isEditMode() {
-    return this.editRow >= 0;
+    return this.editRow() >= 0;
   }
 
   private updateValidators(control: FormControl<string | null>) {

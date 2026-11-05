@@ -1,15 +1,15 @@
 import { NgStyle } from '@angular/common';
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import {
   LuxButtonComponent,
   LuxFormHintComponent,
-  LuxInputAcComponent,
+  LuxInputComponent,
   LuxProgressColors,
   LuxProgressComponent,
   LuxProgressModeType,
   LuxProgressSizeType,
-  LuxSelectAcComponent,
-  LuxToggleAcComponent
+  LuxSelectComponent,
+  LuxToggleComponent
 } from '@ihk-gfi/lux-components';
 import { StatusMarkerComponent } from '../../base/status-marker/status-marker.component';
 import { DemoMarkerType } from '../../base/status-marker/status-marker.model';
@@ -20,13 +20,13 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
 @Component({
   selector: 'app-spinner-example',
   templateUrl: './spinner-example.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxProgressComponent,
     LuxButtonComponent,
-    LuxSelectAcComponent,
-    LuxToggleAcComponent,
-    LuxInputAcComponent,
+    LuxSelectComponent,
+    LuxToggleComponent,
+    LuxInputComponent,
     LuxFormHintComponent,
     StatusMarkerComponent,
     ExampleBaseStructureComponent,
@@ -38,24 +38,22 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
 export class SpinnerExampleComponent {
   readonly markerTypeNew = DemoMarkerType.New;
 
-  sizes = ['small', 'medium', 'large'];
-  colors = LuxProgressColors;
-  backgroundColor = '';
-  modes: LuxProgressModeType[] = ['determinate', 'indeterminate'];
+  readonly sizes = ['small', 'medium', 'large'];
+  readonly colors = LuxProgressColors;
+  readonly backgroundColor = signal('');
+  readonly modes: LuxProgressModeType[] = ['determinate', 'indeterminate'];
 
-  size: LuxProgressSizeType = 'medium';
-  mode: LuxProgressModeType = 'determinate';
-  value = 70;
-  muted = false;
-  showText = false;
-
-  constructor() {}
+  readonly size = signal<LuxProgressSizeType>('medium');
+  readonly mode = signal<LuxProgressModeType>('determinate');
+  readonly value = signal(70);
+  readonly muted = signal(false);
+  readonly showText = signal(false);
 
   addSpinnerProgress() {
-    this.value = this.value + 10 > 100 ? 100 : this.value + 10;
+    this.value.update((v) => (v + 10 > 100 ? 100 : v + 10));
   }
 
   subtractSpinnerProgress() {
-    this.value = this.value - 10 < 0 ? 0 : this.value - 10;
+    this.value.update((v) => (v - 10 < 0 ? 0 : v - 10));
   }
 }

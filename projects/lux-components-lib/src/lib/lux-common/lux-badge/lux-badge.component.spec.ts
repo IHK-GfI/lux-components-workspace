@@ -1,29 +1,30 @@
+import { describe, it, beforeEach, expect } from 'vitest';
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { LuxLabelComponent } from '../lux-label/lux-label.component';
 import { LuxBadgeComponent } from './lux-badge.component';
 
 describe('LuxBadgeComponent', () => {
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       providers: [provideHttpClient(withXhr(), withInterceptorsFromDi()), provideHttpClientTesting()]
     }).compileComponents();
-  }));
+  });
 
   describe('ng-content "lux-label"', () => {
     let fixture: ComponentFixture<MockBadgeComponent>;
     let testComponent: MockBadgeComponent;
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(async () => {
       fixture = TestBed.createComponent(MockBadgeComponent);
       fixture.detectChanges();
       testComponent = fixture.componentInstance;
-    }));
+    });
 
-    it('Wert über die Component setzen', fakeAsync(() => {
+    it('Wert über die Component setzen', async () => {
       // Vorbedingungen testen
       const badgeEl = fixture.debugElement.query(By.css('#badgeLabel'));
       expect(fixture.componentInstance.label()).toEqual('Test 4711');
@@ -37,20 +38,20 @@ describe('LuxBadgeComponent', () => {
       // Nachbedingungen testen
       expect(fixture.componentInstance.label()).toEqual(expectedLabel);
       expect(badgeEl.nativeElement.innerHTML.trim()).toEqual(expectedLabel);
-    }));
+    });
   });
 
   describe('Attribut "luxIconName"', () => {
     let fixture: ComponentFixture<MockBadgeIconNameComponent>;
     let testComponent: MockBadgeIconNameComponent;
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(async () => {
       fixture = TestBed.createComponent(MockBadgeIconNameComponent);
       fixture.detectChanges();
       testComponent = fixture.componentInstance;
-    }));
+    });
 
-    it('Wert über die Component setzen', fakeAsync(() => {
+    it('Wert über die Component setzen', async () => {
       // Vorbedingungen testen
       expect(fixture.componentInstance.iconName()).toEqual('lux-programming-bug');
 
@@ -73,20 +74,20 @@ describe('LuxBadgeComponent', () => {
       expect(fixture.componentInstance.iconName()).toEqual(expectedIcon);
       expect(newIconEl).not.toBeNull();
       expect(newIconEl.nativeElement.innerHTML).toContain(expectedIcon);
-    }));
+    });
   });
 
   describe('Attribut "luxUppercase"', () => {
     let fixture: ComponentFixture<MockBadgeComponent>;
     let testComponent: MockBadgeComponent;
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(async () => {
       fixture = TestBed.createComponent(MockBadgeComponent);
       fixture.detectChanges();
       testComponent = fixture.componentInstance;
-    }));
+    });
 
-    it('Wert über die Component setzen', fakeAsync(() => {
+    it('Wert über die Component setzen', async () => {
       // Vorbedingungen testen
       const badgeEl = fixture.debugElement.query(By.css('div[class~="lux-badge"]'));
       expect(fixture.componentInstance.label()).toEqual('Test 4711');
@@ -108,7 +109,7 @@ describe('LuxBadgeComponent', () => {
       // Nachbedingungen testen
       expect(fixture.componentInstance.uppercase()).toBeTruthy();
       expect(badgeEl.nativeElement.classList).toContain('lux-badge-uppercase');
-    }));
+    });
   });
 });
 

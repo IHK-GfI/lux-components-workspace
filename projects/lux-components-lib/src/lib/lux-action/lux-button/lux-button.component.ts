@@ -1,16 +1,5 @@
 import { NgClass, NgTemplateOutlet } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  DestroyRef,
-  ElementRef,
-  HostBinding,
-  OnInit,
-  inject,
-  input,
-  output
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, OnInit, inject, input, output, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButton, MatFabButton, MatIconButton } from '@angular/material/button';
 import { Subject } from 'rxjs';
@@ -45,19 +34,11 @@ import { LuxActionComponentBaseClass } from '../lux-action-model/lux-action-comp
     '[class.lux-raised]': 'luxRaised()',
     '[class.lux-rounded]': 'luxRounded()',
     '[class.lux-stroked]': 'luxStroked()',
-    '[class.lux-icon-button]': 'luxIconButton()'
+    '[class.lux-icon-button]': 'luxIconButton()',
+    '[class.lux-uppercase]': 'labelUppercase()'
   }
 })
 export class LuxButtonComponent extends LuxActionComponentBaseClass implements OnInit {
-  private destroyRef = inject(DestroyRef);
-  private cdr = inject(ChangeDetectorRef);
-  elementRef = inject(ElementRef);
-  componentsConfigService = inject(LuxComponentsConfigService);
-  tooltipDirective?: LuxTooltipDirective;
-
-  private clickSubject = new Subject<MouseEvent>();
-  private auxClickSubject = new Subject<MouseEvent>();
-  private clickNotAllowedSubject = new Subject<MouseEvent>();
   readonly luxType = input<'button' | 'reset' | 'submit'>('button');
   readonly luxThrottleTime = input<number | undefined>(undefined);
   readonly luxButtonBadge = input<string | undefined>(undefined);
@@ -70,7 +51,15 @@ export class LuxButtonComponent extends LuxActionComponentBaseClass implements O
   luxAuxClicked = output<Event>();
   luxClickNotAllowed = output<Event>();
 
-  @HostBinding('class.lux-uppercase') labelUppercase!: boolean;
+  readonly elementRef = inject(ElementRef);
+  readonly componentsConfigService = inject(LuxComponentsConfigService);
+  tooltipDirective?: LuxTooltipDirective;
+  labelUppercase = signal(false);
+
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly clickSubject = new Subject<MouseEvent>();
+  private readonly auxClickSubject = new Subject<MouseEvent>();
+  private readonly clickNotAllowedSubject = new Subject<MouseEvent>();
 
   ngOnInit() {
     const throttleTimeMs = this.resolveThrottleTime();
@@ -102,7 +91,6 @@ export class LuxButtonComponent extends LuxActionComponentBaseClass implements O
       // darf eine Uppercase-Einstellung für den LuxButton diese nicht überschreiben.
       // Deshalb prüft der LuxButton hier, ob er Teil einer dieser Komponenten ist.
       this.detectParent();
-      this.cdr.markForCheck();
     });
 
     this.clickSubject.pipe(throttleTime(throttleTimeMs), takeUntilDestroyed(this.destroyRef)).subscribe((e) => this.luxClicked.emit(e));
@@ -148,7 +136,7 @@ export class LuxButtonComponent extends LuxActionComponentBaseClass implements O
       selector = 'lux-button';
     }
 
-    this.labelUppercase = this.componentsConfigService.isLabelUppercaseForSelector(selector);
+    this.labelUppercase.set(this.componentsConfigService.isLabelUppercaseForSelector(selector));
   }
 
   private shouldHandleNotAllowedClick(): boolean {

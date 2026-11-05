@@ -1,6 +1,5 @@
-import { Directive, OnDestroy } from '@angular/core';
+import { Directive, OnDestroy, OutputRefSubscription, signal } from '@angular/core';
 import { ICustomCSSConfig, LuxTableComponent } from '@ihk-gfi/lux-components';
-import { Subscription } from 'rxjs';
 import { ColumnConfig } from './column-config';
 import { ResponsiveBehaviour } from './responsive-behaviour';
 
@@ -51,45 +50,55 @@ export abstract class TableExampleBaseClass implements OnDestroy {
       check: (element) => element.date.getFullYear() === 2019
     }
   ];
-  filter = false;
-  filterText = 'Filter hier eingeben';
-  noDataText = 'Keine Daten vorhanden';
-  pagination = true;
-  pageSize = 5;
-  pageSizeOption = this.pageSizeOptions[0].value;
-  autoPagination = true;
-  cssClass: ICustomCSSConfig[] = [];
-  pagerDisabled = false;
-  pagerTooltip = '';
-  pagerFirstLastButton = true;
-  columnWidthOption = this.columnWidthOptions[1].value;
-  multiSelectOnlyCheckboxClick = true;
-  multiSelectDisabledPropertyActive = false;
-  multiSelectDisabledProperty = 'disabled';
-  calculateProportions = false;
-  minWidthPx = -1;
-  tableHeightPx = 500;
-  hideBorders = false;
-  selected = new Set<any>();
-  unboundSelected = new Set<any>();
-  bindLuxSelected = true;
-  observeSelectedChange = true;
-  observeSelectedAsArrayChange = true;
+  readonly filter = signal(false);
+  readonly filterText = signal('Filter hier eingeben');
+  readonly noDataText = signal('Keine Daten vorhanden');
+  readonly pagination = signal(true);
+  readonly pageSize = signal(5);
+  readonly pageSizeOption = signal(this.pageSizeOptions[0].value);
+  readonly autoPagination = signal(true);
+  readonly cssClass = signal<ICustomCSSConfig[]>([]);
+  readonly pagerDisabled = signal(false);
+  readonly pagerTooltip = signal('');
+  readonly pagerFirstLastButton = signal(true);
+  readonly columnWidthOption = signal(this.columnWidthOptions[1].value);
+  readonly multiSelectOnlyCheckboxClick = signal(true);
+  readonly multiSelectDisabledPropertyActive = signal(false);
+  readonly multiSelectDisabledProperty = signal('disabled');
+  readonly calculateProportions = signal(false);
+  readonly minWidthPx = signal(-1);
+  readonly tableHeightPx = signal(500);
+  readonly hideBorders = signal(false);
+  readonly selected = signal(new Set<any>());
+  readonly unboundSelected = signal(new Set<any>());
+  readonly bindLuxSelected = signal(true);
+  readonly observeSelectedChange = signal(true);
+  readonly observeSelectedAsArrayChange = signal(true);
   nameConfig: ColumnConfig = new ColumnConfig({ label: 'Name', sticky: false });
   symbolConfig: ColumnConfig = new ColumnConfig({ label: 'Symbol' });
-  dateConfig: ColumnConfig = new ColumnConfig({ label: 'Datum', sticky: false,  responsiveAt: ['xs', 'sm', 'md'], responsiveBehaviour: ResponsiveBehaviour.COLUMN_HIDE });
+  dateConfig: ColumnConfig = new ColumnConfig({
+    label: 'Datum',
+    sticky: false,
+    responsiveAt: ['xs', 'sm', 'md'],
+    responsiveBehaviour: ResponsiveBehaviour.COLUMN_HIDE
+  });
   columnConfigs = [this.nameConfig, this.symbolConfig, this.dateConfig];
-  dblClickSub?: Subscription;
-  _multiSelect = true;
-  _doubleClickActive = false;
-  alignElementsTop = false;
+  dblClickSub?: OutputRefSubscription;
+  readonly alignElementsTop = signal(false);
+
+  private readonly _multiSelect = signal(true);
+  private readonly _doubleClickActive = signal(false);
+
+  ngOnDestroy(): void {
+    this.dblClickSub?.unsubscribe();
+  }
 
   get doubleClickActive() {
-    return this._doubleClickActive;
+    return this._doubleClickActive();
   }
 
   set doubleClickActive(active: boolean) {
-    this._doubleClickActive = active;
+    this._doubleClickActive.set(active);
 
     if (active) {
       this.dblClickSub = this.getTableComponent().luxDoubleClicked.subscribe((rowItem) => {
@@ -101,16 +110,16 @@ export abstract class TableExampleBaseClass implements OnDestroy {
   }
 
   get multiSelect() {
-    return this._multiSelect;
+    return this._multiSelect();
   }
 
   set multiSelect(multiSelect: boolean) {
-    this._multiSelect = multiSelect;
+    this._multiSelect.set(multiSelect);
 
     if (multiSelect) {
-      this._doubleClickActive = false;
+      this._doubleClickActive.set(false);
     } else {
-      this.multiSelectOnlyCheckboxClick = false;
+      this.multiSelectOnlyCheckboxClick.set(false);
     }
   }
 
@@ -120,9 +129,7 @@ export abstract class TableExampleBaseClass implements OnDestroy {
 
   abstract refreshSelectionBindings(): void;
 
-  ngOnDestroy(): void {
-    this.dblClickSub?.unsubscribe();
-  }
+  abstract setMultiSelectDisabled(disabled: boolean): void;
 
   compareFn(o1: any, o2: any) {
     return o1.name === o2.name;
@@ -144,6 +151,6 @@ export abstract class TableExampleBaseClass implements OnDestroy {
     newSelected.add({ name: 'Beryllium', symbol: 'Be', date: new Date(2018, 11, 18), disabled: false });
     newSelected.add({ name: 'Boron', symbol: 'B', date: new Date(2018, 10, 24), disabled: false });
 
-    this.selected = newSelected;
+    this.selected.set(newSelected);
   }
 }

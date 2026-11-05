@@ -317,7 +317,7 @@ function hasWikiSection(content, version) {
 function updaterIndexTs(version, withTheme = true) {
   const themeLine = withTheme ? `\n      updateDep('@ihk-gfi/lux-components-theme', '${version}', false),` : '';
   return `import { chain, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
-import * as chalk from 'chalk';
+import chalk from 'chalk';
 import { updateDep } from '../../update-dependencies/index';
 import { Options } from '../../utility/types';
 import { finish, messageInfoRule, messageSuccessRule } from '../../utility/util';
@@ -342,13 +342,15 @@ export function update${versionCode(version)}(options: Options, runNpmInstall = 
  */
 function updaterSpecTs(version, previousVersion, withTheme = true, themeVersion = previousVersion) {
   const fn = `update${versionCode(version)}`;
+  const angularVersion = `^${parseVersion(version).major}.0.0`;
   const themeExpectations = withTheme
     ? `expect(getDep(appTree, '@ihk-gfi/lux-components-theme').version).not.toEqual('${themeVersion}');
-          expect(getDep(appTree, '@ihk-gfi/lux-components-theme').version).toEqual('${version}');`
+      expect(getDep(appTree, '@ihk-gfi/lux-components-theme').version).toEqual('${version}');`
     : `expect(getDep(appTree, '@ihk-gfi/lux-components-theme').version).toEqual('${themeVersion}');`;
   return `import { callRule, SchematicContext } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
+import { lastValueFrom } from 'rxjs';
 import { getDep } from '../../utility/dependencies';
 import { appOptions, workspaceOptions } from '../../utility/test';
 import { Options } from '../../utility/types';
@@ -380,7 +382,7 @@ describe('${fn}', () => {
   });
 
   describe('[Rule] ${fn}', () => {
-    it('Sollte die Abhängigkeiten aktualisieren', (done) => {
+    it('Sollte die Abhängigkeiten aktualisieren', async () => {
       appTree.overwrite(
         '/package.json',
         \`
@@ -392,34 +394,28 @@ describe('${fn}', () => {
                 "test": "npm run build && jasmine src/**/*_spec.js"
               },
               "dependencies": {
-                "@angular/animations": "^21.0.0",
-                "@angular/cdk": "^21.0.0",
-                "@angular/common": "^21.0.0",
+                "@angular/animations": "${angularVersion}",
+                "@angular/cdk": "${angularVersion}",
+                "@angular/common": "${angularVersion}",
                 "@ihk-gfi/lux-components": "${previousVersion}",
                 "@ihk-gfi/lux-components-theme": "${themeVersion}",
-                "@angular/compiler": "^21.0.0",
+                "@angular/compiler": "${angularVersion}",
                 "@ihk-gfi/lux-components-icons-and-fonts": "1.11.0"
               },
               "devDependencies": {
-                "@angular-devkit/build-angular": "^21.0.0",
-                "@angular-eslint/builder": "^21.0.0",
-                "@angular/cli": "^21.0.0",
+                "@angular-devkit/build-angular": "${angularVersion}",
+                "@angular-eslint/builder": "${angularVersion}",
+                "@angular/cli": "${angularVersion}",
               }
             }
         \`
       );
 
-      callRule(${fn}(testOptions), appTree, context).subscribe(
-        () => {
-          expect(getDep(appTree, '@ihk-gfi/lux-components').version).not.toEqual('${previousVersion}');
-          expect(getDep(appTree, '@ihk-gfi/lux-components').version).toEqual('${version}');
+      await lastValueFrom(callRule(${fn}(testOptions), appTree, context));
+      expect(getDep(appTree, '@ihk-gfi/lux-components').version).not.toEqual('${previousVersion}');
+      expect(getDep(appTree, '@ihk-gfi/lux-components').version).toEqual('${version}');
 
-          ${themeExpectations}
-
-          done();
-        },
-        (reason) => expect(reason).toBeUndefined()
-      );
+      ${themeExpectations}
     });
   });
 });

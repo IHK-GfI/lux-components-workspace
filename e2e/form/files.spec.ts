@@ -1,17 +1,16 @@
 import { expect, Locator, Page, test } from '@playwright/test';
 import { clickAtCenter } from './support/form-controls';
-import { FormExamplePage } from './support/form-example';
+import { EXAMPLES, FormExamplePage } from './support/form-example';
 import { luxMessage, luxMessagePattern } from './support/lux-messages';
 
 /**
- * Datei-Komponenten (lux-file-input-ac, lux-file-list, lux-file-upload).
+ * Datei-Komponenten (lux-file-input, lux-file-list, lux-file-upload).
  * Die Demo lädt nichts hoch (luxUploadUrl ist leer), die Dateien werden nur im Browser eingelesen.
  */
 interface FileComponentSpec {
   id: string;
   route: string;
   tag: string;
-  headings: [string, string];
   /** Das sichtbare Element, über das der Benutzer die Dateiauswahl öffnet. */
   uploadTrigger: (control: Locator) => Locator;
   /** Prüft, dass die Datei `name` als ausgewählt angezeigt wird. */
@@ -26,36 +25,33 @@ const listShows = async (control: Locator, name: string) => {
 
 const FILE_COMPONENTS: FileComponentSpec[] = [
   {
-    id: 'file-input-ac',
-    route: 'file-input-ac',
-    tag: 'lux-file-input-ac',
-    headings: ['Ohne ReactiveForm', 'Mit ReactiveForm'],
+    id: 'file-input',
+    route: 'file-input',
+    tag: 'lux-file-input',
     uploadTrigger: (control) => control.getByRole('button', { name: 'Hochladen', exact: true }),
     expectSelected: async (control, name) => {
       await expect(control.getByRole('textbox')).toHaveValue(name);
     },
-    maxSizeMessage: (fileName) => luxMessage('form-file-base.error_message.max_file_size', { fileName, fileSizeInMB: 2, maxSizeMB: 1 }),
+    maxSizeMessage: (fileName) => luxMessage('form-file-base.error_message.max_file_size', { fileName, fileSizeInMiB: 2, maxSizeMiB: 1 }),
     notAcceptedMessage: (fileName) => luxMessage('form-file-base.error_message.not_accepted', { fileName })
   },
   {
     id: 'file-list',
     route: 'file-list',
     tag: 'lux-file-list',
-    headings: ['Beispiel ohne Reactive-Form', 'Beispiel in Reactive-Form'],
     uploadTrigger: (control) => control.getByRole('button', { name: 'Neue Dateien hochladen', exact: true }),
     expectSelected: listShows,
-    maxSizeMessage: (fileName) => luxMessage('form-file-base.error_message.max_file_size', { fileName, fileSizeInMB: 2, maxSizeMB: 1 }),
+    maxSizeMessage: (fileName) => luxMessage('form-file-base.error_message.max_file_size', { fileName, fileSizeInMiB: 2, maxSizeMiB: 1 }),
     notAcceptedMessage: (fileName) => luxMessage('form-file-base.error_message.not_accepted', { fileName })
   },
   {
     id: 'file-upload',
     route: 'file-upload',
     tag: 'lux-file-upload',
-    headings: ['Beispiel ohne Reactive-Form', 'Beispiel in Reactive-Form'],
     // Die Ablagefläche ist ein div mit Klick-Handler (ohne Rolle).
     uploadTrigger: (control) => control.locator('.lux-file-upload-drop-container'),
     expectSelected: listShows,
-    maxSizeMessage: (fileName) => luxMessage('file.upload.error_message.max_file_size', { fileName, maxSizeMB: 1 }),
+    maxSizeMessage: (fileName) => luxMessage('file.upload.error_message.max_file_size', { fileName, maxSizeMiB: 1 }),
     notAcceptedMessage: (fileName) => luxMessagePattern('file.upload.error_message.not_accepted', { fileName })
   }
 ];
@@ -75,7 +71,7 @@ for (const spec of FILE_COMPONENTS) {
       example = await FormExamplePage.open(page, spec.route);
     });
 
-    for (const heading of spec.headings) {
+    for (const heading of EXAMPLES) {
       test(`${heading}: Datei auswählen`, async ({ page }) => {
         const control = example.section(heading, spec.tag).control;
 
@@ -84,8 +80,8 @@ for (const spec of FILE_COMPONENTS) {
         await spec.expectSelected(control, 'notiz.txt');
       });
 
-      test(`${heading}: luxMaxSizeMB weist zu große Dateien ab`, async ({ page }) => {
-        await example.options.setText('luxMaxSizeMB', '1');
+      test(`${heading}: luxMaxSizeMiB weist zu große Dateien ab`, async ({ page }) => {
+        await example.options.setText('luxMaxSizeMiB', '1');
         const control = example.section(heading, spec.tag).control;
 
         await chooseFile(page, control, textFile('gross.txt', 2 * 1024 * 1024));

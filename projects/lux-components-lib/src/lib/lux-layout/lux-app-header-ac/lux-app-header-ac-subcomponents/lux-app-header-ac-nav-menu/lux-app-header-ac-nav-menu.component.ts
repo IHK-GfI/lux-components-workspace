@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, ContentChildren, Input, OnDestroy, QueryList, inject, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, contentChildren, inject, input, OnDestroy, signal } from '@angular/core';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { Subscription } from 'rxjs';
 import { LuxButtonComponent } from '../../../../lux-action/lux-button/lux-button.component';
@@ -13,24 +13,33 @@ import { LuxAppHeaderAcNavMenuItemComponent } from './lux-app-header-ac-nav-menu
 @Component({
   selector: 'lux-app-header-ac-nav-menu',
   templateUrl: './lux-app-header-ac-nav-menu.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [NgClass, LuxAriaLabelDirective, LuxMenuItemComponent, LuxMenuTriggerComponent, LuxButtonComponent, LuxMenuComponent, TranslocoPipe]
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    NgClass,
+    LuxAriaLabelDirective,
+    LuxMenuItemComponent,
+    LuxMenuTriggerComponent,
+    LuxButtonComponent,
+    LuxMenuComponent,
+    TranslocoPipe
+  ]
 })
 export class LuxAppHeaderAcNavMenuComponent implements OnDestroy {
-  private queryService = inject(LuxMediaQueryObserverService);
+  readonly luxNavMenuMaximumExtended = input(5);
 
-  @ContentChildren(LuxAppHeaderAcNavMenuItemComponent) menuItemComponents!: QueryList<LuxAppHeaderAcNavMenuItemComponent>;
+  readonly menuItemComponents = contentChildren(LuxAppHeaderAcNavMenuItemComponent);
 
-  @Input() luxNavMenuMaximumExtended = 5;
+  readonly mobileView = signal(false);
 
-  mobileView: boolean;
-  subscription: Subscription;
   navMenuOpened = false;
 
+  private readonly queryService = inject(LuxMediaQueryObserverService);
+  private readonly subscription: Subscription;
+
   constructor() {
-    this.mobileView = this.queryService.activeMediaQuery === 'xs' || this.queryService.activeMediaQuery === 'sm';
+    this.mobileView.set(this.queryService.activeMediaQuery === 'xs' || this.queryService.activeMediaQuery === 'sm');
     this.subscription = this.queryService.getMediaQueryChangedAsObservable().subscribe((query) => {
-      this.mobileView = query === 'xs' || query === 'sm';
+      this.mobileView.set(query === 'xs' || query === 'sm');
     });
   }
 

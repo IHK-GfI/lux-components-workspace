@@ -1,6 +1,7 @@
 import { callRule, SchematicContext } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
+import { lastValueFrom } from 'rxjs';
 import { getDep } from '../../utility/dependencies';
 import { appOptions, workspaceOptions } from '../../utility/test';
 import { Options } from '../../utility/types';
@@ -32,7 +33,7 @@ describe('update210800', () => {
   });
 
   describe('[Rule] update210800', () => {
-    it('Sollte die Abhängigkeiten aktualisieren', (done) => {
+    it('Sollte die Abhängigkeiten aktualisieren', async () => {
       appTree.overwrite(
         '/package.json',
         `
@@ -61,23 +62,17 @@ describe('update210800', () => {
         `
       );
 
-      callRule(update210800(testOptions), appTree, context).subscribe(
-        () => {
-          expect(getDep(appTree, '@ihk-gfi/lux-components').version).not.toEqual('21.7.0');
-          expect(getDep(appTree, '@ihk-gfi/lux-components').version).toEqual('21.8.0');
+      await lastValueFrom(callRule(update210800(testOptions), appTree, context));
+      expect(getDep(appTree, '@ihk-gfi/lux-components').version).not.toEqual('21.7.0');
+      expect(getDep(appTree, '@ihk-gfi/lux-components').version).toEqual('21.8.0');
 
-          expect(getDep(appTree, '@ihk-gfi/lux-components-theme').version).not.toEqual('21.7.0');
-          expect(getDep(appTree, '@ihk-gfi/lux-components-theme').version).toEqual('21.8.0');
-
-          done();
-        },
-        (reason) => expect(reason).toBeUndefined()
-      );
+      expect(getDep(appTree, '@ihk-gfi/lux-components-theme').version).not.toEqual('21.7.0');
+      expect(getDep(appTree, '@ihk-gfi/lux-components-theme').version).toEqual('21.8.0');
     });
   });
 
   describe('[Rule] updateTestUtilsImports', () => {
-    it('Sollte "LuxTestHelper" und "LuxOverlayHelper" auf den Entry Point "test-utils" umstellen und andere Imports unangetastet lassen', (done) => {
+    it('Sollte "LuxTestHelper" und "LuxOverlayHelper" auf den Entry Point "test-utils" umstellen und andere Imports unangetastet lassen', async () => {
       const filePath = testOptions.path + '/src/app/test.component.spec.ts';
 
       appTree.create(
@@ -94,21 +89,15 @@ describe('TestComponent', () => {
         `
       );
 
-      callRule(updateTestUtilsImports(testOptions), appTree, context).subscribe({
-        next: () => {
-          const content = appTree.read(filePath)?.toString() ?? '';
+      await lastValueFrom(callRule(updateTestUtilsImports(testOptions), appTree, context));
+      const content = appTree.read(filePath)?.toString() ?? '';
 
-          expect(content).toContain(`import { LuxTestHelper, LuxOverlayHelper } from '@ihk-gfi/lux-components/test-utils';`);
-          expect(content).toContain(`import { LuxButtonComponent } from '@ihk-gfi/lux-components';`);
-          expect(content).not.toContain(`LuxTestHelper } from '@ihk-gfi/lux-components';`);
-
-          done();
-        },
-        error: (reason) => expect(reason).toBeUndefined()
-      });
+      expect(content).toContain(`import { LuxTestHelper, LuxOverlayHelper } from '@ihk-gfi/lux-components/test-utils';`);
+      expect(content).toContain(`import { LuxButtonComponent } from '@ihk-gfi/lux-components';`);
+      expect(content).not.toContain(`LuxTestHelper } from '@ihk-gfi/lux-components';`);
     });
 
-    it('Sollte eine Datei ohne "LuxTestHelper"/"LuxOverlayHelper" unverändert lassen', (done) => {
+    it('Sollte eine Datei ohne "LuxTestHelper"/"LuxOverlayHelper" unverändert lassen', async () => {
       const filePath = testOptions.path + '/src/app/untouched.component.spec.ts';
 
       const originalContent = `
@@ -119,13 +108,8 @@ export class UntouchedComponent {}
 
       appTree.create(filePath, originalContent);
 
-      callRule(updateTestUtilsImports(testOptions), appTree, context).subscribe({
-        next: () => {
-          expect(appTree.read(filePath)?.toString()).toEqual(originalContent);
-          done();
-        },
-        error: (reason) => expect(reason).toBeUndefined()
-      });
+      await lastValueFrom(callRule(updateTestUtilsImports(testOptions), appTree, context));
+      expect(appTree.read(filePath)?.toString()).toEqual(originalContent);
     });
   });
 });

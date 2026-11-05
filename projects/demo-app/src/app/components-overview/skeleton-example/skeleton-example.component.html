@@ -1,6 +1,6 @@
 <example-base-structure
   exampleTitle="Skeleton"
-  exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/lux%E2%80%90skeleton-v21"
+  exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/lux%E2%80%90skeleton-v22"
 >
   <example-base-content class="lux-flex lux-flex-col lux-gap-4">
     <div class="lux-highlight-section lux-flex lux-flex-col lux-gap-2">
@@ -69,40 +69,34 @@
     </div>
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
-    <lux-radio-ac
+    <lux-radio
       luxLabel="luxVariant"
       [luxOptions]="variantOptions"
-      [(luxSelected)]="variant"
+      [(value)]="variant"
       [luxOrientationVertical]="false"
       luxHint="Form des Platzhalters: Textzeile (typografie-relativ), Rechteck oder Kreis."
-    ></lux-radio-ac>
+    />
 
-    <lux-input-ac luxLabel="luxWidth" luxAutocomplete="off" [(luxValue)]="width">
+    <lux-input luxLabel="luxWidth" luxAutocomplete="off" [(value)]="width">
       <lux-form-hint>CSS-Länge (z. B. 120px, 40% oder 3em); bei circle der Durchmesser. Leer: Standardwert der Variante.</lux-form-hint>
-    </lux-input-ac>
+    </lux-input>
 
-    <lux-input-ac luxLabel="luxHeight" luxAutocomplete="off" [(luxValue)]="height">
+    <lux-input luxLabel="luxHeight" luxAutocomplete="off" [(value)]="height">
       <lux-form-hint>
         Feste CSS-Länge (z. B. 16px oder 4em), keine Prozentangabe; wird bei circle ignoriert. Leer: Standardwert der Variante.
       </lux-form-hint>
-    </lux-input-ac>
+    </lux-input>
 
-    <lux-input-ac
-      luxLabel="luxCount"
-      luxType="number"
-      [luxNumberAlignLeft]="true"
-      [luxValue]="count()"
-      (luxValueChange)="onCountChange($event)"
-    >
+    <lux-input luxLabel="luxCount" luxType="number" [luxNumberAlignLeft]="true" [value]="count()" (valueChange)="onCountChange($event)">
       <lux-form-hint>Anzahl der Platzhalter; bei text wird die letzte Zeile kürzer dargestellt.</lux-form-hint>
-    </lux-input-ac>
+    </lux-input>
 
-    <lux-toggle-ac luxLabel="luxAnimated" [(luxChecked)]="animated" [luxNoTopLabel]="true">
+    <lux-toggle luxLabel="luxAnimated" [(checked)]="animated" [luxNoTopLabel]="true">
       <lux-form-hint>
         Schaltet die Puls-Animation aller Platzhalter auf dieser Seite ein oder aus. Die Animation respektiert zusätzlich die
         Systemeinstellung
         <i>prefers-reduced-motion</i>.
       </lux-form-hint>
-    </lux-toggle-ac>
+    </lux-toggle>
   </example-base-simple-options>
 </example-base-structure>
