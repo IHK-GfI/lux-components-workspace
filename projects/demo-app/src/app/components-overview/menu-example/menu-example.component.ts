@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { timer } from 'rxjs';
 import {
   LuxAccordionComponent,
+  LuxButtonComponent,
   LuxDividerComponent,
   LuxFormHintComponent,
   LuxIconRegistryService,
@@ -11,6 +11,7 @@ import {
   LuxMenuItemComponent,
   LuxMenuPanelHeaderComponent,
   LuxMenuSectionTitleComponent,
+  LuxMenuTriggerComponent,
   LuxPanelComponent,
   LuxPanelContentComponent,
   LuxPanelHeaderDescriptionComponent,
@@ -18,6 +19,7 @@ import {
   LuxThemePalette,
   LuxToggleComponent
 } from '@ihk-gfi/lux-components';
+import { timer } from 'rxjs';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
@@ -27,6 +29,7 @@ import { logResult } from '../../example-base/example-base-util/example-base-hel
 @Component({
   selector: 'app-menu-example',
   templateUrl: './menu-example.component.html',
+  styleUrl: './menu-example.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxMenuComponent,
@@ -45,7 +48,9 @@ import { logResult } from '../../example-base/example-base-util/example-base-hel
     ExampleBaseAdvancedOptionsComponent,
     LuxDividerComponent,
     LuxMenuPanelHeaderComponent,
-    LuxMenuSectionTitleComponent
+    LuxMenuSectionTitleComponent,
+    LuxMenuTriggerComponent,
+    LuxButtonComponent
   ]
 })
 export class MenuExampleComponent {
