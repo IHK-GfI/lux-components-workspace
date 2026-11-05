@@ -1,5 +1,6 @@
 import { Signal } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import type { Field } from '@angular/forms/signals';
 import { LuxThemePalette } from '../../lux-util/lux-colors.enum';
 
 /**
@@ -12,7 +13,8 @@ import { LuxThemePalette } from '../../lux-util/lux-colors.enum';
 export interface LuxFilterableFormComponent<T = any> {
   readonly luxControlBinding: Signal<string | undefined>;
   readonly luxLabel: Signal<string>;
-  readonly formControl: FormControl<T>;
+  /** Nur im Legacy-Modus (luxControlBinding) vorhanden; bei [formField] undefined. */
+  readonly formControl?: FormControl<T>;
 }
 
 export class LuxFilterItem<T = any> {
@@ -21,7 +23,9 @@ export class LuxFilterItem<T = any> {
   label: string;
   binding: string;
   component: LuxFilterableFormComponent<T>;
+  field?: Field<T>;
   defaultValues: any[] = [...LuxFilterItem.DEFAULT_VALUES];
+  resetValue: T = this.defaultValues[0];
   value: T = this.defaultValues[0];
   color: LuxThemePalette = 'primary';
   disabled = false;
