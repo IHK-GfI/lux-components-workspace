@@ -67,8 +67,6 @@ Filter (zugeklappt):
 | luxShowAsCard           | boolean         | Stellt die Filter-Form als Card dar. Default: false.                                                                           |
 | luxExpandedLabelOpen    | string          | Label (Tooltip/Aria-Label) des Buttons zum Aufklappen. Ohne Angabe wird ein Standardtext verwendet. Default: ''.               |
 | luxExpandedLabelClose   | string          | Label (Tooltip/Aria-Label) des Buttons zum Zuklappen. Ohne Angabe wird ein Standardtext verwendet. Default: ''.                |
-| luxShowSaveAction       | boolean         | Gibt an, ob im Filtermenü die Aktion zum Speichern eines Filters angezeigt wird. Default: true.                                |
-| luxShowLoadAction       | boolean         | Gibt an, ob im Filtermenü die Aktion zum Laden eines gespeicherten Filters angezeigt wird. Default: true.                      |
 | luxFilterExpanded       | boolean         | Gibt an, ob der Filter auf-/zugeklappt dargestellt wird. Two-Way-Binding über `[(luxFilterExpanded)]` möglich. Default: false. |
 | luxFilterValues         | any             | Die aktuellen Filterwerte als Objekt (Schlüssel = luxControlBinding der Filter-Elemente). Default: {}.                         |
 
@@ -77,8 +75,8 @@ Filter (zugeklappt):
 | Name                    | Typ       | Beschreibung                                                                                                                                                          |
 | ----------------------- | --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | luxOnFilter             | any       | Output-Event welches ausgelöst wird, wenn der Filter-Button gedrückt wird. Als Daten wird ein Objekt mit den Filterwerten übergeben (im Code als `string` typisiert). |
-| luxOnSave               | LuxFilter | Output-Event welches ausgelöst wird, wenn ein neuer Filter gespeichert wird.                                                                                          |
-| luxOnLoad               | string    | Output-Event welches ausgelöst wird, wenn ein Filter geladen werden soll. Übergeben wird der Name des Filters.                                                        |
+| luxOnSave               | LuxFilter | Output-Event welches ausgelöst wird, wenn ein neuer Filter gespeichert wird. Die Aktion zum Speichern wird nur angeboten, wenn auf das Event reagiert wird.                                                                                         |
+| luxOnLoad               | string    | Output-Event welches ausgelöst wird, wenn ein Filter geladen werden soll. Übergeben wird der Name des Filters. Die Aktion zum Laden wird nur angeboten, wenn auf das Event reagiert wird.                                                       |
 | luxOnDelete             | LuxFilter | Output-Event welches ausgelöst wird, wenn ein Filter gelöscht werden soll.                                                                                            |
 | luxOnReset              | void      | Output-Event welches ausgelöst wird, wenn der aktuelle Filter zurückgesetzt werden soll.                                                                              |
 | luxFilterExpandedChange | boolean   | Output-Event welches ausgelöst wird, wenn der Filter ein-/ausgeklappt wird (Grundlage von `[(luxFilterExpanded)]`).                                                   |

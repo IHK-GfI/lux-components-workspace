@@ -22,7 +22,6 @@
             luxAlt="{{ luxAriaTitleImageLabel() || ('luxc.app-header.aria.title.image.lbl' | transloco) }}"
             luxAriaLabel="{{ luxAriaTitleImageLabel() || ('luxc.app-header.aria.title.image.lbl' | transloco) }}"
             luxTagId="lux-brand-logo-button"
-            [luxClickable]="true"
             (luxClicked)="onBrandLogoClicked($event)"
           />
         } @else {
@@ -40,7 +39,6 @@
             class="lux-app-logo"
             luxAlt="{{ luxAriaTitleIconLabel() || ('luxc.app-header.aria.title_icon.lbl' | transloco) }}"
             luxAriaLabel="{{ luxAriaTitleIconLabel() || ('luxc.app-header.aria.title_icon.lbl' | transloco) }}"
-            [luxClickable]="true"
             (luxClicked)="onAppLogoClicked($event)"
           />
         }
@@ -191,7 +189,6 @@
               luxImageHeight="32px"
               class="lux-app-logo-mobile"
               luxAlt="Lux-App-Logo"
-              [luxClickable]="true"
               (luxClicked)="onAppLogoClicked($event)"
             />
           }

@@ -127,6 +127,30 @@ describe('LuxImageComponent', () => {
     // Then
     expect(spy).toHaveBeenCalled();
   });
+
+  it('Sollte ohne luxClicked-Listener nicht klickbar dargestellt werden', () => {
+    // Given
+    component.href.set('assets/png/example.png');
+    // When
+    fixture.detectChanges();
+    const imageEl = fixture.debugElement.query(By.css('.lux-image')).nativeElement as HTMLImageElement;
+    // Then
+    expect(imageEl.classList.contains('lux-clickable')).toBe(false);
+    expect(imageEl.getAttribute('tabindex')).toBeNull();
+  });
+
+  it('Sollte mit luxClicked-Listener klickbar dargestellt werden und luxClicked emittieren', () => {
+    // Given
+    const clickableFixture = TestBed.createComponent(MockClickableComponent);
+    // When
+    clickableFixture.detectChanges();
+    const imageEl = clickableFixture.debugElement.query(By.css('.lux-image')).nativeElement as HTMLImageElement;
+    imageEl.click();
+    // Then
+    expect(imageEl.classList.contains('lux-clickable')).toBe(true);
+    expect(imageEl.getAttribute('tabindex')).toEqual('0');
+    expect(clickableFixture.componentInstance.clicked).toBe(1);
+  });
 });
 
 @Component({
@@ -140,4 +164,14 @@ class MockComponent {
 
   readonly href = signal('');
   readonly raw = signal(false);
+}
+
+@Component({
+  selector: 'lux-mock-clickable-component',
+  template: `<lux-image luxImageSrc="assets/png/example.png" (luxClicked)="clicked = clicked + 1" />`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [LuxImageComponent]
+})
+class MockClickableComponent {
+  clicked = 0;
 }

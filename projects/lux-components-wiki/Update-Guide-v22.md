@@ -17,7 +17,6 @@ In diesem Update-Guide wird beschrieben, wie man die LUX-Components aktualisiere
         - [Komponenten ohne "-ac"](#komponenten-ohne--ac)
         - [Signal-Inputs und -Outputs](#signal-inputs-und--outputs)
         - [OnPush-Change-Detection](#onpush-change-detection)
-        - [Neue Inputs statt automatischer Listener-Erkennung](#neue-inputs-statt-automatischer-listener-erkennung)
         - [Formulare und Signal Forms](#formulare-und-signal-forms)
       - [Update](#update)
       - [Nach dem Update](#nach-dem-update)
@@ -156,27 +155,6 @@ this.options.push(newOption);
 this.options = [...this.options, newOption];
 ```
 
-##### Neue Inputs statt automatischer Listener-Erkennung
-
-Bisher haben einige Komponenten automatisch erkannt, ob auf ein Event reagiert wird, und sich entsprechend dargestellt. Mit den neuen Outputs ist das nicht mehr möglich. Stattdessen gibt es jetzt explizite Inputs:
-
-| Komponente      | Event                                        | Neuer Input                 | Default | Hinweis                                                                          |
-| --------------- | -------------------------------------------- | --------------------------- | ------- | -------------------------------------------------------------------------------- |
-| lux-card        | luxClicked                                   | luxClickable                | false   | Steuert Mauszeiger und Tabindex.                                                 |
-| lux-app-header  | luxClicked                                   | luxClickable                | false   | Steuert Mauszeiger, Rolle und Tabindex von App-Titel, App-Icon und App-Image.    |
-| lux-image       | luxClicked                                   | luxClickable                | false   | **luxClicked wird nur noch ausgelöst, wenn luxClickable auf true gesetzt ist.**  |
-| lux-table       | luxSelectedChange / luxSelectedAsArrayChange | luxShowSelectedChangeCursor | false   | Steuert den Mauszeiger bei Tabellen ohne Multiselect.                            |
-| lux-table       | luxSingleClicked                             | luxShowSingleClickedCursor  | false   | Steuert den Mauszeiger bei Tabellen ohne Multiselect.                            |
-| lux-table       | luxDoubleClicked                             | luxShowDoubleClickedCursor  | false   | Steuert den Mauszeiger und **deaktiviert die Selektion der Zeilen**.             |
-| lux-filter-form | luxOnSave                                    | luxShowSaveAction           | true    | Die Aktion wird jetzt immer angezeigt. Zum Ausblenden explizit auf false setzen. |
-| lux-filter-form | luxOnLoad                                    | luxShowLoadAction           | true    | Die Aktion wird jetzt immer angezeigt. Zum Ausblenden explizit auf false setzen. |
-
-Beispiel:
-
-```html
-<lux-card luxTitle="Titel" [luxClickable]="true" (luxClicked)="onClick()" />
-```
-
 ##### Formulare und Signal Forms
 
 Die Form-Komponenten unterstützen jetzt [Angular Signal Forms](https://angular.dev/guide/forms/signals/overview) (`[formField]`) sowie das Two-Way-Binding über `[(value)]` bzw. bei Checkbox und Toggle über `[(checked)]`.
@@ -228,7 +206,6 @@ Code, der eine Form-Komponente auf die Basisklasse `LuxFormComponentBase` typisi
 
 - Bei fehlenden NPM-Paketen siehe [hier](#fehlende-pakete-bei-npm-install).
 - Wenn sich die Anzeige einer LUX-Komponente nach einer Änderung nicht aktualisiert, wurde vermutlich ein gebundenes Objekt oder Array direkt verändert (siehe [OnPush-Change-Detection](#onpush-change-detection)).
-- Wenn `luxClicked` bei `lux-image` nicht mehr ausgelöst wird, fehlt `[luxClickable]="true"` (siehe [Neue Inputs statt automatischer Listener-Erkennung](#neue-inputs-statt-automatischer-listener-erkennung)).
 
 #### Ergänzung für JAST-Projekte
 

@@ -294,7 +294,21 @@ export class LuxTimepickerComponent<T = any> extends LuxFormLegacyValueBase<T> i
     try {
       if (!this.valueChangesRunning) {
         this.valueChangesRunning = true;
+
+        // Direkt leeren: MatTimepickerInput aktualisiert die Anzeige erst asynchron per effect(), validateTime()
+        // sähe bis dahin den alten Text und meldete matTimepickerParse für ein leeres Feld.
+        const clearedFromOutside = !formValue && !this.focused() && !!this.timeInputValue;
+        if (clearedFromOutside) {
+          this.timeInputValue = '';
+        }
+
         this.updateTimeValue(formValue);
+
+        // Mit shouldEmitDirectly läuft setISOValue() nicht über syncTimepickerValidation(). Ohne den Aufruf
+        // bliebe das value-Model der Direktive gesetzt und die alte Uhrzeit käme beim nächsten Blur zurück.
+        if (clearedFromOutside) {
+          this.syncTimepickerValidation();
+        }
       }
     } finally {
       this.valueChangesRunning = false;
@@ -380,6 +394,7 @@ export class LuxTimepickerComponent<T = any> extends LuxFormLegacyValueBase<T> i
         emitModelToViewChange: this.shouldEmitDirectly,
         emitViewToModelChange: this.shouldEmitDirectly
       });
+      this.bridge.noteSilentValue(isoValue as T);
       this.value.set(isoValue as any);
     }
 

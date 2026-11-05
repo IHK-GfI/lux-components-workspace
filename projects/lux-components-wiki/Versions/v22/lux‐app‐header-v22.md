@@ -63,13 +63,12 @@ Komponente zur Darstellung des Applikationsheaders. Hier können ein seitliches 
 | luxAriaTitleLinkLabel      | string   | Aria-Label (z.B. für Screenreader) für Apptitel (nur wenn ein Link hinterlegt ist). Wenn der Link zur Hauptseite führt, könnte man den Wert auch auf 'LUX Components / Zur Hauptseite wechseln' ändern. Default: ''.     |
 | luxLocaleSupported         | string[] | Array mit den unterstützten Sprachen. Die Sprachauswahl wird erst im App-Header angezeigt, wenn mindestens 2 Sprachen angegeben wurden. Default: ['de'].                                                                 |
 | luxLocaleBaseHref          | string   | Der BaseHref, wie z.B. '/subdomain/'. Default: ''.                                                                                                                                                                       |
-| luxClickable               | boolean  | Bestimmt, ob App-Titel, App-Icon und App-Image klickbar dargestellt werden (Mauszeiger, Rolle "link", Tabindex). Sollte auf "true" gesetzt werden, wenn auf luxClicked reagiert wird. Default: false.                    |
 
 ### @Output
 
 | Name       | Typ   | Beschreibung                                                                                                                     |
 | ---------- | ----- | -------------------------------------------------------------------------------------------------------------------------------- |
-| luxClicked | Event | Event, welches beim Klick auf den App-Titel, das App-Icon (falls vorhanden) oder das App-Image (falls vorhanden) ausgelöst wird. |
+| luxClicked | Event | Event, welches beim Klick auf den App-Titel, das App-Icon (falls vorhanden) oder das App-Image (falls vorhanden) ausgelöst wird. Nur wenn auf das Event reagiert wird, werden diese klickbar dargestellt (Mauszeiger, Rolle "link", Tabindex). |
 
 ## Components
 

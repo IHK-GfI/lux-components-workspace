@@ -1,5 +1,6 @@
 import { NgStyle } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import { luxOutputObserved } from '../../lux-util/lux-output-observed';
 
 @Component({
   selector: 'lux-image',
@@ -17,11 +18,11 @@ export class LuxImageComponent {
   readonly luxRawSrc = input(false);
   readonly luxAlt = input('');
 
-  // Steuert, ob das Bild klickbar/fokussierbar dargestellt wird; explizit setzen, wenn (luxClicked) gebunden wird.
-  readonly luxClickable = input(false);
-
   readonly luxClicked = output<Event>();
   readonly luxImageError = output<Event>();
+
+  // Das Bild wird nur klickbar/fokussierbar dargestellt, wenn auf luxClicked reagiert wird.
+  protected readonly luxClickedObserved = luxOutputObserved(this.luxClicked);
 
   readonly resolvedImageSrc = computed(() => {
     const src = this.luxImageSrc();

@@ -4,7 +4,6 @@
   [luxData]="dataSource()"
   [luxColWidthsPercent]="[70, 30]"
   [ngClass]="{ 'validation-active': validationEnabled() }"
-  [luxShowSingleClickedCursor]="true"
   (luxSingleClicked)="onStartEditMode($event)"
   (keydown.esc)="onEscape()"
   [luxAlignElementsTop]="validationEnabled()"

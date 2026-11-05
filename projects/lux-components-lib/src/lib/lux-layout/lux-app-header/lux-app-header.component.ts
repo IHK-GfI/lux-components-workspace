@@ -28,6 +28,7 @@ import { LuxImageComponent } from '../../lux-icon/lux-image/lux-image.component'
 import { LuxAppService } from '../../lux-util/lux-app.service';
 import { LuxConsoleService } from '../../lux-util/lux-console.service';
 import { LuxMediaQueryObserverService } from '../../lux-util/lux-media-query-observer.service';
+import { luxOutputObserved } from '../../lux-util/lux-output-observed';
 import { LuxAppHeaderActionNavComponent } from './lux-app-header-subcomponents/lux-app-header-action-nav/lux-app-header-action-nav.component';
 import { LuxAppHeaderRightNavComponent } from './lux-app-header-subcomponents/lux-app-header-right-nav/lux-app-header-right-nav.component';
 import { LuxLangSelectComponent } from './lux-app-header-subcomponents/lux-lang-select/lux-lang-select.component';
@@ -73,10 +74,6 @@ export class LuxAppHeaderComponent implements OnInit, OnDestroy {
   readonly luxAriaTitleLinkLabel = input('');
   readonly luxAriaRoleHeaderLabel = input('');
 
-  // Ersetzt die frühere .observed-Abfrage von luxClicked (output() hat kein Äquivalent) -
-  // steuert die Klickbar-Darstellung des Headers (Cursor, Rolle, Tabindex).
-  readonly luxClickable = input(false);
-
   readonly luxClicked = output<Event>();
 
   readonly customTrigger = viewChild('customTrigger', { read: ElementRef });
@@ -93,6 +90,8 @@ export class LuxAppHeaderComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
 
   readonly userNameShort = computed(() => this.generateUserNameShort());
+  // Steuert die Klickbar-Darstellung des Headers (Cursor, Rolle, Tabindex).
+  protected readonly luxClickedObserved = luxOutputObserved(this.luxClicked);
 
   constructor() {
     this.appService.appHeaderEl = this.elementRef.nativeElement;
