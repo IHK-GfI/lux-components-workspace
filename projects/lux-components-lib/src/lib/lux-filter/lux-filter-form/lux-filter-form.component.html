@@ -54,9 +54,18 @@
 
 <!-- der eigentliche Inhalt des Filterformulars, wird via Content-Projection eingefügt -->
 <ng-template #filterFormTemplate>
-  <form [formGroup]="filterForm" class="lux-filter-form">
-    <ng-content></ng-content>
-  </form>
+  @if (luxSignalForm()) {
+    <form class="lux-filter-form">
+      <ng-container *ngTemplateOutlet="filterFields" />
+    </form>
+  } @else {
+    <form [formGroup]="filterForm" class="lux-filter-form">
+      <ng-container *ngTemplateOutlet="filterFields" />
+    </form>
+  }
+</ng-template>
+<ng-template #filterFields>
+  <ng-content />
 </ng-template>
 
 <!-- Filter-Button ist jetzt vom Menü getrennt -->
