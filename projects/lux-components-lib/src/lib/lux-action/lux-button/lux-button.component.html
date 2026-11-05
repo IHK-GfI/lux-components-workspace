@@ -1,163 +1,163 @@
-@if (luxRaised && !luxRounded && !luxFlat && !luxStroked) {
+@if (luxRaised() && !luxRounded() && !luxFlat() && !luxStroked()) {
   <button
     matButton="elevated"
     class="lux-button lux-button-raised"
     (focus)="tooltipDirective?.show()"
     (blur)="tooltipDirective?.hide()"
     [disableRipple]="true"
-    [color]="luxColor"
+    [color]="luxColor()"
     (click)="clicked($event)"
     (auxclick)="auxClicked($event)"
-    [disabled]="luxDisabled"
-    [type]="luxType"
+    [disabled]="luxDisabled()"
+    [type]="luxType()"
     class="lux-button"
     luxTagIdHandler
-    [luxTagId]="luxTagId"
-    [ngClass]="{ 'lux-icon-button': !!luxIconName, 'lux-button-spinner': luxLoading }"
-    [attr.aria-label]="luxLabel ? luxLabel : ''"
+    [luxTagId]="luxTagId()"
+    [ngClass]="{ 'lux-icon-button': !!luxIconName(), 'lux-button-spinner': luxLoading() }"
+    [attr.aria-label]="luxLabel() ? luxLabel() : ''"
     [luxAriaDisabled]="luxDisabledAria() ? 'true' : undefined"
   >
     <ng-container *ngTemplateOutlet="luxButtonContent"></ng-container>
   </button>
-} @else if (!luxRaised && !luxRounded && luxFlat && !!luxColor && !luxStroked) {
+} @else if (!luxRaised() && !luxRounded() && luxFlat() && !!luxColor() && !luxStroked()) {
   <button
     matButton="filled"
     class="lux-button lux-button-flat"
     (focus)="tooltipDirective?.show()"
     (blur)="tooltipDirective?.hide()"
     [disableRipple]="true"
-    [color]="luxColor"
+    [color]="luxColor()"
     (click)="clicked($event)"
     (auxclick)="auxClicked($event)"
-    [disabled]="luxDisabled"
-    [type]="luxType"
+    [disabled]="luxDisabled()"
+    [type]="luxType()"
     class="lux-button"
     luxTagIdHandler
-    [luxTagId]="luxTagId"
-    [ngClass]="{ 'lux-icon-button': !!luxIconName }"
-    [attr.aria-label]="luxLabel ? luxLabel : ''"
+    [luxTagId]="luxTagId()"
+    [ngClass]="{ 'lux-icon-button': !!luxIconName() }"
+    [attr.aria-label]="luxLabel() ? luxLabel() : ''"
     [luxAriaDisabled]="luxDisabledAria() ? 'true' : undefined"
   >
     <ng-container *ngTemplateOutlet="luxButtonContent"></ng-container>
   </button>
-} @else if (!luxRaised && !luxRounded && !luxFlat && luxStroked) {
+} @else if (!luxRaised() && !luxRounded() && !luxFlat() && luxStroked()) {
   <button
     matButton="outlined"
     class="lux-button lux-button-stroked"
     (focus)="tooltipDirective?.show()"
     (blur)="tooltipDirective?.hide()"
     [disableRipple]="true"
-    [color]="luxColor"
+    [color]="luxColor()"
     (click)="clicked($event)"
     (auxclick)="auxClicked($event)"
-    [disabled]="luxDisabled"
-    [type]="luxType"
+    [disabled]="luxDisabled()"
+    [type]="luxType()"
     class="lux-button"
     luxTagIdHandler
-    [luxTagId]="luxTagId"
-    [ngClass]="{ 'lux-icon-button': !!luxIconName }"
-    [attr.aria-label]="luxLabel ? luxLabel : ''"
+    [luxTagId]="luxTagId()"
+    [ngClass]="{ 'lux-icon-button': !!luxIconName() }"
+    [attr.aria-label]="luxLabel() ? luxLabel() : ''"
     [luxAriaDisabled]="luxDisabledAria() ? 'true' : undefined"
   >
     <ng-container *ngTemplateOutlet="luxButtonContent"></ng-container>
   </button>
-} @else if (!luxRaised && !luxRounded && !luxFlat && !luxStroked && luxIconButton) {
+} @else if (!luxRaised() && !luxRounded() && !luxFlat() && !luxStroked() && luxIconButton()) {
   <button
     mat-icon-button
     class="lux-button lux-button-icon-only"
     (focus)="tooltipDirective?.show()"
     (blur)="tooltipDirective?.hide()"
     [disableRipple]="true"
-    [color]="luxColor"
+    [color]="luxColor()"
     (click)="clicked($event)"
     (auxclick)="auxClicked($event)"
-    [disabled]="luxDisabled"
-    [type]="luxType"
+    [disabled]="luxDisabled()"
+    [type]="luxType()"
     luxTagIdHandler
-    [luxTagId]="luxTagId"
-    [ngClass]="{ 'lux-icon-button': true, 'lux-button-spinner': luxLoading }"
-    [attr.aria-label]="luxLabel ? luxLabel : ''"
+    [luxTagId]="luxTagId()"
+    [ngClass]="{ 'lux-icon-button': true, 'lux-button-spinner': luxLoading() }"
+    [attr.aria-label]="luxLabel() ? luxLabel() : ''"
     [luxAriaDisabled]="luxDisabledAria() ? 'true' : undefined"
   >
-    @if (luxLoading && !luxDisabled) {
+    @if (luxLoading() && !luxDisabled()) {
       <lux-progress
         inert
         luxType="Spinner"
         luxSize="small"
-        [luxMode]="luxSpinnerMode"
-        [luxValue]="luxSpinnerValue"
+        [luxMode]="luxSpinnerMode()"
+        [luxValue]="luxSpinnerValue()"
         luxAnimationDuration="slow"
         class="lux-button-spinner"
       ></lux-progress>
     }
-    @if ((!luxLoading || (luxLoading && luxDisabled)) && luxIconName) {
-      <lux-icon [luxIconName]="luxIconName" luxPadding="unset" luxMargin="unset" class="lux-button-icon"></lux-icon>
+    @if ((!luxLoading() || (luxLoading() && luxDisabled())) && luxIconName()) {
+      <lux-icon [luxIconName]="luxIconName()" luxPadding="unset" luxMargin="unset" class="lux-button-icon"></lux-icon>
     }
   </button>
-} @else if (luxRounded && !luxStroked) {
+} @else if (luxRounded() && !luxStroked()) {
   <button
     mat-fab
     (focus)="tooltipDirective?.show()"
     (blur)="tooltipDirective?.hide()"
     [disableRipple]="true"
-    [color]="luxColor"
+    [color]="luxColor()"
     (click)="clicked($event)"
     (auxclick)="auxClicked($event)"
-    [disabled]="luxDisabled"
-    [type]="luxType"
+    [disabled]="luxDisabled()"
+    [type]="luxType()"
     class="lux-button lux-button-rounded"
     luxTagIdHandler
-    [luxTagId]="luxTagId"
-    [ngClass]="{ 'lux-icon-button': !!luxIconName, 'lux-fab-rounded-default': !luxColor }"
-    [attr.aria-label]="luxLabel ? luxLabel : ''"
+    [luxTagId]="luxTagId()"
+    [ngClass]="{ 'lux-icon-button': !!luxIconName(), 'lux-fab-rounded-default': !luxColor() }"
+    [attr.aria-label]="luxLabel() ? luxLabel() : ''"
     [luxAriaDisabled]="luxDisabledAria() ? 'true' : undefined"
   >
-    @if (luxLoading && !luxDisabled) {
+    @if (luxLoading() && !luxDisabled()) {
       <lux-progress
         inert
         luxType="Spinner"
         luxSize="small"
-        [luxMode]="luxSpinnerMode"
-        [luxValue]="luxSpinnerValue"
+        [luxMode]="luxSpinnerMode()"
+        [luxValue]="luxSpinnerValue()"
         luxAnimationDuration="slow"
         class="lux-button-spinner"
       ></lux-progress>
     }
-    @if (!luxLoading || (luxLoading && luxDisabled)) {
-      <lux-icon [luxIconName]="luxIconName" luxPadding="0px" luxMargin="0px" class="lux-button-icon-round"></lux-icon>
+    @if (!luxLoading() || (luxLoading() && luxDisabled())) {
+      <lux-icon [luxIconName]="luxIconName()" luxPadding="0px" luxMargin="0px" class="lux-button-icon-round"></lux-icon>
     }
   </button>
-} @else if (luxRounded && luxStroked) {
+} @else if (luxRounded() && luxStroked()) {
   <button
     mat-fab
     (focus)="tooltipDirective?.show()"
     (blur)="tooltipDirective?.hide()"
     [disableRipple]="true"
-    [color]="luxColor"
+    [color]="luxColor()"
     (click)="clicked($event)"
     (auxclick)="auxClicked($event)"
-    [disabled]="luxDisabled"
-    [type]="luxType"
+    [disabled]="luxDisabled()"
+    [type]="luxType()"
     class="lux-button lux-button-rounded lux-stroked"
     luxTagIdHandler
-    [luxTagId]="luxTagId"
-    [ngClass]="{ 'lux-icon-button': !!luxIconName, 'lux-fab-stroked-default': !luxColor }"
-    [attr.aria-label]="luxLabel ? luxLabel : ''"
+    [luxTagId]="luxTagId()"
+    [ngClass]="{ 'lux-icon-button': !!luxIconName(), 'lux-fab-stroked-default': !luxColor() }"
+    [attr.aria-label]="luxLabel() ? luxLabel() : ''"
     [luxAriaDisabled]="luxDisabledAria() ? 'true' : undefined"
   >
-    @if (luxLoading && !luxDisabled) {
+    @if (luxLoading() && !luxDisabled()) {
       <lux-progress
         inert
         luxType="Spinner"
         luxSize="small"
-        [luxMode]="luxSpinnerMode"
-        [luxValue]="luxSpinnerValue"
+        [luxMode]="luxSpinnerMode()"
+        [luxValue]="luxSpinnerValue()"
         luxAnimationDuration="slow"
         class="lux-button-spinner"
       ></lux-progress>
     }
-    @if (!luxLoading || (luxLoading && luxDisabled)) {
-      <lux-icon [luxIconName]="luxIconName" luxPadding="0px" luxMargin="0px" class="lux-button-icon-round"></lux-icon>
+    @if (!luxLoading() || (luxLoading() && luxDisabled())) {
+      <lux-icon [luxIconName]="luxIconName()" luxPadding="0px" luxMargin="0px" class="lux-button-icon-round"></lux-icon>
     }
   </button>
 } @else {
@@ -167,16 +167,16 @@
     (focus)="tooltipDirective?.show()"
     (blur)="tooltipDirective?.hide()"
     [disableRipple]="true"
-    [color]="luxColor"
+    [color]="luxColor()"
     (click)="clicked($event)"
     (auxclick)="auxClicked($event)"
-    [disabled]="luxDisabled"
-    [type]="luxType"
+    [disabled]="luxDisabled()"
+    [type]="luxType()"
     class="lux-button"
     luxTagIdHandler
-    [luxTagId]="luxTagId"
-    [ngClass]="{ 'lux-icon-button': !!luxIconName }"
-    [attr.aria-label]="luxLabel ? luxLabel : ''"
+    [luxTagId]="luxTagId()"
+    [ngClass]="{ 'lux-icon-button': !!luxIconName() }"
+    [attr.aria-label]="luxLabel() ? luxLabel() : ''"
     [luxAriaDisabled]="luxDisabledAria() ? 'true' : undefined"
   >
     <ng-container *ngTemplateOutlet="luxButtonContent"></ng-container>
@@ -185,48 +185,48 @@
 
 <ng-template #luxButtonContent>
   <div class="lux-button-content-container">
-    @if (luxLoading && !luxIconShowRight && !luxDisabled) {
+    @if (luxLoading() && !luxIconShowRight() && !luxDisabled()) {
       <lux-progress
         inert
         luxType="Spinner"
         luxSize="small"
-        [luxMode]="luxSpinnerMode"
-        [luxValue]="luxSpinnerValue"
+        [luxMode]="luxSpinnerMode()"
+        [luxValue]="luxSpinnerValue()"
         luxAnimationDuration="slow"
         class="lux-button-spinner"
       ></lux-progress>
     }
-    @if (luxIconName && !luxIconShowRight && !luxLoading) {
-      <lux-icon [luxIconName]="luxIconName" luxPadding="0px" luxMargin="0px" class="lux-button-icon"></lux-icon>
+    @if (luxIconName() && !luxIconShowRight() && !luxLoading()) {
+      <lux-icon [luxIconName]="luxIconName()" luxPadding="0px" luxMargin="0px" class="lux-button-icon"></lux-icon>
     }
-    @if (luxLabel) {
+    @if (luxLabel()) {
       <span class="lux-button-label">
-        {{ luxLabel }}
+        {{ luxLabel() }}
       </span>
     }
-    @if (luxButtonBadge && !luxDisabled) {
+    @if (luxButtonBadge() && !luxDisabled()) {
       <span
         class="lux-button-badge lux-bg-color-primary-20"
         [ngClass]="{
-          'lux-button-badge-primary': luxButtonBadgeColor === 'primary',
-          'lux-button-badge-warn': luxButtonBadgeColor === 'warn',
-          'lux-button-badge-accent': luxButtonBadgeColor === 'accent',
-          'lux-mr-3': !!luxIconName && luxIconShowRight
+          'lux-button-badge-primary': luxButtonBadgeColor() === 'primary',
+          'lux-button-badge-warn': luxButtonBadgeColor() === 'warn',
+          'lux-button-badge-accent': luxButtonBadgeColor() === 'accent',
+          'lux-mr-3': !!luxIconName() && luxIconShowRight()
         }"
       >
-        {{ luxButtonBadge }}
+        {{ luxButtonBadge() }}
       </span>
     }
-    @if (luxIconName && luxIconShowRight && !luxLoading) {
-      <lux-icon [luxIconName]="luxIconName" luxPadding="0px" luxMargin="0px" class="lux-button-icon"></lux-icon>
+    @if (luxIconName() && luxIconShowRight() && !luxLoading()) {
+      <lux-icon [luxIconName]="luxIconName()" luxPadding="0px" luxMargin="0px" class="lux-button-icon"></lux-icon>
     }
-    @if (luxLoading && luxIconShowRight && !luxDisabled) {
+    @if (luxLoading() && luxIconShowRight() && !luxDisabled()) {
       <lux-progress
         inert
         luxType="Spinner"
         luxSize="small"
-        [luxMode]="luxSpinnerMode"
-        [luxValue]="luxSpinnerValue"
+        [luxMode]="luxSpinnerMode()"
+        [luxValue]="luxSpinnerValue()"
         luxAnimationDuration="slow"
         class="lux-button-spinner"
       ></lux-progress>

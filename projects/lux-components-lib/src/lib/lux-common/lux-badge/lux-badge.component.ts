@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { LuxIconComponent } from '../../lux-icon/lux-icon/lux-icon.component';
 import { LuxBadgeColor, LuxBadgeSize } from '../../lux-util/lux-colors.enum';
 
@@ -7,16 +7,16 @@ import { LuxBadgeColor, LuxBadgeSize } from '../../lux-util/lux-colors.enum';
   selector: 'lux-badge',
   templateUrl: './lux-badge.component.html',
   styleUrls: ['./lux-badge.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [NgClass, LuxIconComponent]
 })
 export class LuxBadgeComponent {
   readonly ICON_SIZE: string = '1x';
   readonly DEFAULT_BADGE_COLOR = 'gray';
 
-  @Input() luxUppercase = true;
-  @Input() luxIconName = '';
-  @Input() luxColor: LuxBadgeColor = this.DEFAULT_BADGE_COLOR;
-  @Input() luxMuted = false;
-  @Input() luxSize: LuxBadgeSize = '';
+  readonly luxUppercase = input(true);
+  readonly luxIconName = input('');
+  readonly luxColor = input<LuxBadgeColor>(this.DEFAULT_BADGE_COLOR);
+  readonly luxMuted = input(false);
+  readonly luxSize = input<LuxBadgeSize>('');
 }

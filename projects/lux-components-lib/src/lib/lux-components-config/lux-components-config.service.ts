@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { LuxComponentsConfigParameters } from './lux-components-config-parameters.interface';
-import { LuxConfigTokenService } from './lux-components-config.module';
+import { LuxConfigTokenService } from './lux-components-config.provider';
 
 /**
  * Dieser Service wird dazu verwendet, auf die Konfiguration der LuxComponents zuzugreifen und diese auszulesen bzw.

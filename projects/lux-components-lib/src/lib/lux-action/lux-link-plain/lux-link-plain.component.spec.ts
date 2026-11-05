@@ -1,12 +1,12 @@
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { Router } from '@angular/router';
+import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { LuxComponentsConfigService } from '../../lux-components-config/lux-components-config.service';
 import { LuxThemePalette } from '../../lux-util/lux-colors.enum';
-import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { LuxLinkPlainComponent } from './lux-link-plain.component';
 
 describe('LuxLinkPlainComponent', () => {
@@ -39,7 +39,7 @@ describe('LuxLinkPlainComponent', () => {
     expect(label.nativeElement.textContent.trim()).toEqual('');
 
     // Änderungen durchführen
-    component.label = 'Ein Label sie zu knechten';
+    component.label.set('Ein Label sie zu knechten');
     LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
@@ -53,7 +53,7 @@ describe('LuxLinkPlainComponent', () => {
     expect(icon).toBeNull();
 
     // Änderungen durchführen
-    component.iconName = 'lux-programming-bug';
+    component.iconName.set('lux-programming-bug');
     LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
@@ -67,7 +67,7 @@ describe('LuxLinkPlainComponent', () => {
     expect(disabled).toBeNull();
 
     // Änderungen durchführen
-    component.disabled = true;
+    component.disabled.set(true);
     LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
@@ -81,7 +81,7 @@ describe('LuxLinkPlainComponent', () => {
     expect(spy).toHaveBeenCalledTimes(0);
 
     // Änderungen durchführen
-    component.href = '/mock-route';
+    component.href.set('/mock-route');
     LuxTestHelper.wait(fixture);
 
     const link = fixture.debugElement.query(By.css('.link-wrapper'));
@@ -101,7 +101,7 @@ describe('LuxLinkPlainComponent', () => {
     expect(spy).toHaveBeenCalledTimes(0);
 
     // Änderungen durchführen  [mit HTTP]
-    component.href = 'http://mock-route';
+    component.href.set('http://mock-route');
     LuxTestHelper.wait(fixture);
 
     const link = fixture.debugElement.query(By.css('.link-wrapper'));
@@ -113,7 +113,7 @@ describe('LuxLinkPlainComponent', () => {
     expect(spy).toHaveBeenCalledWith('http://mock-route', '_self');
 
     // Änderungen durchführen [mit HTTPS]
-    component.href = 'https://mock-route';
+    component.href.set('https://mock-route');
     LuxTestHelper.wait(fixture);
 
     link.triggerEventHandler('click', new MouseEvent('click', { bubbles: true, cancelable: true }));
@@ -132,8 +132,8 @@ describe('LuxLinkPlainComponent', () => {
     expect(spy).toHaveBeenCalledTimes(0);
 
     // Änderungen durchführen
-    component.blank = true;
-    component.href = 'http://mock-route';
+    component.blank.set(true);
+    component.href.set('http://mock-route');
     LuxTestHelper.wait(fixture);
 
     const link = fixture.debugElement.query(By.css('a'));
@@ -153,8 +153,8 @@ describe('LuxLinkPlainComponent', () => {
     expect(spy).toHaveBeenCalledTimes(0);
 
     // Änderungen durchführen
-    component.blank = true;
-    component.href = '/mock-route';
+    component.blank.set(true);
+    component.href.set('/mock-route');
     LuxTestHelper.wait(fixture);
 
     const link = fixture.debugElement.query(By.css('.link-wrapper'));
@@ -174,7 +174,7 @@ describe('LuxLinkPlainComponent', () => {
     expect(link.nativeElement.getAttribute('rel')).toBeNull();
 
     // Änderungen durchführen
-    component.blank = true;
+    component.blank.set(true);
     LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
@@ -186,24 +186,24 @@ describe('LuxLinkPlainComponent', () => {
 @Component({
   template: `
     <lux-link-plain
-      [luxLabel]="label"
-      [luxIconName]="iconName"
-      [luxDisabled]="disabled"
-      [luxBlank]="blank"
-      [luxHref]="href"
-      [luxColor]="color"
+      [luxLabel]="label()"
+      [luxIconName]="iconName()"
+      [luxDisabled]="disabled()"
+      [luxBlank]="blank()"
+      [luxHref]="href()"
+      [luxColor]="color()"
     >
     </lux-link-plain>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxLinkPlainComponent]
 })
 class MockLinkPlainComponent {
-  label = '';
-  raised = false;
-  iconName = '';
-  disabled = false;
-  blank = false;
-  href = '';
-  color?: LuxThemePalette;
+  label = signal('');
+  raised = signal(false);
+  iconName = signal('');
+  disabled = signal(false);
+  blank = signal(false);
+  href = signal('');
+  color = signal<LuxThemePalette | undefined>(undefined);
 }

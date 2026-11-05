@@ -1,18 +1,19 @@
 import { NgClass, NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
+  DestroyRef,
   ElementRef,
-  EventEmitter,
   HostBinding,
-  Input,
-  OnDestroy,
   OnInit,
-  Output,
-  inject
+  inject,
+  input,
+  output
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButton, MatFabButton, MatIconButton } from '@angular/material/button';
-import { Subject, Subscription } from 'rxjs';
+import { Subject } from 'rxjs';
 import { throttleTime } from 'rxjs/operators';
 import { LuxProgressComponent, LuxProgressModeType } from '../../lux-common/lux-progress/lux-progress.component';
 import { LuxComponentsConfigService } from '../../lux-components-config/lux-components-config.service';
@@ -38,94 +39,81 @@ import { LuxActionComponentBaseClass } from '../lux-action-model/lux-action-comp
     LuxIconComponent,
     LuxProgressComponent
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    '[class.lux-flat]': 'luxFlat',
-    '[class.lux-raised]': 'luxRaised',
-    '[class.lux-rounded]': 'luxRounded',
-    '[class.lux-stroked]': 'luxStroked',
-    '[class.lux-icon-button]': 'luxIconButton'
+    '[class.lux-flat]': 'luxFlat()',
+    '[class.lux-raised]': 'luxRaised()',
+    '[class.lux-rounded]': 'luxRounded()',
+    '[class.lux-stroked]': 'luxStroked()',
+    '[class.lux-icon-button]': 'luxIconButton()'
   }
 })
-export class LuxButtonComponent extends LuxActionComponentBaseClass implements OnInit, OnDestroy {
+export class LuxButtonComponent extends LuxActionComponentBaseClass implements OnInit {
+  private destroyRef = inject(DestroyRef);
+  private cdr = inject(ChangeDetectorRef);
   elementRef = inject(ElementRef);
   componentsConfigService = inject(LuxComponentsConfigService);
   tooltipDirective?: LuxTooltipDirective;
 
-  private configSubscription!: Subscription;
-
   private clickSubject = new Subject<MouseEvent>();
-  private clickSubscription!: Subscription;
-
   private auxClickSubject = new Subject<MouseEvent>();
-  private auxClickSubscription!: Subscription;
   private clickNotAllowedSubject = new Subject<MouseEvent>();
-  private clickNotAllowedSubscription!: Subscription;
+  readonly luxType = input<'button' | 'reset' | 'submit'>('button');
+  readonly luxThrottleTime = input<number | undefined>(undefined);
+  readonly luxButtonBadge = input<string | undefined>(undefined);
+  readonly luxButtonBadgeColor = input<LuxThemePalette>('primary');
+  readonly luxSpinnerMode = input<LuxProgressModeType>('indeterminate');
+  readonly luxSpinnerValue = input(70);
+  readonly luxLoading = input(false);
+  readonly luxIconButton = input(false);
 
-  @Input() luxType: 'button' | 'reset' | 'submit' = 'button';
-  @Input() luxThrottleTime!: number;
-  @Input() luxButtonBadge?: string;
-  @Input() luxButtonBadgeColor?: LuxThemePalette = 'primary';
-  @Input() luxSpinnerMode: LuxProgressModeType = 'indeterminate';
-  @Input() luxSpinnerValue = 70;
-  @Input() luxLoading = false;
-  @Input() luxIconButton = false;
-
-  @Output() luxAuxClicked = new EventEmitter<Event>();
-  @Output() luxClickNotAllowed = new EventEmitter<Event>();
+  luxAuxClicked = output<Event>();
+  luxClickNotAllowed = output<Event>();
 
   @HostBinding('class.lux-uppercase') labelUppercase!: boolean;
 
   ngOnInit() {
-    if (!this.luxThrottleTime) {
-      this.luxThrottleTime = this.componentsConfigService.currentConfig.buttonConfiguration?.throttleTimeMs
-        ? this.componentsConfigService.currentConfig.buttonConfiguration.throttleTimeMs
-        : LuxComponentsConfigService.DEFAULT_CONFIG.buttonConfiguration.throttleTimeMs;
-    }
+    const throttleTimeMs = this.resolveThrottleTime();
 
     if (
-      (this.luxRaised && this.luxFlat) ||
-      (this.luxRaised && this.luxStroked) ||
-      (this.luxStroked && this.luxFlat) ||
-      (this.luxIconButton && (this.luxRaised || this.luxFlat || this.luxStroked || this.luxRounded))
+      (this.luxRaised() && this.luxFlat()) ||
+      (this.luxRaised() && this.luxStroked()) ||
+      (this.luxStroked() && this.luxFlat()) ||
+      (this.luxIconButton() && (this.luxRaised() || this.luxFlat() || this.luxStroked() || this.luxRounded()))
     ) {
       console.log(
         'Es kann nur eine Button-Variante gesetzt werden!',
         'luxRaised: ',
-        this.luxRaised,
+        this.luxRaised(),
         'luxFlat: ',
-        this.luxFlat,
+        this.luxFlat(),
         'luxStroked: ',
-        this.luxStroked,
+        this.luxStroked(),
         'luxRounded: ',
-        this.luxRounded,
+        this.luxRounded(),
         'luxIconButton: ',
-        this.luxIconButton
+        this.luxIconButton()
       );
     }
 
-    this.configSubscription = this.componentsConfigService.config.subscribe(() => {
+    this.componentsConfigService.config.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
       // Hintergrund: LuxLink, LuxSideNavItem und LuxMenuItem benutzen alle unter der Haube
       // den LuxButton. Wenn diese nun als Ausnahmen für Uppercase in der Config eingetragen werden,
       // darf eine Uppercase-Einstellung für den LuxButton diese nicht überschreiben.
       // Deshalb prüft der LuxButton hier, ob er Teil einer dieser Komponenten ist.
       this.detectParent();
+      this.cdr.markForCheck();
     });
 
-    this.clickSubscription = this.clickSubject.pipe(throttleTime(this.luxThrottleTime)).subscribe((e) => this.luxClicked.emit(e));
+    this.clickSubject.pipe(throttleTime(throttleTimeMs), takeUntilDestroyed(this.destroyRef)).subscribe((e) => this.luxClicked.emit(e));
 
-    this.auxClickSubscription = this.auxClickSubject.pipe(throttleTime(this.luxThrottleTime)).subscribe((e) => this.luxAuxClicked.emit(e));
+    this.auxClickSubject
+      .pipe(throttleTime(throttleTimeMs), takeUntilDestroyed(this.destroyRef))
+      .subscribe((e) => this.luxAuxClicked.emit(e));
 
-    this.clickNotAllowedSubscription = this.clickNotAllowedSubject
-      .pipe(throttleTime(this.luxThrottleTime))
+    this.clickNotAllowedSubject
+      .pipe(throttleTime(throttleTimeMs), takeUntilDestroyed(this.destroyRef))
       .subscribe((e) => this.luxClickNotAllowed.emit(e));
-  }
-
-  ngOnDestroy() {
-    this.configSubscription?.unsubscribe();
-    this.clickSubscription?.unsubscribe();
-    this.auxClickSubscription?.unsubscribe();
-    this.clickNotAllowedSubscription?.unsubscribe();
   }
 
   clicked(event: MouseEvent) {
@@ -164,12 +152,20 @@ export class LuxButtonComponent extends LuxActionComponentBaseClass implements O
   }
 
   private shouldHandleNotAllowedClick(): boolean {
-    return !!this.luxDisabledAria() && !this.luxDisabled;
+    return !!this.luxDisabledAria() && !this.luxDisabled();
   }
 
   private emitClickNotAllowed(event: MouseEvent) {
     event.preventDefault();
     event.stopImmediatePropagation();
     this.clickNotAllowedSubject.next(event);
+  }
+
+  private resolveThrottleTime(): number {
+    return (
+      this.luxThrottleTime() ||
+      this.componentsConfigService.currentConfig.buttonConfiguration?.throttleTimeMs ||
+      LuxComponentsConfigService.DEFAULT_CONFIG.buttonConfiguration.throttleTimeMs
+    );
   }
 }
