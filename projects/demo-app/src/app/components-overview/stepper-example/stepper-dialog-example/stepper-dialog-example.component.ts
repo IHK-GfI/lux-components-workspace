@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild, inject } from '@angular/core';
+import { Component, ElementRef, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
   LuxButtonComponent,
@@ -28,6 +28,7 @@ interface DialogStep2Form {
 @Component({
   selector: 'app-stepper-dialog-example',
   templateUrl: './stepper-dialog-example.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxDialogStructureComponent,
     LuxDialogTitleComponent,

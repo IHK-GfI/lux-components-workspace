@@ -11,7 +11,8 @@ import {
   Output,
   SimpleChanges,
   ViewChild,
-  inject
+  inject,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { TranslocoPipe } from '@jsverse/transloco';
@@ -52,6 +53,7 @@ import { LuxSideNavComponent } from './lux-app-header-subcomponents/lux-side-nav
     LuxImageComponent,
     TranslocoPipe
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: {
     '[class.lux-header-mobile]': 'mobileView'
   }

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import {
     LuxAutofocusDirective,
@@ -31,6 +31,7 @@ interface TextareaDummyForm {
 @Component({
   selector: 'lux-textarea-authentic-example',
   templateUrl: './textarea-authentic-example.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxToggleAcComponent,
     LuxTextareaAcComponent,

@@ -1,9 +1,10 @@
-import { Component, EventEmitter, input, Input, Output, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, input, Input, Output, output } from '@angular/core';
 import { LuxThemePalette } from '../../../lux-util/lux-colors.enum';
 import { LuxActionComponentBaseClass } from '../../lux-action-model/lux-action-component-base.class';
 
 @Component({
   selector: 'lux-menu-item',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: ''
 })
 export class LuxMenuItemComponent extends LuxActionComponentBaseClass {

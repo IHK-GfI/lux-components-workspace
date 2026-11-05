@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import {
   LuxButtonComponent,
   LuxFormHintComponent,
@@ -21,6 +21,7 @@ import { logResult } from '../../example-base/example-base-util/example-base-hel
   selector: 'app-infinite-scrolling-example',
   templateUrl: './infinite-scrolling-example.component.html',
   styleUrls: ['./infinite-scrolling-example.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxIconComponent,
     LuxButtonComponent,

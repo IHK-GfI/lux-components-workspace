@@ -1,8 +1,8 @@
 // noinspection DuplicatedCode
 
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
@@ -19,7 +19,7 @@ describe('LuxCardComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       providers: [
-        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideHttpClientTesting(),
         provideNoopAnimations(),
         provideLuxTranslocoTesting()
@@ -374,6 +374,7 @@ describe('LuxCardComponent', () => {
       <lux-card-content> Lorem ipsum </lux-card-content>
     </lux-card>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxCardComponent, LuxCardContentComponent]
 })
 class NoCardActionComponent {}
@@ -384,6 +385,7 @@ class NoCardActionComponent {}
       <lux-card-content> Lorem ipsum </lux-card-content>
     </lux-card>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxCardComponent, LuxCardContentComponent]
 })
 class CardActionComponent {
@@ -397,6 +399,7 @@ class CardActionComponent {
       <lux-card-content-expanded>Lorem ipsum expanded</lux-card-content-expanded>
     </lux-card>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxCardComponent, LuxCardContentComponent, LuxCardContentExpandedComponent]
 })
 class ExpandedCardComponent {
@@ -410,6 +413,7 @@ class ExpandedCardComponent {
       <lux-card-content-expanded>Lorem ipsum expanded</lux-card-content-expanded>
     </lux-card>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxCardComponent, LuxCardContentComponent, LuxCardContentExpandedComponent]
 })
 class ExpandedClickableCardComponent {
@@ -425,6 +429,7 @@ class ExpandedClickableCardComponent {
       <lux-card-content-expanded>Lorem ipsum expanded</lux-card-content-expanded>
     </lux-card>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxCardComponent, LuxCardContentComponent, LuxCardContentExpandedComponent]
 })
 class LuxContentExpandedComponent {
@@ -456,6 +461,7 @@ class LuxContentExpandedComponent {
       }
     </lux-card>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxCardComponent, LuxCardContentComponent, LuxCardActionsComponent, LuxCardInfoComponent]
 })
 class MockCardComponent {

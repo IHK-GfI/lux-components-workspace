@@ -1,10 +1,11 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { LuxCardComponent, LuxCardContentComponent, LuxDividerComponent, LuxInputAcComponent, LuxSelectAcComponent, LuxToggleAcComponent } from '@ihk-gfi/lux-components';
 import { StatusMarkerComponent } from '../../../base/status-marker/status-marker.component';
 
 @Component({
   selector: 'detail-example',
   templateUrl: './detail-example.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxDividerComponent, LuxCardContentComponent, LuxCardComponent, LuxToggleAcComponent, LuxSelectAcComponent, LuxInputAcComponent, StatusMarkerComponent]
 })
 export class DetailExampleComponent {

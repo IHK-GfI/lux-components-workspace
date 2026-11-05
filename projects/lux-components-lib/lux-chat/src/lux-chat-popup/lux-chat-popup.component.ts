@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, inject, OnDestroy, model, effect, contentChild, DestroyRef } from '@angular/core';
+import { Component, inject, OnDestroy, model, effect, contentChild, DestroyRef, ChangeDetectionStrategy } from '@angular/core';
 import { MatFabButton } from '@angular/material/button';
 import { LuxIconComponent, LuxMediaQueryObserverService } from '@ihk-gfi/lux-components';
 import { TranslocoPipe } from '@jsverse/transloco';
@@ -10,6 +10,7 @@ import { outputToObservable, takeUntilDestroyed } from '@angular/core/rxjs-inter
 @Component({
   selector: 'lux-chat-popup',
   imports: [NgClass, LuxIconComponent, MatFabButton, TranslocoPipe],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './lux-chat-popup.component.html'
 })
 export class LuxChatPopupComponent {

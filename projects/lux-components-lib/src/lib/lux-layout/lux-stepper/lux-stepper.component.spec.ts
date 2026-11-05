@@ -3,9 +3,9 @@
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, TestBed, waitForAsync } from '@angular/core/testing';
 
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
@@ -27,7 +27,7 @@ describe('LuxStepperComponent', () => {
     TestBed.configureTestingModule({
       providers: [
         provideNoopAnimations(),
-        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideHttpClientTesting(),
         provideLuxTranslocoTesting()
       ]
@@ -447,6 +447,7 @@ describe('LuxStepperComponent', () => {
       </lux-step>
     </lux-stepper>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ReactiveFormsModule, LuxStepperComponent, LuxStepComponent, LuxStepHeaderComponent, LuxStepContentComponent]
 })
 class MockStepperComponent {

@@ -27,7 +27,7 @@
 ### Wichtigste Änderungen zum bisherigen Master-Detail
 
 Das responsive Design wurde um eine Medium-Size-Variante ergänzt. In dieser teilen sich Master und Detail die Bildschirmbreite im Verhältnis 50-50.
-In der Mobilen Ansicht ist der Button zum Wechseln von der Detail- zur Master-Ansicht nicht mehr im App-Header, sondern oben im Detail platziert. Das Swipen bei Touch-Displays ist noch wie vor möglich.
+In der Mobilen Ansicht ist der Button zum Wechseln von der Detail- zur Master-Ansicht nicht mehr im App-Header, sondern oben im Detail platziert.
 Die Desktop-Variante behält das Seiten-Verhältnis von 30%/70% zwischen Master und Detail bei, jedoch nur bis zu einer Max-Width von 500px für den Master. Der restliche Platz wird dem Detail zugesprochen.
 Die lux-master-view-Component wurde entfernt. Es kann nur noch der Simple-Master genutzt werden.
 Die Subcomponent lux-detail-header-ac wurde ergänzt. Diese wird in einer Standard-Variante immer angezeigt und kann durch eigenen Inhalt überschrieben werden.

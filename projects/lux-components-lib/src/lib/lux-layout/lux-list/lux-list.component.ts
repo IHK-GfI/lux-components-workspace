@@ -14,7 +14,8 @@ import {
   OnInit,
   Output,
   PLATFORM_ID,
-  QueryList
+  QueryList,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { Subscription } from 'rxjs';
@@ -45,6 +46,7 @@ const KEY_F2 = 'F2';
 @Component({
   selector: 'lux-list',
   templateUrl: './lux-list.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxIconComponent, TranslocoPipe]
 })
 export class LuxListComponent implements AfterViewInit, OnInit, OnDestroy {

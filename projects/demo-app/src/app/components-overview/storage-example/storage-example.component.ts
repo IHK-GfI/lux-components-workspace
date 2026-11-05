@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, DoCheck, OnDestroy, inject } from '@angular/core';
+import { Component, DoCheck, OnDestroy, inject, ChangeDetectionStrategy } from '@angular/core';
 import {
   LuxAriaLabelDirective,
   LuxButtonComponent,
@@ -20,6 +20,7 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
   selector: 'app-storage-example',
   templateUrl: './storage-example.component.html',
   styleUrls: ['./storage-example.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxMenuComponent,
     LuxMenuItemComponent,

@@ -13,7 +13,8 @@ import {
   TemplateRef,
   ViewChild,
   ViewChildren,
-  inject
+  inject,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatOption } from '@angular/material/core';
@@ -38,6 +39,7 @@ import { LuxFormSelectableBase } from '../lux-form-model/lux-form-selectable-bas
   selector: 'lux-select-ac',
   templateUrl: './lux-select-ac.component.html',
   styleUrls: ['./lux-select-ac.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxFormControlWrapperComponent,
     FormsModule,

@@ -7,7 +7,7 @@ import { LuxFilePreviewRef } from '../lux-file-preview-ref';
 import { LuxFilePreviewComponent } from '../lux-file-preview.component';
 import { LuxFilePreviewService } from '../lux-file-preview.service';
 
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideLuxTranslocoTesting } from '../../../src/testing/transloco-test.provider';
 import { LuxFilePreviewPdfViewerComponent } from './lux-file-preview-pdfviewer.component';
@@ -30,7 +30,7 @@ describe('LuxFilePreviewPdfViewerComponent', () => {
       imports: [OverlayModule, PortalModule, LuxFilePreviewPdfViewerComponent, LuxFilePreviewComponent],
       schemas: [NO_ERRORS_SCHEMA],
       providers: [
-        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideHttpClientTesting(),
         provideLuxTranslocoTesting(),
         LuxFilePreviewService,

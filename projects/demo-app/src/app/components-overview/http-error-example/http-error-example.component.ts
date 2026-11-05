@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { LuxButtonComponent, LuxHttpErrorComponent, LuxHttpErrorInterceptor } from '@ihk-gfi/lux-components';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
@@ -15,6 +15,7 @@ interface Error {
   selector: 'app-http-error-example',
   templateUrl: 'http-error-example.component.html',
   styleUrls: ['http-error-example.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxHttpErrorComponent,
     LuxButtonComponent,

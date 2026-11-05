@@ -1,4 +1,4 @@
-import { Component, ViewChild, input } from '@angular/core';
+import { Component, ViewChild, input, ChangeDetectionStrategy } from '@angular/core';
 import { LuxPopupCloseReason, LuxPopupComponent } from '@ihk-gfi/lux-components';
 
 @Component({
@@ -6,6 +6,7 @@ import { LuxPopupCloseReason, LuxPopupComponent } from '@ihk-gfi/lux-components'
   standalone: true,
   imports: [LuxPopupComponent],
   exportAs: 'popupExampleInfoPopup',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <lux-popup
       [luxTitle]="title()"

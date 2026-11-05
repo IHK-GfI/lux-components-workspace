@@ -1,6 +1,6 @@
 import { NgClass } from '@angular/common';
 import { AccordionGroup } from '@angular/aria/accordion';
-import { Component, DestroyRef, OnDestroy, Signal, computed, contentChildren, inject, input } from '@angular/core';
+import { Component, DestroyRef, OnDestroy, Signal, computed, contentChildren, inject, input, ChangeDetectionStrategy } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { Subject } from 'rxjs';
 import { LuxAccordionColor, LuxAccordionColors, LuxModeType } from '@ihk-gfi/lux-components';
@@ -24,6 +24,7 @@ export type LuxAriaTogglePosition = LuxAccordionAriaTogglePosition;
   // 'disabled' is forwarded under the luxDisabled name so the group's own state stays the single source of truth
   hostDirectives: [{ directive: AccordionGroup, inputs: ['disabled: luxDisabled'] }],
   providers: [{ provide: LuxAccordionAriaBase, useExisting: LuxAccordionAriaComponent }],
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: {
     class: 'lux-flex lux-flex-auto',
     '[class.lux-default]': "luxMode() === 'default'",

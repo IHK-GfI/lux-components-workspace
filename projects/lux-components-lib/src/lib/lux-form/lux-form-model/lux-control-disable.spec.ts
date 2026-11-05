@@ -1,8 +1,8 @@
 // noinspection DuplicatedCode
 
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -29,7 +29,13 @@ describe('LuxControlDisable', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      providers: [LuxConsoleService, provideNoopAnimations(), provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting(), provideLuxTranslocoTesting()]
+      providers: [
+        LuxConsoleService,
+        provideNoopAnimations(),
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+        provideLuxTranslocoTesting()
+      ]
     }).compileComponents();
   }));
 
@@ -469,6 +475,7 @@ describe('LuxControlDisable', () => {
       <lux-toggle-ac luxLabel="toggle" luxControlBinding="toggle" [(luxDisabled)]="disabledState" id="toggle"></lux-toggle-ac>
     </form>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     ReactiveFormsModule,
     LuxToggleAcComponent,

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import {
   ILuxMessage,
   ILuxMessageChangeEvent,
@@ -30,6 +30,7 @@ import { logResult } from '../../example-base/example-base-util/example-base-hel
 @Component({
   selector: 'app-message-box-example',
   templateUrl: './message-box-example.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxMessageBoxComponent,
     LuxButtonComponent,

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import {
   LuxAccordionColor,
   LuxAccordionComponent,
@@ -27,6 +27,7 @@ import { CustomPanelComponent } from './custom-panel/custom-panel.component';
   selector: 'app-accordion-example',
   templateUrl: './accordion-example.component.html',
   styleUrls: ['./accordion-example.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxAccordionComponent,
     LuxPanelHeaderDescriptionComponent,

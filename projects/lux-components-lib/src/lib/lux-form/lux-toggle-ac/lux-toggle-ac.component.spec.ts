@@ -1,8 +1,8 @@
 // noinspection DuplicatedCode
 
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -20,7 +20,7 @@ describe('LuxToggleAcComponent', () => {
       providers: [
         LuxConsoleService,
         provideNoopAnimations(),
-        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideHttpClientTesting(),
         provideLuxTranslocoTesting()
       ]
@@ -612,6 +612,7 @@ describe('LuxToggleAcComponent', () => {
 
 @Component({
   template: ` <lux-toggle-ac luxLabel="Magst du Pommes?" [luxChecked]="true" [luxDisabled]="disabled"></lux-toggle-ac> `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxToggleAcComponent]
 })
 class LuxDisabledAttributeComponent {
@@ -620,6 +621,7 @@ class LuxDisabledAttributeComponent {
 
 @Component({
   template: ` <lux-toggle-ac luxLabel="Eula gelesen?" (luxCheckedChange)="onCheckedChange($event)"></lux-toggle-ac> `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxToggleAcComponent]
 })
 class LuxCheckedChangeComponent {
@@ -632,6 +634,7 @@ class LuxCheckedChangeComponent {
 
 @Component({
   template: ` <lux-toggle-ac luxLabel="Eula gelesen?" [(luxChecked)]="eula"></lux-toggle-ac> `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxToggleAcComponent]
 })
 class LuxCheckedAttributeComponent {
@@ -640,6 +643,7 @@ class LuxCheckedAttributeComponent {
 
 @Component({
   template: ` <lux-toggle-ac [luxLabel]="label" [luxChecked]="false"></lux-toggle-ac> `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxToggleAcComponent]
 })
 class LuxLabelAttributeComponent {
@@ -648,6 +652,7 @@ class LuxLabelAttributeComponent {
 
 @Component({
   template: ` <lux-toggle-ac [luxLabel]="label" [luxRequired]="true"></lux-toggle-ac> `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxToggleAcComponent]
 })
 class LuxRequiredAttributeComponent {
@@ -660,6 +665,7 @@ class LuxRequiredAttributeComponent {
       <lux-toggle-ac luxLabel="Eula gelesen?" luxControlBinding="eula" [luxRequired]="required"></lux-toggle-ac>
     </form>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ReactiveFormsModule, LuxToggleAcComponent]
 })
 class LuxToggleInFormAttributeComponent {
@@ -679,6 +685,7 @@ class LuxToggleInFormAttributeComponent {
       <lux-toggle-ac luxLabel="Eula gelesen?" luxControlBinding="eula"></lux-toggle-ac>
     </form>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ReactiveFormsModule, LuxToggleAcComponent]
 })
 class LuxToggleRequiredInFormAttributeComponent {
@@ -693,6 +700,7 @@ class LuxToggleRequiredInFormAttributeComponent {
 
 @Component({
   template: ` <lux-toggle-ac luxLabel="Eula gelesen?" [(luxChecked)]="eula" [luxControlValidators]="validators"></lux-toggle-ac> `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxToggleAcComponent]
 })
 class LuxValidatorsComponent {
@@ -709,6 +717,7 @@ class LuxValidatorsComponent {
       (luxCheckedChange)="onCheckedChange()"
     ></lux-toggle-ac>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxToggleAcComponent]
 })
 class LuxRevalidationComponent {
@@ -726,6 +735,7 @@ class LuxRevalidationComponent {
     <lux-toggle-ac #a luxLabel="A" [(luxChecked)]="a" (luxCheckedChange)="onA()"></lux-toggle-ac>
     <lux-toggle-ac #b luxLabel="B" [(luxChecked)]="b" (luxCheckedChange)="onB()"></lux-toggle-ac>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxToggleAcComponent]
 })
 class LuxMutualUpdateComponent {

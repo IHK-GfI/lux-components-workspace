@@ -1,5 +1,5 @@
 import { JsonPipe } from '@angular/common';
-import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
 import {
   LuxAutocompleteAcComponent,
   LuxButtonComponent,
@@ -35,6 +35,7 @@ import { CustomFilterItemComponent } from './custom-filter-item.component';
   selector: 'lux-filter-example',
   templateUrl: './filter-example.component.html',
   styleUrls: ['./filter-example.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxLookupComboboxAcComponent,
     LuxLookupAutocompleteAcComponent,

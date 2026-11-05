@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import {
   ILuxDialogPresetConfig,
   LuxAriaLabelDirective,
@@ -23,6 +23,7 @@ import { DIALOG_EXAMPLE_LOCAL_TOKEN } from '../dialog-example-local.token';
   selector: 'app-dialog-component-example',
   templateUrl: './dialog-component-example.component.html',
   styleUrls: ['./dialog-component-example.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxDialogActionsComponent,
     LuxDialogContentComponent,

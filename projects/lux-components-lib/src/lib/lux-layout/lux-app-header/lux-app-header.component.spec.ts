@@ -1,8 +1,8 @@
 // noinspection DuplicatedCode
 
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, flushMicrotasks, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
@@ -32,7 +32,7 @@ describe('LuxAppHeaderComponent', () => {
       providers: [
         LuxConsoleService,
         provideNoopAnimations(),
-        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideHttpClientTesting(),
         provideLuxTranslocoTesting()
       ]
@@ -582,6 +582,7 @@ describe('LuxAppHeaderComponent', () => {
 
 @Component({
   template: ` <lux-app-header (luxClicked)="onClicked()" luxAppTitle="MyClickTitle" luxAppTitleShort="MyClick"></lux-app-header> `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxAppHeaderComponent]
 })
 class MockLabelClickedAppHeaderComponent {
@@ -597,6 +598,7 @@ class MockLabelClickedAppHeaderComponent {
       luxAppTitleShort="MyClick"
     ></lux-app-header>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxAppHeaderComponent]
 })
 class MockImageClickedAppHeaderComponent {
@@ -612,6 +614,7 @@ class MockImageClickedAppHeaderComponent {
       luxAppTitleShort="MyClick"
     ></lux-app-header>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxAppHeaderComponent]
 })
 class MockIconClickedAppHeaderComponent {
@@ -672,6 +675,7 @@ class MockIconClickedAppHeaderComponent {
       }
     </lux-app-header>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxAppHeaderActionNavComponent,
     LuxAppHeaderActionNavItemComponent,

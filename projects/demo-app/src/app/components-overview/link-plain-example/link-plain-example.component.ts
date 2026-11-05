@@ -1,4 +1,4 @@
-import { Component, OnDestroy, inject } from '@angular/core';
+import { Component, OnDestroy, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import {
   LuxComponentsConfigParameters,
@@ -18,6 +18,7 @@ import { logResult } from '../../example-base/example-base-util/example-base-hel
   selector: 'app-link-plain-example',
   templateUrl: './link-plain-example.component.html',
   styleUrls: ['./link-plain-example.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxLinkPlainComponent,
     LuxToggleAcComponent,

@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSlider, MatSliderThumb } from '@angular/material/slider';
 import { Subscription } from 'rxjs';
@@ -20,6 +20,7 @@ export declare type LuxSliderAcColor = 'primary' | 'accent' | 'warn';
   selector: 'lux-slider-ac',
   templateUrl: './lux-slider-ac.component.html',
   styleUrls: ['./lux-slider-ac.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxFormControlWrapperComponent,
     FormsModule,

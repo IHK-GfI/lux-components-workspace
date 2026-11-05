@@ -7,8 +7,8 @@
   @if (luxIndex > 0) {
     <lux-button
       luxLabel="{{ luxStepperConfig?.luxPreviousButtonConfig?.label || ('luxc.stepper.back.btn' | transloco) }}"
-      [luxColor]="luxStepperConfig?.luxPreviousButtonConfig?.color"
-      [luxIconName]="luxStepperConfig?.luxPreviousButtonConfig?.iconName"
+      [luxColor]="$safeNavigationMigration(luxStepperConfig?.luxPreviousButtonConfig?.color)"
+      [luxIconName]="$safeNavigationMigration(luxStepperConfig?.luxPreviousButtonConfig?.iconName)"
       [luxFlat]="luxStepperConfig?.luxPreviousButtonConfig?.flat ?? false"
       [luxStroked]="luxStepperConfig?.luxPreviousButtonConfig?.stroked ?? false"
       (luxClicked)="luxPrevClick.emit()"
@@ -20,8 +20,8 @@
   @if (luxIndex < (luxStepperConfig?.luxSteps?.length ?? 0) - 1) {
     <lux-button
       luxLabel="{{ luxStepperConfig?.luxNextButtonConfig?.label || ('luxc.stepper.next.btn' | transloco) }}"
-      [luxColor]="luxStepperConfig?.luxNextButtonConfig?.color"
-      [luxIconName]="luxStepperConfig?.luxNextButtonConfig?.iconName"
+      [luxColor]="$safeNavigationMigration(luxStepperConfig?.luxNextButtonConfig?.color)"
+      [luxIconName]="$safeNavigationMigration(luxStepperConfig?.luxNextButtonConfig?.iconName)"
       [luxFlat]="luxStepperConfig?.luxNextButtonConfig?.flat ?? false"
       [luxStroked]="luxStepperConfig?.luxNextButtonConfig?.stroked ?? false"
       (luxClicked)="luxNextClick.emit()"
@@ -34,8 +34,8 @@
   @if (luxIndex === (luxStepperConfig?.luxSteps?.length ?? 0) - 1) {
     <lux-button
       luxLabel="{{ luxStepperConfig?.luxFinishButtonConfig?.label || ('luxc.stepper.finish.btn' | transloco) }}"
-      [luxColor]="luxStepperConfig?.luxFinishButtonConfig?.color"
-      [luxIconName]="luxStepperConfig?.luxFinishButtonConfig?.iconName"
+      [luxColor]="$safeNavigationMigration(luxStepperConfig?.luxFinishButtonConfig?.color)"
+      [luxIconName]="$safeNavigationMigration(luxStepperConfig?.luxFinishButtonConfig?.iconName)"
       [luxFlat]="luxStepperConfig?.luxFinishButtonConfig?.flat ?? false"
       [luxStroked]="luxStepperConfig?.luxFinishButtonConfig?.stroked ?? false"
       (luxClicked)="luxFinClick.emit()"

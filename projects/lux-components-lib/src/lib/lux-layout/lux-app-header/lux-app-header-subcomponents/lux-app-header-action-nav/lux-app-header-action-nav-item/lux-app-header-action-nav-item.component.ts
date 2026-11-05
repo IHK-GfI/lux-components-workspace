@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, ContentChild, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { Component, ContentChild, EventEmitter, Input, Output, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { LuxButtonComponent } from '../../../../../lux-action/lux-button/lux-button.component';
 import { LuxThemePalette } from '../../../../../lux-util/lux-colors.enum';
 import { LuxAppHeaderActionNavItemCustomComponent } from './lux-app-header-action-nav-item-custom.component';
@@ -7,6 +7,7 @@ import { LuxAppHeaderActionNavItemCustomComponent } from './lux-app-header-actio
 @Component({
   selector: 'lux-app-header-action-nav-item',
   templateUrl: './lux-app-header-action-nav-item.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [NgClass, LuxButtonComponent]
 })
 export class LuxAppHeaderActionNavItemComponent {

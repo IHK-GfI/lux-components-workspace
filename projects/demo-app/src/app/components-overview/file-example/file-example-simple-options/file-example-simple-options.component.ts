@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import {
   LuxFormHintComponent,
   LuxInputAcComponent,
@@ -14,6 +14,7 @@ import { FileListExampleComponent } from '../file-list-example/file-list-example
 @Component({
   selector: 'app-file-example-simple-options',
   templateUrl: './file-example-simple-options.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxToggleAcComponent,
     LuxSelectAcComponent,

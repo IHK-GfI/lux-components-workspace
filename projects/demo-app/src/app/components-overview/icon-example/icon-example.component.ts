@@ -1,5 +1,5 @@
 import { NgStyle } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import {
   LuxCheckboxAcComponent,
   LuxFormHintComponent,
@@ -20,6 +20,7 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
   selector: 'app-icon-example',
   templateUrl: './icon-example.component.html',
   styleUrls: ['./icon-example.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxIconComponent,
     LuxLinkPlainComponent,

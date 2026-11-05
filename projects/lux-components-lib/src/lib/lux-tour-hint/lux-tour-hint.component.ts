@@ -1,11 +1,12 @@
 import { NgClass, NgStyle } from '@angular/common';
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild, inject } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
 import { LuxTourHintRef } from './lux-tour-hint-model/lux-tour-hint-ref.class';
 
 @Component({
   selector: 'lux-tour-hint',
   templateUrl: './lux-tour-hint.component.html',
   styleUrls: ['./lux-tour-hint.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [NgStyle, NgClass]
 })
 export class LuxTourHintComponent implements OnInit, AfterViewInit {

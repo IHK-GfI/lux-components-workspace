@@ -1,5 +1,5 @@
 import { chain, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
-import * as chalk from 'chalk';
+import chalk from 'chalk';
 import { updateDep } from '../../update-dependencies/index';
 import { replaceRule } from '../../utility/files';
 import { AddTransUnitItem, ReplaceItem } from '../../utility/replace-item';
@@ -49,7 +49,7 @@ function updateMessages(options: Options): Rule {
         `Messages (de) werden angepasst...`,
         `Messages (de) wurden angepasst.`,
         deFilePath,
-        new AddTransUnitItem(beforeId, deFilterButton),
+        new AddTransUnitItem(beforeId, deFilterButton)
       ),
 
       replaceRule(
@@ -57,7 +57,7 @@ function updateMessages(options: Options): Rule {
         `Messages (en) werden angepasst...`,
         `Messages (en) wurden angepasst.`,
         enFilePath,
-        new AddTransUnitItem(beforeId, enFilterButton),
+        new AddTransUnitItem(beforeId, enFilterButton)
       )
     ]);
   };

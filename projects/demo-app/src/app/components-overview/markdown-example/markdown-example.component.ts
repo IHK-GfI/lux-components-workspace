@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import {
   LuxFormHintComponent,
   LuxInputAcComponent,
@@ -15,6 +15,7 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
 @Component({
   selector: 'lux-markdown-example',
   templateUrl: './markdown-example.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxToggleAcComponent,
     LuxTextareaAcComponent,

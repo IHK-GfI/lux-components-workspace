@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
   LuxInputAcComponent,
@@ -25,6 +25,7 @@ interface StepperLargeFinButtonDummyForm {
   selector: 'app-stepper-large-example-step-fin-button',
   templateUrl: './stepper-large-example-step-fin-button.component.html',
   providers: [{ provide: LuxStepperLargeStepComponent, useExisting: StepperLargeExampleStepFinButtonComponent }],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxToggleAcComponent, LuxInputAcComponent, ReactiveFormsModule, StepperLargeExampleErrorMessageBoxComponent]
 })
 export class StepperLargeExampleStepFinButtonComponent extends LuxStepperLargeStepComponent implements OnInit, OnDestroy {

@@ -1,5 +1,5 @@
 import { NgComponentOutlet } from '@angular/common';
-import { Component, DestroyRef, inject, OnInit, Type } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, Type, ChangeDetectionStrategy } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { LuxButtonComponent } from '../lux-action/lux-button/lux-button.component';
@@ -30,6 +30,7 @@ import { LuxConsentService } from './lux-consent.service';
   host: {
     '[class.mobile-view]': 'mobileView'
   },
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxDialogStructureComponent,
     LuxDialogTitleComponent,

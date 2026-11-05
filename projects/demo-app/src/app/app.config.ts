@@ -1,4 +1,4 @@
-import { provideHttpClient, withFetch } from '@angular/common/http';
+import { provideHttpClient } from '@angular/common/http';
 import { ApplicationConfig, importProvidersFrom, inject, provideAppInitializer, provideZoneChangeDetection } from '@angular/core';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
@@ -31,7 +31,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideAnimations(),
     importProvidersFrom([LuxComponentsConfigModule.forRoot(myConfiguration)]),
-    provideHttpClient(withFetch()),
+    provideHttpClient(),
     provideLuxTranslocoRoot(),
     provideTranslocoLocale({
       langToLocaleMapping: {

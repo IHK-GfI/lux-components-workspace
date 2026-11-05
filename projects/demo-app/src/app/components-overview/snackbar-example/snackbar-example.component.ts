@@ -1,4 +1,4 @@
-import { Component, OnDestroy, inject } from '@angular/core';
+import { Component, OnDestroy, inject, ChangeDetectionStrategy } from '@angular/core';
 import { MatSnackBarDismiss } from '@angular/material/snack-bar';
 import {
   LuxButtonComponent,
@@ -19,6 +19,7 @@ import { logResult } from '../../example-base/example-base-util/example-base-hel
 @Component({
   selector: 'app-snackbar-example',
   templateUrl: './snackbar-example.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxButtonComponent,
     LuxToggleAcComponent,

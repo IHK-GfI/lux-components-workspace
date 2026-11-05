@@ -1,8 +1,8 @@
 // noinspection DuplicatedCode
 
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -21,7 +21,7 @@ describe('LuxChipComponent-Authentic', () => {
       providers: [
         LuxConsoleService,
         provideNoopAnimations(),
-        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideHttpClientTesting(),
         provideLuxTranslocoTesting()
       ]
@@ -750,6 +750,7 @@ describe('LuxChipComponent-Authentic', () => {
   template: `
     <lux-chips-ac luxLabel="Label" [luxInputAllowed]="true" [luxAutocompleteOptions]="options" [luxOptionBlockSize]="8"></lux-chips-ac>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxChipsAcComponent]
 })
 class LuxScrollComponent {
@@ -779,6 +780,7 @@ class LuxScrollComponent {
       <lux-chip-ac-group [luxRemovable]="true" luxColor="primary" [luxLabels]="chips" #myChipGroup> </lux-chip-ac-group>
     </lux-chips-ac>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxChipsAcComponent, LuxChipAcGroupComponent]
 })
 class LuxStrictNoFormComponent {
@@ -801,6 +803,7 @@ class LuxStrictNoFormComponent {
       </lux-chips-ac>
     </div>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ReactiveFormsModule, LuxChipsAcComponent, LuxChipAcGroupComponent]
 })
 class LuxStrictFormComponent {
@@ -824,6 +827,7 @@ class LuxStrictFormComponent {
       </lux-chips-ac>
     </div>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ReactiveFormsModule, LuxChipsAcComponent, LuxChipAcGroupComponent]
 })
 class LuxFormInitValueComponent {
@@ -848,6 +852,7 @@ class LuxFormInitValueComponent {
       </lux-chips-ac>
     </div>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ReactiveFormsModule, LuxChipsAcComponent, LuxChipAcGroupComponent]
 })
 class LuxFormRequiredValueComponent {
@@ -892,6 +897,7 @@ class LuxFormRequiredValueComponent {
       </lux-chip-ac-group>
     </lux-chips-ac>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ReactiveFormsModule, LuxChipAcComponent, LuxChipsAcComponent, LuxChipAcGroupComponent]
 })
 class ChipsComponent {
@@ -964,6 +970,7 @@ class ChipsComponent {
       }
     </lux-chips-ac>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxChipAcComponent, LuxChipsAcComponent]
 })
 class LuxRequiredNoGroupComponent {
@@ -992,6 +999,7 @@ class LuxRequiredNoGroupComponent {
       </lux-chips-ac>
     </div>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ReactiveFormsModule, LuxChipAcComponent, LuxChipsAcComponent]
 })
 class LuxFormRequiredNoGroupInFormComponent {

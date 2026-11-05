@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.component';
 import { LuxAriaLabelDirective } from '../../lux-directives/lux-aria/lux-aria-label.directive';
@@ -10,6 +10,7 @@ import { LuxTourHintRef } from '../lux-tour-hint-model/lux-tour-hint-ref.class';
   selector: 'lux-tour-hint-preset',
   templateUrl: './lux-tour-hint-preset.component.html',
   styleUrls: ['./lux-tour-hint-preset.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxIconComponent, LuxCheckboxAcComponent, LuxButtonComponent, LuxAriaLabelDirective, TranslocoPipe]
 })
 export class LuxTourHintPresetComponent {

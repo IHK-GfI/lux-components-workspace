@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import {
     LuxAutofocusDirective,
@@ -27,6 +27,7 @@ interface DatetimeDummyForm {
 @Component({
   selector: 'app-datetimepicker-authentic-example',
   templateUrl: './datetimepicker-authentic-example.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxToggleAcComponent,
     LuxSelectAcComponent,

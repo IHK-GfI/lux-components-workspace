@@ -1,6 +1,6 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { Component, DebugElement } from '@angular/core';
+import { Component, DebugElement, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, fakeAsync, flushMicrotasks, inject, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { TooltipPosition } from '@angular/material/tooltip';
 import { By } from '@angular/platform-browser';
@@ -238,6 +238,7 @@ describe('LuxTooltipDirective', () => {
     [luxTooltipIfTruncated]="ifTruncated"
     >{{ label }}</span
   >`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxTooltipDirective]
 })
 class MockComponent {

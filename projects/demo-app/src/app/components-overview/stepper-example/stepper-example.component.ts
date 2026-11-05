@@ -1,6 +1,6 @@
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { NgTemplateOutlet } from '@angular/common';
-import { Component, DestroyRef, OnDestroy, ViewChild, inject } from '@angular/core';
+import { Component, DestroyRef, OnDestroy, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -58,6 +58,7 @@ interface StepperForm2DummyForm {
   selector: 'app-stepper-example',
   templateUrl: './stepper-example.component.html',
   styleUrls: ['./stepper-example.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxTextboxComponent,
     LuxAccordionComponent,

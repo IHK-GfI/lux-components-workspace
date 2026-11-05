@@ -2,9 +2,9 @@
 
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, TestBed, tick, waitForAsync } from '@angular/core/testing';
 
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
@@ -28,7 +28,7 @@ describe('LuxLookupComboboxAcComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       providers: [
-        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideHttpClientTesting(),
         provideNoopAnimations(),
         provideLuxTranslocoTesting(),
@@ -608,7 +608,10 @@ describe('LuxLookupComboboxAcComponent', () => {
       const filterInputAfterReopen = document.querySelector('.lux-select-panel-filter-input') as HTMLInputElement;
       filterInputAfterReopen.value = 'a';
       LuxTestHelper.dispatchFakeEvent(filterInputAfterReopen, 'input');
-      LuxTestHelper.dispatchEvent(filterInputAfterReopen, LuxTestHelper.createKeyboardEvent('keydown', 40, filterInputAfterReopen, 'ArrowDown'));
+      LuxTestHelper.dispatchEvent(
+        filterInputAfterReopen,
+        LuxTestHelper.createKeyboardEvent('keydown', 40, filterInputAfterReopen, 'ArrowDown')
+      );
       fixture.detectChanges();
       flush();
 
@@ -948,6 +951,7 @@ describe('LuxLookupComboboxAcComponent', () => {
       [luxRequired]="required"
     ></lux-lookup-combobox-ac>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxLookupComboboxAcComponent]
 })
 class LuxNoFormComponent {
@@ -974,6 +978,7 @@ class LuxNoFormComponent {
       (luxDataLoadedAsArray)="updateEntries($event)"
     ></lux-lookup-combobox-ac>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxLookupComboboxAcComponent]
 })
 class LuxScrollComponent {
@@ -1005,6 +1010,7 @@ class LuxScrollComponent {
       [luxLabel]="'Label'"
     ></lux-lookup-combobox-ac>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxLookupComboboxAcComponent]
 })
 class LuxFilterComponent {
@@ -1031,6 +1037,7 @@ class LuxFilterComponent {
       [luxLabel]="'Label'"
     ></lux-lookup-combobox-ac>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxLookupComboboxAcComponent]
 })
 class LuxFilterInputBindingsComponent {
@@ -1057,6 +1064,7 @@ class LuxFilterInputBindingsComponent {
       [luxLabel]="'Label'"
     ></lux-lookup-combobox-ac>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxLookupComboboxAcComponent]
 })
 class LuxFilterInitialLoadComponent {
@@ -1082,6 +1090,7 @@ class LuxFilterInitialLoadComponent {
       ></lux-lookup-combobox-ac>
     </form>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ReactiveFormsModule, LuxLookupComboboxAcComponent]
 })
 class LuxFilterReactiveFormComponent {
@@ -1108,6 +1117,7 @@ class LuxFilterReactiveFormComponent {
       [luxLabel]="'Label'"
     ></lux-lookup-combobox-ac>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxLookupComboboxAcComponent]
 })
 class LuxFilterMultipleComponent {
@@ -1133,6 +1143,7 @@ class LuxFilterMultipleComponent {
       [luxLabel]="'Label'"
     ></lux-lookup-combobox-ac>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxLookupComboboxAcComponent]
 })
 class LuxVisibleOptionCountComponent {

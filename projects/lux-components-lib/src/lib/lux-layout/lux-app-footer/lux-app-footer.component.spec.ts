@@ -1,8 +1,8 @@
 // noinspection DuplicatedCode
 
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { fakeAsync, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
@@ -16,7 +16,7 @@ import { LuxAppFooterComponent } from './lux-app-footer.component';
 describe('LuxAppFooterComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting(), provideLuxTranslocoTesting()]
+      providers: [provideHttpClient(withXhr(), withInterceptorsFromDi()), provideHttpClientTesting(), provideLuxTranslocoTesting()]
     }).compileComponents();
   }));
 
@@ -203,6 +203,7 @@ describe('LuxAppFooterComponent', () => {
 
 @Component({
   template: ` <lux-app-footer luxVersion="0.1.2"></lux-app-footer> `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxAppFooterComponent]
 })
 class MockAppFooterButtonOrderComponent {
@@ -231,6 +232,7 @@ class MockAppFooterButtonOrderComponent {
 @Component({
   selector: 'lux-mock-app-footer-link-order',
   template: ` <lux-app-footer luxVersion="0.1.3"></lux-app-footer> `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxAppFooterComponent]
 })
 class MockAppFooterLinkOrderComponent {

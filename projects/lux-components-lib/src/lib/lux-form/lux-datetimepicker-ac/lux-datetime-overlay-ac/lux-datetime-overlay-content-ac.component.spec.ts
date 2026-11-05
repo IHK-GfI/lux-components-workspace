@@ -1,4 +1,4 @@
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
@@ -22,7 +22,7 @@ describe('LuxDatetimeOverlayContentAcComponent', () => {
       providers: [
         LuxConsoleService,
         provideNoopAnimations(),
-        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideHttpClientTesting(),
         provideLuxTranslocoTesting(),
         // Stellt in der Anwendung die LuxDatetimepickerAcComponent bereit, in der das Overlay geöffnet wird

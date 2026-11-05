@@ -1,4 +1,4 @@
-import { Component, ContentChild, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, ContentChild, Input, OnChanges, OnInit, SimpleChanges, ChangeDetectionStrategy } from '@angular/core';
 import { Subject } from 'rxjs';
 import { LuxUtil } from '../../../lux-util/lux-util';
 import { LuxTableColumnContentComponent } from './lux-table-column-content.component';
@@ -7,6 +7,7 @@ import { LuxTableColumnHeaderComponent } from './lux-table-column-header.compone
 
 @Component({
   selector: 'lux-table-column',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `<ng-content select="lux-table-column-header"></ng-content>
     <ng-content select="lux-table-column-content"></ng-content>
     <ng-content select="lux-table-column-footer"></ng-content>`

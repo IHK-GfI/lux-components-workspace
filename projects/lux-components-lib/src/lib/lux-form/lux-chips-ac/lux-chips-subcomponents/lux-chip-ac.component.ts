@@ -1,9 +1,10 @@
-import { AfterViewInit, Component, EventEmitter, Input, Output, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, Output, TemplateRef, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { LuxThemePalette } from '../../../lux-util/lux-colors.enum';
 import { LuxUtil } from '../../../lux-util/lux-util';
 
 @Component({
   selector: 'lux-chip-ac',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <ng-template>
       <ng-content></ng-content>

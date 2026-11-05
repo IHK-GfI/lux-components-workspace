@@ -1,5 +1,5 @@
 import { NgClass, NgTemplateOutlet } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, HostListener, OnInit, QueryList, ViewChildren, inject } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, OnInit, QueryList, ViewChildren, inject, ChangeDetectionStrategy } from '@angular/core';
 import { LuxButtonComponent } from '../../../../lux-action/lux-button/lux-button.component';
 import { LuxUtil } from '../../../../lux-util/lux-util';
 import { LuxStepperLargeComponent } from '../../lux-stepper-large.component';
@@ -10,6 +10,7 @@ import { LuxStepperLargeMobileOverlayRef } from './lux-stepper-large-mobile-over
   selector: 'lux-stepper-large-mobile-overlay',
   templateUrl: './lux-stepper-large-mobile-overlay.component.html',
   styleUrls: ['./lux-stepper-large-mobile-overlay.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [NgClass, NgTemplateOutlet, LuxButtonComponent]
 })
 export class LuxStepperLargeMobileOverlayComponent implements OnInit, AfterViewInit {

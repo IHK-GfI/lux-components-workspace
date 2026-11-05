@@ -1,11 +1,11 @@
 <!-- Horizontaler Stepper, die Konfiguration stammt aus dem LuxStepper und wird hier angewandt -->
 <mat-horizontal-stepper
-  [linear]="luxStepperConfig?.luxLinear"
-  [selectedIndex]="luxStepperConfig?.luxCurrentStepNumber"
+  [linear]="$safeNavigationMigration(luxStepperConfig?.luxLinear)"
+  [selectedIndex]="$safeNavigationMigration(luxStepperConfig?.luxCurrentStepNumber)"
   [ngClass]="{
-    'lux-ignore-mat-step-icons': luxStepperConfig?.luxUseCustomIcons,
-    'lux-pointer-events-none': luxStepperConfig?.luxDisabled,
-    'lux-linear-stepper': luxStepperConfig?.luxLinear,
+    'lux-ignore-mat-step-icons': $safeNavigationMigration(luxStepperConfig?.luxUseCustomIcons),
+    'lux-pointer-events-none': $safeNavigationMigration(luxStepperConfig?.luxDisabled),
+    'lux-linear-stepper': $safeNavigationMigration(luxStepperConfig?.luxLinear),
     'lux-no-animation': !luxStepperConfig?.luxHorizontalStepAnimationActive
   }"
   [disableRipple]="true"

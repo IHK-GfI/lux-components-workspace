@@ -1,8 +1,9 @@
-import { AfterContentInit, Component, ContentChild, TemplateRef } from '@angular/core';
+import { AfterContentInit, Component, ContentChild, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
 import { LuxUtil } from '../../../lux-util/lux-util';
 
 @Component({
   selector: 'lux-table-column-footer',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: ''
 })
 export class LuxTableColumnFooterComponent<T = any> implements AfterContentInit {

@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { MAT_SNACK_BAR_DATA, MatSnackBarRef } from '@angular/material/snack-bar';
 import { Observable, Subject } from 'rxjs';
@@ -8,6 +8,7 @@ import { LuxSnackbarConfig } from '../lux-snackbar-config';
 @Component({
   selector: 'lux-snackbar',
   templateUrl: './lux-snackbar.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxIconComponent, MatButton]
 })
 export class LuxSnackbarComponent implements OnInit {

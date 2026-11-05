@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { timer } from 'rxjs';
 import {
@@ -29,6 +29,7 @@ import { logResult } from '../../example-base/example-base-util/example-base-hel
 @Component({
   selector: 'app-menu-example',
   templateUrl: './menu-example.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxMenuComponent,
     LuxMenuItemComponent,
