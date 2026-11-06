@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
-import { FormField, disabled, form, readonly, required } from '@angular/forms/signals';
+import { FormField, disabled, form, readonly, required, validate } from '@angular/forms/signals';
 import {
   LuxAutofocusDirective,
   LuxDateFilterFn,
@@ -9,7 +9,9 @@ import {
   LuxInputComponent,
   LuxSelectComponent,
   LuxStartView,
-  LuxToggleComponent
+  LuxToggleComponent,
+  LuxUtil,
+  luxDateValue
 } from '@ihk-gfi/lux-components';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
@@ -55,30 +57,34 @@ interface DatepickerDummyForm {
 })
 export class DatepickerExampleComponent {
   // 1. Signal Form - der empfohlene Weg.
-  readonly signalModel = signal<{ datepickerValue: string | null }>({ datepickerValue: '2020-05-28T00:00:00.000Z' });
+  readonly signalModel = signal<{ datepickerValue: string | null }>({ datepickerValue: '2020-05-28' });
   readonly signalForm = form(this.signalModel, (path) => {
     disabled(path.datepickerValue, { when: () => this.disabled() });
     readonly(path.datepickerValue, { when: () => this.readonly() });
     required(path.datepickerValue, { when: () => this.required() });
+    // Prüft Format, Grenzen und Filter auch im Signal Form - die Komponente selbst kann das Feld nicht ungültig machen
+    validate(
+      path.datepickerValue,
+      luxDateValue({ min: () => this.minDate(), max: () => this.maxDate(), filter: () => this.customFilter() })
+    );
   });
 
   // 2. Freistehend, ohne jedes Formular.
-  readonly plainValue = signal<string | null>('2020-05-28T00:00:00.000Z');
+  readonly plainValue = signal<string | null>('2020-05-28');
 
   readonly useCustomFilter = signal(false);
   readonly useErrorMessage = signal(true);
   readonly showOutputEvents = signal(false);
   readonly form = new FormGroup<DatepickerDummyForm>({
-    // Ein Date-Objekt wird vom Datepicker in einen String (UTC-Mitternacht) umgewandelt -> '2020-05-28T00:00:00.000Z'
-    datepickerExample: new FormControl<string | null>(new Date(Date.UTC(2020, 4, 28)) as any)
+    // Ein Tag ohne Zeitzone, z.B. Java LocalDate oder .NET DateOnly
+    datepickerExample: new FormControl<string | null>('2020-05-28')
   });
   readonly log = logResult;
   readonly validatorOptions = [
     { value: Validators.minLength(3), label: 'Validators.minLength(3)' },
     { value: Validators.maxLength(10), label: 'Validators.maxLength(10)' }
   ];
-  // Kalendertag im Format des Datepickers (UTC-Mitternacht), damit das Beispiel in jeder Zeitzone den 28.05.2020 zeigt
-  readonly value = signal('2020-05-28T00:00:00.000Z');
+  readonly value = signal('2020-05-28');
   readonly controlBinding = 'datepickerExample';
   readonly disabled = signal(false);
   readonly readonly = signal(false);
@@ -116,10 +122,9 @@ export class DatepickerExampleComponent {
     return selected.value;
   }
 
-  weekendFilterFn(d: Date | null) {
-    // Der Datepicker liefert jeden Tag als UTC-Mitternacht, daher den UTC-Wochentag prüfen
-    const day = d ? d.getUTCDay() : 0;
-    // Samstage und Sonntage als Auswahl unterbinden
+  weekendFilterFn(date: string) {
+    // Der Tag kommt als "yyyy-MM-dd". Samstage (6) und Sonntage (0) als Auswahl unterbinden.
+    const day = LuxUtil.getDayOfWeek(date);
     return day !== 0 && day !== 6;
   }
 }

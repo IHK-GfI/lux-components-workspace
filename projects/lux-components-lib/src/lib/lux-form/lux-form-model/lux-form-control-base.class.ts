@@ -250,10 +250,12 @@ export abstract class LuxFormControlBase<T = unknown> {
   readonly isDirty = computed(() => this.stateOverride()?.dirty ?? (this.dirty() || this.dirtyInternal()));
 
   /**
-   * Die Fehler aus Signal Forms. Im Legacy-Betrieb leer - dort ist legacyErrors() die Quelle,
-   * und klassische Reactive-Forms-Fehler tragen ohnehin keine schema-seitige message.
+   * Die Fehler aus Signal Forms. Ohne [formField] leer - klassische Reactive-Forms-Fehler tragen ohnehin
+   * keine schema-seitige message.
    */
-  readonly resolvedErrors = computed<readonly ValidationError.WithOptionalFieldTree[]>(() => (this.stateOverride() ? [] : this.errors()));
+  readonly resolvedErrors = computed<readonly ValidationError.WithOptionalFieldTree[]>(() =>
+    this.errors().filter((error) => !this.isForeignError(error.kind))
+  );
 
   /**
    * Die Fehler in der klassischen ValidationErrors-Form - die gemeinsame Grundlage für
@@ -263,7 +265,15 @@ export abstract class LuxFormControlBase<T = unknown> {
   readonly legacyErrors = computed<LuxValidationErrors | null>(() => {
     const override = this.stateOverride();
     const base = override ? (override.legacyErrors ?? null) : LuxUtil.toLegacyValidationErrors(this.errors());
-    return mergeErrors(base, this.internalErrors());
+    const errors = mergeErrors(base, this.internalErrors());
+
+    const foreignKeys = Object.keys(errors ?? {}).filter((key) => this.isForeignError(key));
+    if (!errors || foreignKeys.length === 0) {
+      return errors;
+    }
+
+    const ownEntries = Object.entries(errors).filter(([key]) => !foreignKeys.includes(key));
+    return ownEntries.length > 0 ? Object.fromEntries(ownEntries) : null;
   });
 
   /**
@@ -300,7 +310,7 @@ export abstract class LuxFormControlBase<T = unknown> {
     // Der im Schema hinterlegte Text, z.B. required(path.name, { message: 'Bitte ausfüllen' }).
     // Er ist bewusst spezifischer als der generische Transloco-Default, aber schwächer als die
     // beiden LUX-Übersteuerungen darüber.
-    const fromSchema = this.resolvedErrors().find((error) => !!error.message)?.message;
+    const fromSchema = this.hasPriorityError(errors) ? undefined : this.resolvedErrors().find((error) => !!error.message)?.message;
     if (fromSchema) {
       return fromSchema;
     }
@@ -426,6 +436,24 @@ export abstract class LuxFormControlBase<T = unknown> {
   /** Von den Templates an das native Eingabeelement zu binden. */
   onBlur() {
     this.markAsTouched();
+  }
+
+  /**
+   * Ob ein Fehler zu einem anderen Control gehört, das am selben Feld hängt (z.B. Datepicker und Timepicker mit
+   * gemeinsamem Wert). Dieses Control zeigt ihn dann nicht an. isInvalid() meldet weiter den Zustand des Feldes.
+   * @param _kind der Fehler-Key bzw. das kind des Fehlers.
+   */
+  protected isForeignError(_kind: string): boolean {
+    return false;
+  }
+
+  /**
+   * Ob ein Fehler vorliegt, den das Control selbst ermittelt hat und der konkreter ist als ein Text aus dem
+   * Schema (z.B. eine zu große Datei). errorMessageModifier() liefert dann die Meldung.
+   * @param _errors die Fehler des Controls.
+   */
+  protected hasPriorityError(_errors: LuxValidationErrors): boolean {
+    return false;
   }
 
   /**

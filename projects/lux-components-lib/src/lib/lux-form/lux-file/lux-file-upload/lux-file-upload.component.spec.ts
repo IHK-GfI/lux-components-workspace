@@ -140,6 +140,49 @@ describe('LuxFileUploadComponent', () => {
       expect(fileComponent.isTouched()).toBe(true);
     });
 
+    it('sollte den Fehler zeigen, wenn das Feld selbst als berührt markiert wird', () => {
+      // z.B. über markAllAsTouched() beim Absenden, ohne Interaktion mit dem Control
+      testComponent.required.set(true);
+      fixture.detectChanges();
+
+      testComponent.testForm().markAsTouched();
+      fixture.detectChanges();
+
+      expect(fileComponent.isTouched()).toBe(true);
+      expect(fileComponent.showError()).toBe(true);
+    });
+
+    it('sollte den im Schema hinterlegten Fehlertext anzeigen', () => {
+      testComponent.customError.set(true);
+      fixture.detectChanges();
+
+      expect(fileComponent.errorMessage()).toEqual('Eigene Meldung');
+    });
+
+    it('sollte einen eigenen Datei-Fehler dem Fehlertext aus dem Schema vorziehen', () => {
+      testComponent.customError.set(true);
+      fixture.detectChanges();
+
+      fileComponent.formControl.setErrors({ [LuxFileErrorCause.MultipleForbidden]: true });
+      fixture.detectChanges();
+
+      expect(fileComponent.errorMessage()).toEqual('Es darf nur eine Datei hochgeladen werden.');
+    });
+
+    it('sollte bei form().reset() den Berührt-Zustand zurücksetzen', () => {
+      testComponent.required.set(true);
+      fixture.detectChanges();
+      fileComponent.markAsTouched();
+      fixture.detectChanges();
+      expect(fileComponent.showError()).toBe(true);
+
+      testComponent.testForm().reset();
+      fixture.detectChanges();
+
+      expect(fileComponent.isTouched()).toBe(false);
+      expect(fileComponent.showError()).toBe(false);
+    });
+
     it('sollte per focusout touched werden, ohne dass zuvor eine Datei ausgewählt wurde', () => {
       testComponent.required.set(true);
       fixture.detectChanges();
@@ -186,10 +229,12 @@ describe('LuxFileUploadComponent', () => {
 })
 class FormFieldFileComponent {
   readonly required = signal(false);
+  readonly customError = signal(false);
   readonly model = signal<ILuxFileObject[] | null>(null);
   readonly testForm = form(this.model, (path) => {
     required(path, { when: () => this.required() });
     validate(path, (ctx) => (this.required() && Array.isArray(ctx.value()) && ctx.value()!.length === 0 ? requiredError() : undefined));
+    validate(path, () => (this.customError() ? { kind: 'eigenerFehler', message: 'Eigene Meldung' } : undefined));
   });
 }
 

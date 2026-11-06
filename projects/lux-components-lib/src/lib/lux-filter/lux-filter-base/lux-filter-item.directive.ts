@@ -4,7 +4,6 @@ import { FormField } from '@angular/forms/signals';
 import { LuxAutocompleteComponent } from '../../lux-form/lux-autocomplete/lux-autocomplete.component';
 import { LuxCheckboxComponent } from '../../lux-form/lux-checkbox/lux-checkbox.component';
 import { LuxDatepickerComponent } from '../../lux-form/lux-datepicker/lux-datepicker.component';
-import { LuxDatetimepickerComponent } from '../../lux-form/lux-datetimepicker/lux-datetimepicker.component';
 import { LuxInputComponent } from '../../lux-form/lux-input/lux-input.component';
 import { LuxRadioComponent } from '../../lux-form/lux-radio/lux-radio.component';
 import { LuxSelectComponent } from '../../lux-form/lux-select/lux-select.component';
@@ -31,7 +30,6 @@ export class LuxFilterItemDirective implements OnInit {
   autoCompleteAuthentic = inject(LuxAutocompleteComponent, { optional: true });
   autoCompleteLookupAuthentic = inject(LuxLookupAutocompleteComponent, { optional: true });
   datepickerAuthentic = inject(LuxDatepickerComponent, { optional: true });
-  datetimepickerAuthentic = inject(LuxDatetimepickerComponent, { optional: true });
   timepickerAuthentic = inject(LuxTimepickerComponent, { optional: true });
   toggleAuthentic = inject(LuxToggleComponent, { optional: true });
   checkboxAuthentic = inject(LuxCheckboxComponent, { optional: true });
@@ -50,8 +48,6 @@ export class LuxFilterItemDirective implements OnInit {
       this.formComponent = this.inputAuthentic;
     } else if (this.datepickerAuthentic) {
       this.formComponent = this.datepickerAuthentic;
-    } else if (this.datetimepickerAuthentic) {
-      this.formComponent = this.datetimepickerAuthentic;
     } else if (this.timepickerAuthentic) {
       this.formComponent = this.timepickerAuthentic;
     } else if (this.toggleAuthentic) {
@@ -125,8 +121,6 @@ export class LuxFilterItemDirective implements OnInit {
         this.filterItem.renderFn = this.renderToggleFn;
       } else if (this.filterItem.component instanceof LuxDatepickerComponent) {
         this.filterItem.renderFn = this.renderDateAcFn;
-      } else if (this.filterItem.component instanceof LuxDatetimepickerComponent) {
-        this.filterItem.renderFn = this.renderDateTimeAcFn;
       } else if (this.filterItem.component instanceof LuxTimepickerComponent) {
         this.filterItem.renderFn = this.renderTimeAcFn;
       } else if (
@@ -165,10 +159,6 @@ export class LuxFilterItemDirective implements OnInit {
 
   renderDateAcFn(filterItem: LuxFilterItem, value: any) {
     return (filterItem.component as LuxDatepickerComponent).datepickerInput()?.nativeElement.value;
-  }
-
-  renderDateTimeAcFn(filterItem: LuxFilterItem, value: any) {
-    return (filterItem.component as LuxDatetimepickerComponent).dateTimePickerInputEl()?.nativeElement.value;
   }
 
   renderTimeAcFn(filterItem: LuxFilterItem, value: any) {

@@ -33,8 +33,6 @@ export class LuxAutofocusDirective implements AfterViewInit {
       tagName === 'lux-timepicker' ||
       tagName === 'lux-datepicker-ac' ||
       tagName === 'lux-datepicker' ||
-      tagName === 'lux-datetimepicker-ac' ||
-      tagName === 'lux-datetimepicker' ||
       tagName === 'lux-file-input-ac' ||
       tagName === 'lux-file-input' ||
       tagName === 'lux-radio-ac' ||

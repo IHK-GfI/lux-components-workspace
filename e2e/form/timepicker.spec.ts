@@ -5,8 +5,8 @@ import { luxMessage } from './support/lux-messages';
 
 /**
  * Timepicker-Tests. Sie laufen zusätzlich in den Projekten "form-tz-*" mit anderen
- * Zeitzonen des Browsers. Der Timepicker arbeitet mit UTC: Das Beispiel steht auf
- * 2026-06-18T14:30:00.000Z und zeigt in jeder Zeitzone 14:30 an.
+ * Zeitzonen des Browsers. Die Uhrzeit hat keine Zeitzone: Das Beispiel steht auf "14:30"
+ * und zeigt in jeder Zeitzone 14:30 an.
  */
 const spec = formControl('timepicker');
 let example: FormExamplePage;
@@ -16,22 +16,22 @@ test.beforeEach(async ({ page }) => {
   await example.options.useValidatorErrorMessages();
 });
 
-test('Startwert wird als UTC-Uhrzeit angezeigt', async () => {
+test('Startwert wird ohne Zeitzone angezeigt', async () => {
   const section = example.section(EXAMPLE_WITHOUT_FORM, spec.tag);
 
   await expect(spec.field(section.control)).toHaveValue('14:30');
-  await expect.poll(() => section.value()).toBe('2026-06-18T14:30:00.000Z');
+  await expect.poll(() => section.value()).toBe('14:30');
 });
 
 for (const input of ['09:15', '9:15']) {
-  test(`Eingabe "${input}" ändert nur die Uhrzeit`, async () => {
+  test(`Eingabe "${input}"`, async () => {
     const section = example.section(EXAMPLE_WITHOUT_FORM, spec.tag);
     const field = spec.field(section.control);
 
     await field.fill(input);
     await field.blur();
 
-    await expect.poll(() => section.value()).toBe('2026-06-18T09:15:00.000Z');
+    await expect.poll(() => section.value()).toBe('09:15');
     await expect(field).toHaveValue('09:15');
     await expect(section.error).toHaveCount(0);
   });

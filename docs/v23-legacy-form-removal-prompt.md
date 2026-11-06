@@ -35,7 +35,7 @@ Alt-APIs werden vollständig entfernt.
 
 | Bisherige Legacy-Basis        | Neue Basis                                                                                         | Betroffene Controls                                                                                                                                                                                                                           |
 | ----------------------------- | -------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `LuxFormLegacyValueBase`      | `LuxFormValueControlBase<T>` (`lux-form-model/lux-form-value-control-base.class.ts`)               | `lux-autocomplete`, `lux-chips`, `lux-datepicker`, `lux-datetimepicker`, `lux-input`, `lux-slider`, `lux-textarea`, `lux-timepicker`, `lux-lookup-model/lux-lookup-component.ts` (Basis für `lux-lookup-autocomplete`, `lux-lookup-combobox`) |
+| `LuxFormLegacyValueBase`      | `LuxFormValueControlBase<T>` (`lux-form-model/lux-form-value-control-base.class.ts`)               | `lux-autocomplete`, `lux-chips`, `lux-datepicker`, `lux-input`, `lux-slider`, `lux-textarea`, `lux-timepicker`, `lux-lookup-model/lux-lookup-component.ts` (Basis für `lux-lookup-autocomplete`, `lux-lookup-combobox`) |
 | `LuxFormLegacyCheckableBase`  | `LuxFormCheckboxControlBase` (`lux-form-model/lux-form-checkbox-control-base.class.ts`)            | `lux-checkbox`, `lux-toggle`                                                                                                                                                                                                                  |
 | `LuxFormLegacySelectableBase` | `LuxFormSelectableControlBase<O,V,P>` (`lux-form-model/lux-form-selectable-control-base.class.ts`) | `lux-radio`, `lux-select`                                                                                                                                                                                                                     |
 
@@ -85,7 +85,7 @@ umgekehrter Richtung:
    grep gefundene betroffene Specs (Liste ist eine Starthilfe, nicht
    abschliessend zu verstehen): `lux-button-toggle`, `lux-filter-form`,
    `lux-autocomplete`, `lux-checkbox`, `lux-chips`, `lux-datepicker`,
-   `lux-datetimepicker`, `lux-file-input`, `lux-file-list`,
+   `lux-file-input`, `lux-file-list`,
    `lux-form-model/lux-control-disable`, `lux-input`,
    `lux-input-binding-modes`, `lux-radio`, `lux-select`, `lux-slider`,
    `lux-textarea`, `lux-timepicker`, `lux-toggle`, `lux-stepper`,
