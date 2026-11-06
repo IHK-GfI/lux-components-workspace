@@ -26,6 +26,7 @@ import { LuxMaxLengthDirective } from '../lux-form-control/lux-form-directives/l
 import { LuxNameDirective } from '../lux-form-control/lux-form-directives/lux-name/lux-name-directive.directive';
 import { LuxFormLegacyValueBase } from '../lux-form-model/lux-form-legacy/lux-form-legacy-value-base.class';
 import { provideLuxFormControl } from '../lux-form-model/lux-form-control-base.class';
+import { LuxMatInputErrorDirective } from '../lux-form-model/lux-mat-input-error.directive';
 import { LuxInputPrefixComponent } from '../lux-input/lux-input-subcomponents/lux-input-prefix.component';
 import { LuxInputSuffixComponent } from '../lux-input/lux-input-subcomponents/lux-input-suffix.component';
 
@@ -39,6 +40,7 @@ import { LuxInputSuffixComponent } from '../lux-input/lux-input-subcomponents/lu
     LuxFormControlWrapperComponent,
     MatPrefix,
     MatInput,
+    LuxMatInputErrorDirective,
     LuxNameDirective,
     LuxMaxLengthDirective,
     NgClass,

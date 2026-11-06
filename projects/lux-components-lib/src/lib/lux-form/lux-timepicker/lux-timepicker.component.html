@@ -11,14 +11,15 @@
   <div class="lux-input-row-authentic">
     <input
       matInput
+      [luxMatInputError]="showError()"
       luxTagIdHandler
       [luxTagId]="luxTagId()"
       [matTimepicker]="timepicker"
       [matTimepickerMin]="min()"
       [matTimepickerMax]="max()"
       [matTimepickerOpenOnClick]="false"
-      [placeholder]="luxPlaceholder()"
-      [disabled]="isDisabled()"
+      [placeholder]="dateMissing() ? ('luxc.timepicker.placeholder.date_required' | transloco) : luxPlaceholder()"
+      [disabled]="isDisabled() || dateMissing()"
       [required]="isRequired()"
       [readonly]="isReadonly()"
       [autocomplete]="luxAutocomplete()"
@@ -34,10 +35,10 @@
       #timepickerInput
     />
     @if (luxShowToggle()) {
-      <mat-timepicker-toggle [disabled]="isDisabled() || isReadonly()" [for]="timepicker" [disableRipple]="true">
+      <mat-timepicker-toggle [disabled]="isDisabled() || isReadonly() || dateMissing()" [for]="timepicker" [disableRipple]="true">
         <lux-icon matTimepickerToggleIcon luxIconName="lux-interface-time-clock-circle" class="lux-timepicker-toggle-icon" />
       </mat-timepicker-toggle>
     }
-    <mat-timepicker [interval]="luxInterval()" (selected)="onTimeOptionSelected($event)" #timepicker />
+    <mat-timepicker [interval]="interval()" #timepicker />
   </div>
 </lux-form-control-wrapper>

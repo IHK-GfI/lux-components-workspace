@@ -1,4 +1,3 @@
-import { Platform } from '@angular/cdk/platform';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -9,12 +8,15 @@ import {
   effect,
   inject,
   input,
+  isDevMode,
   signal,
   untracked,
   viewChild
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import { AbstractControl } from '@angular/forms';
+import { transformedValue } from '@angular/forms/signals';
+import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
 import {
   MatDatepicker,
   MatDatepickerInput,
@@ -29,14 +31,23 @@ import { LuxAriaLabelledbyDirective } from '../../lux-directives/lux-aria/lux-ar
 import { LuxTagIdDirective } from '../../lux-directives/lux-tag-id/lux-tag-id.directive';
 import { LuxIconComponent } from '../../lux-icon/lux-icon/lux-icon.component';
 import { LuxThemeService } from '../../lux-theme/lux-theme.service';
+import {
+  LuxLocalDate,
+  compareLocalDate,
+  formatLocalDate,
+  formatLocalDateTime,
+  parseLocalDate,
+  parseLocalDateTime,
+  parseLocalTime
+} from '../../lux-util/lux-local-date';
 import { LuxMediaQueryObserverService } from '../../lux-util/lux-media-query-observer.service';
-import { LuxUtil } from '../../lux-util/lux-util';
 import { LuxFormControlWrapperComponent } from '../lux-form-control-wrapper/lux-form-control-wrapper.component';
 import { LuxValidationErrors } from '../lux-form-model/lux-form-component-base.class';
 import { provideLuxFormControl } from '../lux-form-model/lux-form-control-base.class';
 import { LuxFormLegacyValueBase } from '../lux-form-model/lux-form-legacy/lux-form-legacy-value-base.class';
 import { LuxReferenceControl } from '../lux-form-model/lux-reference-control.interface';
-import { LuxDatepickerAdapter } from './lux-datepicker-adapter';
+import { LuxMatInputErrorDirective } from '../lux-form-model/lux-mat-input-error.directive';
+import { LuxCalendarDate, LuxDatepickerAdapter } from './lux-datepicker-adapter';
 import { LuxDatepickerCustomHeaderComponent } from './lux-datepicker-custom-header/lux-datepicker-custom-header.component';
 
 export const APP_DATE_FORMATS_AC = {
@@ -51,17 +62,28 @@ export const APP_DATE_FORMATS_AC = {
   }
 };
 
-export declare type LuxDateFilterFn = (date: Date | null) => boolean;
+/**
+ * Filter für auswählbare Tage. Der Tag kommt als "yyyy-MM-dd", den Wochentag liefert LuxUtil.getDayOfWeek().
+ */
+export declare type LuxDateFilterFn = (date: string) => boolean;
 export declare type LuxStartView = 'month' | 'year' | 'multi-year';
 
 const defaultDateFilterFn: LuxDateFilterFn = () => true;
 
+/**
+ * Datepicker für einen Kalendertag ohne Zeitzone. Der Wert ist immer "yyyy-MM-dd" (z.B. "2029-05-26").
+ * Beim Einlesen wird zusätzlich Mitternacht ohne Zeitzone angenommen ("2029-05-26T00:00:00"), alle anderen
+ * Formate werden mit einem Validierungsfehler abgelehnt (siehe Update-Guide v22).
+ *
+ * Mit luxReferenceControl teilt sich der Datepicker mit einem lux-timepicker einen Wert "yyyy-MM-ddTHH:mm".
+ * Er ändert dann nur das Datum, beim ersten Datum gilt die Standarduhrzeit des Timepickers (luxDefaultTime).
+ */
 @Component({
   selector: 'lux-datepicker, lux-datepicker-ac',
   templateUrl: './lux-datepicker.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
-    { provide: DateAdapter, useClass: LuxDatepickerAdapter, deps: [MAT_DATE_LOCALE, Platform] },
+    { provide: DateAdapter, useClass: LuxDatepickerAdapter },
     { provide: MAT_DATE_FORMATS, useValue: APP_DATE_FORMATS_AC },
     provideLuxFormControl(() => LuxDatepickerComponent)
   ],
@@ -69,6 +91,7 @@ const defaultDateFilterFn: LuxDateFilterFn = () => true;
     LuxIconComponent,
     LuxFormControlWrapperComponent,
     MatInput,
+    LuxMatInputErrorDirective,
     MatDatepickerInput,
     MatDatepickerToggle,
     MatDatepickerToggleIcon,
@@ -79,7 +102,7 @@ const defaultDateFilterFn: LuxDateFilterFn = () => true;
     LuxTagIdDirective
   ]
 })
-export class LuxDatepickerComponent<T = any> extends LuxFormLegacyValueBase<T> implements AfterViewInit, OnDestroy {
+export class LuxDatepickerComponent<T = any> extends LuxFormLegacyValueBase<T> implements LuxReferenceControl, AfterViewInit, OnDestroy {
   readonly luxStartView = input<LuxStartView>('month');
   readonly luxTouchUi = input(false);
   readonly luxOpened = input(false);
@@ -100,8 +123,6 @@ export class LuxDatepickerComponent<T = any> extends LuxFormLegacyValueBase<T> i
   readonly datepickerInput = viewChild<ElementRef>('datepickerInput');
   readonly datepickerInputDirective = viewChild('datepickerInput', { read: MatDatepickerInput });
 
-  lastValue: Date | null = null;
-
   readonly smallScreen = signal(false);
 
   readonly luxLocale = signal<string>('de-DE');
@@ -118,23 +139,54 @@ export class LuxDatepickerComponent<T = any> extends LuxFormLegacyValueBase<T> i
     }
   }
 
+  /**
+   * Ob eine Nutzereingabe Ereignisse am FormControl auslöst. An einem realen FormControl gehören valueChanges und
+   * statusChanges der Anwendung, das synthetische FormControl wird still mitgeführt.
+   */
   get shouldEmitDirectly() {
-    return !!this.luxReferenceControl() && this.inForm;
+    return this.inForm;
   }
 
-  private dateAdapter = inject<DateAdapter<Date>>(DateAdapter);
+  private dateAdapter = inject<DateAdapter<LuxCalendarDate>>(DateAdapter);
   private mediaObserver = inject(LuxMediaQueryObserverService);
   private themeService = inject(LuxThemeService);
 
-  private previousISO?: string;
+  private previousValue?: unknown;
+  private lastRejectedValue?: unknown;
   private valueChangesRunning = false;
+  private viewInitialized = false;
   private triggerOpenCloseTimeout?: ReturnType<typeof setTimeout>;
   private notifyFormValueChangedTimeout?: ReturnType<typeof setTimeout>;
-  private datepickerValidatorRegistered = false;
 
-  readonly min = computed(() => this.parseDate(this.luxMinDate()));
-  readonly max = computed(() => this.parseDate(this.luxMaxDate()));
-  readonly start = computed(() => this.parseDate(this.luxStartDate()));
+  /**
+   * Ob der Text im Eingabefeld kein gültiges Datum ist (z.B. "31.02.2029" oder "26.05.29"). Material meldet
+   * eine solche Eingabe nicht immer über (dateInput), z.B. wenn vorher kein Wert gesetzt war.
+   */
+  private inputTextInvalid = false;
+
+  /**
+   * Meldet eine ungültige Texteingabe im Signal-Forms-Betrieb als Parse-Fehler an das Feld, damit es ungültig
+   * wird. Der Wert selbst wird hierüber nicht geschrieben.
+   */
+  private readonly inputText = transformedValue<T, string>(this.value, {
+    parse: () => (this.inputTextInvalid ? { error: { kind: 'matDatepickerParse' } } : {}),
+    format: () => ''
+  });
+
+  readonly min = computed(() => this.toCalendarDate(this.luxMinDate(), 'luxMinDate'));
+  readonly max = computed(() => this.toCalendarDate(this.luxMaxDate(), 'luxMaxDate'));
+  readonly start = computed(() => this.toCalendarDate(this.luxStartDate(), 'luxStartDate'));
+
+  /**
+   * luxCustomFilter für Material: Material übergibt einen LuxCalendarDate, der Filter erwartet "yyyy-MM-dd".
+   */
+  readonly dateFilter = computed(() => {
+    const filter = this.luxCustomFilter();
+    return (date: LuxCalendarDate | null) => !date || filter(formatLocalDate(date));
+  });
+
+  /** Ob sich der Datepicker mit einem Timepicker einen Wert "yyyy-MM-ddTHH:mm" teilt. */
+  readonly sharedValue = computed(() => !!this.luxReferenceControl());
 
   /**
    * Auf kleinen Bildschirmen wird die TouchUI unabhängig von luxTouchUi aktiviert.
@@ -143,9 +195,6 @@ export class LuxDatepickerComponent<T = any> extends LuxFormLegacyValueBase<T> i
 
   constructor() {
     super();
-
-    // Bereits im Konstruktor setzen, da Material den Adapter (z.B. deserialize) früh verwendet
-    (this.dateAdapter as LuxDatepickerAdapter).combinedWithTimeProvider = () => !!this.luxReferenceControl();
 
     this.tService.langChanges$.pipe(takeUntilDestroyed()).subscribe((lang) => {
       switch (lang) {
@@ -161,15 +210,10 @@ export class LuxDatepickerComponent<T = any> extends LuxFormLegacyValueBase<T> i
         default:
           this.luxLocale.set(lang);
       }
+      // MatDatepickerInput formatiert die Anzeige daraufhin selbst neu (localeChanges).
       this.dateAdapter.setLocale(this.luxLocale());
-
-      // Input-Feld neu formatieren. formControl.value ist ein ISO-String, kein Date - vor dem
-      // Formatieren erst deserialisieren (das übernahm früher unbemerkt der
-      // ControlValueAccessor, der beim Neuformatieren selbst nochmal writeValue()/_formatValue()
-      // mit einem bereits geparsten Date aufrief und diesen Aufruf hier faktisch überschrieb).
-      if (this.formControl && this.datepickerInput()) {
-        this.dateInputValue = this.formatDateTime(this.dateAdapter.deserialize(this.formControl.value));
-      }
+      // Ein abgelehnter Wert wird roh angezeigt und muss danach wiederhergestellt werden.
+      this.displayValue();
     });
 
     this.mediaObserver
@@ -184,57 +228,53 @@ export class LuxDatepickerComponent<T = any> extends LuxFormLegacyValueBase<T> i
       untracked(() => (this.triggerOpenCloseTimeout = setTimeout(() => this.triggerOpenClose())));
     });
 
-    // MatDatepickerInput.validate() neu auswerten, wenn sich min/max/Filter ändern - nicht nur wenn
-    // sich der Wert selbst ändert (siehe syncDatepickerValidation()).
+    // Die Datumsprüfung neu auswerten, wenn sich min/max/Filter ändern - nicht nur wenn sich der Wert selbst
+    // ändert. Ein ungültig getippter Text bleibt dabei mit seinem Fehler stehen (siehe revalidate()).
     effect(() => {
       this.min();
       this.max();
       this.luxCustomFilter();
 
-      untracked(() => this.syncDatepickerValidation());
+      untracked(() => this.revalidateAndNotify());
+    });
+
+    // LuxLegacyFormBridge.updateValidators() ersetzt bei jeder luxControlValidators-/luxRequired-Änderung
+    // außerhalb eines Formulars die komplette Validator-Liste - und damit auch validateDate. Danach wird neu
+    // geprüft, sonst fehlten die Fehler von validateDate bis zur nächsten Änderung.
+    effect(() => {
+      this.luxControlValidators();
+      this.luxRequired();
+
+      untracked(() => this.revalidateAndNotify());
     });
   }
 
   override ngOnInit() {
     super.ngOnInit();
 
-    if (this.formControl.value) {
-      // Ein bereits vorhandener FormControl-Wert (z.B. aus einer Reactive Form) wurde von der
-      // Brücke nicht automatisch verarbeitet - sie schreibt nur einen echten luxValue-Initialwert,
-      // nicht einen bereits vorhandenen Fremd-Wert. Einmalige Normalisierung nachholen.
-      this.updateDateValue(this.formControl.value);
-      // updateDateValue() kann dabei den Wert normalisieren (z.B. Uhrzeitanteil kappen) und schreibt
-      // die Korrektur über this.value.set() - im Signal-Forms-Betrieb sähe das wie eine echte
-      // Nutzeränderung aus. Vor jeder Interaktion ist ein Zurücksetzen von touched/dirty sicher.
-      this.resetFieldTouchedAndDirty();
-    }
-
-    (this.dateAdapter as LuxDatepickerAdapter).referenceTimeProvider = () => {
-      const referenceValue = this.luxReferenceControl()?.lastValue;
-      if (referenceValue instanceof Date && LuxUtil.isDate(referenceValue)) {
-        return referenceValue;
-      }
-      if (this.previousISO && LuxUtil.ISO_8601_FULL.test(this.previousISO)) {
-        return new Date(this.previousISO);
-      }
-      return null;
-    };
+    // Ein bereits vorhandener Wert (z.B. aus einer Reactive Form) wird nicht umgeschrieben. Er löst auch
+    // kein luxValueChange aus, nur die Prüfung (siehe Update-Guide v22).
+    this.previousValue = this.formControl.value;
+    this.warnIfRejected(this.formControl.value);
   }
 
   ngAfterViewInit() {
-    // Nachholende Anzeige-/Validitätssynchronisation: War der Startwert bereits über luxValue/eine
-    // reale Reactive Form gesetzt, lief der Normalisierungs-Durchlauf in ngOnInit(), bevor das
-    // Input-Element existierte (viewChild löst datepickerInputDirective() erst ab hier auf) - die
-    // Anzeige (und die matDatepickerParse/-Min/-Max/-Filter-Validierung) blieb dadurch bislang
-    // unformatiert.
-    this.syncDatepickerValidation();
+    // Anzeige und Prüfung für einen bereits vorhandenen Wert nachholen: Beim ersten Durchlauf in ngOnInit()
+    // existierte das Input-Element noch nicht (viewChild löst datepickerInputDirective() erst ab hier auf).
+    this.displayValue();
+    this.viewInitialized = true;
   }
 
   ngOnDestroy() {
     clearTimeout(this.notifyFormValueChangedTimeout);
     clearTimeout(this.triggerOpenCloseTimeout);
-    (this.dateAdapter as LuxDatepickerAdapter).referenceTimeProvider = null;
-    (this.dateAdapter as LuxDatepickerAdapter).combinedWithTimeProvider = null;
+
+    // In Reactive Forms überlebt das FormControl die Komponente. Ohne das Entfernen würde es weiter mit dem Stand
+    // dieser Instanz geprüft (ungültiger Text, min/max/Filter) und bliebe evtl. dauerhaft ungültig.
+    if (this.formControl?.hasValidator(this.validateDate)) {
+      this.formControl.removeValidators(this.validateDate);
+      this.formControl.updateValueAndValidity({ emitEvent: false });
+    }
   }
 
   /**
@@ -247,7 +287,7 @@ export class LuxDatepickerComponent<T = any> extends LuxFormLegacyValueBase<T> i
       return this.tService.translate('luxc.datepicker.error_message.min');
     } else if (errors['matDatepickerMax']) {
       return this.tService.translate('luxc.datepicker.error_message.max');
-    } else if (errors['matDatepickerParse']) {
+    } else if (errors['matDatepickerParse'] || errors['matDatepickerFilter']) {
       return this.tService.translate('luxc.datepicker.error_message.invalid');
     } else if (errors['required']) {
       if (this.datepickerInput()?.nativeElement.value) {
@@ -258,6 +298,16 @@ export class LuxDatepickerComponent<T = any> extends LuxFormLegacyValueBase<T> i
     }
 
     return undefined;
+  }
+
+  /** Beim gemeinsamen Wert zeigt der Timepicker seine Fehler selbst an. */
+  protected override isForeignError(kind: string): boolean {
+    return this.sharedValue() && kind.startsWith('matTimepicker');
+  }
+
+  /** Bei einer ungültigen Eingabe ist der Wert null, ein required-Text aus dem Schema passt dann nicht. */
+  protected override hasPriorityError(errors: LuxValidationErrors): boolean {
+    return !!errors['matDatepickerParse'];
   }
 
   onFocus(e: FocusEvent) {
@@ -276,9 +326,39 @@ export class LuxDatepickerComponent<T = any> extends LuxFormLegacyValueBase<T> i
     this.luxFocusOut.emit(e);
   }
 
-  onDateChange(event: MatDatepickerInputEvent<any>) {
+  /**
+   * Jede Texteingabe, auch eine, die Material nicht als (dateInput) meldet.
+   */
+  onTextInput() {
+    this.updateInputTextInvalid();
+    this.revalidateAndNotify();
+    this.inputText.set(this.dateInputValue ?? '');
+  }
+
+  /**
+   * Eine Änderung durch den Nutzer (Texteingabe oder Auswahl im Kalender).
+   */
+  onDateChange(event: MatDatepickerInputEvent<LuxCalendarDate>) {
     this.markAsDirty();
-    this.processValueChange(event.value);
+    // Material meldet (dateInput) vor onTextInput(). Die Prüfung im setValue() braucht den aktuellen Stand.
+    this.updateInputTextInvalid();
+
+    const date = event.value;
+    if (!this.sharedValue()) {
+      this.processValueChange(() => this.setDateValue(date ? formatLocalDate(date) : null));
+    } else if (date) {
+      // Beim gemeinsamen Wert bleibt die Uhrzeit erhalten, beim ersten Datum gilt die Standarduhrzeit
+      const time = parseLocalDateTime(this.formControl.value)?.time ?? this.defaultTime();
+      this.processValueChange(() => this.setDateValue(formatLocalDateTime({ date, time })));
+    } else if ((this.dateInputValue ?? '').trim() === '') {
+      // Datum geleert: Der gemeinsame Wert wird null, beide Felder sind leer
+      this.processValueChange(() => this.setDateValue(null));
+    } else {
+      // Ungültige oder unvollständige Eingabe: Der gemeinsame Wert bleibt unverändert
+      this.revalidateAndNotify();
+    }
+
+    this.inputText.set(this.dateInputValue ?? '');
   }
 
   // für dem Customheader für das "Green"-Theme
@@ -288,50 +368,320 @@ export class LuxDatepickerComponent<T = any> extends LuxFormLegacyValueBase<T> i
   }
 
   /**
-   * Jede Wertänderung von außen (über [(value)]/[formField] oder ein reales FormControl) läuft
-   * hier zusammen.
+   * Jede Wertänderung von außen (über [(value)]/[formField] oder ein reales FormControl) läuft hier zusammen.
+   * Der Wert wird nicht umgeschrieben, nur angezeigt und geprüft.
    */
   override emitValueChange(formValue: any) {
-    this.processValueChange(formValue);
-  }
-
-  /**
-   * Gemeinsamer Einstiegspunkt für onDateChange() (Nutzereingabe) und emitValueChange() (jede
-   * externe Änderung) - beide teilen sich denselben valueChangesRunning-Reentrancy-Guard, damit ein
-   * von updateDateValue()/setISOValue() selbst ausgelöster (normalisierter) Wert nicht rekursiv
-   * erneut verarbeitet wird.
-   */
-  private processValueChange(value: any) {
-    try {
-      if (!this.valueChangesRunning) {
-        this.valueChangesRunning = true;
-        this.updateDateValue(value);
-      }
-    } finally {
-      this.valueChangesRunning = false;
-    }
+    this.processValueChange(() => this.applyExternalValue(formValue));
   }
 
   /**
    * Die eigentliche luxValueChange-Emission, entkoppelt von emitValueChange() (das hier bereits als
    * "irgendein Wert hat sich geändert"-Hook der Brücke belegt ist, siehe oben). Wird ausschließlich
-   * verzögert aus setISOValue() aufgerufen, wenn der neue Wert innerhalb von min/max liegt.
+   * verzögert aufgerufen, wenn der neue Wert gültig ist und innerhalb von min/max liegt.
    */
   notifyFormValueChanged(value: T) {
     super.emitValueChange(value);
   }
 
   /**
-   * Parst Min-, Max- bzw. Startdatum. Ohne Timepicker wird - wie beim Wert - der gemeinte Kalendertag verwendet
-   * (siehe LuxDatepickerAdapter#toCalendarDay), mit Timepicker der UTC-Zeitpunkt.
-   * @param value
+   * Jedes Schreiben von außen in das FormControl, auch ohne Wertänderung (z.B. form.reset() bei leerem Wert, siehe
+   * LuxLegacyBridgeHost.onFormValueWritten()). Wie bei ControlValueAccessor.writeValue() ersetzt der Wert dann
+   * einen ungültig getippten Text. Das gilt auch mit Fokus: Eigene Schreibzugriffe filtert processValueChange()
+   * heraus, und setzt die Anwendung nur denselben Wert erneut, bleibt die laufende Eingabe stehen.
    */
-  private parseDate(value: string | null): Date | null {
-    if (typeof value !== 'string') {
+  onFormValueWritten(value: unknown) {
+    this.processValueChange(() => {
+      if (!this.focused() || this.inputTextInvalid || value !== this.previousValue) {
+        this.writeValueToInput();
+      }
+
+      this.previousValue = value;
+      this.revalidate();
+    });
+  }
+
+  /**
+   * form().reset() im Signal Form, auch ohne Wertänderung. Eine ausdrückliche Anweisung, deshalb wird die Anzeige
+   * auch mit Fokus ersetzt.
+   */
+  override reset() {
+    super.reset();
+    this.writeValueToInput();
+    this.revalidate();
+  }
+
+  /**
+   * Gemeinsamer Einstiegspunkt für onDateChange() (Nutzereingabe) und emitValueChange() (jede externe
+   * Änderung) - beide teilen sich denselben valueChangesRunning-Reentrancy-Guard, damit ein von
+   * setDateValue() selbst ausgelöster Wert nicht rekursiv erneut verarbeitet wird.
+   */
+  private processValueChange(change: () => void) {
+    if (this.valueChangesRunning) {
+      return;
+    }
+
+    this.valueChangesRunning = true;
+    try {
+      change();
+    } finally {
+      this.valueChangesRunning = false;
+    }
+  }
+
+  /**
+   * Die Brücke ruft emitValueChange() nur bei einer echten Wertänderung auf, auch nach einem stillen setValue() von
+   * außen (siehe LuxLegacyFormBridge.forwardValueChange()). Ein eigener Vergleich würde das verfälschen.
+   */
+  private applyExternalValue(value: unknown) {
+    this.previousValue = value;
+
+    this.warnIfRejected(value);
+    this.displayValue();
+    this.notifyIfValid(value);
+  }
+
+  /**
+   * Schreibt eine Änderung des Nutzers in das FormControl bzw. Model und löst luxValueChange aus.
+   * @param newValue "yyyy-MM-dd", beim gemeinsamen Wert "yyyy-MM-ddTHH:mm", oder null.
+   */
+  private setDateValue(newValue: string | null) {
+    this.previousValue = newValue;
+
+    const status = this.formControl.status;
+    const controlChanged = this.formControl.value !== newValue;
+    if (controlChanged) {
+      this.formControl.setValue(newValue as T, {
+        emitEvent: this.shouldEmitDirectly,
+        emitModelToViewChange: this.shouldEmitDirectly,
+        emitViewToModelChange: this.shouldEmitDirectly
+      });
+      this.bridge.noteSilentValue(newValue as T);
+      // Signal-Schreibzugriff - markiert diese OnPush-Komponente automatisch als zu prüfen, auch
+      // wenn formControl.events wegen shouldEmitDirectly=false nicht feuert.
+      this.value.set(newValue as T);
+    }
+
+    this.displayValue();
+
+    if (controlChanged) {
+      this.notifyIfValid(newValue);
+    } else {
+      // z.B. nach einer ungültigen Eingabe wieder derselbe Tag: setValue() hat dann keine Ereignisse ausgelöst
+      this.notifyStatusChange(status);
+    }
+  }
+
+  /**
+   * luxValueChange wird nur ausgelöst, wenn der Wert leer oder ein gültiges Datum innerhalb von min/max ist.
+   */
+  private notifyIfValid(value: unknown) {
+    if (value != null && value !== '') {
+      const date = this.dateOf(value);
+      const min = this.min();
+      const max = this.max();
+
+      if (!date || (min && compareLocalDate(date, min) < 0) || (max && compareLocalDate(date, max) > 0)) {
+        return;
+      }
+    }
+
+    // ExpressionChangedError vermeiden, indem die Änderung in einen Timeout gepackt wird, damit sie nach der
+    // aktuellen Änderungsschleife ausgeführt wird.
+    this.notifyFormValueChangedTimeout = setTimeout(() => {
+      this.notifyFormValueChanged(value as T);
+    });
+  }
+
+  /**
+   * Prüft Wert und Texteingabe (Format, min/max, luxCustomFilter). Ersetzt MatDatepickerInput.validate(), das
+   * nur seinen eigenen Wert kennt und den Filter mit einem LuxCalendarDate statt "yyyy-MM-dd" aufrufen würde.
+   */
+  private validateDate = (control: AbstractControl): LuxValidationErrors | null => {
+    if (this.inputTextInvalid) {
+      return { matDatepickerParse: { text: this.dateInputValue } };
+    }
+
+    const value = control.value;
+    if (value == null || value === '') {
       return null;
     }
 
-    return this.luxReferenceControl() ? this.dateAdapter.parse(value, {}) : (this.dateAdapter as LuxDatepickerAdapter).toCalendarDay(value);
+    const date = this.dateOf(value);
+    if (!date) {
+      return { matDatepickerParse: { text: String(value) } };
+    }
+
+    const min = this.min();
+    if (min && compareLocalDate(date, min) < 0) {
+      return { matDatepickerMin: { min: formatLocalDate(min), actual: formatLocalDate(date) } };
+    }
+
+    const max = this.max();
+    if (max && compareLocalDate(date, max) > 0) {
+      return { matDatepickerMax: { max: formatLocalDate(max), actual: formatLocalDate(date) } };
+    }
+
+    if (!this.luxCustomFilter()(formatLocalDate(date))) {
+      return { matDatepickerFilter: true };
+    }
+
+    return null;
+  };
+
+  private registerDateValidator() {
+    if (this.formControl && !this.formControl.hasValidator(this.validateDate)) {
+      this.formControl.addValidators(this.validateDate);
+    }
+  }
+
+  /**
+   * Zeigt den aktuellen Wert an und prüft ihn. Für jeden neuen Wert, ob von außen gesetzt oder vom Nutzer
+   * übernommen: Wie bei ControlValueAccessor.writeValue() ersetzt er einen ungültig getippten Text.
+   *
+   * Die Anzeige wird NUR geschrieben, während das Feld NICHT fokussiert ist: Sonst würde jede Wertänderung
+   * die gerade laufende Eingabe des Nutzers mit dem formatierten Wert überschreiben (z.B. sprang "1.09.2026"
+   * sofort zu "01.09.2026"). MatDatepickerInput hält die Anzeige während der Eingabe selbst aktuell.
+   */
+  private displayValue() {
+    if (!this.focused()) {
+      this.writeValueToInput();
+    }
+
+    this.revalidate();
+  }
+
+  private writeValueToInput() {
+    const inputDirective = this.datepickerInputDirective();
+    if (!inputDirective || !this.formControl) {
+      return;
+    }
+
+    const value = this.formControl.value;
+    const date = this.toDisplayDate(value);
+    inputDirective.writeValue(date);
+    this.inputTextInvalid = false;
+
+    if (!date) {
+      // MatDatepickerInput.writeValue() formatiert nur bei einem anderen Wert neu. Bei null bliebe ein
+      // abgelehnter Wert oder ungültig getippter Text sonst stehen.
+      this.dateInputValue = '';
+    } else if (!this.dateAdapter.isValid(date)) {
+      // Einen abgelehnten Wert roh anzeigen, damit sichtbar ist, was nicht stimmt
+      this.dateInputValue = typeof value === 'string' ? value : String(value);
+    }
+  }
+
+  private updateInputTextInvalid() {
+    const date = this.dateAdapter.parse(this.dateInputValue ?? '', APP_DATE_FORMATS_AC.parse.dateInput);
+    this.inputTextInvalid = !!date && !this.dateAdapter.isValid(date);
+  }
+
+  /**
+   * Wie revalidate(), meldet einen geänderten Status aber an der Reactive Form. Nicht für Schreibzugriffe von außen:
+   * Deren setValue() löst die Ereignisse selbst aus.
+   */
+  private revalidateAndNotify() {
+    const status = this.formControl?.status;
+    this.revalidate();
+    this.notifyStatusChange(status);
+  }
+
+  /**
+   * Meldet einen still (emitEvent: false) geänderten Status an der Reactive Form, damit z.B. form.statusChanges
+   * aktuell bleibt. Wie bei MatDatepickerInput erhält die Anwendung dabei auch ein valueChanges mit unverändertem
+   * Wert. Die Brücke gibt das nicht als Wertänderung weiter (siehe LuxLegacyFormBridge.forwardValueChange()).
+   * Beim ersten Rendern bleibt es still, wie bei einem [formControl].
+   */
+  private notifyStatusChange(previousStatus: string | undefined) {
+    if (this.viewInitialized && this.inForm && previousStatus !== this.formControl.status) {
+      this.formControl.updateValueAndValidity();
+    }
+  }
+
+  /**
+   * Prüft Wert und Texteingabe neu, ohne den Wert neu anzuzeigen. Für Texteingaben und geänderte Regeln
+   * (min/max/Filter, Validatoren): Ein ungültig getippter Text bleibt wie bei MatDatepickerInput mit seinem
+   * Fehler stehen, bis der Nutzer ihn korrigiert oder ein neuer Wert gesetzt wird.
+   */
+  private revalidate() {
+    if (!this.datepickerInputDirective() || !this.formControl) {
+      return;
+    }
+
+    this.registerDateValidator();
+
+    // Bewusst OHNE Event-Emission: updateValueAndValidity() feuert value-/statusChanges/events IMMER
+    // neu, auch wenn sich weder Wert noch Status geändert haben (siehe notifyStatusChange()). Die Anzeige von touched/dirty/invalid/errorMessage bleibt aktuell, weil
+    // LuxLegacyFormBridge.check() ohnehin bei jedem ngDoCheck() syncState() aufruft.
+    this.formControl.updateValueAndValidity({ emitEvent: false });
+
+    // Im Signal-Forms- und Freistehend-Betrieb bleibt stateOverride bewusst undefined (die Legacy-Brücke ist
+    // dort nicht "engaged", siehe LuxLegacyFormBridge.engaged) - ohne diese zusätzliche Meldung an
+    // internalErrors() käme die Datumsprüfung in genau diesen beiden Betriebsarten nie in
+    // isInvalid()/errorMessage() an.
+    this.internalErrors.set(this.formControl.errors as LuxValidationErrors | null);
+  }
+
+  /**
+   * Liest luxMinDate, luxMaxDate bzw. luxStartDate ("yyyy-MM-dd").
+   */
+  private toCalendarDate(value: string | null, inputName: string): LuxCalendarDate | null {
+    if (value == null || value === '') {
+      return null;
+    }
+
+    const date = parseLocalDate(value);
+    if (!date) {
+      if (isDevMode()) {
+        console.warn(`lux-datepicker: ${inputName} erwartet 'yyyy-MM-dd', erhalten '${value}' (siehe Update-Guide v22).`);
+      }
+      return null;
+    }
+
+    return LuxCalendarDate.of(date);
+  }
+
+  /**
+   * Gibt im Dev-Modus eine Warnung für einen abgelehnten Wert aus, je Wert nur einmal.
+   */
+  private warnIfRejected(value: unknown) {
+    if (value == null || value === '' || this.dateOf(value) || value === this.lastRejectedValue) {
+      return;
+    }
+
+    this.lastRejectedValue = value;
+    if (isDevMode()) {
+      const expected = this.sharedValue() ? 'yyyy-MM-ddTHH:mm' : 'yyyy-MM-dd';
+      const conversion = this.sharedValue() ? 'LuxUtil.fromV21DateTime()' : 'LuxUtil.fromV21Date()';
+      console.warn(
+        `lux-datepicker: Erwartet '${expected}', erhalten ${describeValue(value)}. ` +
+          `Für Werte im Format von Version 21 gibt es ${conversion} (siehe Update-Guide v22).`
+      );
+    }
+  }
+
+  /**
+   * Der Tag eines Werts: "yyyy-MM-dd" bzw. beim gemeinsamen Wert der Tag aus "yyyy-MM-ddTHH:mm".
+   */
+  private dateOf(value: unknown): LuxLocalDate | null {
+    return this.sharedValue() ? (parseLocalDateTime(value)?.date ?? null) : parseLocalDate(value);
+  }
+
+  private toDisplayDate(value: unknown): LuxCalendarDate | null {
+    if (value == null || value === '') {
+      return null;
+    }
+
+    const date = this.dateOf(value);
+    return date ? LuxCalendarDate.of(date) : this.dateAdapter.invalid();
+  }
+
+  /**
+   * Die Standarduhrzeit des verknüpften Timepickers (luxDefaultTime), sonst 00:00.
+   */
+  private defaultTime() {
+    return parseLocalTime(this.luxReferenceControl()?.luxDefaultTime?.()) ?? { hour: 0, minute: 0 };
   }
 
   /**
@@ -344,169 +694,12 @@ export class LuxDatepickerComponent<T = any> extends LuxFormLegacyValueBase<T> i
       this.matDatepicker()?.close();
     }
   }
+}
 
-  /**
-   * Aktualisiert den FormControl-Value und den Wert im Parent über luxValueChange mithilfe des übergebenen ISO-Strings.
-   * @param isoValue
-   */
-  private setISOValue(isoValue: string) {
-    // Getrennt von der formControl.value-Korrektur unten: Die Legacy-Bridge wendet ihren
-    // valueInput-Effect (luxValue) beim allerersten Lauf immer an, auch wenn sich dessen Rohwert
-    // (hier: ein noch nicht normalisiertes Datumsformat) seit dem letzten Durchlauf inhaltlich
-    // nicht geändert hat - das lässt formControl.value auf den Rohwert zurückfallen. Ein erneuter
-    // Durchlauf hier MUSS das korrigieren (siehe unten), darf dafür aber kein zweites
-    // luxValueChange auslösen, wenn der (bereits normalisierte) ISO-Wert unverändert ist.
-    const valueGenuinelyChanged = this.previousISO !== isoValue;
-    this.previousISO = isoValue;
-
-    const min = this.min();
-    const max = this.max();
-
-    let minOk = true;
-    if (min && isoValue && this.dateAdapter.compareDate(new Date(isoValue), min) < 0) {
-      minOk = false;
-    }
-
-    let maxOk = true;
-    if (max && isoValue && this.dateAdapter.compareDate(new Date(isoValue), max) > 0) {
-      maxOk = false;
-    }
-
-    if (this.formControl.value !== isoValue) {
-      // "silently" den FormControl auf den (potenziell) geänderten Wert aktualisieren,
-      // damit die Änderung nicht erneut über valueChanges getriggert wird.
-      // Damit wird auch verhindert, dass beim Tippen ins Input-Feld der Wert sofort vervollständigt wird.
-      this.formControl.setValue(isoValue as any, {
-        emitEvent: this.shouldEmitDirectly,
-        emitModelToViewChange: this.shouldEmitDirectly,
-        emitViewToModelChange: this.shouldEmitDirectly
-      });
-      this.bridge.noteSilentValue(isoValue as T);
-      // Signal-Schreibzugriff - markiert diese OnPush-Komponente automatisch als zu prüfen, auch
-      // wenn formControl.events wegen shouldEmitDirectly=false nicht feuert (kein manuelles
-      // markForCheck() mehr nötig, siehe LuxLegacyFormBridge/LuxFormControlBase).
-      this.value.set(isoValue as any);
-    }
-
-    this.syncDatepickerValidation();
-
-    // Der luxValueChange-Output wird nur anstoßen, wenn das Datum innerhalb der Grenzen (min und max)
-    // liegt UND sich der normalisierte Wert tatsächlich geändert hat (siehe valueGenuinelyChanged oben).
-    if (minOk && maxOk && valueGenuinelyChanged) {
-      // ExpressionChangedError vermeiden, indem die Änderung in einen Timeout gepackt wird, damit sie nach der aktuellen Änderungsschleife ausgeführt wird.
-      // Wenn z.B. ein Datum mit Uhrzeit von außen übergeben wird, wird das Datum intern angepasst (z.B. auf 00:00 Uhr gesetzt), damit es im Datepicker korrekt dargestellt wird. In diesem Fall würde luxValueChange sofort erneut getriggert werden, was zu einem ExpressionChangedError führen kann, da sich der Wert während der Änderungsschleife ändert.
-      this.notifyFormValueChangedTimeout = setTimeout(() => {
-        this.notifyFormValueChanged(isoValue as T);
-      });
-    }
+function describeValue(value: unknown): string {
+  if (value instanceof Date) {
+    return `ein Date-Objekt (${isNaN(value.getTime()) ? 'Invalid Date' : value.toISOString()})`;
   }
 
-  /**
-   * Registriert MatDatepickerInput.validate() (deckt matDatepickerParse/-Min/-Max/-Filter ab) als
-   * regulären Validator auf dem FormControl. Ohne [formControl]/NgControl auf dem <input> komponiert
-   * Angular NG_VALIDATORS nicht mehr automatisch (das war früher exakt die Funktion, die
-   * formControl.setValidators() beim Binden der Reactive-Forms-Direktive übernahm).
-   *
-   * Bewusst als ECHTER Validator registriert statt die Fehler nur einmalig per setErrors() zu
-   * setzen: Ein reines setErrors() wird vom nächsten updateValueAndValidity()-Aufruf (der die
-   * REGISTRIERTEN Validatoren neu auswertet) sofort wieder überschrieben/verworfen - genau das tut
-   * z.B. LuxLegacyFormBridge beim Verarbeiten von luxControlValidators. Die Validator-Funktionen
-   * selbst lesen ausschließlich control.value (Min/Max/Filter) bzw. den internen Parse-Status des
-   * Inputs (Parse), beides unabhängig von einem ControlValueAccessor, daher funktioniert die
-   * Registrierung ohne CVA unverändert.
-   */
-  private syncDatepickerValidation() {
-    const inputDirective = this.datepickerInputDirective();
-    if (!inputDirective || !this.formControl) {
-      return;
-    }
-
-    if (!this.datepickerValidatorRegistered) {
-      this.datepickerValidatorRegistered = true;
-      this.formControl.addValidators((control) => inputDirective.validate(control));
-    }
-
-    // Synchronisiert MatDatepickerInputBase._lastValueValid (bestimmt den matDatepickerParse-Fehler)
-    // sowie die Anzeige - das übernahm früher automatisch der ControlValueAccessor von [formControl]
-    // (writeValue() wird von Angular immer mindestens einmal aufgerufen, auch für einen leeren
-    // Initialwert; ohne diesen Aufruf bliebe _lastValueValid dauerhaft bei seinem Default false
-    // stehen und ein völlig unberührtes, leeres Feld würde fälschlich als "ungültiges Datum"
-    // gemeldet).
-    //
-    // NUR während das Feld NICHT fokussiert ist: MatDatepickerInputBase.writeValue() reformatiert
-    // die Anzeige entgegen der ursprünglichen Annahme hier IMMER, wenn der übergebene Wert (bei uns
-    // immer ein ISO-String) nicht per === der intern gehaltenen Date-Referenz entspricht - das ist
-    // buchstäblich bei jedem Aufruf der Fall, ein Referenzvergleich String-gegen-Date kann nie wahr
-    // werden. Ohne diese Fokus-Bremse überschrieb setISOValue() -> syncDatepickerValidation() bei
-    // JEDEM Tastendruck (jeder Aufruf von onDateChange()) die gerade laufende Eingabe des Nutzers
-    // mit dem kanonisch reformatierten Wert - z.B. sprang "1.09.2026" (Nutzer löscht eine Ziffer aus
-    // "15.09.2026" und tippt weiter) sofort zu "01.09.2026". _onInput() der Direktive hält
-    // _lastValueValid während echter Tastatureingabe ohnehin schon selbst aktuell, ein Nachziehen
-    // ist hier also nur bei externen Änderungen (Programmzugriff, ngAfterViewInit, Blur) nötig.
-    if (!this.focused()) {
-      inputDirective.writeValue(this.formControl.value);
-    }
-
-    // Bewusst OHNE Event-Emission: updateValueAndValidity() feuert value-/statusChanges/events IMMER
-    // neu, auch wenn sich weder Wert noch Status geändert haben. Da syncDatepickerValidation() aus
-    // setISOValue() heraus bei JEDEM Aufruf läuft, würde ein nicht unterdrücktes valueChanges hier
-    // die LuxLegacyFormBridge-Subscription (formControl.valueChanges -> host.emitValueChange() ->
-    // processValueChange() -> updateDateValue() -> setISOValue() -> syncDatepickerValidation()) mit
-    // demselben, unveränderten Wert erneut anstoßen - eine Endlosschleife, die die CPU auf einem Kern
-    // dauerhaft auslastet (siehe Issue #289 - Hang auf der baseline-Demoseite). Die Validatoren
-    // laufen trotzdem synchron neu; die Anzeige von touched/dirty/invalid/errorMessage bleibt aktuell,
-    // weil LuxLegacyFormBridge.check() ohnehin bei jedem ngDoCheck() syncState() aufruft.
-    this.formControl.updateValueAndValidity({ emitEvent: false });
-
-    // Im Signal-Forms- und Freistehend-Betrieb bleibt stateOverride bewusst undefined (die
-    // Legacy-Brücke ist dort nicht "engaged", siehe LuxLegacyFormBridge.engaged) - ohne diese
-    // zusätzliche Meldung an internalErrors() käme luxMinDate/luxMaxDate/luxCustomFilter in genau
-    // diesen beiden Betriebsarten nie in isInvalid()/errorMessage() an (siehe LuxTimepickerComponent
-    // .syncTimepickerValidation() für dasselbe Muster).
-    this.internalErrors.set(this.formControl.errors as LuxValidationErrors | null);
-  }
-
-  private updateDateValue(value: any) {
-    if (!value) {
-      this.setISOValue(value);
-      return;
-    }
-
-    let newDate: Date | null;
-    if (this.luxReferenceControl()) {
-      // Mit Timepicker bilden Datum und Uhrzeit zusammen einen UTC-Zeitpunkt
-      const eventDate = typeof value === 'string' ? this.dateAdapter.parse(value, {}) : value;
-      if (!LuxUtil.isDate(eventDate)) {
-        return;
-      }
-
-      newDate = new Date(0);
-      newDate.setUTCFullYear(eventDate.getUTCFullYear(), eventDate.getUTCMonth(), eventDate.getUTCDate());
-      newDate.setUTCHours(eventDate.getUTCHours(), eventDate.getUTCMinutes(), eventDate.getUTCSeconds(), 0);
-    } else {
-      // Ohne Timepicker wird der gemeinte Kalendertag als UTC-Mitternacht gespeichert
-      newDate = (this.dateAdapter as LuxDatepickerAdapter).toCalendarDay(value);
-      if (!newDate) {
-        return;
-      }
-    }
-    this.lastValue = newDate;
-
-    // Sicherheitshalber noch einmal prüfen, kann vorkommen das ein unsinniger Wert eingetragen wird
-    // z.B. 'asdf', das führt zu InvalidDate's.
-    //
-    // Bewusst OHNE zusätzlichen "bereits verarbeitet"-Vergleich gegen previousISO: setISOValue()
-    // selbst prüft bereits gegen formControl.value (die maßgebliche Quelle) und ist dadurch
-    // idempotent. Ein Vergleich hier gegen previousISO wäre zu aggressiv - die Legacy-Bridge wendet
-    // z.B. luxValue erneut (mit dem noch unnormalisierten Rohwert) an, sobald ihr eigener
-    // valueInput-Effect zum ersten Mal läuft, was den FormControl-Wert wieder auf den unnormierten
-    // String zurückfallen lassen könnte; nur der erneute setISOValue()-Durchlauf korrigiert das.
-    if (LuxUtil.isDate(newDate)) {
-      this.setISOValue(newDate.toISOString());
-    }
-  }
-
-  private formatDateTime(date: any) {
-    return this.dateAdapter.format(date, APP_DATE_FORMATS_AC.display.dateInput);
-  }
+  return typeof value === 'string' ? `'${value}'` : String(value);
 }

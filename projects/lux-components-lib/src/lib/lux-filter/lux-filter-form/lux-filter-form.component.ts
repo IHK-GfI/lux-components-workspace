@@ -18,6 +18,7 @@ import {
   output,
   signal
 } from '@angular/core';
+import { outputToObservable } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import type { FieldTree } from '@angular/forms/signals';
 import { TranslocoPipe } from '@jsverse/transloco';
@@ -311,8 +312,6 @@ export class LuxFilterFormComponent implements OnInit, AfterViewInit, OnDestroy 
         if (formComponent) {
           if (formComponent.datepickerAuthentic && formComponent.datepickerAuthentic.matDatepicker) {
             formComponent.datepickerAuthentic.matDatepicker()?.close();
-          } else if (formComponent.datetimepickerAuthentic && formComponent.datetimepickerAuthentic.dateTimeOverlayComponent) {
-            formComponent.datetimepickerAuthentic.dateTimeOverlayComponent()?.close();
           } else if (formComponent.timepickerAuthentic && formComponent.timepickerAuthentic.matTimepicker) {
             formComponent.timepickerAuthentic.matTimepicker()?.close();
           } else if (formComponent.selectAuthentic && formComponent.selectAuthentic.matSelect) {
@@ -413,9 +412,13 @@ export class LuxFilterFormComponent implements OnInit, AfterViewInit, OnDestroy 
    *
    * Bewusst über registerOnChange und nicht über valueChanges: valueChanges feuert auch bei einer reinen
    * Revalidierung und würde mit dem Wert des ersten Controls z.B. eine eingetippte Uhrzeit überschreiben.
+   *
+   * Änderungen durch den Nutzer schreiben die Komponenten ohne umgebendes Formular still in ihr eigenes Control,
+   * dabei greift weder registerOnChange noch valueChanges. Sie kommen deshalb über das value-Model der Komponente
+   * zu den anderen Controls: ein eingetipptes Datum zum Timepicker, eine eingetippte Uhrzeit ins Formular.
    */
   private addFilterControl(filterItem: LuxFilterItem<any>) {
-    const registeredControl = this.filterForm.get(filterItem.binding);
+    const registeredControl = this.filterForm.get(filterItem.binding) as FormControl | null;
     const control = filterItem.component.formControl;
 
     if (!control) {
@@ -425,7 +428,26 @@ export class LuxFilterFormComponent implements OnInit, AfterViewInit, OnDestroy 
     if (!registeredControl) {
       this.filterForm.addControl(filterItem.binding, control);
     } else if (registeredControl !== control) {
-      (registeredControl as FormControl).registerOnChange((value: any) => control.setValue(value));
+      registeredControl.registerOnChange((value: any) => control.setValue(value));
+
+      const firstItem = this.formElementes.find((item) => item.filterItem.binding === filterItem.binding)?.filterItem;
+      this.forwardUserValue(firstItem?.component, control);
+      this.forwardUserValue(filterItem.component, registeredControl);
+    }
+  }
+
+  /**
+   * Schreibt jede Wertänderung der Komponente in das Control, sofern es den Wert noch nicht hat.
+   */
+  private forwardUserValue(component: LuxFilterItem<any>['component'] | undefined, target: FormControl) {
+    if (component?.value) {
+      this.subscriptions.push(
+        outputToObservable(component.value).subscribe((value) => {
+          if (target.value !== value) {
+            target.setValue(value);
+          }
+        })
+      );
     }
   }
 

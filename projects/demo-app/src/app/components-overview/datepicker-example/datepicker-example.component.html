@@ -228,22 +228,22 @@
       [(value)]="startView"
       [luxOptions]="['month', 'year']"
     />
-    <lux-input luxName="datepicker_luxStartDate" luxLabel="luxStartDate" luxPlaceholder="10.02.2015" [(value)]="startDate">
+    <lux-input luxName="datepicker_luxStartDate" luxLabel="luxStartDate" luxPlaceholder="2015-02-10" [(value)]="startDate">
       <lux-form-hint>
         Diese Property definiert das in der Datumsauswahl pre-selektierte Datum.<br />
-        Dazu das Datum einfach als String (z.B. 10.02.2015) eingeben.
+        Dazu das Datum als "yyyy-MM-dd" (z.B. 2015-02-10) eingeben.
       </lux-form-hint>
     </lux-input>
-    <lux-input luxName="datepicker_luxMinDate" luxLabel="luxMinDate" luxPlaceholder="01.01.2000" [(value)]="minDate">
+    <lux-input luxName="datepicker_luxMinDate" luxLabel="luxMinDate" luxPlaceholder="2000-01-01" [(value)]="minDate">
       <lux-form-hint>
         Diese Property definiert das minimal erlaubte Datum des Datepickers.<br />
-        Dazu das Datum einfach als String (z.B. 01.01.2000) eingeben.
+        Dazu das Datum als "yyyy-MM-dd" (z.B. 2000-01-01) eingeben.
       </lux-form-hint>
     </lux-input>
-    <lux-input luxName="datepicker_luxMaxDate" luxLabel="luxMaxDate" luxPlaceholder="31.12.2099" [(value)]="maxDate">
+    <lux-input luxName="datepicker_luxMaxDate" luxLabel="luxMaxDate" luxPlaceholder="2099-12-31" [(value)]="maxDate">
       <lux-form-hint>
         Diese Property bestimmt maximal erlaubte Datum.<br />
-        Dazu das Datum einfach als String (z.B. 31.12.2099) eingeben.
+        Dazu das Datum als "yyyy-MM-dd" (z.B. 2099-12-31) eingeben.
       </lux-form-hint>
     </lux-input>
     <lux-toggle

@@ -358,7 +358,7 @@ Json
     "label": "Auto A",
     "value": "a"
   },
-  "datepicker": "2020-09-09T00:00:00.000Z",
+  "datepicker": "2020-09-09",
   "singleSelect": {
     "label": "Single 4711",
     "value": "4711"
