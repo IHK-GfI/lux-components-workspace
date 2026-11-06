@@ -1,3 +1,4 @@
+import { computed } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import type { FieldContext } from '@angular/forms/signals';
 import { TranslocoService } from '@jsverse/transloco';
@@ -62,6 +63,20 @@ describe('luxTimepickerMinMax', () => {
       kind: 'luxTimepickerMax',
       message: tService.translate('luxc.timepicker.error_message.max')
     });
+  });
+
+  it('sollte die message nach einem Sprachwechsel neu berechnen, wenn sie in einem computed gelesen wird', () => {
+    const validator = createValidator({ min: () => '08:00', max: () => '19:00' });
+    const result = TestBed.runInInjectionContext(() => computed(() => validator(ctxFor('2026-06-18T07:59:00.000Z'))));
+
+    const messageDe = tService.translate('luxc.timepicker.error_message.min');
+    expect((result() as { message: string }).message).toBe(messageDe);
+
+    tService.setActiveLang('en');
+
+    const messageEn = tService.translate('luxc.timepicker.error_message.min');
+    expect(messageEn).not.toBe(messageDe);
+    expect((result() as { message: string }).message).toBe(messageEn);
   });
 
   it('sollte min ignorieren, wenn kein min gesetzt ist', () => {

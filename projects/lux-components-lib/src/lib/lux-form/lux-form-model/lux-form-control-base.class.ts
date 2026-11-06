@@ -287,6 +287,10 @@ export abstract class LuxFormControlBase<T = unknown> {
 
     const value = this.controlValue();
 
+    // translate() liefert nur eine Momentaufnahme: ohne diesen Lesezugriff würde die Meldung
+    // nach einem Sprachwechsel nicht neu berechnet.
+    this.tService.activeLang();
+
     const custom = this.luxErrorMessage();
     if (custom) {
       return custom;

@@ -5,6 +5,7 @@ import { LuxAppHeaderAcSessionTimerService } from './lux-app-header-ac-session-t
 import { LuxTooltipDirective } from '../../../../lux-directives/lux-tooltip/lux-tooltip.directive';
 import { LuxMediaQueryObserverService } from '../../../../lux-util/lux-media-query-observer.service';
 import { TranslocoService } from '@jsverse/transloco';
+import { luxTranslateSignal } from '../../../../lux-util/lux-translate-signal';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { LuxAriaLabelDirective } from '../../../../lux-directives/lux-aria/lux-aria-label.directive';
 
@@ -23,7 +24,10 @@ export class LuxAppHeaderAcSessionTimerComponent implements OnInit {
   private readonly tService = inject(TranslocoService);
   private readonly liveAnnouncer = inject(LiveAnnouncer);
   private readonly destroyRef = inject(DestroyRef);
-
+  private readonly hoursLabel = luxTranslateSignal('luxc.app-header.session-timer.timer.button.lbl.hours');
+  private readonly secondsLabel = luxTranslateSignal('luxc.app-header.session-timer.timer.button.lbl.seconds');
+  private readonly minutesLabel = luxTranslateSignal('luxc.app-header.session-timer.timer.button.lbl.minutes');
+  private readonly tooltip = luxTranslateSignal('luxc.app-header.session-timer.timer.button.tooltip');
   private readonly luxLoading = signal(false);
   private readonly mobileView = signal(false);
 
@@ -91,19 +95,19 @@ export class LuxAppHeaderAcSessionTimerComponent implements OnInit {
 
   getTimerLabel(): string {
     if (this.luxSessionTimerService.showHours()) {
-      return `${this.tService.translate('luxc.app-header.session-timer.timer.button.lbl.hours')}`;
+      return this.hoursLabel();
     } else if (this.luxSessionTimerService.showSeconds()) {
-      return `${this.luxSessionTimerService.formattedSeconds()} ${this.tService.translate('luxc.app-header.session-timer.timer.button.lbl.seconds')}`;
+      return `${this.luxSessionTimerService.formattedSeconds()} ${this.secondsLabel()}`;
     } else {
-      return `${this.luxSessionTimerService.formattedMinutes()} ${this.tService.translate('luxc.app-header.session-timer.timer.button.lbl.minutes')}`;
+      return `${this.luxSessionTimerService.formattedMinutes()} ${this.minutesLabel()}`;
     }
   }
 
   announceSessionTimer(): void {
-    this.liveAnnouncer.announce(`${this.tService.translate('luxc.app-header.session-timer.timer.button.announcer')}`);
+    this.liveAnnouncer.announce(this.tService.translate('luxc.app-header.session-timer.timer.button.announcer'));
   }
 
   getTimerTooltip(): string {
-    return this.tService.translate('luxc.app-header.session-timer.timer.button.tooltip');
+    return this.tooltip();
   }
 }
