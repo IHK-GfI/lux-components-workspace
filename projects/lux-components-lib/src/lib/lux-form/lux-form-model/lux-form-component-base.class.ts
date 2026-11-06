@@ -228,6 +228,18 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
   }));
 
   constructor() {
+    // Eine bereits angezeigte Fehlermeldung folgt einem Sprachwechsel zur Laufzeit. Eine per
+    // dismissError() ausgeblendete Meldung (errorMessage undefined) bleibt ausgeblendet.
+    effect(() => {
+      this.tService.activeLang();
+
+      untracked(() => {
+        if (this.formControl?.touched && this.latestErrors && this.errorMessage() !== undefined) {
+          this.errorMessage.set(this.fetchErrorMessage());
+        }
+      });
+    });
+
     effect(() => {
       this.luxDisabled();
 

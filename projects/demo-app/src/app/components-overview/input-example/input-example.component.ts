@@ -65,7 +65,7 @@ export class InputExampleComponent {
   readonly signalForm = form(this.signalModel, (path) => {
     disabled(path.inputValue, { when: () => this.disabled() });
     readonly(path.inputValue, { when: () => this.readonly() });
-    required(path.inputValue, { message: 'Bitte einen Wert eingeben', when: () => this.required() });
+    required(path.inputValue, { when: () => this.required() });
     minLength(path.inputValue, () => (this.controlValidators().includes(this.validatorOptions[0].value) ? 3 : undefined));
     maxLength(path.inputValue, () => (this.controlValidators().includes(this.validatorOptions[1].value) ? 10 : undefined));
     email(path.inputValue, { when: () => this.controlValidators().includes(this.validatorOptions[2].value) });

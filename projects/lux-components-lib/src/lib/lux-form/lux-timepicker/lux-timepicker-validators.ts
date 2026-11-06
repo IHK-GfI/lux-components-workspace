@@ -33,10 +33,8 @@ export interface LuxTimepickerMinMaxOptions {
  * je an ein anderes Control gebunden wird, das seine Fehlertexte direkt aus den Signal-Forms-Errors
  * liest statt über LuxFormControlBase.errorMessage().
  *
- * Bewusst NICHT reaktiv auf Sprachwechsel: TranslocoService.translate() liefert eine Momentaufnahme,
- * kein Signal, ein späterer Sprachwechsel löst daher keine Revalidierung aus (die message bleibt bis
- * zur nächsten Wertänderung in der zuvor aktiven Sprache) - LuxTimepickerComponent selbst löst das für
- * die eigene Anzeige separat über ein explizites langChanges$-Abonnement.
+ * Die message folgt einem Sprachwechsel: Der Validator liest TranslocoService.activeLang() und wird
+ * dadurch bei einem Sprachwechsel neu ausgewertet (benötigt Transloco >= 8.3.0).
  *
  * @param options `min`/`max` als Getter, passend zu den luxMinTime/luxMaxTime-Inputs.
  * @returns Ein FieldValidator zur Verwendung mit validate() aus @angular/forms/signals.
@@ -79,11 +77,13 @@ export function luxTimepickerMinMax<TPathKind extends PathKind = PathKind.Root>(
 
     const minSeconds = LuxUtil.parseTimeToSeconds(options.min?.());
     if (minSeconds !== null && valueSeconds < minSeconds) {
+      tService.activeLang();
       return { kind: 'luxTimepickerMin', message: tService.translate('luxc.timepicker.error_message.min') };
     }
 
     const maxSeconds = LuxUtil.parseTimeToSeconds(options.max?.());
     if (maxSeconds !== null && valueSeconds > maxSeconds) {
+      tService.activeLang();
       return { kind: 'luxTimepickerMax', message: tService.translate('luxc.timepicker.error_message.max') };
     }
 
