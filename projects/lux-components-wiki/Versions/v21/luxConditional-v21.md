@@ -89,8 +89,9 @@ eingeblendete Inhalt eine eigene Live-Region hat (etwa eine `lux-message-box`) o
 ### Layout
 
 Die Direktive erzeugt das Element `lux-conditional` (`display: contents`) mit einem Panel `div.lux-conditional__panel`, in dem der Inhalt liegt.
-Das Panel hat keine eigenen Abstände. Innerhalb einer Flex-Zeile ist das Panel das Flex-Item; soll es den Platz eines Feldes
-einnehmen, braucht es eine passende Regel der Anwendung, zum Beispiel:
+Das Panel hat keine eigenen Abstände und nimmt als Block die Breite seines Containers ein; Inhalte mit großer Min-Content-Breite,
+etwa ein Feld mit mehreren Chips oder eine Tabelle, lassen das Panel nicht über den Container hinauswachsen. Innerhalb einer Flex-Zeile
+ist das Panel das Flex-Item; soll es den Platz eines Feldes einnehmen, braucht es eine passende Regel der Anwendung, zum Beispiel:
 
 ```scss
 .meine-zeile > lux-conditional > .lux-conditional__panel {
