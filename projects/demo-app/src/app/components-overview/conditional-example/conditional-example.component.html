@@ -59,5 +59,30 @@
         </lux-card>
       </div>
     </div>
+
+    <div class="lux-highlight-section lux-flex lux-flex-col lux-gap-2">
+      <h3>Breiter Inhalt</h3>
+      <p>
+        Der eingeblendete Bereich bleibt auf die Breite seines Containers begrenzt, auch wenn der Inhalt eine große Mindestbreite hat, hier
+        eine Mehrfachauswahl mit langen Einträgen.
+      </p>
+      <div class="example-form lux-flex lux-flex-col lux-gap-4">
+        <lux-checkbox-ac
+          luxLabel="Zuständigkeiten angeben"
+          luxTagId="conditional-responsibilities"
+          [(luxChecked)]="showDepartments"
+          [luxNoLabels]="true"
+        ></lux-checkbox-ac>
+
+        <lux-select-ac
+          *luxConditional="showDepartments(); announce: 'Abteilungen'"
+          luxLabel="Abteilungen"
+          luxTagId="conditional-departments"
+          [luxOptions]="departmentOptions"
+          [luxMultiple]="true"
+          [(luxSelected)]="departments"
+        ></lux-select-ac>
+      </div>
+    </div>
   </example-base-content>
 </example-base-structure>
