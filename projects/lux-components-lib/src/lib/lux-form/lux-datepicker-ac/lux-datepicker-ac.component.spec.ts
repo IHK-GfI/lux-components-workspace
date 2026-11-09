@@ -531,6 +531,32 @@ describe('LuxDatepickerAcComponent', () => {
       expect(matErrorEl.nativeElement.innerText.trim()).toEqual('Das Datum überschreitet den Maximalwert');
     }));
 
+    it('Sollte die Grenzen aufheben, wenn luxMinDate und luxMaxDate auf null gesetzt werden', fakeAsync(() => {
+      // Vorbedingungen testen
+      testComponent.minDate = '10/20/2015';
+      testComponent.maxDate = '10/25/2015';
+      LuxTestHelper.wait(fixture);
+      expect(datepickerComponent.min).not.toBeNull();
+      expect(datepickerComponent.max).not.toBeNull();
+
+      // Änderungen durchführen
+      testComponent.minDate = null;
+      testComponent.maxDate = null;
+      LuxTestHelper.wait(fixture);
+
+      // Nachbedingungen testen
+      expect(datepickerComponent.min).toBeNull();
+      expect(datepickerComponent.max).toBeNull();
+
+      // Ein Wert außerhalb der früheren Grenzen ist jetzt gültig
+      testComponent.value = '2015-10-19T00:00:00.000Z';
+      LuxTestHelper.wait(fixture);
+      datepickerComponent.formControl.markAsTouched();
+      datepickerComponent.formControl.updateValueAndValidity();
+      LuxTestHelper.wait(fixture);
+      expect(fixture.debugElement.query(By.css('mat-error'))).toBeFalsy();
+    }));
+
     it('LuxMaxDate als ISO-String ohne Zeitzoneninfo mit später Uhrzeit', fakeAsync(() => {
       // Vorbedingungen testen
       let matErrorEl = fixture.debugElement.query(By.css('mat-error'));
@@ -1029,8 +1055,8 @@ class LuxNoFormAttributeTestComponent {
   disabled?: boolean;
   readonly = false;
   required = false;
-  minDate?: string;
-  maxDate?: string;
+  minDate?: string | null;
+  maxDate?: string | null;
   startDate?: string;
   customFilter?: LuxDateFilterAcFn;
   showToggle = true;
