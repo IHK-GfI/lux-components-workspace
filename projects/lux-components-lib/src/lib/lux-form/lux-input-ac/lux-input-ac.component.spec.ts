@@ -1268,6 +1268,65 @@ describe('LuxInputAcComponent', () => {
     }));
   });
 
+  describe('luxMin, luxMax und luxStep (luxType="number")', () => {
+    let fixture: ComponentFixture<LuxInputNumberLimitsComponent>;
+    let testComponent: LuxInputNumberLimitsComponent;
+
+    beforeEach(fakeAsync(() => {
+      fixture = TestBed.createComponent(LuxInputNumberLimitsComponent);
+      testComponent = fixture.componentInstance;
+      fixture.detectChanges();
+    }));
+
+    it('Sollte min, max und step als Attribute am Zahlenfeld setzen', fakeAsync(() => {
+      const input = fixture.debugElement.query(By.css('input[type="number"]'));
+      expect(input.nativeElement.getAttribute('min')).toBeNull();
+      expect(input.nativeElement.getAttribute('max')).toBeNull();
+      expect(input.nativeElement.getAttribute('step')).toBeNull();
+
+      testComponent.min = 0;
+      testComponent.max = 100;
+      testComponent.step = 5;
+      LuxTestHelper.wait(fixture);
+
+      expect(input.nativeElement.getAttribute('min')).toEqual('0');
+      expect(input.nativeElement.getAttribute('max')).toEqual('100');
+      expect(input.nativeElement.getAttribute('step')).toEqual('5');
+    }));
+
+    it('Sollte die Attribute wieder entfernen, wenn die Grenzen aufgehoben werden', fakeAsync(() => {
+      const input = fixture.debugElement.query(By.css('input[type="number"]'));
+      testComponent.min = 10;
+      testComponent.max = 20;
+      testComponent.step = 2;
+      LuxTestHelper.wait(fixture);
+      expect(input.nativeElement.getAttribute('min')).toEqual('10');
+
+      testComponent.min = undefined;
+      testComponent.max = undefined;
+      testComponent.step = undefined;
+      LuxTestHelper.wait(fixture);
+
+      expect(input.nativeElement.getAttribute('min')).toBeNull();
+      expect(input.nativeElement.getAttribute('max')).toBeNull();
+      expect(input.nativeElement.getAttribute('step')).toBeNull();
+    }));
+
+    it('Sollte bei einem Wert außerhalb von luxMin/luxMax keinen Angular-Validierungsfehler erzeugen', fakeAsync(() => {
+      const luxInput: LuxInputAcComponent = fixture.debugElement.query(By.directive(LuxInputAcComponent)).componentInstance;
+      const input = fixture.debugElement.query(By.css('input[type="number"]'));
+      testComponent.min = 0;
+      testComponent.max = 100;
+      LuxTestHelper.wait(fixture);
+
+      LuxTestHelper.setInputValue(input.nativeElement, '150', fixture);
+      LuxTestHelper.wait(fixture);
+
+      expect(luxInput.formControl.value as unknown).toEqual(150);
+      expect(luxInput.formControl.errors).toBeNull();
+    }));
+  });
+
   describe('A11y', () => {
     let fixture: ComponentFixture<LuxInputA11yComponent>;
     let testComponent: LuxInputA11yComponent;
@@ -1745,4 +1804,14 @@ class LuxInputA11yComponent {
   readonly = false;
   required = false;
   noTopLabel = false;
+}
+
+@Component({
+  template: ` <lux-input-ac luxType="number" luxLabel="Anzahl" [luxMin]="min" [luxMax]="max" [luxStep]="step"></lux-input-ac> `,
+  imports: [LuxInputAcComponent]
+})
+class LuxInputNumberLimitsComponent {
+  min?: number;
+  max?: number;
+  step?: number;
 }

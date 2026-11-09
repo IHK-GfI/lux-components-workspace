@@ -1,6 +1,6 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { NgClass } from '@angular/common';
-import { Component, ContentChild, ElementRef, inject, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, ContentChild, ElementRef, inject, Input, input, OnInit, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatPrefix, MatSuffix } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
@@ -49,6 +49,16 @@ export class LuxInputAcComponent<T = string> extends LuxFormInputBaseClass<T> im
   @Input() luxHideCounterLabel = false;
   @Input() luxClearable = false;
   @Input() luxClearAriaLabel = '';
+
+  /**
+   * Untere Grenze des Zahlenfelds (Attribut `min`, wirkt auf Pfeiltasten und Spinner). Nur bei luxType="number".
+   * `undefined` entfernt das Attribut. Erzeugt keinen Validierungsfehler am FormControl.
+   */
+  readonly luxMin = input<number | undefined>();
+  /** Obere Grenze des Zahlenfelds (Attribut `max`), siehe luxMin. */
+  readonly luxMax = input<number | undefined>();
+  /** Schrittweite des Zahlenfelds (Attribut `step`) für Pfeiltasten und Spinner. Nur bei luxType="number". */
+  readonly luxStep = input<number | undefined>();
 
   @Input() set luxMaxLength(maxLength: number) {
     this._luxMaxLength = maxLength;
