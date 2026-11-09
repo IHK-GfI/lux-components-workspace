@@ -28,6 +28,7 @@ export const COMPONENT_OVERVIEW_ROUTES: Routes = [
       { path: 'link', loadComponent: () => import('./link-example/link-example.component').then(m => m.LinkExampleComponent) },
       { path: 'progress', loadComponent: () => import('./progress-example/progress-example.component').then(m => m.ProgressBarExampleComponent) },
       { path: 'quill', loadComponent: () => import('./quill-example/quill-example.component').then(m => m.QuillExampleComponent) },
+      { path: 'min-max-input', loadComponent: () => import('./min-max-input-example/min-max-input-example.component').then(m => m.MinMaxInputExampleComponent) },
       { path: 'radio-button-ac', loadComponent: () => import('./radio-authentic-example/radio-authentic-example.component').then(m => m.RadioAuthenticExampleComponent) },
       { path: 'select-ac', loadComponent: () => import('./select-authentic-example/select-authentic-example.component').then(m => m.SelectAuthenticExampleComponent) },
       { path: 'skeleton', loadComponent: () => import('./skeleton-example/skeleton-example.component').then(m => m.SkeletonExampleComponent) },
