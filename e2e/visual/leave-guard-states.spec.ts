@@ -112,12 +112,12 @@ test('leave-guard-states/dialog-ungespeichert', async ({ page }) => {
   await expect(dialog).toBeHidden();
   await expect(page).toHaveURL(new RegExp(`${ROUTE}$`));
 
-  // Verwerfen und fortfahren: die Navigation wird zugelassen.
+  // Verwerfen & fortfahren: die Navigation wird zugelassen.
   // "Weiter" ist dieselbe lux-button-Instanz wie beim ersten Klick und ignoriert Klicks innerhalb von
   // buttonConfiguration.throttleTimeMs. Die Uhr deshalb vorspulen, sonst wird der Klick je nach Laufzeit verschluckt.
   await page.clock.runFor(BUTTON_THROTTLE_MS);
   await navigateAway(page);
-  await dialog.getByRole('button', { name: 'Verwerfen und fortfahren', exact: true }).click();
+  await dialog.getByRole('button', { name: 'Verwerfen & fortfahren', exact: true }).click();
   await expect(dialog).toBeHidden();
   await expect(page).not.toHaveURL(new RegExp(`${ROUTE}$`));
 });

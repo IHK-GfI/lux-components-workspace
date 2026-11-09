@@ -21,7 +21,7 @@
 Der Leave-Guard schützt Routen vor dem unbeabsichtigten Verlassen, wenn die Komponente ungespeicherte Änderungen enthält.
 Gibt es ungespeicherte Daten, erscheint ein Bestätigungsdialog mit zwei Aktionen:
 
-- **Verwerfen und fortfahren** (Warn-Aktion): Die Navigation wird zugelassen, die Änderungen gehen verloren.
+- **Verwerfen & fortfahren** (Warn-Aktion): Die Navigation wird zugelassen, die Änderungen gehen verloren.
 - **Abbrechen** (Standard-Button): Die Navigation wird abgebrochen, die Seite bleibt geöffnet.
 
 Zusätzlich blockiert der Guard die Navigation, solange über den [LuxLoadingService](lux‐loading-v21) ein blockierender Vorgang läuft
@@ -72,7 +72,7 @@ Alle Dialogtexte kommen aus den LUX-Übersetzungen (`luxc-de.json`, `luxc-en.jso
 | -------------------------------- | --------------------------------------------------------------------------------------------------------- |
 | luxc.leave-guard.unsaved.title   | Ungespeicherte Änderungen                                                                                 |
 | luxc.leave-guard.unsaved.content | Es liegen ungespeicherte Änderungen vor. Beim Fortfahren gehen diese Änderungen verloren.                 |
-| luxc.leave-guard.unsaved.confirm | Verwerfen und fortfahren                                                                                  |
+| luxc.leave-guard.unsaved.confirm | Verwerfen & fortfahren                                                                                    |
 | luxc.leave-guard.unsaved.decline | Abbrechen                                                                                                 |
 | luxc.leave-guard.busy.title      | Aktion wird verarbeitet                                                                                   |
 | luxc.leave-guard.busy.content    | Eine Aktion wird noch verarbeitet. Die Seite kann verlassen werden, sobald der Vorgang abgeschlossen ist. |

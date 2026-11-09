@@ -246,7 +246,7 @@
         "title": "Aktion wird verarbeitet"
       },
       "unsaved": {
-        "confirm": "Verwerfen und fortfahren",
+        "confirm": "Verwerfen & fortfahren",
         "content": "Es liegen ungespeicherte Änderungen vor. Beim Fortfahren gehen diese Änderungen verloren.",
         "decline": "Abbrechen",
         "title": "Ungespeicherte Änderungen"
