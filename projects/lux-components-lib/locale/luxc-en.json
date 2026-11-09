@@ -290,6 +290,17 @@
       "btn.close.arialabel": "Close message",
       "container.arialabel": "Messages"
     },
+    "min-max-input": {
+      "default_label": "Value range",
+      "min_label": "From",
+      "max_label": "To",
+      "errors.range_min": "{{minLabel}} {{min}} must not be greater than {{maxLabel}} {{max}}.",
+      "errors.range_max": "{{maxLabel}} {{max}} must not be less than {{minLabel}} {{min}}.",
+      "errors.out_of_bounds": "{{label}}: Allowed values are from {{min}} to {{max}}.",
+      "errors.below_min": "{{label}}: The value must be at least {{min}}.",
+      "errors.above_max": "{{label}}: The value must be at most {{max}}.",
+      "errors.invalid_date": "{{label}}: Please enter a valid date."
+    },
     "paginator": {
       "0_until_length": "0 of {{length}}",
       "elements_on_page": "Items per page",

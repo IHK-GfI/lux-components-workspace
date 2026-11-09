@@ -1,0 +1,28 @@
+// Die Optik der Felder und der Meldung kommt aus dem Theme (Form-Control-Wrapper, lux-form-error-*), hier nur das Layout.
+:host {
+  display: block;
+}
+
+.lux-min-max-input__group {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+
+.lux-min-max-input__legend {
+  padding: 0;
+  margin-bottom: var(--lux-theme-spacing-sm);
+  font-size: var(--lux-theme-font-size-sm);
+}
+
+.lux-min-max-input__fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr));
+  gap: var(--lux-theme-spacing-md);
+}
+
+.lux-min-max-input__message {
+  min-height: 1.2em;
+  margin: var(--lux-theme-form-control-error-margin);
+}

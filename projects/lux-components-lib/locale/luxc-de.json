@@ -290,6 +290,17 @@
       "btn.close.arialabel": "Meldung schließen",
       "container.arialabel": "Meldungen"
     },
+    "min-max-input": {
+      "default_label": "Wertebereich",
+      "min_label": "Von",
+      "max_label": "Bis",
+      "errors.range_min": "{{minLabel}} {{min}} darf nicht größer als {{maxLabel}} {{max}} sein.",
+      "errors.range_max": "{{maxLabel}} {{max}} darf nicht kleiner als {{minLabel}} {{min}} sein.",
+      "errors.out_of_bounds": "{{label}}: Zulässig sind Werte von {{min}} bis {{max}}.",
+      "errors.below_min": "{{label}}: Der Wert muss mindestens {{min}} sein.",
+      "errors.above_max": "{{label}}: Der Wert darf höchstens {{max}} sein.",
+      "errors.invalid_date": "{{label}}: Bitte ein gültiges Datum eingeben."
+    },
     "paginator": {
       "0_until_length": "0 von {{length}}",
       "elements_on_page": "Elemente pro Seite",
