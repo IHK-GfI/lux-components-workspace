@@ -1,5 +1,5 @@
 import { NgClass, NgStyle } from '@angular/common';
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild, inject } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, ViewChild, inject } from '@angular/core';
 import { LuxTourHintRef } from './lux-tour-hint-model/lux-tour-hint-ref.class';
 
 @Component({
@@ -8,7 +8,7 @@ import { LuxTourHintRef } from './lux-tour-hint-model/lux-tour-hint-ref.class';
   styleUrls: ['./lux-tour-hint.component.scss'],
   imports: [NgStyle, NgClass]
 })
-export class LuxTourHintComponent implements OnInit, AfterViewInit {
+export class LuxTourHintComponent implements AfterViewInit {
   private cdr = inject(ChangeDetectorRef);
   private element = inject(ElementRef);
   tourHintRef = inject(LuxTourHintRef);
@@ -32,6 +32,12 @@ export class LuxTourHintComponent implements OnInit, AfterViewInit {
   //CSS Class for the arrow where to point
   public arrowClass = 'top';
 
+  //The arrow is hidden if the tour-hint had to be placed on top of the target
+  public arrowVisible = true;
+
+  //Called after closing so the creator of this component can clean up
+  public onClosed?: () => void;
+
   //Constants which are also used in scss but can't directly be read from here
   private arrowLength = 16;
   private shadowPadding = 5;
@@ -53,11 +59,9 @@ export class LuxTourHintComponent implements OnInit, AfterViewInit {
   @ViewChild('tourHintContainer', { read: ElementRef })
   private tourHintContainer!: ElementRef;
 
-  ngOnInit(): void {
-    //When resizing / min- / maximizing window update all positions
-    addEventListener('resize', () => {
-      this.updateTargetAndPositions();
-    });
+  //When resizing / min- / maximizing window update all positions
+  @HostListener('window:resize') windowResize() {
+    this.updateTargetAndPositions();
   }
 
   ngAfterViewInit(): void {
@@ -76,8 +80,9 @@ export class LuxTourHintComponent implements OnInit, AfterViewInit {
       inline: 'center'
     });
 
-    const windowWidth = window.innerWidth;
-    const windowHeight = window.innerHeight;
+    //Unlike window.innerWidth / innerHeight this is the visible area without the scrollbars of the page
+    const windowWidth = document.documentElement.clientWidth;
+    const windowHeight = document.documentElement.clientHeight;
     const bounds = this.getSurroundingBounds(this.luxTarget);
 
     this.calculatePositions(windowWidth, windowHeight, bounds);
@@ -97,82 +102,74 @@ export class LuxTourHintComponent implements OnInit, AfterViewInit {
       const spaceBottom = winHeight - bounds.bottom - calculatedHeight;
       const spaceLeft = bounds.left - calculatedWidth;
       const spaceRight = winWidth - bounds.right - calculatedWidth;
-      const spaceMax = Math.max(spaceTop, spaceBottom, spaceLeft, spaceRight);
 
-      const neededWidth = calculatedWidth + this.arrowLength;
-      const neededHeight = calculatedHeight + this.arrowLength;
+      //A side is only usable if the whole tour-hint including the arrow fits next to the target
+      const fitting = [
+        { side: 'top', space: spaceTop },
+        { side: 'bottom', space: spaceBottom },
+        { side: 'left', space: spaceLeft },
+        { side: 'right', space: spaceRight }
+      ].filter((candidate) => candidate.space >= this.arrowLength);
 
-      const showTop = spaceTop === spaceMax;
-      const showBottom = spaceBottom === spaceMax;
-      const showLeft = spaceLeft === spaceMax;
-      const showRight = spaceRight === spaceMax;
+      //Without enough space on any side (e.g. small screens), the tour-hint is shown above or below the target
+      const candidates = fitting.length
+        ? fitting
+        : [
+            { side: 'top', space: spaceTop },
+            { side: 'bottom', space: spaceBottom }
+          ];
+      const spaceMax = Math.max(...candidates.map((candidate) => candidate.space));
+      const side = candidates.find((candidate) => candidate.space === spaceMax)!.side;
+
+      //The tour-hint is always kept inside the viewport
+      const maxLeft = Math.max(0, winWidth - calculatedWidth);
+      const maxTop = Math.max(0, winHeight - calculatedHeight);
 
       //Min value for offsetting the arrow when tour-hint is at an edge of the screen
       const arrowOffset = this.arrowLength * 4;
 
-      //Offsets for modal and arrow so when target is outside screen it will be handled correctly
-      let baseOffX = 0;
-      let baseOffY = 0;
+      //Offset of the arrow so it points to the target even if the tour-hint was moved into the viewport
       let arrowOffX = 0;
       let arrowOffY = 0;
 
-      if (showTop || showBottom) {
-        //Top OR Bottom
-        this.tourHintPosLeft = bounds.midX - this.arrowLength * 2;
-        if (this.tourHintPosLeft < 0) this.tourHintPosLeft = 0;
+      if (side === 'top' || side === 'bottom') {
+        const desiredLeft = bounds.midX - this.arrowLength * 2;
+        this.tourHintPosLeft = Math.min(Math.max(desiredLeft, 0), maxLeft);
+        arrowOffX = Math.min(Math.max(desiredLeft - this.tourHintPosLeft, 0), Math.max(0, calculatedWidth - arrowOffset));
 
-        baseOffX = this.tourHintPosLeft + neededWidth - winWidth;
-        arrowOffX = baseOffX;
-        baseOffY = 0;
-        arrowOffY = 0;
-
-        if (baseOffX < 0) {
-          baseOffX = 0;
-          arrowOffX = 0;
-        } else if (baseOffX >= calculatedWidth - arrowOffset) arrowOffX = calculatedWidth - arrowOffset;
-
-        if (showTop) {
-          //Show on top
+        if (side === 'top') {
           this.arrowClass = 'bottom';
-          this.tourHintPosTop = bounds.top - neededHeight;
+          this.tourHintPosTop = bounds.top - calculatedHeight - this.arrowLength;
         } else {
-          //Show on bottom
           this.arrowClass = 'top';
           this.tourHintPosTop = bounds.bottom + this.arrowLength;
         }
 
-        if (this.tourHintPosTop < 0) this.tourHintPosTop = 0;
+        this.tourHintPosTop = Math.min(Math.max(this.tourHintPosTop, 0), maxTop);
       } else {
-        //Left OR Right
-        this.tourHintPosTop = bounds.midY - this.arrowLength * 2;
-        if (this.tourHintPosTop < 0) this.tourHintPosTop = 0;
+        const desiredTop = bounds.midY - this.arrowLength * 2;
+        this.tourHintPosTop = Math.min(Math.max(desiredTop, 0), maxTop);
+        arrowOffY = Math.min(Math.max(desiredTop - this.tourHintPosTop, 0), Math.max(0, calculatedHeight - arrowOffset));
 
-        baseOffX = 0;
-        arrowOffX = 0;
-        baseOffY = this.tourHintPosTop + neededHeight - winHeight;
-        arrowOffY = baseOffY;
-
-        if (baseOffY < 0) {
-          baseOffY = 0;
-          arrowOffY = 0;
-        } else if (baseOffY >= calculatedHeight - arrowOffset) arrowOffY = calculatedHeight - arrowOffset;
-
-        if (showLeft) {
-          //Show on left side
+        if (side === 'left') {
           this.arrowClass = 'right';
-          this.tourHintPosLeft = bounds.left - neededWidth;
+          this.tourHintPosLeft = bounds.left - calculatedWidth - this.arrowLength;
         } else {
-          //Show on right side
           this.arrowClass = 'left';
           this.tourHintPosLeft = bounds.right + this.arrowLength;
         }
 
-        if (this.tourHintPosLeft < 0) this.tourHintPosLeft = 0;
+        this.tourHintPosLeft = Math.min(Math.max(this.tourHintPosLeft, 0), maxLeft);
       }
 
+      this.arrowVisible = !(
+        this.tourHintPosLeft < bounds.right &&
+        this.tourHintPosLeft + calculatedWidth > bounds.left &&
+        this.tourHintPosTop < bounds.bottom &&
+        this.tourHintPosTop + calculatedHeight > bounds.top
+      );
+
       this.dynamicArrowStyle = {
-        '--baseOffsetX': -baseOffX + 'px',
-        '--baseOffsetY': -baseOffY + 'px',
         '--arrowOffsetX': -arrowOffX + 'px',
         '--arrowOffsetY': -arrowOffY + 'px'
       };
@@ -222,6 +219,9 @@ export class LuxTourHintComponent implements OnInit, AfterViewInit {
   }
 
   public close() {
+    //Without a target a still pending position update does nothing
+    this._luxTarget = undefined;
     this.element.nativeElement.remove();
+    this.onClosed?.();
   }
 }

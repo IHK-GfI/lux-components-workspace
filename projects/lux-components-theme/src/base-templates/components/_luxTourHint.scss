@@ -4,18 +4,21 @@ $arrowSize: 16px;
 
 lux-tour-hint {
   .tour-hint {
-    --baseOffsetX: 0px;
-    --baseOffsetY: 0px;
     --arrowOffsetX: 0px;
     --arrowOffsetY: 0px;
 
     position: fixed;
     z-index: 1002;
     border-radius: var(--lux-theme-app-border-radius);
-    transform: translate(var(--baseOffsetX), var(--baseOffsetY));
     padding: 10px;
-    min-width: 250px;
-    min-height: 100px;
+    box-sizing: border-box;
+    //Fixed elements shrink depending on their left position, so the natural width is used and limited to the viewport
+    //Percentages are used, because unlike 100vw / 100vh they don't include the scrollbars of the page
+    width: max-content;
+    min-width: min(270px, 100%);
+    max-width: 100%;
+    min-height: 120px;
+    max-height: 100%;
 
     display: flex;
 
@@ -27,6 +30,14 @@ lux-tour-hint {
 
     &:focus {
       outline: none;
+    }
+
+    //Scrolls instead of .tour-hint, because overflow on .tour-hint would clip the arrow
+    .tour-hint-scroll-container {
+      display: flex;
+      flex: 1 1 auto;
+      min-width: 0;
+      overflow: auto;
     }
 
     .arrow {
@@ -128,15 +139,21 @@ lux-tour-hint {
 }
 
 lux-tour-hint-preset {
+  //Uses the full width of the tour-hint, otherwise the close icon wouldn't be in the corner of short hints
+  flex: 1 1 auto;
+  min-width: 0;
+
   .tour-hint-container {
+    //The close icon is positioned inside the scroll container, so that a scrollbar can't cover it
+    position: relative;
     height: 100%;
     display: flex;
     flex-direction: column;
 
     .action-close {
       position: absolute;
-      top: 8px;
-      right: 8px;
+      top: 0;
+      right: 0;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -163,22 +180,32 @@ lux-tour-hint-preset {
       height: 100%;
 
       display: grid;
-      grid-template-rows: 1fr min-content;
+      grid-template-rows: minmax(5rem, 1fr) min-content;
       grid-auto-flow: row;
 
+      //If the height is limited only the text scrolls, the title and the actions stay visible
       .tour-hint-data {
         margin: 0 10px 0 10px;
         grid-row-start: 1;
         grid-row-end: 2;
+        max-width: 350px;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+        //Words which don't fit into a whole line are broken, instead of making the tour-hint scroll horizontally
+        overflow-wrap: anywhere;
 
+        //Margins don't collapse in a flex container, so the gap to the text is only defined by the text
         .tour-hint-title {
           margin-top: 0;
+          margin-bottom: 0;
+          //Keeps a long title away from the close icon
+          padding-right: 24px;
         }
 
         .tour-hint-content {
           white-space: pre-line;
 
-          max-width: 350px;
           max-height: 250px;
           overflow-y: auto;
         }
@@ -194,6 +221,8 @@ lux-tour-hint-preset {
 
         .action-dont-show-again {
           margin: 20px 10px 0 10px;
+          //The invisible touch target of the checkbox is higher than the row and would cause a scrollbar
+          overflow-y: clip;
         }
 
         .action-navigation {
