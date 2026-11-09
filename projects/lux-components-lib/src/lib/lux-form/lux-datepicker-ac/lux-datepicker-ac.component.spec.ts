@@ -988,6 +988,50 @@ describe('LuxDatepickerAcComponent', () => {
     }));
   });
 
+  describe('luxAriaDescribedby', () => {
+    let fixture: ComponentFixture<LuxDatepickerDescribedbyComponent>;
+    let testComponent: LuxDatepickerDescribedbyComponent;
+    let datepicker: LuxDatepickerAcComponent;
+    let input: HTMLInputElement;
+
+    beforeEach(fakeAsync(() => {
+      fixture = TestBed.createComponent(LuxDatepickerDescribedbyComponent);
+      testComponent = fixture.componentInstance;
+      fixture.detectChanges();
+      flush();
+      datepicker = fixture.debugElement.query(By.directive(LuxDatepickerAcComponent)).componentInstance;
+      input = fixture.debugElement.query(By.css('input')).nativeElement;
+    }));
+
+    it('Sollte die externe Id vor die eigene Hinweis-Id stellen', fakeAsync(() => {
+      testComponent.hint = 'Ein Hinweis';
+      LuxTestHelper.wait(fixture);
+      expect(input.getAttribute('aria-describedby')).toEqual(datepicker.uid + '-hint');
+
+      testComponent.describedby = 'externe-meldung';
+      LuxTestHelper.wait(fixture);
+
+      expect(input.getAttribute('aria-describedby')).toEqual('externe-meldung ' + datepicker.uid + '-hint');
+    }));
+
+    it('Sollte bei luxNoBottomLabel nicht auf die ausgeblendete Fehlerzeile verweisen', fakeAsync(() => {
+      testComponent.required = true;
+      LuxTestHelper.wait(fixture);
+      datepicker.formControl.markAsTouched();
+      datepicker.formControl.updateValueAndValidity();
+      LuxTestHelper.wait(fixture);
+      expect(datepicker.errorMessage).toBeTruthy();
+      expect(input.getAttribute('aria-describedby')).toEqual(datepicker.uid + '-error');
+
+      testComponent.noBottomLabel = true;
+      testComponent.describedby = 'externe-meldung';
+      LuxTestHelper.wait(fixture);
+
+      expect(fixture.debugElement.query(By.css('mat-error'))).toBeNull();
+      expect(input.getAttribute('aria-describedby')).toEqual('externe-meldung');
+    }));
+  });
+
   describe('A11y', () => {
     let fixture: ComponentFixture<LuxDatepickerA11yComponent>;
     let testComponent: LuxDatepickerA11yComponent;
@@ -1141,4 +1185,23 @@ class LuxDatepickerA11yComponent {
   disabled = false;
   readonly = false;
   required = false;
+}
+
+@Component({
+  template: `
+    <lux-datepicker-ac
+      luxLabel="Datum"
+      [luxHint]="hint"
+      [luxRequired]="required"
+      [luxNoBottomLabel]="noBottomLabel"
+      [luxAriaDescribedby]="describedby"
+    ></lux-datepicker-ac>
+  `,
+  imports: [LuxDatepickerAcComponent]
+})
+class LuxDatepickerDescribedbyComponent {
+  hint?: string;
+  required = false;
+  noBottomLabel = false;
+  describedby?: string;
 }

@@ -253,13 +253,16 @@ export class LuxDatepickerAcComponent<T = any> extends LuxFormInputBaseClass<T> 
   }
 
   descripedBy() {
+    return this.joinDescribedBy(this.ownDescribedBy());
+  }
+
+  private ownDescribedBy(): string | undefined {
     if (this.errorMessage) {
       return this.uid + '-error';
-    } else {
-      return (this.formHintComponent || this.luxHint) && (!this.luxHintShowOnlyOnFocus || (this.luxHintShowOnlyOnFocus && this.focused))
-        ? this.uid + '-hint'
-        : undefined;
     }
+    return (this.formHintComponent || this.luxHint) && (!this.luxHintShowOnlyOnFocus || (this.luxHintShowOnlyOnFocus && this.focused))
+      ? this.uid + '-hint'
+      : undefined;
   }
 
   /**

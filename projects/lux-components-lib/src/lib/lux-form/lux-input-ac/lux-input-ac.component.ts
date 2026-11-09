@@ -174,13 +174,16 @@ export class LuxInputAcComponent<T = string> extends LuxFormInputBaseClass<T> im
   }
 
   descripedBy() {
+    return this.joinDescribedBy(this.ownDescribedBy());
+  }
+
+  private ownDescribedBy(): string | undefined {
     if (this.errorMessage) {
       return this.uid + '-error';
-    } else {
-      return (this.formHintComponent || this.luxHint) && (!this.luxHintShowOnlyOnFocus || (this.luxHintShowOnlyOnFocus && this.focused))
-        ? this.uid + '-hint'
-        : undefined;
     }
+    return (this.formHintComponent || this.luxHint) && (!this.luxHintShowOnlyOnFocus || (this.luxHintShowOnlyOnFocus && this.focused))
+      ? this.uid + '-hint'
+      : undefined;
   }
 
   override notifyFormValueChanged(formValue: any) {

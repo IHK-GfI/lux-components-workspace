@@ -135,6 +135,12 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
    */
   @Input() luxAriaLabelledby?: string;
   /**
+   * Id eines externen beschreibenden Elements (z.B. eine gemeinsame Meldung mehrerer Felder).
+   * Wird im "aria-describedby" des nativen Eingabeelements vor die eigene Hinweis- bzw. Fehler-Id gestellt.
+   * Ausgewertet von lux-input-ac und lux-datepicker-ac (siehe joinDescribedBy()).
+   */
+  @Input() luxAriaDescribedby?: string;
+  /**
    * Blendet das obere Label nur visuell aus (lux-sr-only). Das <label> bleibt im DOM,
    * der zugängliche Name des Controls bleibt erhalten (Issue #267).
    * Wirkt auch ohne gesetztes luxLabel: Dann entfällt die leere Label-Zeile visuell,
@@ -145,7 +151,7 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
    * Entfernt den unteren Bereich (Hint, Fehlermeldung, Counter) aus dem DOM.
    * Achtung, bewusste Entscheidung: Damit entfällt auch die per aria-describedby
    * referenzierte Fehlermeldung. Nur einsetzen, wenn Fehler an anderer Stelle
-   * wahrnehmbar gemacht werden.
+   * wahrnehmbar gemacht werden, z.B. über luxAriaDescribedby auf eine gemeinsame Meldung.
    */
   @Input() luxNoBottomLabel = false;
   /**
@@ -182,6 +188,16 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
       return undefined;
     }
     return this.formLabelComponent || this.luxLabel ? this.uid + '-label' : undefined;
+  }
+
+  /**
+   * Verkettet ein externes luxAriaDescribedby mit der eigenen Id der Hinweis- bzw. Fehlerzeile.
+   * Die eigene Id wird nur geliefert, wenn die Zeile auch gerendert wird (nicht bei luxNoBottomLabel
+   * oder luxNoLabels), damit aria-describedby nie auf eine Id zeigt, die nicht im DOM ist.
+   */
+  protected joinDescribedBy(ownId: string | undefined): string | undefined {
+    const ids = [this.luxAriaDescribedby, this.luxNoBottomLabel || this.luxNoLabels ? undefined : ownId].filter((id) => !!id);
+    return ids.length > 0 ? ids.join(' ') : undefined;
   }
 
   get luxFormGroup(): FormGroup {
