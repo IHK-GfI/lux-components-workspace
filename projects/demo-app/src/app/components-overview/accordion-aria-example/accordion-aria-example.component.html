@@ -70,6 +70,16 @@
                 Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna
                 aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
               </p>
+              @if (i === 0 && showPanelInputs) {
+                <div class="lux-flex lux-flex-col lux-gap-4">
+                  <lux-input-ac luxName="accordion_panel_input" luxLabel="Einzeilige Eingabe" [(luxValue)]="panelInputValue"></lux-input-ac>
+                  <lux-textarea-ac
+                    luxName="accordion_panel_textarea"
+                    luxLabel="Mehrzeilige Eingabe"
+                    [(luxValue)]="panelTextareaValue"
+                  ></lux-textarea-ac>
+                </div>
+              }
               @if (stickyLongContent) {
                 @for (index of longContentArr; track index) {
                   <p>
@@ -297,6 +307,9 @@
         </lux-toggle-ac>
         <lux-toggle-ac luxLabel="Beispiel-Datepicker im Header" [(luxChecked)]="showHeaderDatepicker2Panel" [luxNoTopLabel]="true">
           <lux-form-hint> Diese Property blendet den Beispiel-Datepicker im Header des Panels ein/aus. </lux-form-hint>
+        </lux-toggle-ac>
+        <lux-toggle-ac luxLabel="Eingabefelder im Panel #1" [(luxChecked)]="showPanelInputs" [luxNoTopLabel]="true">
+          <lux-form-hint> Zeigt ein einzeiliges und ein mehrzeiliges Eingabefeld im Panelinhalt. </lux-form-hint>
         </lux-toggle-ac>
         <lux-toggle-ac luxLabel="luxDisabled" [(luxChecked)]="disabled1Panel" [luxNoTopLabel]="true">
           <lux-form-hint> Diese Property deaktiviert das Panel. </lux-form-hint>

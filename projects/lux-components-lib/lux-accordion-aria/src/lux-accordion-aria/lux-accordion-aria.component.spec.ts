@@ -111,6 +111,43 @@ describe('LuxAccordionAriaComponent', () => {
       expect(innerHeaderButtons[2].nativeElement.getAttribute('aria-expanded')).toBe('true');
     }));
 
+    it('sollte Tastatureingaben auch in verschachtelten Panelinhalten weiterleiten', fakeAsync(() => {
+      const nestedFixture = TestBed.createComponent(LuxNestedAccordionAriaTestComponent);
+      nestedFixture.detectChanges();
+      tick();
+
+      const root = nestedFixture.nativeElement as HTMLElement;
+      const outerHeader = root.querySelector<HTMLButtonElement>('.lux-expansion-panel-header-toggle')!;
+      outerHeader.click();
+      nestedFixture.detectChanges();
+      tick();
+      nestedFixture.detectChanges();
+
+      const innerHeader = root.querySelectorAll<HTMLButtonElement>('.lux-expansion-panel-header-toggle')[1];
+      innerHeader.click();
+      nestedFixture.detectChanges();
+      tick();
+      nestedFixture.detectChanges();
+
+      const keydownListener = jasmine.createSpy('keydown');
+      root.addEventListener('keydown', keydownListener);
+      const textarea = root.querySelector<HTMLTextAreaElement>('textarea')!;
+      textarea.focus();
+      const space = new KeyboardEvent('keydown', { bubbles: true, cancelable: true, key: ' ' });
+      expect(textarea.dispatchEvent(space)).toBeTrue();
+      expect(keydownListener).toHaveBeenCalledWith(space);
+      expect(outerHeader.getAttribute('aria-expanded')).toBe('true');
+      expect(innerHeader.getAttribute('aria-expanded')).toBe('true');
+
+      innerHeader.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, cancelable: true, key: 'Enter' }));
+      nestedFixture.detectChanges();
+      tick();
+      nestedFixture.detectChanges();
+      expect(outerHeader.getAttribute('aria-expanded')).toBe('true');
+      expect(innerHeader.getAttribute('aria-expanded')).toBe('false');
+      root.removeEventListener('keydown', keydownListener);
+    }));
+
     it('sollte die luxDisabled-Eigenschaft respektieren', fakeAsync(() => {
       const accordionComponent = fixture.debugElement.query(By.directive(LuxAccordionAriaComponent)).componentInstance;
       expect(accordionComponent.luxDisabled()).toBeFalsy();
@@ -119,6 +156,23 @@ describe('LuxAccordionAriaComponent', () => {
       LuxTestHelper.wait(fixture);
 
       expect(accordionComponent.luxDisabled()).toBe(true);
+      fixture.debugElement.queryAll(By.css('.lux-expansion-panel-header-toggle')).forEach((header) => {
+        expect(header.nativeElement.getAttribute('aria-disabled')).toBe('true');
+        expect(header.nativeElement.getAttribute('tabindex')).toBe('0');
+      });
+    }));
+
+    it('sollte luxDisabled weiterhin als Boolean-Attribut interpretieren', fakeAsync(() => {
+      const accordionFixture = TestBed.createComponent(LuxAccordionAriaComponent);
+      accordionFixture.componentRef.setInput('luxDisabled', '');
+      accordionFixture.detectChanges();
+      tick();
+      expect(accordionFixture.componentInstance.luxDisabled()).toBeTrue();
+
+      accordionFixture.componentRef.setInput('luxDisabled', 'false');
+      accordionFixture.detectChanges();
+      tick();
+      expect(accordionFixture.componentInstance.luxDisabled()).toBeFalse();
     }));
 
     it('sollte Farben-CSS-Klassen anwenden', fakeAsync(() => {
@@ -275,7 +329,10 @@ class LuxAccordionAriaCustomHeaderTestComponent {}
           <lux-accordion-aria>
             <lux-panel-aria>
               <lux-panel-aria-header-title>Inner 1</lux-panel-aria-header-title>
-              <lux-panel-aria-content>Inner Content 1</lux-panel-aria-content>
+              <lux-panel-aria-content>
+                Inner Content 1
+                <textarea aria-label="Verschachtelte Eingabe"></textarea>
+              </lux-panel-aria-content>
             </lux-panel-aria>
             <lux-panel-aria>
               <lux-panel-aria-header-title>Inner 2</lux-panel-aria-header-title>

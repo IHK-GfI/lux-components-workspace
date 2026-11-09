@@ -22,8 +22,7 @@ import { LuxAccordionAriaBase, LuxAccordionAriaTogglePosition } from '../lux-acc
   templateUrl: './lux-panel-aria.component.html',
   styleUrls: ['./lux-panel-aria.component.scss'],
   standalone: true,
-  imports: [AccordionPanel, AccordionTrigger, LuxIconComponent, AccordionContent],
-  hostDirectives: [AccordionGroup]
+  imports: [AccordionPanel, AccordionTrigger, AccordionGroup, LuxIconComponent, AccordionContent]
 })
 export class LuxPanelAriaComponent {
   private static panelIdCounter = 0;
