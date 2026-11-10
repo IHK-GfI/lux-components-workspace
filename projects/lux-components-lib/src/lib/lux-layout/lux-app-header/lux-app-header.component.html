@@ -23,7 +23,7 @@
       >
         @if (luxIconName() && !sideNav() && !mobileView()) {
           <lux-icon
-            style="padding: 6px 5px"
+            class="lux-app-header-title-icon"
             luxAriaLabel="{{ luxAriaTitleIconLabel() || ('luxc.app-header.aria.title_icon.lbl' | transloco) }}"
             [luxIconName]="luxIconName()"
             [ngClass]="{ 'lux-cursor-pointer': luxClickedObserved(), focused: luxClickedObserved() }"
@@ -36,7 +36,7 @@
         }
         @if (luxImageSrc() && !sideNav() && !mobileView()) {
           <lux-image
-            style="padding: 0 5px"
+            class="lux-app-header-title-image"
             luxAriaLabel="{{ luxAriaTitleImageLabel() || ('luxc.app-header.aria.title.image.lbl' | transloco) }}"
             [luxImageSrc]="luxImageSrc()!"
             [luxImageHeight]="luxImageHeight()"
