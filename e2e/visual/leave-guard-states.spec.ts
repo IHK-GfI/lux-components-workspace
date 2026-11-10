@@ -143,3 +143,28 @@ test('leave-guard-states/dialog-verarbeitung', async ({ page }) => {
   await expect(page).toHaveURL(new RegExp(`${ROUTE}$`));
   await expect(nameInput(page)).toBeDisabled();
 });
+
+test.describe('Mobil', () => {
+  test.use({ viewport: { width: 390, height: 844 } });
+
+  test('leave-guard-states/dialog-ungespeichert-mobil', async ({ page }) => {
+    await openLeaveGuard(page);
+    await enterName(page);
+
+    // Mobil gibt es die Beispiel-Navigation ("Weiter") nicht, deshalb über den Datenschutz-Link im Footer wegnavigieren.
+    await page.getByRole('contentinfo').getByRole('button', { name: 'Datenschutz', exact: true }).click();
+    const dialog = page.getByRole('dialog');
+    await expect(dialog).toContainText('Ungespeicherte Änderungen');
+
+    // Mobil stehen die Buttons untereinander, sind gleich breit und haben Abstand zueinander.
+    const confirm = await dialog.getByRole('button', { name: 'Verwerfen und fortfahren', exact: true }).boundingBox();
+    const decline = await dialog.getByRole('button', { name: 'Abbrechen', exact: true }).boundingBox();
+    expect(confirm).not.toBeNull();
+    expect(decline).not.toBeNull();
+    expect(decline!.x).toBeCloseTo(confirm!.x, 0);
+    expect(decline!.width).toBeCloseTo(confirm!.width, 0);
+    expect(decline!.y).toBeGreaterThan(confirm!.y + confirm!.height);
+
+    await screenshotSoft(page, dialog, 'leave-guard-dialog-ungespeichert-mobil.png');
+  });
+});

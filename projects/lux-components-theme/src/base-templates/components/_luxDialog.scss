@@ -25,11 +25,34 @@
   );
 }
 
-lux-dialog-action {
-  flex-flow: row wrap;
-  gap: 8px;
-  box-sizing: border-box;
+// Abstand zwischen den Aktionen ueber gap statt Margins an den Buttons,
+// damit umgebrochene Buttons zentriert bleiben und auch vertikal Abstand haben.
+// Bewusst nur ein Element-Selektor: Klassen der Anwendung (z.B. lux-gap-2) haben Vorrang.
+lux-dialog-actions {
   display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  box-sizing: border-box;
+}
+
+// Modifier: Auf kleinen Bildschirmen stehen die Buttons untereinander und nutzen die volle Breite.
+lux-dialog-actions.lux-dialog-actions-stacked {
+  @include luxbreakpoints.lt-md {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+
+    // Runde Buttons und reine Icon-Buttons behalten ihre Groesse.
+    lux-button:has(.lux-button-rounded, .lux-button-icon-only) {
+      align-self: center;
+    }
+
+    button.lux-button:not(.lux-button-rounded, .lux-button-icon-only) {
+      width: 100%;
+    }
+  }
 }
 
 lux-dialog-structure {
