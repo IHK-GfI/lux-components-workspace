@@ -56,6 +56,12 @@ lux-app-header {
     }
     .lux-header-title {
       color: var(--lux-theme-primary-20);
+      lux-icon.lux-app-header-title-icon {
+        padding: 6px 5px;
+      }
+      lux-image.lux-app-header-title-image {
+        padding: 0 5px;
+      }
       .lux-app-header-title-label {
         margin-left: 5px;
         padding: 10px 5px;

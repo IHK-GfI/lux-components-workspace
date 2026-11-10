@@ -60,6 +60,10 @@
   - Die LUX-Components benötigen weder `@angular/animations` noch `provideAnimations()`/`provideNoopAnimations()`. Apps, die diese selbst verwenden, müssen sie weiterhin einbinden. Andernfalls können `provideAnimations()` und das Paket `@angular/animations` entfernt werden (`npm uninstall @angular/animations`). Das Update-Schematic entfernt sie nicht automatisch.
   - In Unit-Tests wird `provideNoopAnimations()` bzw. `NoopAnimationsModule` für die LUX-Components nicht mehr benötigt. Specs, die Material-Overlays öffnen (z. B. über `LuxDialogService`), können die Material-Animationen stattdessen mit `{ provide: MATERIAL_ANIMATIONS, useValue: { animationsDisabled: true } }` abschalten.
   - `luxAfterExpansion` von `lux-card` wird jetzt wie dokumentiert nach dem Auf- und Zuklappen ausgelöst. Bisher wurde das Event nie ausgelöst. Beim ersten Rendern einer initial aufgeklappten Karte bleibt es aus.
+- Issue #366: CSP-Kompatibilität: Die Templates der LUX-Components enthalten keine statischen `style`-Attribute mehr, damit sie auch bei einer strikten Content Security Policy (`style-src` ohne `'unsafe-inline'`) ohne Verstöße funktionieren.
+  - Betroffen waren `lux-select`, `lux-error-page` und `lux-app-header` (Titel-Icon und Titel-Bild). Die Optik bleibt unverändert.
+  - Die Styles liegen jetzt im Theme. Die LUX-Components 22.0.0 müssen daher zusammen mit dem LUX-Theme 22.0.0 verwendet werden.
+  - Ein ESLint-Check verhindert neue statische `style`-Attribute und `[attr.style]`-Bindings in den Templates der Bibliothek.
 
 ## Version 21.10.0
 
