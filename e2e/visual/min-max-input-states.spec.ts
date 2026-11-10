@@ -26,7 +26,7 @@ test('min-max-input-states/bereichsmeldung', async ({ page }) => {
   await leaveWith(numbers, 'Von', '200');
   await leaveWith(numbers, 'Bis', '100');
 
-  await expect(numbers.getByRole('status')).toHaveText('Bis 100 darf nicht kleiner als Von 200 sein.');
+  await expect(numbers.getByRole('status')).toHaveText('Bis darf nicht kleiner als 200 sein.');
   await expect(numbers.getByLabel('Bis', { exact: true })).toHaveAttribute('aria-invalid', 'true');
   await expect(numbers.getByLabel('Von', { exact: true })).toHaveAttribute('aria-invalid', 'false');
   await screenshotSoft(page, numbers, 'min-max-input-bereichsmeldung.png');
@@ -50,7 +50,7 @@ test('min-max-input-states/datum', async ({ page }) => {
   await leaveWith(dates, 'Von', '10.05.2026');
   await leaveWith(dates, 'Bis', '01.05.2026');
 
-  await expect(dates.getByRole('status')).toHaveText('Bis 01.05.26 darf nicht kleiner als Von 10.05.26 sein.');
+  await expect(dates.getByRole('status')).toHaveText('Bis darf nicht kleiner als 10.05.26 sein.');
   await screenshotSoft(page, dates, 'min-max-input-datum.png');
 });
 

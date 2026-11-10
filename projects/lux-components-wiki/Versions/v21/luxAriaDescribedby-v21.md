@@ -44,5 +44,5 @@ Ist die Direktive im Konsumenten importiert und wird das Attribut an einer diese
 ```html
 <lux-input-ac luxLabel="Von" luxAriaDescribedby="bereich-meldung"></lux-input-ac>
 <lux-input-ac luxLabel="Bis" luxAriaDescribedby="bereich-meldung"></lux-input-ac>
-<p id="bereich-meldung" role="status">Von 200 darf nicht größer als Bis 100 sein.</p>
+<p id="bereich-meldung" role="status">Von darf nicht größer als 100 sein.</p>
 ```

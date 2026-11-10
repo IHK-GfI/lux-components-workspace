@@ -33,7 +33,7 @@
 - Ein leeres Feld bedeutet "keine Begrenzung" (im Wert fehlt der Schlüssel, nie `0` oder `''`).
 - Von darf nicht größer als Bis sein.
 - Grenzen gelten für beide Felder (`luxBounds`) oder zusätzlich je Seite (`luxMinFieldBounds`, `luxMaxFieldBounds`).
-- Eine gemeinsame Meldung unter beiden Feldern nennt Feld und Werte.
+- Eine gemeinsame Meldung unter beiden Feldern nennt das Feld und den verletzten Grenzwert.
 - Geprüft wird erst beim Verlassen eines Feldes, nicht beim Tippen.
 
 Der Wert ist ein Objekt `{ min?: T; max?: T }`. Bei `luxType="number"` ist `T` eine Zahl, bei `luxType="date"` ein ISO-String (Kalendertag als UTC-Mitternacht, wie bei `lux-datepicker-ac`). Er ändert sich nur, wenn der Bereich gültig ist.
@@ -96,16 +96,16 @@ Die Komponente prüft ein Feld erst, wenn es den Fokus verliert. Dadurch stören
 
 ### Meldungen
 
-Die Meldung erscheint unter beiden Feldern und nennt Feldlabel und Werte. Zahlen und Daten werden in der aktiven Sprache formatiert.
+Die Meldung erscheint unter beiden Feldern und nennt das Feldlabel und den verletzten Grenzwert. Zahlen und Daten werden in der aktiven Sprache formatiert.
 
-| Fall                                      | Meldung (deutsch)                            |
-| ----------------------------------------- | -------------------------------------------- |
-| Von verlassen, Von größer als Bis         | Von 200 darf nicht größer als Bis 100 sein.  |
-| Bis verlassen, Bis kleiner als Von        | Bis 100 darf nicht kleiner als Von 200 sein. |
-| Wert außerhalb, nur untere Grenze gesetzt | Von: Der Wert muss mindestens 0 sein.        |
-| Wert außerhalb, nur obere Grenze gesetzt  | Bis: Der Wert darf höchstens 100 sein.       |
-| Wert außerhalb, beide Grenzen gesetzt     | Von: Zulässig sind Werte von 0 bis 100.      |
-| Datum nicht lesbar (`luxType="date"`)     | Von: Bitte ein gültiges Datum eingeben.      |
+| Fall                                      | Meldung (deutsch)                       |
+| ----------------------------------------- | --------------------------------------- |
+| Von verlassen, Von größer als Bis         | Von darf nicht größer als 100 sein.     |
+| Bis verlassen, Bis kleiner als Von        | Bis darf nicht kleiner als 200 sein.    |
+| Wert außerhalb, nur untere Grenze gesetzt | Von: Der Wert muss mindestens 0 sein.   |
+| Wert außerhalb, nur obere Grenze gesetzt  | Bis: Der Wert darf höchstens 100 sein.  |
+| Wert außerhalb, beide Grenzen gesetzt     | Von: Zulässig sind Werte von 0 bis 100. |
+| Datum nicht lesbar (`luxType="date"`)     | Von: Bitte ein gültiges Datum eingeben. |
 
 Die Texte liegen unter den Schlüsseln `luxc.min-max-input.*` und lassen sich wie alle LUX-Texte über Transloco überschreiben.
 

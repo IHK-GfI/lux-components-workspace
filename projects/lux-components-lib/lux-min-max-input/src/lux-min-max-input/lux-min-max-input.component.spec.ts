@@ -90,7 +90,7 @@ describe('LuxMinMaxInputComponent', () => {
       await typeInto(1, '100');
       await blur(1);
 
-      expect(messageText()).toBe('Bis 100 darf nicht kleiner als Von 200 sein.');
+      expect(messageText()).toBe('Bis darf nicht kleiner als 200 sein.');
       expect(invalidStates()).toEqual(['false', 'true']);
       expect(fieldErrorLines()).toBe(0);
       expect(emitted.at(-1)).toEqual({ min: 200 });
@@ -109,7 +109,7 @@ describe('LuxMinMaxInputComponent', () => {
       await typeInto(0, '200');
       await blur(0);
 
-      expect(messageText()).toBe('Von 200 darf nicht größer als Bis 100 sein.');
+      expect(messageText()).toBe('Von darf nicht größer als 100 sein.');
       expect(invalidStates()).toEqual(['true', 'false']);
       expect(emitted.at(-1)).toEqual({ max: 100 });
     });
@@ -122,7 +122,7 @@ describe('LuxMinMaxInputComponent', () => {
       expect(messageText()).toBe('');
 
       await blur(1);
-      expect(messageText()).toBe('Bis 1 darf nicht kleiner als Von 5 sein.');
+      expect(messageText()).toBe('Bis darf nicht kleiner als 5 sein.');
 
       await typeInto(1, '10');
       expect(messageText()).toBe('');
@@ -227,7 +227,7 @@ describe('LuxMinMaxInputComponent', () => {
       expect(invalidStates()).toEqual(['false', 'false']);
 
       await blur(1);
-      expect(messageText()).toBe('Bis 100 darf nicht kleiner als Von 200 sein.');
+      expect(messageText()).toBe('Bis darf nicht kleiner als 200 sein.');
     });
 
     it('Sollte die Meldung des anderen Feldes behalten, wenn ein fehlerfreies Feld verlassen wird', async () => {
@@ -448,7 +448,7 @@ describe('LuxMinMaxInputComponent', () => {
       await settle();
       await blur(1);
 
-      expect(messageText()).toBe('Bis 01.05.26 darf nicht kleiner als Von 10.05.26 sein.');
+      expect(messageText()).toBe('Bis darf nicht kleiner als 10.05.26 sein.');
       expect(emitted).toEqual([]);
 
       fixture.componentRef.setInput('luxValue', { min: '2026-05-10T00:00:00.000Z', max: '2026-06-01T00:00:00.000Z' });
