@@ -64,26 +64,12 @@ export class LuxLangSelectAcComponent implements OnInit {
     }
     const newLocale = this.localeOptions.find((item) => item.code === locale);
     if (newLocale) {
-      // Sicherstellen, dass Übersetzungen nach Lazy-Nachladen vorhanden sind
-      this.translocoService.load(newLocale.code).subscribe({
-        next: () => this.translocoService.setActiveLang(newLocale!.code),
-        error: () => this.translocoService.setActiveLang('de')
-      });
+      this.activateLocale(newLocale.code);
     }
   }
 
   onLocaleChanged(locale: LuxLocaleAc) {
-    // Vor Sprachwechsel: erst laden, dann aktivieren, damit Komponenten nicht kurz Keys anzeigen.
-    this.translocoService.load(locale.code).subscribe({
-      next: () => {
-        this.cookieService.set(this.cookieName, locale.code, undefined, this.cookiePath);
-        this.translocoService.setActiveLang(locale.code);
-      },
-      error: () => {
-        // Fallback: Cookie nicht setzen, bei Fehler auf Default zurück.
-        this.translocoService.setActiveLang('de');
-      }
-    });
+    this.activateLocale(locale.code, () => this.cookieService.set(this.cookieName, locale.code, undefined, this.cookiePath));
   }
 
   onMenuOpened() {
@@ -95,5 +81,25 @@ export class LuxLangSelectAcComponent implements OnInit {
     if (customTrigger) {
       customTrigger.nativeElement.children[0].focus();
     }
+  }
+
+  /**
+   * Vor dem Sprachwechsel erst laden, damit Komponenten nicht kurz Keys anzeigen. Schlägt das
+   * Laden fehl, wird nicht gewechselt und onActivated nicht aufgerufen: Ohne fallbackLang bleibt
+   * die bisherige Sprache aktiv, mit fallbackLang aktiviert Transloco selbst die Fallback-Sprache.
+   */
+  private activateLocale(code: string, onActivated?: () => void) {
+    this.translocoService.load(code).subscribe({
+      next: () => {
+        // Mit fallbackLang liefert load() bei einem Fehler die Fallback-Übersetzungen; die
+        // angeforderte Sprache ist dann nicht geladen.
+        if (!this.translocoService.getTranslation().has(code)) {
+          return;
+        }
+        this.translocoService.setActiveLang(code);
+        onActivated?.();
+      },
+      error: () => undefined
+    });
   }
 }

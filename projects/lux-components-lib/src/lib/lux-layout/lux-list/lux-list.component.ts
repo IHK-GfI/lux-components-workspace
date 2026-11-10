@@ -16,8 +16,9 @@ import {
   output,
   PLATFORM_ID
 } from '@angular/core';
-import { TranslocoPipe, translateSignal } from '@jsverse/transloco';
+import { TranslocoPipe } from '@jsverse/transloco';
 import { LuxIconComponent } from '../../lux-icon/lux-icon/lux-icon.component';
+import { luxTranslateSignal } from '../../lux-util/lux-translate-signal';
 import { LuxUtil } from '../../lux-util/lux-util';
 import { LuxListItemComponent } from './lux-list-subcomponents/lux-list-item.component';
 
@@ -75,7 +76,7 @@ export class LuxListComponent implements AfterViewInit, OnInit, OnDestroy {
     return this.effectiveLabel();
   }
 
-  private defaultLabel = translateSignal('luxc.list.arialabel');
+  private defaultLabel = luxTranslateSignal('luxc.list.arialabel');
   private elementRef = inject(ElementRef);
   private platformId = inject(PLATFORM_ID);
   private cdr = inject(ChangeDetectorRef);

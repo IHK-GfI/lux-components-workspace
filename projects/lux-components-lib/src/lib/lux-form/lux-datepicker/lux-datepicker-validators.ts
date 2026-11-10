@@ -47,6 +47,9 @@ export interface LuxDateTimeValueOptions {
  * matDatepickerMax, matDatepickerFilter), damit luxErrorCallback und die Fehlertexte in beiden Fällen gleich
  * funktionieren.
  *
+ * Die message folgt einem Sprachwechsel: Der Validator liest TranslocoService.activeLang() und wird
+ * dadurch bei einem Sprachwechsel neu ausgewertet (benötigt Transloco >= 8.3.0).
+ *
  * @param options `min`, `max` und `filter` als Getter, passend zu luxMinDate, luxMaxDate und luxCustomFilter.
  * @returns Ein FieldValidator zur Verwendung mit validate() aus @angular/forms/signals.
  *
@@ -71,6 +74,9 @@ export function luxDateValue<TPathKind extends PathKind = PathKind.Root>(
       return undefined;
     }
 
+    // Abhängigkeit auf die Sprache, damit die übersetzte message einem Sprachwechsel folgt.
+    tService.activeLang();
+
     const date = parseLocalDate(value);
     if (!date) {
       return { kind: 'matDatepickerParse', message: tService.translate('luxc.datepicker.error_message.invalid') };
@@ -84,6 +90,8 @@ export function luxDateValue<TPathKind extends PathKind = PathKind.Root>(
  * Signal-Forms-Schema-Validator für ein Feld, das sich lux-datepicker und lux-timepicker über
  * luxReferenceControl teilen. Prüft das Format ("yyyy-MM-ddTHH:mm", siehe LuxUtil.isLocalDateTime), den Tag
  * wie luxDateValue() und die Uhrzeit wie luxTimeValue().
+ *
+ * Die message folgt wie bei luxDateValue() einem Sprachwechsel.
  *
  * @param options Grenzen und Filter als Getter, passend zu den Inputs der beiden Komponenten.
  * @returns Ein FieldValidator zur Verwendung mit validate() aus @angular/forms/signals.
@@ -105,6 +113,9 @@ export function luxDateTimeValue<TPathKind extends PathKind = PathKind.Root>(
     if (value == null || value === '') {
       return undefined;
     }
+
+    // Abhängigkeit auf die Sprache, damit die übersetzte message einem Sprachwechsel folgt.
+    tService.activeLang();
 
     const dateTime = parseLocalDateTime(value);
     if (!dateTime) {

@@ -2,7 +2,7 @@
   <lux-menu
     class="lux-lang-select-menu"
     luxAriaMenuTriggerLabel="{{ 'luxc.lang-select.aria.langmenu.btn' | transloco }}"
-    [luxMenuLabel]="translocoService.getActiveLang().toUpperCase()"
+    [luxMenuLabel]="translocoService.activeLang().toUpperCase()"
     luxMenuIconName=""
     [luxDisplayExtended]="false"
   >

@@ -20,9 +20,9 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlContainer, ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, NgControl } from '@angular/forms';
 import { MatButtonToggle, MatButtonToggleChange, MatButtonToggleGroup } from '@angular/material/button-toggle';
-import { TranslocoService } from '@jsverse/transloco';
 import { LuxIconComponent } from '../../lux-icon/lux-icon/lux-icon.component';
 import { LuxConsoleService } from '../../lux-util/lux-console.service';
+import { luxTranslateSignal } from '../../lux-util/lux-translate-signal';
 
 export interface LuxButtonToggleOption<T = unknown> {
   label: string;
@@ -117,7 +117,7 @@ export class LuxButtonToggleComponent<T = unknown> implements ControlValueAccess
     }
 
     if (this.hasRequiredError()) {
-      return this.tService.translate('luxc.button-toggle.error_message.required');
+      return this.requiredErrorMessage();
     }
 
     return undefined;
@@ -135,8 +135,8 @@ export class LuxButtonToggleComponent<T = unknown> implements ControlValueAccess
   private readonly destroyRef = inject(DestroyRef);
   private readonly injector = inject(Injector);
   private readonly controlContainer = inject(ControlContainer, { optional: true });
-  private readonly tService = inject(TranslocoService);
-  private readonly defaultAriaLabel = signal(this.tService.translate('luxc.button-toggle.aria_label'));
+  private readonly defaultAriaLabel = luxTranslateSignal('luxc.button-toggle.aria_label');
+  private readonly requiredErrorMessage = luxTranslateSignal('luxc.button-toggle.error_message.required');
   private readonly uniqueId = LuxButtonToggleComponent.nextUniqueId++;
   private onChange: (value: T | T[] | undefined) => void = () => {};
   private onTouched: () => void = () => {};
@@ -262,10 +262,6 @@ export class LuxButtonToggleComponent<T = unknown> implements ControlValueAccess
   }
 
   ngOnInit(): void {
-    this.tService.langChanges$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-      this.defaultAriaLabel.set(this.tService.translate('luxc.button-toggle.aria_label'));
-    });
-
     const bindingName = this.luxControlBinding();
     if (!bindingName || this.getNgControl()) {
       return;
