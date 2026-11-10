@@ -1,4 +1,4 @@
-import { Signal } from '@angular/core';
+import { OutputRef, Signal } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import type { Field } from '@angular/forms/signals';
 import { LuxThemePalette } from '../../lux-util/lux-colors.enum';
@@ -15,6 +15,11 @@ export interface LuxFilterableFormComponent<T = any> {
   readonly luxLabel: Signal<string>;
   /** Nur im Legacy-Modus (luxControlBinding) vorhanden; bei [formField] undefined. */
   readonly formControl?: FormControl<T>;
+  /**
+   * Das value-Model der Komponente (z.B. Datepicker, Timepicker). Es meldet auch Änderungen, die die Komponente
+   * ohne umgebendes Formular still in ihr FormControl schreibt (siehe LuxFilterFormComponent.addFilterControl()).
+   */
+  readonly value?: OutputRef<T>;
 }
 
 export class LuxFilterItem<T = any> {

@@ -14,7 +14,8 @@ import {
   LuxRadioComponent,
   LuxSelectComponent,
   LuxSnackbarService,
-  LuxToggleComponent
+  LuxToggleComponent,
+  LuxUtil
 } from '@ihk-gfi/lux-components';
 import {
   LuxAccordionAriaComponent,
@@ -101,7 +102,7 @@ export class AccordionAriaExampleComponent {
   readonly borderCheck = signal(false);
   readonly showHeaderButtons1Panel = signal(true);
   readonly showHeaderDatepicker2Panel = signal(true);
-  readonly headerDate2Panel = signal<string | null>(new Date().toISOString());
+  readonly headerDate2Panel = signal<string | null>(LuxUtil.todayAsLocalDate());
   readonly stickyHeader = signal(false);
   readonly stickyHeaderOffset = signal('');
   readonly stickyLongContent = signal(false);

@@ -12,7 +12,6 @@ import { LuxAutocompleteComponent } from './lux-autocomplete/lux-autocomplete.co
 import { LuxCheckboxComponent } from './lux-checkbox/lux-checkbox.component';
 import { LuxChipsComponent } from './lux-chips/lux-chips.component';
 import { LuxDatepickerComponent } from './lux-datepicker/lux-datepicker.component';
-import { LuxDatetimepickerComponent } from './lux-datetimepicker/lux-datetimepicker.component';
 import { LuxFileInputComponent } from './lux-file/lux-file-input/lux-file-input.component';
 import { LuxInputComponent } from './lux-input/lux-input.component';
 import { LuxSelectComponent } from './lux-select/lux-select.component';
@@ -38,19 +37,14 @@ describe('Form-Controls - aria-label/aria-labelledby am nativen Eingabefeld', ()
   });
 
   // Jeder Testfall bekommt seine eigene, schlanke Host-Komponente mit nur dem jeweils relevanten
-  // Control. Zuvor rendersierte eine gemeinsame Host-Komponente immer alle 7 Form-Controls
-  // (inkl. Autocomplete/Datepicker/Datetimepicker/Timepicker/File-Input) für jeden der 14 Tests
+  // Control. Zuvor rendersierte eine gemeinsame Host-Komponente immer alle Form-Controls
+  // (inkl. Autocomplete/Datepicker/Timepicker/File-Input) für jeden Test
   // mit, was die Kosten pro Test ca. versiebenfacht hat, obwohl nur ein Control geprüft wird.
   const cases: { selector: string; nativeSelector: string; componentType: new () => AriaBindingsTestComponent }[] = [
     { selector: 'lux-input', nativeSelector: 'lux-input input', componentType: LuxInputAriaBindingsTestComponent },
     { selector: 'lux-textarea', nativeSelector: 'lux-textarea textarea', componentType: LuxTextareaAriaBindingsTestComponent },
     { selector: 'lux-autocomplete', nativeSelector: 'lux-autocomplete input', componentType: LuxAutocompleteAriaBindingsTestComponent },
     { selector: 'lux-datepicker', nativeSelector: 'lux-datepicker input', componentType: LuxDatepickerAriaBindingsTestComponent },
-    {
-      selector: 'lux-datetimepicker',
-      nativeSelector: 'lux-datetimepicker input',
-      componentType: LuxDatetimepickerAriaBindingsTestComponent
-    },
     { selector: 'lux-timepicker', nativeSelector: 'lux-timepicker input', componentType: LuxTimepickerAriaBindingsTestComponent },
     {
       selector: 'lux-file-input',
@@ -117,13 +111,6 @@ class LuxAutocompleteAriaBindingsTestComponent extends AriaBindingsTestComponent
   template: `<lux-datepicker [luxAriaLabel]="ariaLabel" [luxAriaLabelledby]="ariaLabelledby"></lux-datepicker>`
 })
 class LuxDatepickerAriaBindingsTestComponent extends AriaBindingsTestComponent {}
-
-@Component({
-  selector: 'lux-test-datetimepicker-aria-bindings',
-  imports: [LuxDatetimepickerComponent],
-  template: `<lux-datetimepicker [luxAriaLabel]="ariaLabel" [luxAriaLabelledby]="ariaLabelledby"></lux-datetimepicker>`
-})
-class LuxDatetimepickerAriaBindingsTestComponent extends AriaBindingsTestComponent {}
 
 @Component({
   selector: 'lux-test-timepicker-aria-bindings',

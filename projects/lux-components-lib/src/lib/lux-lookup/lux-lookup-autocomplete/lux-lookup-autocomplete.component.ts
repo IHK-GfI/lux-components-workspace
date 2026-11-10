@@ -15,6 +15,7 @@ import { LuxTagIdDirective } from '../../lux-directives/lux-tag-id/lux-tag-id.di
 import { LuxFormControlWrapperComponent } from '../../lux-form/lux-form-control-wrapper/lux-form-control-wrapper.component';
 import { LuxValidationErrors } from '../../lux-form/lux-form-model/lux-form-component-base.class';
 import { provideLuxFormControl } from '../../lux-form/lux-form-model/lux-form-control-base.class';
+import { LuxMatInputErrorDirective } from '../../lux-form/lux-form-model/lux-mat-input-error.directive';
 import { LuxLookupComponent } from '../lux-lookup-model/lux-lookup-component';
 import { LuxLookupTableEntry } from '../lux-lookup-model/lux-lookup-table-entry';
 @Component({
@@ -26,6 +27,7 @@ import { LuxLookupTableEntry } from '../lux-lookup-model/lux-lookup-table-entry'
   imports: [
     LuxFormControlWrapperComponent,
     MatInput,
+    LuxMatInputErrorDirective,
     MatAutocompleteTrigger,
     LuxTagIdDirective,
     LuxAriaDescribedbyDirective,

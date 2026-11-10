@@ -134,6 +134,11 @@ export abstract class LuxFormFileBase<T = any> extends LuxFormValueControlBase<T
     this.bridge.markAsTouched();
   }
 
+  override reset() {
+    super.reset();
+    this.bridge.resetInteractionState();
+  }
+
   override markAsDirty() {
     super.markAsDirty();
     this.bridge.markAsDirty();
@@ -706,6 +711,10 @@ export abstract class LuxFormFileBase<T = any> extends LuxFormValueControlBase<T
    */
   private isDnDAllowed(): boolean {
     return this.luxDnDActive() && !this.luxDisabled() && !this.luxReadonly();
+  }
+
+  protected override hasPriorityError(errors: LuxValidationErrors): boolean {
+    return Object.values(LuxFileErrorCause).some((cause) => !!errors[cause]);
   }
 
   protected override errorMessageModifier(value: any, errors: LuxValidationErrors): string | undefined {

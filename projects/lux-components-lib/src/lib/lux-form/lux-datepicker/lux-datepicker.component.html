@@ -11,18 +11,20 @@
   <div class="lux-input-row-authentic">
     <input
       matInput
+      [luxMatInputError]="showError()"
       luxTagIdHandler
       [luxTagId]="luxTagId()"
       [matDatepicker]="datepicker"
       [min]="min()"
       [max]="max()"
-      [matDatepickerFilter]="luxCustomFilter()"
+      [matDatepickerFilter]="dateFilter()"
       [placeholder]="luxPlaceholder()"
       [disabled]="isDisabled()"
       [required]="isRequired()"
       [readonly]="isReadonly()"
       [autocomplete]="luxAutocomplete()"
       (dateInput)="onDateChange($event)"
+      (input)="onTextInput()"
       (blur)="luxBlur.emit($event)"
       (focus)="onFocus($event)"
       (focusin)="onFocusIn($event)"

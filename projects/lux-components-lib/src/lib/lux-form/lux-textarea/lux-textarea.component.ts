@@ -11,6 +11,7 @@ import { LuxMaxLengthDirective } from '../lux-form-control/lux-form-directives/l
 import { LuxNameDirective } from '../lux-form-control/lux-form-directives/lux-name/lux-name-directive.directive';
 import { provideLuxFormControl } from '../lux-form-model/lux-form-control-base.class';
 import { LuxFormLegacyValueBase } from '../lux-form-model/lux-form-legacy/lux-form-legacy-value-base.class';
+import { LuxMatInputErrorDirective } from '../lux-form-model/lux-mat-input-error.directive';
 
 @Component({
   selector: 'lux-textarea, lux-textarea-ac',
@@ -21,6 +22,7 @@ import { LuxFormLegacyValueBase } from '../lux-form-model/lux-form-legacy/lux-fo
   imports: [
     LuxFormControlWrapperComponent,
     MatInput,
+    LuxMatInputErrorDirective,
     CdkTextareaAutosize,
     LuxNameDirective,
     LuxMaxLengthDirective,

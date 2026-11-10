@@ -1,307 +1,270 @@
 import { getLocaleFirstDayOfWeek } from '@angular/common';
-import { Injectable } from '@angular/core';
-import { NativeDateAdapter } from '@angular/material/core';
-import { LuxUtil } from '../../lux-util/lux-util';
+import { Injectable, inject } from '@angular/core';
+import { DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
+import {
+  LuxLocalDate,
+  addDaysToLocalDate,
+  dayOfWeekOf,
+  formatLocalDate,
+  getDaysInMonth,
+  localDateOf,
+  parseLocalDate
+} from '../../lux-util/lux-local-date';
 import DateTimeFormatOptions = Intl.DateTimeFormatOptions;
 
 /**
- * DateAdapter der LuxDatepickerComponent.
+ * Ein Kalendertag ohne Zeitzone, der Werttyp des LuxDatepickerAdapter.
+ * Der Monat zählt von 1 bis 12 (wie Temporal), Angular Material zählt dagegen von 0 bis 11.
+ */
+export class LuxCalendarDate implements LuxLocalDate {
+  constructor(
+    readonly year: number,
+    readonly month: number,
+    readonly day: number
+  ) {}
+
+  static of(date: LuxLocalDate): LuxCalendarDate {
+    return new LuxCalendarDate(date.year, date.month, date.day);
+  }
+}
+
+type LuxDatePart = 'day' | 'month' | 'year';
+
+// Tag und Monat 1- oder 2-stellig, das Jahr genau 4-stellig, getrennt durch ".", "/", "-" oder ein Leerzeichen
+const DATE_INPUT_REGEXP = /^(\d{1,4})[./\-\s](\d{1,4})[./\-\s](\d{1,4})$/;
+
+// Ohne Trenner nur mit genau 8 Ziffern, sonst wäre die Eingabe mehrdeutig (z.B. "1122029")
+const DATE_INPUT_WITHOUT_SEPARATOR_REGEXP = /^\d{8}$/;
+
+/**
+ * DateAdapter der LuxDatepickerComponent für Kalendertage ohne Zeitzone.
  *
- * Der Datepicker speichert ein Datum immer als UTC-Mitternacht (z.B. "2029-05-26T00:00:00.000Z").
- * Damit in jeder Zeitzone genau der gespeicherte Tag angezeigt wird, arbeitet dieser Adapter - anders als
- * der NativeDateAdapter - bei Anzeige, Kalender und Vergleichen durchgehend mit den UTC-Datumsbestandteilen.
- * Welcher Tag mit einem übergebenen Wert gemeint ist, bestimmt toCalendarDay().
+ * Gerechnet wird ohne JavaScript-Date (siehe lux-local-date.ts), deshalb gibt es keinen Tagesversatz je nach
+ * Zeitzone und keine Fehler an den Tagen der Zeitumstellung. Nur für die Ausgabe über Intl wird ein Date auf
+ * UTC-Mitternacht erzeugt und in UTC formatiert.
+ *
+ * Die Texteingabe wird nach der Reihenfolge von Tag, Monat und Jahr der aktiven Locale gelesen
+ * (de: dd.MM.yyyy, en-US: MM/dd/yyyy, en-GB: dd/MM/yyyy).
  */
 @Injectable()
-export class LuxDatepickerAdapter extends NativeDateAdapter {
-  // UTC-Zeitpunkt im ISO-Format ("...Z")
-  private readonly utcRegExp = new RegExp(/Z$/i);
+export class LuxDatepickerAdapter extends DateAdapter<LuxCalendarDate, string> {
+  private datePartOrder?: { locale: string; order: LuxDatePart[] };
 
-  // dd.MM.yyyy
-  private readonly dotRegExp = new RegExp(/\d{1,2}\.\d{1,2}\.\d{4}/);
-
-  // MM/dd/yyyy
-  private readonly backslashRegExp = new RegExp(/\d{1,2}\/\d{1,2}\/\d{4}/);
-
-  // dd-MM-yyyy
-  private readonly hyphenRegExp = new RegExp(/\d{1,2}-\d{1,2}-\d{4}/);
-
-  // yyyy-MM-dd
-  private readonly hyphenRegExp_1 = new RegExp(/\d{4}-\d{1,2}-\d{1,2}/);
-
-  // ddMMyyyy
-  private readonly noSeparatorRegExp = new RegExp(/\d{1,2}\d{1,2}\d{4}/);
-
-  referenceTimeProvider: (() => Date | null) | null = null;
-
-  // Liefert true, wenn der Datepicker mit einem Timepicker kombiniert ist (luxReferenceControl).
-  // Dann bilden Datum und Uhrzeit zusammen einen UTC-Zeitpunkt und der Tag wird immer über UTC bestimmt.
-  combinedWithTimeProvider: (() => boolean) | null = null;
-
-  /**
-   * Bestimmt den gemeinten Kalendertag eines Wertes und liefert ihn als UTC-Mitternacht (so speichert der Datepicker).
-   *
-   * - Ein Datum ohne Zeitzone (z.B. "2029-05-26", "26.05.2029" oder "2029-05-26T23:30:00") oder ein ISO-String mit
-   *   Offset (z.B. "2029-05-26T23:30:00+02:00"): der geschriebene Tag.
-   * - Ein UTC-Zeitpunkt ("...Z") oder ein Date-Objekt genau auf UTC-Mitternacht: der UTC-Tag.
-   * - Ein UTC-Zeitpunkt oder ein Date-Objekt mit anderer Uhrzeit: wie bis Version 21.4.0 der lokale Tag des Nutzers
-   *   (z.B. lokale Mitternacht "2029-05-25T22:00:00.000Z" bzw. new Date(2029, 4, 26) in Europe/Berlin => 26.05.2029).
-   * @param value ein String oder ein Date-Objekt.
-   * @returns den Kalendertag als UTC-Mitternacht oder null, wenn der Wert kein gültiges Datum ist.
-   */
-  toCalendarDay(value: unknown): Date | null {
-    let date: Date | null = null;
-    let isInstant = false;
-
-    if (value instanceof Date) {
-      date = value;
-      isInstant = true;
-    } else if (typeof value === 'string' && LuxUtil.ISO_8601_FULL.test(value)) {
-      date = LuxUtil.parseISO8601AsUTC(value);
-      isInstant = this.utcRegExp.test(value);
-      if (!isInstant && LuxUtil.isDate(date)) {
-        // Ohne Zeitzone oder mit Offset: der geschriebene Tag (die ersten zehn Zeichen "yyyy-MM-dd")
-        date = LuxUtil.parseISO8601AsUTC(value.substring(0, 10) + 'T00:00:00');
-      }
-    } else if (typeof value === 'string') {
-      // Andere Formate (z.B. "26.05.2029") bezeichnen den geschriebenen Tag
-      date = this.parse(value);
-    }
-
-    if (!date || !LuxUtil.isDate(date)) {
-      return null;
-    }
-
-    const result = new Date(0);
-    if (isInstant && !this.isUTCMidnight(date)) {
-      result.setUTCFullYear(date.getFullYear(), date.getMonth(), date.getDate());
-    } else {
-      result.setUTCFullYear(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
-    }
-    return result;
+  constructor() {
+    super();
+    this.setLocale(inject<string | null>(MAT_DATE_LOCALE, { optional: true }) ?? 'de-DE');
   }
 
-  override createDate(year: number, month: number, date: number): Date {
-    // Create UTC-Date
-    const result = new Date(Date.UTC(year, month, date));
-    const refTime = this.referenceTimeProvider?.();
-    if (refTime) {
-      result.setUTCHours(refTime.getUTCHours(), refTime.getUTCMinutes(), refTime.getUTCSeconds(), 0);
-    } else {
-      result.setUTCHours(0, 0, 0, 0);
-    }
-    return result;
+  getYear(date: LuxCalendarDate): number {
+    return date.year;
   }
 
-  override getYear(date: Date): number {
-    return date.getUTCFullYear();
+  getMonth(date: LuxCalendarDate): number {
+    return date.month - 1;
   }
 
-  override getMonth(date: Date): number {
-    return date.getUTCMonth();
+  getDate(date: LuxCalendarDate): number {
+    return date.day;
   }
 
-  override getDate(date: Date): number {
-    return date.getUTCDate();
+  getDayOfWeek(date: LuxCalendarDate): number {
+    return dayOfWeekOf(date);
   }
 
-  override getDayOfWeek(date: Date): number {
-    return date.getUTCDay();
+  getMonthNames(style: 'long' | 'short' | 'narrow'): string[] {
+    const dtf = new Intl.DateTimeFormat(this.locale, { month: style, timeZone: 'UTC' });
+    return Array.from({ length: 12 }, (_, month) => dtf.format(toUtcDate(2017, month + 1, 1)));
   }
 
-  override getYearName(date: Date): string {
-    return this.format(date, { year: 'numeric' });
-  }
-
-  override getNumDaysInMonth(date: Date): number {
-    // Tag 0 des Folgemonats entspricht dem letzten Tag des Monats
-    return this.getDate(this.createUTCDateWithOverflow(this.getYear(date), this.getMonth(date) + 1, 0));
-  }
-
-  override addCalendarMonths(date: Date, months: number): Date {
-    let newDate = this.createUTCDateWithOverflow(this.getYear(date), this.getMonth(date) + months, this.getDate(date));
-
-    // Bei einem Überlauf (z.B. 31.01. + 1 Monat) wird der letzte Tag des Zielmonats verwendet
-    if (this.getMonth(newDate) !== (((this.getMonth(date) + months) % 12) + 12) % 12) {
-      newDate = this.createUTCDateWithOverflow(this.getYear(newDate), this.getMonth(newDate), 0);
-    }
-
-    return newDate;
-  }
-
-  override addCalendarDays(date: Date, days: number): Date {
-    return this.createUTCDateWithOverflow(this.getYear(date), this.getMonth(date), this.getDate(date) + days);
-  }
-
-  override today(): Date {
-    // Der heutige Tag aus Sicht des Nutzers (lokale Zeitzone) als UTC-Mitternacht
-    const now = new Date();
-    return this.createUTCDateWithOverflow(now.getFullYear(), now.getMonth(), now.getDate());
-  }
-
-  override format(date: Date | string, displayFormat: DateTimeFormatOptions): string {
-    if (!date) {
-      return '';
-    }
-
-    if (typeof date === 'string') {
-      date = LuxUtil.parseISO8601AsUTC(date);
-    }
-
-    return date.toLocaleDateString(this.locale, { ...displayFormat, timeZone: 'UTC' });
-  }
-
-  // Wird u.a. von Material intern (z.B. MatDatepickerInput#writeValue) statt parse() verwendet,
-  // um Werte aus dem FormControl in ein Date zu konvertieren.
-  override deserialize(value: any): Date | null {
-    // Ohne Timepicker wird der gemeinte Kalendertag verwendet (siehe toCalendarDay).
-    // Ein reines Datum (z.B. "2029-05-26") interpretiert der native Parser bereits als UTC-Mitternacht.
-    if (!this.combinedWithTimeProvider?.() && (value instanceof Date || (typeof value === 'string' && LuxUtil.ISO_8601_FULL.test(value)))) {
-      return this.toCalendarDay(value) ?? this.invalid();
-    }
-
-    // Ein ISO-String ohne Zeitzoneninfo (z.B. "2027-03-13T00:00:00") würde vom NativeDateAdapter als lokale Zeit interpretiert
-    if (LuxUtil.isISO8601WithoutTimezone(value)) {
-      return LuxUtil.parseISO8601AsUTC(value);
-    }
-    return super.deserialize(value);
-  }
-
-  override parse(value: string): Date | null {
-    let result: Date | null;
-    if (value) {
-      // Prüfen, ob der Wert ein ISO-String ist
-      if (LuxUtil.ISO_8601_FULL.test(value)) {
-        result = LuxUtil.parseISO8601AsUTC(value);
-      } else if (this.dotRegExp.test(value)) {
-        // Hat der String das Format dd.MM.YYYY ?
-        result = this.getUTCNulled_ddMMYYYY(value, '.');
-      } else if (this.backslashRegExp.test(value)) {
-        result = this.getUTCNulled_MMddYYY(value, '/');
-      } else if (this.hyphenRegExp.test(value)) {
-        result = this.getUTCNulled_ddMMYYYY(value, '-');
-      } else if (this.hyphenRegExp_1.test(value)) {
-        result = this.getUTCNulled_YYYYMMdd(value, '-');
-      } else if (this.noSeparatorRegExp.test(value)) {
-        result = this.getUTCNulled_ddMMYYYYNoSeparator(value);
-      } else {
-        // Dies ist nötig, damit die Fehlermeldung "Das Feld enthält keinen gültigen Wert" angezeigt wird,
-        // wenn der String nicht geparst werden kann.
-        result = value as any;
-      }
-    } else {
-      result = null;
-    }
-    return result;
-  }
-
-  override getFirstDayOfWeek(): number {
-    let startDay;
-    try {
-      startDay = getLocaleFirstDayOfWeek(this.locale);
-    } catch (e) {
-      startDay = super.getFirstDayOfWeek();
-    }
-    return startDay;
-  }
-
-  /**
-   * UTC Date mit 0-Werten für Time erhalten. Werte außerhalb des gültigen Bereichs laufen über
-   * (z.B. Tag 0 => letzter Tag des Vormonats).
-   * @param year
-   * @param month
-   * @param date
-   */
-  private createUTCDateWithOverflow(year: number, month: number, date: number): Date {
-    const result = new Date(0);
-    result.setUTCFullYear(year, month, date);
-    return result;
-  }
-
-  private isUTCMidnight(date: Date): boolean {
-    return date.getUTCHours() === 0 && date.getUTCMinutes() === 0 && date.getUTCSeconds() === 0 && date.getUTCMilliseconds() === 0;
-  }
-
-  private applyReferenceTime(date: Date): Date {
-    const refTime = this.referenceTimeProvider?.();
-    if (refTime) {
-      date.setUTCHours(refTime.getUTCHours(), refTime.getUTCMinutes(), refTime.getUTCSeconds(), 0);
-    }
-    return date;
-  }
-
-  /**
-   * UTC Date mit 0-Werten für Time aus einem ddMMYYYY-String erhalten.
-   * @param dateString
-   * @param separator
-   */
-  private getUTCNulled_ddMMYYYY(dateString: string, separator: string) {
-    const splitDate = dateString.split(separator);
-    const tempDate = new Date(0);
-    tempDate.setUTCFullYear(+splitDate[2], this.calculateMonth(+splitDate[1]), +splitDate[0]);
-    return this.applyReferenceTime(tempDate);
-  }
-
-  /**
-   * UTC Date mit 0-Werten für Time aus einem ddMMYYYY-String erhalten.
-   * @param dateString
-   */
-  private getUTCNulled_ddMMYYYYNoSeparator(dateString: string) {
-    const tempDate = new Date(0);
-    tempDate.setUTCFullYear(+dateString.substring(4, 8), this.calculateMonth(+dateString.substring(2, 4)), +dateString.substring(0, 2));
-    return this.applyReferenceTime(tempDate);
-  }
-
-  /**
-   * UTC Date mit 0-Werten für Time aus einem YYYYMMdd-String erhalten.
-   * @param dateString
-   * @param separator
-   */
-  private getUTCNulled_YYYYMMdd(dateString: string, separator: string) {
-    const splitDate = dateString.split(separator);
-    const tempDate = new Date(0);
-    tempDate.setUTCFullYear(+splitDate[0], this.calculateMonth(+splitDate[1]), +splitDate[2]);
-    return this.applyReferenceTime(tempDate);
-  }
-
-  /**
-   * UTC Date mit 0-Werten für Time aus einem MMddYYYY-String erhalten.
-   * @param dateString
-   * @param separator
-   */
-  private getUTCNulled_MMddYYY(dateString: string, separator: string) {
-    const splitDate = dateString.split(separator);
-    const tempDate = new Date(0);
-    tempDate.setUTCFullYear(+splitDate[2], this.calculateMonth(+splitDate[0]), +splitDate[1]);
-    return this.applyReferenceTime(tempDate);
-  }
-
-  override isValid(date: any) {
-    return LuxUtil.isDate(date) && this.isValidYear(date);
-  }
-
-  private calculateMonth(month: number) {
-    let newMonth: number;
-
-    if (month <= 0) {
-      newMonth = 0;
-    } else if (month >= 12) {
-      newMonth = 11;
-    } else {
-      newMonth = month - 1;
-    }
-
-    return newMonth;
-  }
-
-  private isValidYear(date: any) {
-    // Prüfen, ob das Jahr auch aus genau vier Stellen (z.B. 2020) besteht.
-    // Ohne diesen Check würden auch 5- oder 6-stellige Jahreszahlen akzeptiert.
-    return date.getUTCFullYear() && date.getUTCFullYear().toString().length === 4;
+  getDateNames(): string[] {
+    const dtf = new Intl.DateTimeFormat(this.locale, { day: 'numeric', timeZone: 'UTC' });
+    return Array.from({ length: 31 }, (_, day) => dtf.format(toUtcDate(2017, 1, day + 1)));
   }
 
   // Damit werden zwei Buchstaben für den Wochentag angezeigt (Mo, Di, Mi, ...)
-  override getDayOfWeekNames() {
-    return super.getDayOfWeekNames('short');
+  getDayOfWeekNames(): string[] {
+    const dtf = new Intl.DateTimeFormat(this.locale, { weekday: 'short', timeZone: 'UTC' });
+    // Der 01.01.2017 war ein Sonntag
+    return Array.from({ length: 7 }, (_, day) => dtf.format(toUtcDate(2017, 1, day + 1)));
   }
+
+  getYearName(date: LuxCalendarDate): string {
+    return this.format(date, { year: 'numeric' });
+  }
+
+  getFirstDayOfWeek(): number {
+    try {
+      return getLocaleFirstDayOfWeek(this.locale);
+    } catch {
+      // Wie NativeDateAdapter, wenn für die Locale keine Angular-Locale-Daten registriert sind
+      const locale = new Intl.Locale(this.locale) as Intl.Locale & {
+        getWeekInfo?: () => { firstDay: number };
+        weekInfo?: { firstDay: number };
+      };
+      const firstDay = (locale.getWeekInfo?.() ?? locale.weekInfo)?.firstDay ?? 0;
+      return firstDay === 7 ? 0 : firstDay;
+    }
+  }
+
+  getNumDaysInMonth(date: LuxCalendarDate): number {
+    return getDaysInMonth(date.year, date.month);
+  }
+
+  clone(date: LuxCalendarDate): LuxCalendarDate {
+    return new LuxCalendarDate(date.year, date.month, date.day);
+  }
+
+  createDate(year: number, month: number, date: number): LuxCalendarDate {
+    return new LuxCalendarDate(year, month + 1, date);
+  }
+
+  today(): LuxCalendarDate {
+    return LuxCalendarDate.of(localDateOf(new Date()));
+  }
+
+  /**
+   * Liest die Texteingabe nach der Reihenfolge der aktiven Locale.
+   * @returns den Tag, null bei einer leeren Eingabe oder einen ungültigen Wert (siehe invalid()).
+   */
+  parse(value: unknown): LuxCalendarDate | null {
+    if (value == null) {
+      return null;
+    }
+
+    if (this.isDateInstance(value)) {
+      return value;
+    }
+
+    if (typeof value !== 'string') {
+      return this.invalid();
+    }
+
+    const text = value.trim();
+    if (text === '') {
+      return null;
+    }
+
+    return this.parseText(text) ?? this.invalid();
+  }
+
+  format(date: LuxCalendarDate, displayFormat: DateTimeFormatOptions): string {
+    if (!this.isValid(date)) {
+      throw Error('LuxDatepickerAdapter: Ein ungültiges Datum kann nicht formatiert werden.');
+    }
+
+    return new Intl.DateTimeFormat(this.locale, { ...displayFormat, timeZone: 'UTC' }).format(toUtcDate(date.year, date.month, date.day));
+  }
+
+  addCalendarYears(date: LuxCalendarDate, years: number): LuxCalendarDate {
+    return this.addCalendarMonths(date, years * 12);
+  }
+
+  addCalendarMonths(date: LuxCalendarDate, months: number): LuxCalendarDate {
+    const monthIndex = date.year * 12 + date.month - 1 + months;
+    const year = Math.floor(monthIndex / 12);
+    const month = monthIndex - year * 12 + 1;
+
+    // Bei einem Überlauf (z.B. 31.01. + 1 Monat) wird der letzte Tag des Zielmonats verwendet
+    return new LuxCalendarDate(year, month, Math.min(date.day, getDaysInMonth(year, month)));
+  }
+
+  addCalendarDays(date: LuxCalendarDate, days: number): LuxCalendarDate {
+    return LuxCalendarDate.of(addDaysToLocalDate(date, days));
+  }
+
+  toIso8601(date: LuxCalendarDate): string {
+    return formatLocalDate(date);
+  }
+
+  /**
+   * Wird von Material für Werte von außen verwendet (u.a. writeValue, min, max, startAt).
+   * Angenommen werden ein LuxCalendarDate und ein Datum ohne Zeitzone ("yyyy-MM-dd", siehe LuxUtil.isLocalDate).
+   */
+  override deserialize(value: unknown): LuxCalendarDate | null {
+    if (value == null || value === '') {
+      return null;
+    }
+
+    if (this.isDateInstance(value)) {
+      return value;
+    }
+
+    const date = parseLocalDate(value);
+    return date ? LuxCalendarDate.of(date) : this.invalid();
+  }
+
+  isDateInstance(obj: unknown): obj is LuxCalendarDate {
+    return obj instanceof LuxCalendarDate;
+  }
+
+  isValid(date: LuxCalendarDate): boolean {
+    return (
+      Number.isInteger(date.year) &&
+      date.year >= 1 &&
+      date.month >= 1 &&
+      date.month <= 12 &&
+      date.day >= 1 &&
+      date.day <= getDaysInMonth(date.year, date.month)
+    );
+  }
+
+  invalid(): LuxCalendarDate {
+    return new LuxCalendarDate(NaN, NaN, NaN);
+  }
+
+  private parseText(text: string): LuxCalendarDate | null {
+    const order = this.getDatePartOrder();
+    let parts: string[];
+
+    if (DATE_INPUT_WITHOUT_SEPARATOR_REGEXP.test(text)) {
+      parts = [];
+      let index = 0;
+      for (const part of order) {
+        const length = part === 'year' ? 4 : 2;
+        parts.push(text.substring(index, index + length));
+        index += length;
+      }
+    } else {
+      const match = DATE_INPUT_REGEXP.exec(text);
+      if (!match) {
+        return null;
+      }
+      parts = [match[1], match[2], match[3]];
+    }
+
+    const values: Partial<Record<LuxDatePart, string>> = {};
+    order.forEach((part, index) => (values[part] = parts[index]));
+
+    if (values.year?.length !== 4 || values.month!.length > 2 || values.day!.length > 2) {
+      return null;
+    }
+
+    const date = new LuxCalendarDate(+values.year, +values.month!, +values.day!);
+    return this.isValid(date) ? date : null;
+  }
+
+  /**
+   * Die Reihenfolge von Tag, Monat und Jahr in der aktiven Locale, z.B. ['day', 'month', 'year'] für "de-DE".
+   */
+  private getDatePartOrder(): LuxDatePart[] {
+    if (this.datePartOrder?.locale !== this.locale) {
+      const order = new Intl.DateTimeFormat(this.locale, { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'UTC' })
+        .formatToParts(toUtcDate(2017, 1, 1))
+        .map((part) => part.type)
+        .filter((type): type is LuxDatePart => type === 'day' || type === 'month' || type === 'year');
+      this.datePartOrder = { locale: this.locale, order };
+    }
+
+    return this.datePartOrder.order;
+  }
+}
+
+/**
+ * Ein Date auf UTC-Mitternacht des Tages, nur für die Ausgabe über Intl mit timeZone 'UTC'.
+ * setUTCFullYear statt Date.UTC, damit die Jahre 0-99 nicht auf 1900-1999 abgebildet werden.
+ */
+function toUtcDate(year: number, month: number, day: number): Date {
+  const date = new Date(0);
+  date.setUTCFullYear(year, month - 1, day);
+  return date;
 }

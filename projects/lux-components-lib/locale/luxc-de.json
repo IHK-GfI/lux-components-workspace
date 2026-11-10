@@ -112,21 +112,12 @@
       "next.month.arialabel": "nächster Monat",
       "prev.month.arialabel": "vorheriger Monat"
     },
-    "datetimepicker": {
-      "error_message.empty": "Das Datum darf nicht leer sein",
-      "error_message.invalid": "Die Datum-/Uhrzeitkombination ist ungültig",
-      "error_message.max": "Das Datum überschreitet den Maximalwert",
-      "error_message.min": "Das Datum unterschreitet den Minimalwert",
-      "invalid.date": "Bitte ein Datum wählen",
-      "invalid.time": "Bitte eine Zeit eingeben",
-      "panel.hours.arialabel": "Stunden",
-      "panel.minutes.arialabel": "Minuten"
-    },
     "timepicker": {
       "error_message.empty": "Die Zeit darf nicht leer sein",
       "error_message.invalid": "Die Zeit ist ungültig",
       "error_message.max": "Die Zeit überschreitet den Maximalwert",
-      "error_message.min": "Die Zeit unterschreitet den Minimalwert"
+      "error_message.min": "Die Zeit unterschreitet den Minimalwert",
+      "placeholder.date_required": "Bitte zuerst ein Datum wählen"
     },
     "dialog": {
       "btn.close.arialabel": "Dialog schließen"

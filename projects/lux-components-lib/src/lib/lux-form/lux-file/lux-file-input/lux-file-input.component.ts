@@ -12,6 +12,7 @@ import { LuxFormControlWrapperComponent } from '../../lux-form-control-wrapper/l
 import { LuxValidationErrors } from '../../lux-form-model/lux-form-component-base.class';
 import { provideLuxFormControl } from '../../lux-form-model/lux-form-control-base.class';
 import { LuxFormFileBase } from '../../lux-form-model/lux-form-file-base.class';
+import { LuxMatInputErrorDirective } from '../../lux-form-model/lux-mat-input-error.directive';
 import { ILuxFileActionConfig } from '../lux-file-model/lux-file-action-config.interface';
 import { LuxFileCaptureDirective } from '../lux-file-model/lux-file-capture.directive';
 import { ILuxFileError } from '../lux-file-model/lux-file-error.interface';
@@ -52,6 +53,7 @@ const defaultDownloadActionConfig: ILuxFileActionConfig = {
   imports: [
     LuxFormControlWrapperComponent,
     MatInput,
+    LuxMatInputErrorDirective,
     LuxFileCaptureDirective,
     LuxFileProgressComponent,
     LuxTagIdDirective,

@@ -83,19 +83,10 @@
             [luxFilterHidden]="datepickerHidden()"
             luxFilterItem
           />
-          <lux-datetimepicker
-            class="lux-col-span-6 lt-md:lux-col-span-1"
-            luxLabel="Datetimepicker"
-            luxName="filter_datetimepicker"
-            luxControlBinding="datetimepicker"
-            [luxFilterDisabled]="datetimepickerDisabled()"
-            [luxFilterHidden]="datetimepickerHidden()"
-            luxFilterItem
-          />
           <div class="lux-col-span-12 lt-md:lux-col-span-1">
             <div class="lux-flex lux-gap-4 lt-sm:lux-flex-col lt-sm:lux-gap-0">
               <lux-datepicker
-                class="lux-flex-auto"
+                class="lux-flex-1"
                 luxLabel="Datepicker"
                 luxName="filter_datepicker_combined"
                 luxControlBinding="combinedDateTime"
@@ -106,7 +97,7 @@
                 #combinedDatepicker
               />
               <lux-timepicker
-                class="lux-flex-auto"
+                class="lux-flex-1"
                 luxLabel="Timepicker"
                 luxName="filter_timepicker_combined"
                 luxControlBinding="combinedDateTime"
@@ -276,14 +267,6 @@
               luxControlBinding="datepicker"
               [luxFilterDisabled]="datepickerDisabled()"
               [luxFilterHidden]="datepickerHidden()"
-              luxFilterItem
-            />
-            <lux-datetimepicker
-              luxLabel="Datetimepicker-Ac"
-              luxName="filter_datetimepicker_ac"
-              luxControlBinding="datetimepicker"
-              [luxFilterDisabled]="datetimepickerDisabled()"
-              [luxFilterHidden]="datetimepickerHidden()"
               luxFilterItem
             />
             <div class="lux-grid lux-col-span-2 lt-md:lux-col-span-1 lux-grid-cols-2 lt-md:lux-grid-cols-1 lux-gap-4">
@@ -457,13 +440,6 @@
       <div class="lux-flex lt-lg:lux-flex-col gt-md:lux-gap-16">
         <lux-toggle luxLabel="luxFilterDisabled" [(checked)]="datepickerDisabled" [luxNoLabels]="true" />
         <lux-toggle luxLabel="luxFilterHidden" [(checked)]="datepickerHidden" [luxNoLabels]="true" />
-      </div>
-    </div>
-    <div class="lux-flex lux-flex-col">
-      <div class="lux-flex-auto lux-pb-3">Datetimepicker</div>
-      <div class="lux-flex lt-lg:lux-flex-col gt-md:lux-gap-16">
-        <lux-toggle luxLabel="luxFilterDisabled" [(checked)]="datetimepickerDisabled" [luxNoLabels]="true" />
-        <lux-toggle luxLabel="luxFilterHidden" [(checked)]="datetimepickerHidden" [luxNoLabels]="true" />
       </div>
     </div>
     <div class="lux-flex lux-flex-col">

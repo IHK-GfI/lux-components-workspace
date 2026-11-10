@@ -5,7 +5,7 @@ import { luxMessage } from './support/lux-messages';
 
 /**
  * Datepicker-Tests. Sie laufen zusätzlich in den Projekten "form-tz-*" mit anderen
- * Zeitzonen des Browsers – der ISO-Wert und die Anzeige müssen überall derselbe Kalendertag bleiben.
+ * Zeitzonen des Browsers – der Wert ("yyyy-MM-dd") und die Anzeige müssen überall derselbe Tag bleiben.
  */
 const spec = formControl('datepicker');
 
@@ -16,6 +16,13 @@ test.beforeEach(async ({ page }) => {
   await example.options.useValidatorErrorMessages();
 });
 
+test('Startwert wird ohne Zeitzone angezeigt', async () => {
+  const section = example.section(EXAMPLE_WITHOUT_FORM, spec.tag);
+
+  await expect(spec.field(section.control)).toHaveValue('28.05.2020');
+  await expect.poll(() => section.value()).toBe('2020-05-28');
+});
+
 for (const input of ['1.2.2026', '01.02.2026', '01022026']) {
   test(`Eingabeformat "${input}"`, async () => {
     const section = example.section(EXAMPLE_WITHOUT_FORM, spec.tag);
@@ -24,7 +31,7 @@ for (const input of ['1.2.2026', '01.02.2026', '01022026']) {
     await field.fill(input);
     await field.blur();
 
-    await expect.poll(() => section.value()).toBe('2026-02-01T00:00:00.000Z');
+    await expect.poll(() => section.value()).toBe('2026-02-01');
     await expect(field).toHaveValue('01.02.2026');
     await expect(section.error).toHaveCount(0);
   });
@@ -46,11 +53,11 @@ test('Auswahl des Monatsersten im Kalender (#196)', async ({ page }) => {
     .click();
 
   await expect(calendar).toBeHidden();
-  await expect.poll(() => section.value()).toBe(`${year}-${month}-01T00:00:00.000Z`);
+  await expect.poll(() => section.value()).toBe(`${year}-${month}-01`);
   await expect(spec.field(section.control)).toHaveValue(`01.${month}.${year}`);
 });
 
-for (const input of ['abc', '1.2.26']) {
+for (const input of ['abc', '1.2.26', '31.02.2026', '2026-02-01']) {
   test(`Ungültige Eingabe "${input}"`, async () => {
     const section = example.section(EXAMPLE_WITHOUT_FORM, spec.tag);
     const field = spec.field(section.control);
@@ -65,8 +72,8 @@ for (const input of ['abc', '1.2.26']) {
 
 test('luxMinDate und luxMaxDate', async () => {
   await example.options.openTab('Erweitert');
-  await example.options.setText('luxMinDate', '10.06.2020');
-  await example.options.setText('luxMaxDate', '20.06.2020');
+  await example.options.setText('luxMinDate', '2020-06-10');
+  await example.options.setText('luxMaxDate', '2020-06-20');
   await example.options.openTab('Allgemein');
 
   const section = example.section(EXAMPLE_WITHOUT_FORM, spec.tag);
@@ -83,7 +90,7 @@ test('luxMinDate und luxMaxDate', async () => {
   await field.fill('15.06.2020');
   await field.blur();
   await expect(section.error).toHaveCount(0);
-  await expect.poll(() => section.value()).toBe('2020-06-15T00:00:00.000Z');
+  await expect.poll(() => section.value()).toBe('2020-06-15');
 });
 
 test('Readonly deaktiviert den Kalender-Button', async () => {

@@ -112,21 +112,12 @@
       "next.month.arialabel": "next month",
       "prev.month.arialabel": "previous month"
     },
-    "datetimepicker": {
-      "error_message.empty": "The date should not be empty",
-      "error_message.invalid": "Invalid date or time",
-      "error_message.max": "Above the maximum value",
-      "error_message.min": "Below the minimum value",
-      "invalid.date": "Please enter a date",
-      "invalid.time": "Please enter a time",
-      "panel.hours.arialabel": "Hours",
-      "panel.minutes.arialabel": "Minutes"
-    },
     "timepicker": {
       "error_message.empty": "The time should not be empty",
       "error_message.invalid": "Invalid time",
       "error_message.max": "Above the maximum value",
-      "error_message.min": "Below the minimum value"
+      "error_message.min": "Below the minimum value",
+      "placeholder.date_required": "Please select a date first"
     },
     "dialog": {
       "btn.close.arialabel": "Dialog close"
