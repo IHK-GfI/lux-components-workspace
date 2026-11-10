@@ -26,6 +26,9 @@ export interface LuxTimeValueOptions {
  * Die Fehler verwenden dieselben Keys wie die Komponente (matTimepickerParse, matTimepickerMin,
  * matTimepickerMax). Für den gemeinsamen Wert mit einem Datepicker gibt es luxDateTimeValue().
  *
+ * Die message folgt einem Sprachwechsel: Der Validator liest TranslocoService.activeLang() und wird
+ * dadurch bei einem Sprachwechsel neu ausgewertet (benötigt Transloco >= 8.3.0).
+ *
  * @param options `min` und `max` als Getter, passend zu luxMinTime und luxMaxTime.
  * @returns Ein FieldValidator zur Verwendung mit validate() aus @angular/forms/signals.
  *
@@ -49,6 +52,9 @@ export function luxTimeValue<TPathKind extends PathKind = PathKind.Root>(
     if (value == null || value === '') {
       return undefined;
     }
+
+    // Abhängigkeit auf die Sprache, damit die übersetzte message einem Sprachwechsel folgt.
+    tService.activeLang();
 
     const time = parseLocalTime(value);
     if (!time) {

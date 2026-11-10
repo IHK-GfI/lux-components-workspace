@@ -9,6 +9,7 @@ import { AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModu
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { LuxA11yTestHelper, LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
+import { TranslocoService } from '@jsverse/transloco';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxConsoleService } from '../../lux-util/lux-console.service';
 import { LuxFormControlWrapperComponent } from '../lux-form-control-wrapper/lux-form-control-wrapper.component';
@@ -119,6 +120,21 @@ describe('LuxInputComponent', () => {
         expect(errorEl).toBeTruthy();
         expect(errorEl.nativeElement.innerText.trim()).toEqual('* Pflichtfeld');
         expect(textInput.formControl.valid).toBeFalsy();
+      });
+
+      it('Sollte die Fehlermeldung nach einem Sprachwechsel neu übersetzen', async () => {
+        testComponent.formGroup.get('text')!.setValidators(Validators.required);
+        await LuxTestHelper.wait(fixture);
+        const textInput = fixture.debugElement.query(By.css('#text')).componentInstance;
+        textInput.formControl.markAsTouched();
+        textInput.formControl.updateValueAndValidity();
+        await LuxTestHelper.wait(fixture);
+        expect(fixture.debugElement.query(By.css('mat-error')).nativeElement.innerText.trim()).toEqual('* Pflichtfeld');
+
+        TestBed.inject(TranslocoService).setActiveLang('en');
+        await LuxTestHelper.wait(fixture);
+
+        expect(fixture.debugElement.query(By.css('mat-error')).nativeElement.innerText.trim()).toEqual('* required');
       });
 
       it('Sollte einen Startwert setzen', async () => {

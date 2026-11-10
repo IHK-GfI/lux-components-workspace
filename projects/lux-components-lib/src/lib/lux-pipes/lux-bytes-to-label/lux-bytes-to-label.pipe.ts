@@ -4,10 +4,15 @@ import { TranslocoService } from '@jsverse/transloco';
 type SizeUnit = 'B' | 'KB' | 'KiB' | 'MB' | 'MiB';
 
 @Pipe({
-  name: 'bytesToLabel'
+  name: 'bytesToLabel',
+  // Unrein, damit die Formatierung einem Sprachwechsel folgt. transform() ist deshalb bei
+  // unveränderten Argumenten und gleicher Sprache nur ein Cache-Treffer.
+  pure: false
 })
 export class LuxBytesToLabelPipe implements PipeTransform {
   private transloco = inject(TranslocoService);
+  private lastCacheKey: string | undefined;
+  private lastResult = '';
 
   /**
    * Transform bytes into a size string with specified unit.
@@ -18,6 +23,16 @@ export class LuxBytesToLabelPipe implements PipeTransform {
    *                       matching the Windows File Explorer convention (default: false)
    */
   transform(bytes: number | null | undefined, unit: SizeUnit = 'MiB', decimals = 2, legacyLabels = false): string {
+    const locale = this.transloco.activeLang();
+    const cacheKey = `${bytes}|${unit}|${decimals}|${legacyLabels}|${locale}`;
+    if (cacheKey !== this.lastCacheKey) {
+      this.lastCacheKey = cacheKey;
+      this.lastResult = this.format(bytes, unit, decimals, legacyLabels, locale);
+    }
+    return this.lastResult;
+  }
+
+  private format(bytes: number | null | undefined, unit: SizeUnit, decimals: number, legacyLabels: boolean, locale: string): string {
     if (bytes == null || isNaN(Number(bytes))) {
       return '';
     }
@@ -70,7 +85,6 @@ export class LuxBytesToLabelPipe implements PipeTransform {
       truncated = 1;
     }
 
-    const locale = this.transloco.getActiveLang();
     const formatted = truncated.toLocaleString(locale, {
       minimumFractionDigits: decimalPlaces,
       maximumFractionDigits: decimalPlaces

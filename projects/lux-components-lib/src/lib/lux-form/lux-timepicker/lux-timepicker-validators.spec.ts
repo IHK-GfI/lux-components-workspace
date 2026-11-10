@@ -1,3 +1,4 @@
+import { computed } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import type { FieldContext } from '@angular/forms/signals';
 import { TranslocoService } from '@jsverse/transloco';
@@ -66,6 +67,20 @@ describe('luxTimeValue', () => {
   it('sollte fehlende oder unpassende Grenzen ignorieren', () => {
     expect(createValidator({ min: () => null, max: () => undefined })(ctxFor('14:30'))).toBeUndefined();
     expect(createValidator({ min: () => '1970-01-01T08:00:00.000Z' })(ctxFor('05:00'))).toBeUndefined();
+  });
+
+  it('sollte die message nach einem Sprachwechsel neu berechnen, wenn sie in einem computed gelesen wird', () => {
+    const validator = createValidator({ min: () => '08:00', max: () => '19:00' });
+    const result = TestBed.runInInjectionContext(() => computed(() => validator(ctxFor('07:59'))));
+
+    const messageDe = tService.translate('luxc.timepicker.error_message.min');
+    expect((result() as { message: string }).message).toBe(messageDe);
+
+    tService.setActiveLang('en');
+
+    const messageEn = tService.translate('luxc.timepicker.error_message.min');
+    expect(messageEn).not.toBe(messageDe);
+    expect((result() as { message: string }).message).toBe(messageEn);
   });
 
   it('sollte auf geänderte Grenzen reagieren, da die Optionen bei jedem Aufruf neu gelesen werden', () => {
