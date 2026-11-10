@@ -23,14 +23,13 @@
     <div class="lux-flex lux-flex-col">
       <h3>Zeitraum (luxType="date")</h3>
       <p class="lux-hint">
-        Beide Kalender sind auf das Jahr 2026 begrenzt. Ist "Bis höchstens 7 Tage nach Von" eingeschaltet, rechnet die Beispielseite aus dem
-        Von-Datum die Grenzen des Bis-Felds (luxMaxFieldBounds) und übergibt sie der Komponente.
+        Ist "Bis höchstens 7 Tage nach Von" eingeschaltet (Optionen, Erweitert), rechnet die Beispielseite aus dem Von-Datum die Grenzen des
+        Bis-Felds (luxMaxFieldBounds) und übergibt sie der Komponente.
       </p>
       <lux-min-max-input
         luxTagId="minmax_date"
         luxType="date"
         luxLabel="Zeitraum"
-        [luxBounds]="dateBounds"
         [luxMaxFieldBounds]="dateMaxFieldBounds()"
         [(luxValue)]="dateValue"
         [(luxDisabled)]="disabled"

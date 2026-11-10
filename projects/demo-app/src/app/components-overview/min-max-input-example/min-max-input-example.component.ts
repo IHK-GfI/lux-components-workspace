@@ -64,9 +64,6 @@ export class MinMaxInputExampleComponent {
   numberValue = signal<LuxMinMaxValue<number>>({});
   dateValue = signal<LuxMinMaxValue<string>>({});
 
-  // Fester Jahresbereich, damit das Beispiel (und sein Screenshot) nicht vom aktuellen Datum abhängt.
-  readonly dateBounds: LuxMinMaxBounds<string> = { min: '2026-01-01T00:00:00.000Z', max: '2026-12-31T00:00:00.000Z' };
-
   numberBounds = computed<LuxMinMaxBounds<number>>(() => {
     const bounds: LuxMinMaxBounds<number> = {};
     const min = this.boundsMin();
