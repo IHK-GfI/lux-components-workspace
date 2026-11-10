@@ -306,6 +306,46 @@ describe('LuxAppHeaderComponent', () => {
       expect(fixture.debugElement.queryAll(By.css('.lux-side-nav-item button'))[1].nativeElement.disabled).toBe(true);
     });
 
+    it('Sollte pro lux-side-nav-item genau einen Tab-Stopp besitzen', async () => {
+      testComponent.createSideNavItems(2);
+      await LuxTestHelper.wait(fixture);
+
+      const focusableSelector = 'button:not([disabled]), a[href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+      const items = fixture.debugElement.queryAll(By.css('.lux-side-nav-item'));
+      expect(items.length).toBe(2);
+      for (const item of items) {
+        const element: HTMLElement = item.nativeElement;
+        expect(element.matches(focusableSelector)).toBe(false);
+        expect(element.querySelectorAll(focusableSelector).length).toBe(1);
+      }
+    });
+
+    it('Sollte Enter und Leertaste auf einem lux-side-nav-item nur über den nativen Button-Klick verarbeiten', async () => {
+      const spy = vi.spyOn(testComponent, 'onClick').mockReturnValue(undefined);
+      testComponent.createSideNavItems(1);
+      testComponent.sideNavItems()[0].expandable = true;
+      testComponent.refreshSideNavItems();
+      await LuxTestHelper.wait(fixture);
+
+      const sideNavItem: LuxSideNavItemComponent = fixture.debugElement.query(By.directive(LuxSideNavItemComponent)).componentInstance;
+      const button: HTMLButtonElement = fixture.debugElement.query(By.css('.lux-side-nav-item button')).nativeElement;
+      expect(sideNavItem.luxExpanded()).toBe(true);
+
+      // Tastendruck auf dem Button: Der Wrapper darf das hochblubbernde keydown nicht zusätzlich als Klick werten
+      for (const key of ['Enter', ' ']) {
+        button.dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true }));
+        await LuxTestHelper.wait(fixture);
+      }
+      expect(spy).not.toHaveBeenCalled();
+      expect(sideNavItem.luxExpanded()).toBe(true);
+
+      // Der native Klick (den der Browser bei Enter/Leertaste auslöst) schaltet genau einmal um
+      button.click();
+      await LuxTestHelper.wait(fixture);
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(sideNavItem.luxExpanded()).toBe(false);
+    });
+
     it('Sollte lux-side-nav-items selektieren', async () => {
       // Vorbedingungen testen
       expect(fixture.debugElement.queryAll(By.css('.lux-side-nav-item-selected')).length).toBe(0);
@@ -682,6 +722,7 @@ class MockIconClickedAppHeaderComponent {
                   [luxIconName]="sideNavItem.iconName"
                   [luxSelected]="sideNavItem.selected"
                   [luxCloseOnClick]="sideNavItem.closeOnClick"
+                  [luxExpandable]="sideNavItem.expandable"
                   (luxClicked)="onClick(sideNavItem)"
                 ></lux-side-nav-item>
               }
@@ -754,6 +795,7 @@ class MockAppHeaderComponent {
       iconName: string;
       selected: boolean;
       closeOnClick: boolean;
+      expandable: boolean;
       ignoreThisItem: boolean;
     }[]
   >([]);
@@ -779,6 +821,7 @@ class MockAppHeaderComponent {
       iconName: string;
       selected: boolean;
       closeOnClick: boolean;
+      expandable: boolean;
       ignoreThisItem: boolean;
     }[] = [];
 
@@ -789,6 +832,7 @@ class MockAppHeaderComponent {
         iconName: 'lux-interface-validation-check',
         selected: false,
         closeOnClick: false,
+        expandable: false,
         ignoreThisItem: false
       });
     }

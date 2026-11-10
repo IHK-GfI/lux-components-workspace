@@ -1,11 +1,12 @@
 <ng-template>
   <div class="lux-side-nav-item-container">
+    <!-- Fokus und Tastatur übernimmt der innere lux-button (dessen nativer click blubbert hierher). Der Wrapper
+         macht nur zusätzlich die Icons per Maus klickbar; ein eigener Tab-Stopp bzw. keydown-Handler würde
+         doppelte Tab-Stopps, doppeltes Umschalten und Scrollen bei der Leertaste verursachen. -->
+    <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -->
     <div
       class="lux-side-nav-item lux-whitespace-nowrap lux-flex lux-place-content-center lux-align-items-center"
       (click)="onClick($event)"
-      (keydown.enter)="onClick($event)"
-      (keydown.space)="onClick($event)"
-      [attr.tabindex]="luxDisabled() ? -1 : 0"
       [ngClass]="{
         'lux-side-nav-item-expandable': luxExpandable(),
         'lux-side-nav-item-selected': luxSelected() && !luxDisabled(),
