@@ -49,6 +49,11 @@ export class LuxInputAcComponent<T = string> extends LuxFormInputBaseClass<T> im
   @Input() luxHideCounterLabel = false;
   @Input() luxClearable = false;
   @Input() luxClearAriaLabel = '';
+  /**
+   * Id eines externen beschreibenden Elements (z.B. eine gemeinsame Meldung mehrerer Felder).
+   * Wird im "aria-describedby" des nativen Eingabeelements vor die eigene Hinweis- bzw. Fehler-Id gestellt.
+   */
+  @Input() luxAriaDescribedby?: string;
 
   /**
    * Untere Grenze des Zahlenfelds (Attribut `min`, wirkt auf Pfeiltasten und Spinner). Nur bei luxType="number".
@@ -174,7 +179,7 @@ export class LuxInputAcComponent<T = string> extends LuxFormInputBaseClass<T> im
   }
 
   descripedBy() {
-    return this.joinDescribedBy(this.ownDescribedBy());
+    return this.joinDescribedBy(this.luxAriaDescribedby, this.ownDescribedBy());
   }
 
   private ownDescribedBy(): string | undefined {

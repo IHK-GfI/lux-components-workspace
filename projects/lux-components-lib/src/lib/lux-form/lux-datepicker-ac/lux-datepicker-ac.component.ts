@@ -82,6 +82,11 @@ export class LuxDatepickerAcComponent<T = any> extends LuxFormInputBaseClass<T> 
   @Input() luxMaxDate: string | null = null;
   @Input() luxMinDate: string | null = null;
   @Input() luxReferenceControl?: LuxReferenceControl;
+  /**
+   * Id eines externen beschreibenden Elements (z.B. eine gemeinsame Meldung mehrerer Felder).
+   * Wird im "aria-describedby" des nativen Eingabeelements vor die eigene Hinweis- bzw. Fehler-Id gestellt.
+   */
+  @Input() luxAriaDescribedby?: string;
 
   @ViewChild(MatDatepicker) matDatepicker?: MatDatepicker<any>;
   @ViewChild('datepickerInput', { read: ElementRef }) datepickerInput?: ElementRef;
@@ -253,7 +258,7 @@ export class LuxDatepickerAcComponent<T = any> extends LuxFormInputBaseClass<T> 
   }
 
   descripedBy() {
-    return this.joinDescribedBy(this.ownDescribedBy());
+    return this.joinDescribedBy(this.luxAriaDescribedby, this.ownDescribedBy());
   }
 
   private ownDescribedBy(): string | undefined {
