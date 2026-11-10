@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, signal, untracked } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { LuxInputAcComponent, LuxSelectAcComponent, LuxToggleAcComponent } from '@ihk-gfi/lux-components';
 import { LuxMinMaxBounds, LuxMinMaxInputComponent, LuxMinMaxValue } from '@ihk-gfi/lux-components/lux-min-max-input';
@@ -47,7 +47,7 @@ export class MinMaxInputExampleComponent {
 
   readonly controlBinding = 'mitarbeitende';
   readonly form = new FormGroup({
-    mitarbeitende: new FormControl<LuxMinMaxValue<number | string>>({ min: 10, max: 50 }, { nonNullable: true })
+    mitarbeitende: new FormControl<LuxMinMaxValue<number>>({ min: 10, max: 50 }, { nonNullable: true })
   });
 
   showOutputEvents = signal(false);
@@ -61,8 +61,8 @@ export class MinMaxInputExampleComponent {
   disabled = signal(false);
   limitToWeek = signal(true);
 
-  numberValue = signal<LuxMinMaxValue<number | string>>({});
-  dateValue = signal<LuxMinMaxValue<number | string>>({});
+  numberValue = signal<LuxMinMaxValue<number>>({});
+  dateValue = signal<LuxMinMaxValue<string>>({});
 
   // Fester Jahresbereich, damit das Beispiel (und sein Screenshot) nicht vom aktuellen Datum abhängt.
   readonly dateBounds: LuxMinMaxBounds<string> = { min: '2026-01-01T00:00:00.000Z', max: '2026-12-31T00:00:00.000Z' };
@@ -83,9 +83,20 @@ export class MinMaxInputExampleComponent {
   // Wertabhängige Grenze: Bis liegt höchstens 7 Tage nach Von. Rechnet die Anwendung, nicht die Komponente.
   dateMaxFieldBounds = computed<LuxMinMaxBounds<string> | undefined>(() => {
     const von = this.dateValue().min;
-    if (!this.limitToWeek() || typeof von !== 'string') {
+    if (!this.limitToWeek() || !von) {
       return undefined;
     }
     return { min: von, max: addDays(von, 7) };
   });
+
+  constructor() {
+    // Ein schon übernommener Bis-Wert kann die neue, vom Von-Wert abhängige Grenze verletzen; dann setzt ihn die Anwendung zurück.
+    effect(() => {
+      const limit = this.dateMaxFieldBounds()?.max;
+      const bis = this.dateValue().max;
+      if (limit && bis && Date.parse(bis) > Date.parse(limit)) {
+        untracked(() => this.dateValue.update((value) => ({ min: value.min })));
+      }
+    });
+  }
 }

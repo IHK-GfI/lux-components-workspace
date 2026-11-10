@@ -152,6 +152,14 @@ describe('LuxMinMaxInputComponent', () => {
       expect(emitted).toEqual([]);
     });
 
+    it('Sollte Grenzwerte in der Meldung nicht runden', async () => {
+      await setup({ luxBounds: { min: 0.125 } });
+      await typeInto(0, '0.12');
+      await blur(0);
+
+      expect(messageText()).toBe('Von: Der Wert muss mindestens 0,125 sein.');
+    });
+
     it('Sollte einseitige Meldungen nutzen und die Emission zurückhalten, auch wenn das Feld nie als ungültig gezeigt wurde', async () => {
       await setup({ luxBounds: { min: 0 } });
       await typeInto(0, '-3');
@@ -345,6 +353,23 @@ describe('LuxMinMaxInputComponent', () => {
       await settle();
       expect(inputs().every((el) => !el.disabled)).toBe(true);
       expect(wrappers().some((el) => el.classList.contains('lux-form-control-disabled-authentic'))).toBe(false);
+    });
+
+    it('Sollte eine stehende Meldung nach disable und enable wieder anzeigen', async () => {
+      await setup();
+      await typeInto(0, '200');
+      await blur(0);
+      await typeInto(1, '100');
+      await blur(1);
+      expect(messageText()).toBe('Bis darf nicht kleiner als 200 sein.');
+
+      fixture.componentRef.setInput('luxDisabled', true);
+      await settle();
+      fixture.componentRef.setInput('luxDisabled', false);
+      await settle();
+
+      expect(messageText()).toBe('Bis darf nicht kleiner als 200 sein.');
+      expect(isMarked()).toEqual([false, true]);
     });
 
     it('Sollte Felder und Wert zurücksetzen, wenn sich der Typ ändert', async () => {

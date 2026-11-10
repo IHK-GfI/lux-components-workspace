@@ -3,7 +3,8 @@ import { LuxMinMaxType } from './lux-min-max-input-types';
 /** Validation error keys produced by the range logic (internal, not part of the public API). */
 export type LuxMinMaxRangeErrorKey = 'range' | 'belowMin' | 'aboveMax' | 'outOfBounds';
 
-const isEmpty = (raw: unknown): boolean => raw === null || raw === undefined || raw === '';
+/** Leer heißt unbegrenzt: null, undefined oder leerer String. */
+export const isEmpty = (raw: unknown): boolean => raw === null || raw === undefined || raw === '';
 
 /** Converts a raw field value of the given type to a comparable number; undefined for empty, null for invalid. */
 export function toComparable(raw: unknown, type: LuxMinMaxType): number | undefined | null {

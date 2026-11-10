@@ -17,7 +17,7 @@ import {
   LuxInputAcSuffixComponent
 } from '@ihk-gfi/lux-components';
 import { translateSignal, TranslocoPipe, TranslocoService } from '@jsverse/transloco';
-import { rangeErrors, toComparable } from './lux-min-max-input-range-validation';
+import { isEmpty, rangeErrors, toComparable } from './lux-min-max-input-range-validation';
 import { LuxMinMaxBounds, LuxMinMaxType, LuxMinMaxValue } from './lux-min-max-input-types';
 
 type Side = 'min' | 'max';
@@ -48,6 +48,9 @@ const sameRange = (a: LuxMinMaxValue<number | string>, b: LuxMinMaxValue<number 
  * oder je Seite, eine gemeinsame Meldung unter beiden Feldern, Prüfung erst beim Verlassen eines Feldes. Formatierung und
  * Eingabefilterung übernehmen die Felder. Der Wert steht als Two-Way-Model `luxValue` und als ControlValueAccessor
  * (Reactive Forms, ngModel) zur Verfügung.
+ *
+ * Der Typparameter T ist der Werttyp der Felder (number bei luxType="number", string bei luxType="date") und wird aus der
+ * Bindung abgeleitet, damit enger typisierte Signale der Anwendung mit [(luxValue)] funktionieren.
  */
 @Component({
   selector: 'lux-min-max-input',
@@ -66,13 +69,13 @@ const sameRange = (a: LuxMinMaxValue<number | string>, b: LuxMinMaxValue<number 
     }
   ]
 })
-export class LuxMinMaxInputComponent implements ControlValueAccessor {
+export class LuxMinMaxInputComponent<T extends number | string = number | string> implements ControlValueAccessor {
   private static nextUniqueId = 0;
 
   /** Feldtyp beider Seiten: Zahlenfeld oder Datepicker. */
   readonly luxType = input<LuxMinMaxType>('number');
   /** Aktueller Bereich; ein leeres Feld fehlt im Objekt. Ändert sich nur bei gültigem Bereich. Zahl als number, Datum als ISO-String. */
-  readonly luxValue = model<LuxMinMaxValue<number | string>>({});
+  readonly luxValue = model<LuxMinMaxValue<T>>({});
   /** Sichtbare Gruppenlegende; ohne Angabe nur für Screenreader ("Wertebereich"). */
   readonly luxLabel = input<string>('');
   /** Label des Von-Felds, Standard aus der Übersetzung ("Von"). */
@@ -82,11 +85,11 @@ export class LuxMinMaxInputComponent implements ControlValueAccessor {
   /** Einheit als Suffix beider Zahlenfelder, z.B. "kg"; bei luxType="date" ohne Wirkung. */
   readonly luxUnit = input<string>('');
   /** Zulässiger Bereich für beide Felder; Werte außerhalb erzeugen eine Meldung, die den Bereich nennt. */
-  readonly luxBounds = input<LuxMinMaxBounds<number | string>>({});
+  readonly luxBounds = input<LuxMinMaxBounds<T>>({});
   /** Zusätzliche Grenzen des Von-Felds; je Seite gewinnt die engere Grenze (Schnittmenge mit luxBounds). */
-  readonly luxMinFieldBounds = input<LuxMinMaxBounds<number | string> | undefined>(undefined);
+  readonly luxMinFieldBounds = input<LuxMinMaxBounds<T> | undefined>(undefined);
   /** Zusätzliche Grenzen des Bis-Felds; je Seite gewinnt die engere Grenze (Schnittmenge mit luxBounds). */
-  readonly luxMaxFieldBounds = input<LuxMinMaxBounds<number | string> | undefined>(undefined);
+  readonly luxMaxFieldBounds = input<LuxMinMaxBounds<T> | undefined>(undefined);
   /** Schrittweite des Zahlenfelds für Pfeiltasten und Spinner; bei luxType="date" ohne Wirkung. */
   readonly luxStep = input<number>(1);
   /** Deaktiviert beide Felder. Model, damit setDisabledState() des ControlValueAccessors den Zustand zurückschreiben kann. */
@@ -139,30 +142,10 @@ export class LuxMinMaxInputComponent implements ControlValueAccessor {
   });
 
   // Für den Datepicker als ISO-String; null hebt eine Kalendersperre wieder auf.
-  protected readonly dateLimits = computed<Record<Side, { min: string | null; max: string | null }>>(() => {
-    if (this.luxType() !== 'date') {
-      return { min: { min: null, max: null }, max: { min: null, max: null } };
-    }
-    const limits = this.neighbourLimits();
-    const text = (bound: number | string | undefined): string | null => (typeof bound === 'string' ? bound : null);
-    return {
-      min: { min: text(limits.min.min), max: text(limits.min.max) },
-      max: { min: text(limits.max.min), max: text(limits.max.max) }
-    };
-  });
+  protected readonly dateLimits = computed(() => this.limitsFor('date', (bound) => (typeof bound === 'string' ? bound : null)));
 
   // Für das Zahlenfeld als min/max-Attribut; undefined entfernt das Attribut.
-  protected readonly numberLimits = computed<Record<Side, { min?: number; max?: number }>>(() => {
-    if (this.luxType() !== 'number') {
-      return { min: {}, max: {} };
-    }
-    const limits = this.neighbourLimits();
-    const num = (bound: number | string | undefined): number | undefined => (typeof bound === 'number' ? bound : undefined);
-    return {
-      min: { min: num(limits.min.min), max: num(limits.min.max) },
-      max: { min: num(limits.max.min), max: num(limits.max.max) }
-    };
-  });
+  protected readonly numberLimits = computed(() => this.limitsFor('number', (bound) => (typeof bound === 'number' ? bound : undefined)));
 
   // Parameter der Meldung, formatiert mit der aktuellen Sprache; ein Sprachwechsel stellt Text und Werte zusammen um.
   protected readonly messageParams = computed((): Record<string, string> => {
@@ -186,9 +169,9 @@ export class LuxMinMaxInputComponent implements ControlValueAccessor {
   });
 
   private previousType: LuxMinMaxType | undefined;
-  private previousValue: LuxMinMaxValue<number | string> | undefined;
-  private lastEmitted: LuxMinMaxValue<number | string> | undefined;
-  private onChange: (value: LuxMinMaxValue<number | string>) => void = () => {};
+  private previousValue: LuxMinMaxValue<T> | undefined;
+  private lastEmitted: LuxMinMaxValue<T> | undefined;
+  private onChange: (value: LuxMinMaxValue<T>) => void = () => {};
   private onTouched: () => void = () => {};
 
   constructor() {
@@ -249,11 +232,11 @@ export class LuxMinMaxInputComponent implements ControlValueAccessor {
 
   // ControlValueAccessor
 
-  writeValue(value: LuxMinMaxValue<number | string> | null): void {
+  writeValue(value: LuxMinMaxValue<T> | null): void {
     this.luxValue.set(value ?? {});
   }
 
-  registerOnChange(fn: (value: LuxMinMaxValue<number | string>) => void): void {
+  registerOnChange(fn: (value: LuxMinMaxValue<T>) => void): void {
     this.onChange = fn;
   }
 
@@ -272,6 +255,10 @@ export class LuxMinMaxInputComponent implements ControlValueAccessor {
       return;
     }
     const control = this.form.controls[checked.side];
+    if (control.disabled) {
+      // disable() räumt die Validatorfehler ab; die Meldung bleibt stehen und wird nach enable() neu bewertet.
+      return;
+    }
     if (changed === checked.side && toComparable(control.value, this.luxType()) !== checked.comparable) {
       // Eine Änderung im geprüften Feld hebt die Prüfung bis zum nächsten Verlassen auf.
       this.checked = null;
@@ -322,7 +309,8 @@ export class LuxMinMaxInputComponent implements ControlValueAccessor {
       // LUX speichert Kalendertage als UTC-Mitternacht.
       return new Intl.DateTimeFormat(lang, { dateStyle: 'short', timeZone: 'UTC' }).format(new Date(raw as string | number));
     }
-    return new Intl.NumberFormat(lang, { maximumFractionDigits: 2 }).format(Number(raw));
+    // Ohne Rundung, sonst nennt die Meldung einen anderen Grenzwert als den geprüften.
+    return new Intl.NumberFormat(lang, { maximumFractionDigits: 20 }).format(Number(raw));
   }
 
   private sideValidator(side: Side): ValidatorFn {
@@ -361,8 +349,13 @@ export class LuxMinMaxInputComponent implements ControlValueAccessor {
     return side === 'min' ? 'max' : 'min';
   }
 
-  private isEmpty(raw: unknown): boolean {
-    return raw === null || raw === undefined || raw === '';
+  // Grenzen je Feld für den angegebenen Feldtyp; bei anderem Typ überall der Leerwert von pick().
+  private limitsFor<E>(type: LuxMinMaxType, pick: (bound: number | string | undefined) => E): Record<Side, { min: E; max: E }> {
+    const limits = this.luxType() === type ? this.neighbourLimits() : { min: {}, max: {} };
+    return {
+      min: { min: pick(limits.min.min), max: pick(limits.min.max) },
+      max: { min: pick(limits.max.min), max: pick(limits.max.max) }
+    };
   }
 
   private revalidate(): void {
@@ -377,7 +370,7 @@ export class LuxMinMaxInputComponent implements ControlValueAccessor {
     this.message.set(null);
   }
 
-  private sync(type: LuxMinMaxType, value: LuxMinMaxValue<number | string>): void {
+  private sync(type: LuxMinMaxType, value: LuxMinMaxValue<T>): void {
     const typeChanged = this.previousType !== undefined && this.previousType !== type;
     const valueChanged = value !== this.previousValue;
     this.previousType = type;
@@ -387,7 +380,7 @@ export class LuxMinMaxInputComponent implements ControlValueAccessor {
       this.form.reset({ min: null, max: null }, { emitEvent: false });
       if (!valueChanged && (value.min !== undefined || value.max !== undefined)) {
         // Nur der Typ hat gewechselt: alte Werte passen nicht zum neuen Feldtyp.
-        const cleared: LuxMinMaxValue<number | string> = {};
+        const cleared: LuxMinMaxValue<T> = {};
         this.previousValue = cleared;
         this.lastEmitted = cleared;
         this.luxValue.set(cleared);
@@ -409,7 +402,7 @@ export class LuxMinMaxInputComponent implements ControlValueAccessor {
     for (const side of SIDES) {
       const control = this.form.controls[side];
       const next = value[side] ?? null;
-      if ((control.value ?? null) !== next && !(this.isEmpty(control.value) && next === null)) {
+      if ((control.value ?? null) !== next && !(isEmpty(control.value) && next === null)) {
         control.setValue(next, { emitEvent: false });
       }
     }
@@ -422,18 +415,18 @@ export class LuxMinMaxInputComponent implements ControlValueAccessor {
     if (this.form.disabled || SIDES.some((side) => this.hasError(side))) {
       return;
     }
-    const nextMin = this.isEmpty(min.value) ? undefined : (min.value as number | string);
-    const nextMax = this.isEmpty(max.value) ? undefined : (max.value as number | string);
+    const nextMin = isEmpty(min.value) ? undefined : (min.value as number | string);
+    const nextMax = isEmpty(max.value) ? undefined : (max.value as number | string);
     const current = this.luxValue();
     if (current.min === nextMin && current.max === nextMax) {
       return;
     }
-    const next: LuxMinMaxValue<number | string> = {};
+    const next = {} as LuxMinMaxValue<T>;
     if (nextMin !== undefined) {
-      next.min = nextMin;
+      next.min = nextMin as T;
     }
     if (nextMax !== undefined) {
-      next.max = nextMax;
+      next.max = nextMax as T;
     }
     this.lastEmitted = next;
     this.luxValue.set(next);

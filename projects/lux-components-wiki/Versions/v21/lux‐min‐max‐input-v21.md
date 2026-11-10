@@ -36,7 +36,7 @@
 - Eine gemeinsame Meldung unter beiden Feldern nennt das Feld und den verletzten Grenzwert.
 - Geprüft wird erst beim Verlassen eines Feldes, nicht beim Tippen.
 
-Der Wert ist ein Objekt `{ min?: T; max?: T }`. Bei `luxType="number"` ist `T` eine Zahl, bei `luxType="date"` ein ISO-String (Kalendertag als UTC-Mitternacht, wie bei `lux-datepicker-ac`). Er ändert sich nur, wenn der Bereich gültig ist.
+Der Wert ist ein Objekt `{ min?: T; max?: T }`. Bei `luxType="number"` ist `T` eine Zahl, bei `luxType="date"` ein ISO-String (Kalendertag als UTC-Mitternacht, wie bei `lux-datepicker-ac`). Er ändert sich nur, wenn der Bereich gültig ist. Die Komponente ist generisch über `T`; der Typ wird aus der Bindung abgeleitet, sodass `[(luxValue)]` auch mit einem `signal<LuxMinMaxValue<string>>()` funktioniert.
 
 ```typescript
 export type LuxMinMaxType = 'number' | 'date';
@@ -51,28 +51,28 @@ export type LuxMinMaxBounds<T extends number | string = number> = LuxMinMaxValue
 
 ### Inputs
 
-| Name              | Typ                                | Default     | Beschreibung                                                                                                                                                                           |
-| ----------------- | ---------------------------------- | ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| luxType           | LuxMinMaxType                      | `'number'`  | Feldtyp beider Seiten: `'number'` (Zahlenfeld) oder `'date'` (Datepicker). Ein Wechsel zur Laufzeit leert Felder und Wert.                                                             |
-| luxValue          | LuxMinMaxValue\<number \| string>  | `{}`        | Aktueller Bereich. `model`, also auch als `[(luxValue)]` nutzbar. Ändert sich nur bei gültigem Bereich. Ein von außen gesetzter Wert wird angezeigt, ohne `luxValueChange` auszulösen. |
-| luxLabel          | string                             | `''`        | Sichtbare Legende der Gruppe (`fieldset`/`legend`). Ohne Angabe bleibt die Legende nur für Screenreader erhalten ("Wertebereich").                                                     |
-| luxMinLabel       | string                             | `''`        | Label des Von-Felds. Standard ist die Übersetzung "Von".                                                                                                                               |
-| luxMaxLabel       | string                             | `''`        | Label des Bis-Felds. Standard ist die Übersetzung "Bis".                                                                                                                               |
-| luxUnit           | string                             | `''`        | Einheit als Suffix beider Zahlenfelder, z. B. `'kg'`. Bei `luxType="date"` ohne Wirkung.                                                                                               |
-| luxBounds         | LuxMinMaxBounds\<number \| string> | `{}`        | Zulässiger Bereich für beide Felder. Werte außerhalb erzeugen eine Meldung, die den Bereich nennt, und werden nicht in den Wert übernommen.                                            |
-| luxMinFieldBounds | LuxMinMaxBounds\<number \| string> | `undefined` | Zusätzliche Grenzen des Von-Felds. Je Seite gewinnt die engere Grenze (Schnittmenge mit `luxBounds`), siehe [Grenzen gesamt und je Seite](#grenzen-gesamt-und-je-seite).               |
-| luxMaxFieldBounds | LuxMinMaxBounds\<number \| string> | `undefined` | Zusätzliche Grenzen des Bis-Felds, analog zu `luxMinFieldBounds`.                                                                                                                      |
-| luxStep           | number                             | `1`         | Schrittweite der Zahlenfelder für Pfeiltasten und Spinner. Bei `luxType="date"` ohne Wirkung.                                                                                          |
-| luxDisabled       | boolean                            | `false`     | Deaktiviert beide Felder. `model`, also auch als `[(luxDisabled)]` nutzbar. In Reactive Forms wird der Zustand mit `formControl.disable()`/`enable()` synchronisiert.                  |
-| luxTagId          | string \| undefined                | `undefined` | Präfix für die Tag-Ids der beiden Felder (`luxTagIdHandler`). Die Felder erhalten die Suffixe `-min` und `-max`.                                                                       |
-| luxId             | string \| undefined                | `undefined` | Präfix für die DOM-Ids. Ohne Angabe wird je Instanz eine eigene Id erzeugt. Die gemeinsame Meldung hat die Id `<luxId>-message`.                                                       |
+| Name              | Typ                 | Default     | Beschreibung                                                                                                                                                                           |
+| ----------------- | ------------------- | ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| luxType           | LuxMinMaxType       | `'number'`  | Feldtyp beider Seiten: `'number'` (Zahlenfeld) oder `'date'` (Datepicker). Ein Wechsel zur Laufzeit leert Felder und Wert.                                                             |
+| luxValue          | LuxMinMaxValue\<T>  | `{}`        | Aktueller Bereich. `model`, also auch als `[(luxValue)]` nutzbar. Ändert sich nur bei gültigem Bereich. Ein von außen gesetzter Wert wird angezeigt, ohne `luxValueChange` auszulösen. |
+| luxLabel          | string              | `''`        | Sichtbare Legende der Gruppe (`fieldset`/`legend`). Ohne Angabe bleibt die Legende nur für Screenreader erhalten ("Wertebereich").                                                     |
+| luxMinLabel       | string              | `''`        | Label des Von-Felds. Standard ist die Übersetzung "Von".                                                                                                                               |
+| luxMaxLabel       | string              | `''`        | Label des Bis-Felds. Standard ist die Übersetzung "Bis".                                                                                                                               |
+| luxUnit           | string              | `''`        | Einheit als Suffix beider Zahlenfelder, z. B. `'kg'`. Bei `luxType="date"` ohne Wirkung.                                                                                               |
+| luxBounds         | LuxMinMaxBounds\<T> | `{}`        | Zulässiger Bereich für beide Felder. Werte außerhalb erzeugen eine Meldung, die den Bereich nennt, und werden nicht in den Wert übernommen.                                            |
+| luxMinFieldBounds | LuxMinMaxBounds\<T> | `undefined` | Zusätzliche Grenzen des Von-Felds. Je Seite gewinnt die engere Grenze (Schnittmenge mit `luxBounds`), siehe [Grenzen gesamt und je Seite](#grenzen-gesamt-und-je-seite).               |
+| luxMaxFieldBounds | LuxMinMaxBounds\<T> | `undefined` | Zusätzliche Grenzen des Bis-Felds, analog zu `luxMinFieldBounds`.                                                                                                                      |
+| luxStep           | number              | `1`         | Schrittweite der Zahlenfelder für Pfeiltasten und Spinner. Bei `luxType="date"` ohne Wirkung.                                                                                          |
+| luxDisabled       | boolean             | `false`     | Deaktiviert beide Felder. `model`, also auch als `[(luxDisabled)]` nutzbar. In Reactive Forms wird der Zustand mit `formControl.disable()`/`enable()` synchronisiert.                  |
+| luxTagId          | string \| undefined | `undefined` | Präfix für die Tag-Ids der beiden Felder (`luxTagIdHandler`). Die Felder erhalten die Suffixe `-min` und `-max`.                                                                       |
+| luxId             | string \| undefined | `undefined` | Präfix für die DOM-Ids. Ohne Angabe wird je Instanz eine eigene Id erzeugt. Die gemeinsame Meldung hat die Id `<luxId>-message`.                                                       |
 
 ### Outputs
 
-| Name              | Typ                                                  | Beschreibung                                                                                                                  |
-| ----------------- | ---------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| luxValueChange    | OutputEmitterRef\<LuxMinMaxValue\<number \| string>> | Emittiert den neuen Bereich, sobald beide Felder gültig sind und sich der Bereich geändert hat. Gegenstück zu `[(luxValue)]`. |
-| luxDisabledChange | OutputEmitterRef\<boolean>                           | Emittiert, wenn sich der Disabled-Zustand ändert, z. B. durch `formControl.disable()`. Gegenstück zu `[(luxDisabled)]`.       |
+| Name              | Typ                                   | Beschreibung                                                                                                                  |
+| ----------------- | ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| luxValueChange    | OutputEmitterRef\<LuxMinMaxValue\<T>> | Emittiert den neuen Bereich, sobald beide Felder gültig sind und sich der Bereich geändert hat. Gegenstück zu `[(luxValue)]`. |
+| luxDisabledChange | OutputEmitterRef\<boolean>            | Emittiert, wenn sich der Disabled-Zustand ändert, z. B. durch `formControl.disable()`. Gegenstück zu `[(luxDisabled)]`.       |
 
 ### ControlValueAccessor
 
@@ -125,7 +125,7 @@ Hinweis zu Datumsfeldern: Der Datepicker prüft seine Kalendergrenzen schon beim
 
 ### Wertabhängige Grenzen
 
-Hängt eine Grenze vom Wert der anderen Seite ab (etwa "Bis höchstens 7 Tage nach Von"), rechnet die Anwendung die Grenze aus `luxValue` und übergibt sie als `luxMaxFieldBounds` bzw. `luxMinFieldBounds`, siehe [Beispiel 2](#2-zeitraum-bis-höchstens-7-tage-nach-von). Ein bereits übernommener Bereich kann durch eine neue Grenze nachträglich ungültig werden; in dem Fall setzt die Anwendung die betroffene Seite selbst zurück.
+Hängt eine Grenze vom Wert der anderen Seite ab (etwa "Bis höchstens 7 Tage nach Von"), rechnet die Anwendung die Grenze aus `luxValue` und übergibt sie als `luxMaxFieldBounds` bzw. `luxMinFieldBounds`, siehe [Beispiel 2](#2-zeitraum-bis-höchstens-7-tage-nach-von). Ein bereits übernommener Bereich kann durch eine neue Grenze nachträglich ungültig werden; die Komponente prüft nur das zuletzt verlassene Feld, deshalb setzt die Anwendung die betroffene Seite selbst zurück (im Beispiel 2 der Effekt, der `max` entfernt).
 
 ### Zahlformat
 
@@ -179,6 +179,17 @@ bisGrenzen = computed<LuxMinMaxBounds<string> | undefined>(() => {
   const von = this.zeitraum().min;
   return von ? { min: von, max: new Date(Date.parse(von) + 7 * 24 * 60 * 60 * 1000).toISOString() } : undefined;
 });
+
+constructor() {
+  // Ein schon übernommenes Bis kann die neue Grenze verletzen; dann wird es entfernt.
+  effect(() => {
+    const grenze = this.bisGrenzen()?.max;
+    const bis = this.zeitraum().max;
+    if (grenze && bis && Date.parse(bis) > Date.parse(grenze)) {
+      untracked(() => this.zeitraum.update((wert) => ({ min: wert.min })));
+    }
+  });
+}
 ```
 
 ### 3. In einem Reactive Form
