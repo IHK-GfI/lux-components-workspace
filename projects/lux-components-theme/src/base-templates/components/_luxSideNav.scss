@@ -73,7 +73,7 @@ lux-side-nav {
       @include luxfocus.focus-dark-mixin;
 
       button {
-        outline: var(--lux-theme-outline-width) var(--lux-theme-outline-style) transparent !important;
+        outline: var(--lux-theme-outline-width) var(--lux-theme-outline-style) transparent;
       }
     }
 

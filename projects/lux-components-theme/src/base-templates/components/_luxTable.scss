@@ -92,7 +92,7 @@ lux-table {
 
       table {
         width: 100%;
-        border-spacing: 0 !important;
+        border-spacing: 0;
 
         tbody tr:last-of-type td {
           border-bottom: none;
@@ -152,28 +152,28 @@ lux-table {
         td,
         th,
         .lux-multiselect-td,
-        .lux-multiselect-tf {
-          border: unset !important;
+        .lux-multiselect-tf,
+        table .mat-mdc-footer-row > td {
+          border: unset;
         }
       }
 
       // Die Zeilentrennung im no-striping-Zustand ist semantisch und bleibt deshalb auch
-      // bei ausgeblendeten Rahmen (lux-hide-borders) erhalten; das "border: unset
-      // !important" oben würde sie sonst entfernen. Die Regeln spiegeln die obigen
-      // Trennlinien-Regeln mit !important; sie gewinnen trotz gleicher !important-Stärke
-      // durch ihre höhere Spezifität, untereinander gilt: je mehr Klassen, desto stärker.
+      // bei ausgeblendeten Rahmen (lux-hide-borders) erhalten. Diese späteren Regeln haben
+      // eine höhere Spezifität als "border: unset"; untereinander gilt: je mehr Klassen,
+      // desto stärker.
       &.lux-hide-borders.lux-table-no-striping {
         .mat-mdc-row + .mat-mdc-row > td {
-          border-top: 1px solid var(--lux-theme-app-border-color) !important;
+          border-top: 1px solid var(--lux-theme-app-border-color);
         }
 
         .mat-mdc-row + .mat-mdc-row[class*="lux-text-highlight-"] > td,
         .mat-mdc-row[class*="lux-text-highlight-"] + .mat-mdc-row > td {
-          border-top: unset !important;
+          border-top: unset;
         }
 
         .mat-mdc-row[class*="lux-text-highlight-"] + .mat-mdc-row[class*="lux-text-highlight-"] > td {
-          border-top: 1px solid currentColor !important;
+          border-top: 1px solid currentColor;
         }
       }
 
@@ -202,7 +202,7 @@ lux-table {
     }
 
     .lux-hide {
-      display: none !important;
+      display: none;
     }
 
     .lux-multiselect-th,
@@ -214,7 +214,7 @@ lux-table {
     }
 
     .lux-multiselect-th {
-      width: 1% !important;
+      width: 1%;
 
       span {
         text-align: start;
@@ -222,7 +222,7 @@ lux-table {
     }
 
     .lux-table-header-no-data th {
-      border: unset !important;
+      border: unset;
     }
 
     .lux-multiselect-toggle-all-wrapper {
@@ -263,8 +263,10 @@ lux-table {
     @include luxfocus.focus-dark-mixin-inline;
   }
 
-  .lux-row-selected:focus-visible {
-    background-color: var(--lux-theme-hover-color) !important;
+  // Der Hintergrund ist hier der einzige Fokusindikator. Die Selektorkette muss deshalb das
+  // Striping und die lux-text-highlight-*-Zeilen (beide auf .lux-table-content) übertreffen.
+  .lux-table .lux-table-content .mat-mdc-row.mdc-data-table__row.lux-row-selected:focus-visible {
+    background-color: var(--lux-theme-hover-color);
     outline: none;
   }
 
@@ -272,7 +274,8 @@ lux-table {
     @include luxfocus.focus-dark-mixin;
   }
 
-  th.cdk-keyboard-focused div.mat-sort-header-container {
-    border: none !important;
+  // .mat-sort-header statt [mat-sort-header]: Bei Property-Bindings fehlt das Attribut im DOM.
+  th.mat-sort-header.cdk-keyboard-focused div.mat-sort-header-container {
+    border: none;
   }
 }

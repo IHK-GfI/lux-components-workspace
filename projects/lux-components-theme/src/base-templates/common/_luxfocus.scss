@@ -15,7 +15,7 @@
 
 @mixin lux-button-focus {
   $width: calc(var(--lux-theme-outline-width) - 1px);
-  outline: $width var(--lux-theme-outline-style) var(--lux-theme-outline-color-dark) !important;
+  outline: $width var(--lux-theme-outline-style) var(--lux-theme-outline-color-dark);
   outline-offset: 1px;
 }
 
@@ -26,7 +26,7 @@
 }
 
 @mixin lux-selected-mixin {
-  background-color: var(--lux-theme-selected-bg-color) !important;
+  background-color: var(--lux-theme-selected-bg-color);
   position: relative;
   border-radius: 4px;
 
@@ -74,7 +74,7 @@
 }
 
 @mixin lux-hovered-mixin {
-  background-color: var(--lux-theme-hover-color) !important;
+  background-color: var(--lux-theme-hover-color);
   border-radius: 4px;
 }
 

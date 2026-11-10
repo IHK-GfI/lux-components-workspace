@@ -10,7 +10,7 @@ lux-form-control-wrapper {
   box-sizing: border-box;
 
   ::ng-deep input.lux-file-visible-input {
-    width: auto !important;
+    width: auto;
     flex: 1 0 100px;
   }
   .lux-file-menu-container {

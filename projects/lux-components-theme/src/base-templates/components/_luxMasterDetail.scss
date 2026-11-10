@@ -76,7 +76,7 @@ $listmargin: calc(var(--lux-theme-outline-width) + 1px);
         @include luxelevations.lux-elevation-z0;
         border: 1px solid var(--lux-theme-app-border-color);
         color: var(--lux-theme-primary-20);
-        background-color: #fff !important;
+        background-color: #fff;
       }
 
       .lux-button-icon-round.lux-lx-icon.lux-no-size {

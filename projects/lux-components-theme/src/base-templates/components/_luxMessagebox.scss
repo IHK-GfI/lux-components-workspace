@@ -62,7 +62,7 @@ lux-message-box {
 
       & lux-button {
         button.lux-button.mat-mdc-fab.lux-fab-rounded-default:not([class*="mat-elevation-z"]) {
-          color: inherit !important;
+          color: inherit;
           @include luxelevations.lux-elevation-z0();
         }
 
@@ -89,7 +89,7 @@ lux-message-box {
 
   mat-paginator {
     & .mat-paginator-container {
-      padding: 0 20px !important;
+      padding: 0 20px;
     }
   }
 }

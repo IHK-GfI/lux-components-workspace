@@ -66,7 +66,7 @@ lux-list {
       outline: none;
       lux-card mat-card {
         @include luxfocus.focus-dark-mixin-inline;
-        background-color: #fff !important;
+        background-color: #fff;
       }
     }
 
@@ -84,7 +84,7 @@ lux-list {
           &:hover {
             border: 1px solid var(--lux-theme-primary-color);
             background: var(--lux-theme-app-gradient-reverse);
-            background-color: #fff !important;
+            background-color: #fff;
           }
         }
       }

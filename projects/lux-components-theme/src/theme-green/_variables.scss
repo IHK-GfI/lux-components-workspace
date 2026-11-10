@@ -172,8 +172,8 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-form-readonly-bg-color: #eff3f6;
 
   // Fokus
-  --lux-theme-outline-dark: 4px solid var(--lux-theme-accent-secondary-color) !important;
-  --lux-theme-outline-bright: 4px solid #ffffff !important;
+  --lux-theme-outline-dark: 4px solid var(--lux-theme-accent-secondary-color);
+  --lux-theme-outline-bright: 4px solid #ffffff;
   --lux-theme-outline-width: 4px;
   --lux-theme-outline-style: solid;
   --lux-theme-outline-color-bright: #ffffff;

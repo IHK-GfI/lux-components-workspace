@@ -35,8 +35,8 @@ lux-tabs {
 
   mat-tab-group div[role="tab"] {
     letter-spacing: normal;
-    min-height: unset !important;
-    height: unset !important;
+    min-height: unset;
+    height: unset;
   }
 
   .lux-tab-title-container {
