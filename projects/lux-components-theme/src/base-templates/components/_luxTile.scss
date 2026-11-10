@@ -13,12 +13,12 @@ lux-tile {
   mat-card[class~="lux-cursor-pointer"] {
     &.mat-mdc-card {
       border-radius: var(--lux-theme-tile-border-radius);
-      overflow: hidden !important;
+      overflow: hidden;
       padding: 24px;
     }
 
     .mat-mdc-card-content {
-      padding-top: 0px !important;
+      padding-top: 0px;
     }
 
     &.mat-mdc-card.lux-tile-mobile {
@@ -62,9 +62,9 @@ lux-tile {
 
   .lux-tile-mobile-view {
     flex: 0 0 180px;
-    max-width: 180px !important;
-    min-width: 180px !important;
-    min-height: 134px !important;
+    max-width: 180px;
+    min-width: 180px;
+    min-height: 134px;
 
     h2 > * {
       font-size: 1.25rem;
@@ -77,9 +77,9 @@ lux-tile {
 
   .lux-tile-desktop-view {
     flex: 0 0 260px;
-    max-width: 260px !important;
-    min-width: 260px !important;
-    min-height: 175px !important;
+    max-width: 260px;
+    min-width: 260px;
+    min-height: 175px;
 
     h2 > * {
       font-size: 1.5rem;
@@ -102,6 +102,8 @@ lux-tile {
     margin-top: 6px;
     lux-icon {
       mat-icon {
+        // !important ist Absicht: Die Icongröße der Kachel ist fest, luxIconSize setzt
+        // width/height als Inline-Style und darf hier nicht wirken.
         width: 72px !important;
         height: 72px !important;
         padding: 0px;
@@ -114,6 +116,7 @@ lux-tile {
 
   .lux-tile-mobile {
     lux-icon mat-icon {
+      // !important ist Absicht, siehe .lux-tile-icon: luxIconSize darf hier nicht wirken.
       width: 50px !important;
       height: 50px !important;
     }
@@ -165,8 +168,8 @@ lux-tile {
   }
 
   .lux-tile-small-font ::ng-deep .mat-badge-content {
-    top: -4px !important;
-    right: -4px !important;
+    top: -4px;
+    right: -4px;
   }
 
   /** ########## Focus / Hover ########## **/
@@ -175,13 +178,13 @@ lux-tile {
     &.mat-mdc-card:focus-visible {
       box-shadow:
         0 0 0 2px #2e8533,
-        0 0 8px 2px #2e8533 !important;
-      outline: 0 !important;
+        0 0 8px 2px #2e8533;
+      outline: 0;
     }
 
     &:hover {
-      background-image: none !important;
-      background-color: white !important;
+      background-image: none;
+      background-color: white;
 
       h2 {
         color: var(--lux-theme-tile-font-hover-color);

@@ -23,7 +23,7 @@ lux-link-plain {
       display: flex;
       color: var(--lux-theme-link-plain-icon-color);
       mat-icon.mat-icon.lux-icon {
-        padding: 0px !important;
+        padding: 0px;
         width: 0.8em;
         height: 0.8em;
         overflow: visible;
