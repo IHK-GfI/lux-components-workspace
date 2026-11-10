@@ -5,7 +5,6 @@ import { ChangeDetectionStrategy, Component, DebugElement, signal } from '@angul
 import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { TooltipPosition } from '@angular/material/tooltip';
 import { By } from '@angular/platform-browser';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { LuxTooltipDirective } from './lux-tooltip.directive';
 
@@ -40,9 +39,7 @@ describe('LuxTooltipDirective', () => {
 
   beforeEach(async () => {
     vi.useFakeTimers();
-    TestBed.configureTestingModule({
-      providers: [provideNoopAnimations()]
-    }).compileComponents();
+    TestBed.configureTestingModule({}).compileComponents();
   });
 
   beforeEach(async () => {

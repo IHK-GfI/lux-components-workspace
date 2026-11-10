@@ -1,6 +1,8 @@
 # Changelog
 
 - [Changelog](#changelog)
+  - [Version 22.0.0](#version-2200)
+    - [Änderungen](#änderungen)
   - [Version 21.10.0](#version-21100)
     - [Issues](#issues)
   - [Version 21.9.0](#version-2190)
@@ -47,6 +49,17 @@
     - [Optische Änderungen](#optische-änderungen)
     - [Allgemein](#allgemein)
     - [Issues](#issues-19)
+
+## Version 22.0.0
+
+### Änderungen
+
+- Issue #306: `@angular/animations` (deprecated) durch CSS-Transitions, CSS-Keyframes und `animate.enter`/`animate.leave` bzw. die Web Animations API ersetzt.
+  - Betroffen sind das Auf- und Zuklappen von `lux-card`, die `lux-side-nav` (inkl. Overlay) und der Lade-Spinner der `lux-master-detail`. Das Verhalten bleibt unverändert, die Animationen respektieren nun `prefers-reduced-motion`.
+  - **Breaking Change:** Die Exporte `sideNavAnimation`, `sideNavOverlayAnimation` und `expansionAnim` wurden entfernt.
+  - Die LUX-Components benötigen weder `@angular/animations` noch `provideAnimations()`/`provideNoopAnimations()`. Apps, die diese selbst verwenden, müssen sie weiterhin einbinden. Andernfalls können `provideAnimations()` und das Paket `@angular/animations` entfernt werden (`npm uninstall @angular/animations`). Das Update-Schematic entfernt sie nicht automatisch.
+  - In Unit-Tests wird `provideNoopAnimations()` bzw. `NoopAnimationsModule` für die LUX-Components nicht mehr benötigt. Specs, die Material-Overlays öffnen (z. B. über `LuxDialogService`), können die Material-Animationen stattdessen mit `{ provide: MATERIAL_ANIMATIONS, useValue: { animationsDisabled: true } }` abschalten.
+  - `luxAfterExpansion` von `lux-card` wird jetzt wie dokumentiert nach dem Auf- und Zuklappen ausgelöst. Bisher wurde das Event nie ausgelöst. Beim ersten Rendern einer initial aufgeklappten Karte bleibt es aus.
 
 ## Version 21.10.0
 

@@ -6,7 +6,6 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ChangeDetectionStrategy, Component, signal, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
 import { LuxOverlayHelper, LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
@@ -27,7 +26,6 @@ describe('LuxAppHeaderComponent', () => {
     TestBed.configureTestingModule({
       providers: [
         LuxConsoleService,
-        provideNoopAnimations(),
         provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideHttpClientTesting(),
         provideLuxTranslocoTesting()
@@ -176,6 +174,54 @@ describe('LuxAppHeaderComponent', () => {
       // Nachbedingungen prüfen
       expect(sideNavEl.style.opacity).toEqual('1');
       expect(fixture.debugElement.query(By.css('.lux-side-nav-overlay')).nativeElement.style.display).toEqual('');
+    });
+
+    it('Sollte das lux-side-nav nach dem Schließen ausblenden, wenn keine Transition läuft', async () => {
+      const sideNavDebugEl = fixture.debugElement.query(By.directive(LuxSideNavComponent));
+      const wrapperEl: HTMLElement = sideNavDebugEl.nativeElement.firstElementChild;
+      expect(wrapperEl.style.visibility).toEqual('hidden');
+
+      fixture.debugElement.query(By.css('.lux-side-nav-trigger button')).nativeElement.click();
+      await LuxTestHelper.wait(fixture);
+      expect(wrapperEl.style.visibility).toEqual('visible');
+
+      sideNavDebugEl.componentInstance.close();
+      await LuxTestHelper.wait(fixture);
+      expect(wrapperEl.style.visibility).toEqual('hidden');
+    });
+
+    it('Sollte das lux-side-nav erst nach dem Ende der Transition ausblenden', async () => {
+      const sideNavDebugEl = fixture.debugElement.query(By.directive(LuxSideNavComponent));
+      const wrapperEl: HTMLElement = sideNavDebugEl.nativeElement.firstElementChild;
+      const sideNavEl: HTMLElement = fixture.debugElement.query(By.css('.lux-side-nav')).nativeElement;
+
+      sideNavDebugEl.componentInstance.open();
+      await LuxTestHelper.wait(fixture);
+      expect(wrapperEl.style.visibility).toEqual('visible');
+
+      let finishTransition!: () => void;
+      const finished = new Promise<void>((resolve) => (finishTransition = resolve));
+      sideNavEl.getAnimations = (() => [{ finished }]) as unknown as HTMLElement['getAnimations'];
+
+      sideNavDebugEl.componentInstance.close();
+      await LuxTestHelper.wait(fixture);
+      expect(wrapperEl.style.visibility).toEqual('visible');
+
+      finishTransition();
+      await LuxTestHelper.wait(fixture);
+      expect(wrapperEl.style.visibility).toEqual('hidden');
+    });
+
+    it('Sollte open() auf ein bereits geöffnetes lux-side-nav nicht als neue Animation behandeln', async () => {
+      const sideNav: LuxSideNavComponent = fixture.debugElement.query(By.directive(LuxSideNavComponent)).componentInstance;
+      sideNav.open();
+      await LuxTestHelper.wait(fixture);
+      const finishSpy = vi.spyOn(sideNav, 'updateSideNavAfterAnimationIsFinished');
+
+      sideNav.open();
+      await LuxTestHelper.wait(fixture);
+
+      expect(finishSpy).not.toHaveBeenCalled();
     });
 
     it('Sollte den lux-side-nav-header und lux-side-nav-footer darstellen', async () => {

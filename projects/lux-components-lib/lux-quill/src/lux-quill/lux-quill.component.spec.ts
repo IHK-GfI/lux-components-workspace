@@ -6,7 +6,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { disabled, form, FormField, readonly, required } from '@angular/forms/signals';
 import { By } from '@angular/platform-browser';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { LuxDialogRef, LuxDialogService } from '@ihk-gfi/lux-components';
 import { LuxA11yTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { TranslocoService } from '@jsverse/transloco';
@@ -27,7 +26,7 @@ describe('LuxQuillComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [StandaloneHostComponent, FormHostComponent, SignalFormHostComponent, NgModelHostComponent],
-      providers: [provideNoopAnimations(), provideLuxTranslocoTesting()]
+      providers: [provideLuxTranslocoTesting()]
     }).compileComponents();
   });
 

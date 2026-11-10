@@ -4,7 +4,6 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxConsoleService } from '../../lux-util/lux-console.service';
 import { LuxInputComponent } from '../lux-input/lux-input.component';
@@ -15,13 +14,7 @@ describe('LuxFormControlWrapper - Label verstecken statt entfernen', () => {
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
-      providers: [
-        LuxConsoleService,
-        provideNoopAnimations(),
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting(),
-        provideLuxTranslocoTesting()
-      ]
+      providers: [LuxConsoleService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting(), provideLuxTranslocoTesting()]
     }).compileComponents();
   });
 

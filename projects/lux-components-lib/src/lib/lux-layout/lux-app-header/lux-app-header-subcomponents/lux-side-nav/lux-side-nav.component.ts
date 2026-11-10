@@ -1,12 +1,15 @@
 import { NgStyle, NgTemplateOutlet } from '@angular/common';
 import {
   AfterViewInit,
+  afterNextRender,
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   contentChildren,
   effect,
   ElementRef,
   inject,
+  Injector,
   input,
   OnDestroy,
   output,
@@ -23,13 +26,12 @@ import { LuxIconComponent } from '../../../../lux-icon/lux-icon/lux-icon.compone
 import { LuxAppService } from '../../../../lux-util/lux-app.service';
 import { LuxUtil } from '../../../../lux-util/lux-util';
 import { LuxDividerComponent } from '../../../lux-divider/lux-divider.component';
-import { sideNavAnimation, sideNavOverlayAnimation } from './lux-side-nav-model/lux-side-nav-animations';
 import { LuxSideNavItemComponent } from './lux-side-nav-subcomponents/lux-side-nav-item.component';
 
 @Component({
   selector: 'lux-side-nav',
   templateUrl: './lux-side-nav.component.html',
-  animations: [sideNavAnimation, sideNavOverlayAnimation],
+  styleUrl: './lux-side-nav.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '(window:keyup)': 'keyEvent($event)',
@@ -48,6 +50,8 @@ import { LuxSideNavItemComponent } from './lux-side-nav-subcomponents/lux-side-n
 })
 export class LuxSideNavComponent implements AfterViewInit, OnDestroy {
   private appService = inject(LuxAppService);
+  private cdr = inject(ChangeDetectorRef);
+  private injector = inject(Injector);
 
   readonly luxDashboardLink = input<string | undefined>();
   readonly luxDashboardLinkTitle = input('LUX Dashboard');
@@ -69,7 +73,6 @@ export class LuxSideNavComponent implements AfterViewInit, OnDestroy {
   right?: string;
   focusElement: any;
   height?: number;
-  width?: number;
   visibility = 'hidden';
 
   private readonly _sideNavExpanded = signal(false);
@@ -77,6 +80,8 @@ export class LuxSideNavComponent implements AfterViewInit, OnDestroy {
 
   private itemClickSubscriptions: { unsubscribe(): void }[] = [];
   private isFirstSideNavItemsRun = true;
+  // Verwirft die Rückmeldung einer Animation, wenn inzwischen eine neuere gestartet wurde.
+  private animationRun = 0;
 
   constructor() {
     effect(() => {
@@ -96,10 +101,11 @@ export class LuxSideNavComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     this.updateItemClickListeners();
-    this.calculateWidthHeight();
+    this.calculateHeight();
   }
 
   ngOnDestroy() {
+    this.animationRun++;
     this.itemClickSubscriptions.forEach((subscription) => subscription.unsubscribe());
   }
 
@@ -111,7 +117,7 @@ export class LuxSideNavComponent implements AfterViewInit, OnDestroy {
   }
 
   windowResize() {
-    this.calculateWidthHeight();
+    this.calculateHeight();
     this.calculateAppMenuPosition();
   }
 
@@ -121,8 +127,7 @@ export class LuxSideNavComponent implements AfterViewInit, OnDestroy {
     this.setSideNavExpanded(!this.sideNavExpanded());
 
     if (this.sideNavExpanded()) {
-      this.visibility = 'visible';
-      this.calculateWidthHeight();
+      this.calculateHeight();
 
       // Hier wird sich der Menübutton zwischengespeichert
       this.focusElement = document.activeElement;
@@ -142,6 +147,7 @@ export class LuxSideNavComponent implements AfterViewInit, OnDestroy {
    */
   updateSideNavAfterAnimationIsFinished() {
     this.visibility = this.sideNavExpanded() ? 'visible' : 'hidden';
+    this.cdr.markForCheck();
 
     // Den Fokus auf den ersten Button setzen
     const sideNavEl = this.sideNavEl();
@@ -157,7 +163,7 @@ export class LuxSideNavComponent implements AfterViewInit, OnDestroy {
 
   open() {
     this.setSideNavExpanded(true);
-    this.calculateWidthHeight();
+    this.calculateHeight();
   }
 
   close() {
@@ -172,8 +178,43 @@ export class LuxSideNavComponent implements AfterViewInit, OnDestroy {
   }
 
   private setSideNavExpanded(expanded: boolean) {
+    const changed = expanded !== this.sideNavExpanded();
+
+    if (expanded) {
+      this.visibility = 'visible';
+    }
     this._sideNavExpanded.set(expanded);
     this.luxSideNavExpandedChange.emit(expanded);
+
+    // Ohne Zustandswechsel läuft keine Animation, und der Fokus darf nicht versetzt werden.
+    if (changed) {
+      this.finishAfterAnimation();
+    }
+  }
+
+  /**
+   * Wartet auf das Ende der Opacity-Transition der Seitennavigation und aktualisiert danach den Zustand.
+   * Läuft keine Transition (z. B. bei prefers-reduced-motion), wird sofort aktualisiert.
+   */
+  private finishAfterAnimation() {
+    const run = ++this.animationRun;
+
+    afterNextRender(
+      () => {
+        const animations = this.sideNavEl().nativeElement.getAnimations?.() ?? [];
+        if (animations.length === 0) {
+          this.updateSideNavAfterAnimationIsFinished();
+          return;
+        }
+
+        Promise.allSettled(animations.map((animation: Animation) => animation.finished)).then(() => {
+          if (run === this.animationRun) {
+            this.updateSideNavAfterAnimationIsFinished();
+          }
+        });
+      },
+      { injector: this.injector }
+    );
   }
 
   /**
@@ -181,13 +222,12 @@ export class LuxSideNavComponent implements AfterViewInit, OnDestroy {
    * Dafür wird die Gesamthöhe minus der Höhe des Headers und des Footers sowie eine feste Höhe
    * für den App-Header gerechnet.
    */
-  private calculateWidthHeight() {
+  private calculateHeight() {
     setTimeout(() => {
       const totalHeight = this.sideNavEl().nativeElement.offsetHeight;
       const headerHeight = this.sideNavHeaderEl().nativeElement.offsetHeight;
       const footerHeight = this.sideNavFooterEl().nativeElement.offsetHeight;
       this.height = totalHeight - headerHeight - footerHeight;
-      this.width = this.sideNavEl().nativeElement.offsetWidth + 20 /* Sicherheitsaufschlag (Schatten, Scrollbar,...) */;
     });
   }
 

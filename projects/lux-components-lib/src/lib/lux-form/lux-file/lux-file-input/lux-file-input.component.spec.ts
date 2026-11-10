@@ -7,7 +7,6 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { of, throwError } from 'rxjs';
 import { provideLuxTranslocoTesting } from '../../../../testing/transloco-test.provider';
@@ -25,7 +24,6 @@ describe('LuxFileInputComponent', () => {
     TestBed.configureTestingModule({
       providers: [
         LuxConsoleService,
-        provideNoopAnimations(),
         provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideHttpClientTesting(),
         provideLuxTranslocoTesting(),

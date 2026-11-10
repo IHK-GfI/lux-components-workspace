@@ -1,4 +1,3 @@
-import { animate, state, style, transition, trigger } from '@angular/animations';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { NgClass, NgTemplateOutlet } from '@angular/common';
 import {
@@ -17,6 +16,7 @@ import {
   effect,
   inject,
   input,
+  linkedSignal,
   model,
   output,
   untracked,
@@ -56,14 +56,6 @@ import { LuxMasterListComponent } from './lux-master-list/lux-master-list.compon
   selector: 'lux-master-detail, lux-master-detail-ac',
   templateUrl: './lux-master-detail.component.html',
   styleUrls: ['./lux-master-detail.component.scss'],
-  animations: [
-    trigger('masterIsLoadingChanged', [
-      state('true', style({ opacity: 1 })),
-      state('false', style({ opacity: 0 })),
-      transition('1 => 0', animate('0.5s')),
-      transition('0 => 1', animate('1s'))
-    ])
-  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     NgClass,
@@ -181,6 +173,12 @@ export class LuxMasterDetailComponent<T = any> implements OnInit, AfterContentIn
   // handleDetailUpdate() die Änderung verarbeitet - ein Vergleich gegen luxSelectedDetail() würde
   // in diesem Fall immer "keine Änderung" ergeben und die Detail-Ansicht bliebe leer.
   private renderedDetail: any = undefined;
+
+  // Der Spinner blendet nur beim Wechsel von "lädt nicht" zu "lädt" ein, nicht beim ersten Rendern.
+  protected readonly spinnerFadeIn = linkedSignal<boolean, boolean>({
+    source: this.luxMasterIsLoading,
+    computation: (isLoading, previous) => isLoading && previous?.source === false
+  });
 
   constructor() {
     this.subscriptions.push(

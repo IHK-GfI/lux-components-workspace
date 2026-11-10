@@ -2,7 +2,6 @@ import { describe, it, beforeEach, afterEach, expect, vi } from 'vitest';
 import { Component, ElementRef, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatSelect, MatSelectModule } from '@angular/material/select';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { LuxSelectVisibleOptionCountDirective } from './lux-select-visible-option-count.directive';
 
@@ -24,7 +23,7 @@ describe('LuxSelectVisibleOptionCountDirective', () => {
   beforeEach(async () => {
     vi.useFakeTimers();
     await TestBed.configureTestingModule({
-      imports: [NoopAnimationsModule, VisibleOptionCountHostComponent]
+      imports: [VisibleOptionCountHostComponent]
     }).compileComponents();
 
     fixture = TestBed.createComponent(VisibleOptionCountHostComponent);

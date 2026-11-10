@@ -6,7 +6,6 @@ import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/com
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { LuxPaginatorComponent } from '@ihk-gfi/lux-components/lux-paginator';
 import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
@@ -22,12 +21,7 @@ describe('LuxMessageBoxComponent', () => {
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
-      providers: [
-        provideHttpClient(withXhr(), withInterceptorsFromDi()),
-        provideHttpClientTesting(),
-        provideNoopAnimations(),
-        provideLuxTranslocoTesting()
-      ]
+      providers: [provideHttpClient(withXhr(), withInterceptorsFromDi()), provideHttpClientTesting(), provideLuxTranslocoTesting()]
     }).compileComponents();
   });
 

@@ -1,6 +1,5 @@
 import { provideHttpClient } from '@angular/common/http';
 import { ApplicationConfig, inject, provideAppInitializer, provideZoneChangeDetection } from '@angular/core';
-import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
 import { LuxAppHeaderAcSessionTimerService, LuxComponentsConfigParameters, provideLuxComponentsConfig } from '@ihk-gfi/lux-components';
 import { LangDefinition, TranslocoService } from '@jsverse/transloco';
@@ -29,7 +28,6 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
-    provideAnimations(),
     provideLuxComponentsConfig(myConfiguration),
     provideHttpClient(),
     provideLuxTranslocoRoot(),

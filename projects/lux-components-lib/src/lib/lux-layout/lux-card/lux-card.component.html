@@ -73,7 +73,11 @@
     </div>
 
     @if (luxExpanded() && contentExpandedComponent()) {
-      <div class="lux-card-content-expanded lux-mt-4" [@expansionAnim]="{ value: getAnimState(), params: { duration: getAnimDuration() } }">
+      <div
+        class="lux-card-content-expanded lux-mt-4"
+        (animate.enter)="animateExpansion($event, true)"
+        (animate.leave)="animateExpansion($event, false)"
+      >
         <ng-content select="lux-card-content-expanded" />
       </div>
     }

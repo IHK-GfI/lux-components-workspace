@@ -6,7 +6,6 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { LuxA11yTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
@@ -18,7 +17,6 @@ describe('LuxSliderComponent', () => {
     TestBed.configureTestingModule({
       providers: [
         LuxConsoleService,
-        provideNoopAnimations(),
         provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideHttpClientTesting(),
         provideLuxTranslocoTesting()

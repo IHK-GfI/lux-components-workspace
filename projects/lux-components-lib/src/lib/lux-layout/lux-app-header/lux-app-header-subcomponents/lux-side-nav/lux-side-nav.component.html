@@ -1,8 +1,7 @@
 <div [ngStyle]="{ visibility: visibility }">
   <div
     class="lux-side-nav lux-side-nav-z-index"
-    [@expandHide]="{ value: sideNavExpanded() ? 'expanded' : 'void', params: { width: width + 'px' } }"
-    (@expandHide.done)="updateSideNavAfterAnimationIsFinished()"
+    [style.opacity]="sideNavExpanded() ? 1 : 0"
     luxAriaRole="navigation"
     luxAriaLabel="{{ luxAriaRoleNavigationLabel() || ('luxc.side-nav.ariarolenavigation' | transloco) }}"
     [ngStyle]="{ top: top, left: left, bottom: bottom }"
@@ -45,7 +44,8 @@
       tabindex="0"
       class="lux-side-nav-overlay lux-side-nav-overlay-z-index"
       [ngStyle]="{ top: top, left: left, bottom: bottom, right: right }"
-      [@expandHideOverlay]="sideNavExpanded() ? 'expanded' : 'void'"
+      animate.enter="lux-side-nav-overlay--enter"
+      animate.leave="lux-side-nav-overlay--leave"
       (click)="close()"
       (keydown.escape)="close()"
     ></div>

@@ -69,9 +69,8 @@
 
         <div
           #masterSpinnerCard
-          [@masterIsLoadingChanged]="luxMasterIsLoading()"
           class="lux-master-progress-container"
-          [ngClass]="{ 'lux-spinner-hidden': !luxMasterIsLoading() }"
+          [ngClass]="{ 'lux-spinner-hidden': !luxMasterIsLoading(), 'lux-spinner-fade-in': spinnerFadeIn() }"
         >
           @if (luxMasterIsLoading()) {
             <br />

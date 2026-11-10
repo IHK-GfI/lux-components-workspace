@@ -7,7 +7,6 @@ import { ChangeDetectionStrategy, Component, provideZonelessChangeDetection, sig
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { LuxA11yTestHelper, LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { TranslocoService } from '@jsverse/transloco';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
@@ -34,7 +33,6 @@ describe('LuxInputComponent', () => {
     TestBed.configureTestingModule({
       providers: [
         LuxConsoleService,
-        provideNoopAnimations(),
         provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideHttpClientTesting(),
         provideLuxTranslocoTesting()
@@ -1344,7 +1342,6 @@ describe('LuxInputComponent', () => {
 describe('LuxInputComponent: bedingtes required ohne Statuswechsel (Issue #318)', () => {
   const providers = [
     LuxConsoleService,
-    provideNoopAnimations(),
     provideHttpClient(withXhr(), withInterceptorsFromDi()),
     provideHttpClientTesting(),
     provideLuxTranslocoTesting()

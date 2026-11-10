@@ -4,7 +4,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ChangeDetectionStrategy, Component, inject, InjectionToken, Injector, TemplateRef, viewChild } from '@angular/core';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
+import { MATERIAL_ANIMATIONS } from '@angular/material/core';
 import { LuxOverlayHelper, LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.component';
@@ -31,7 +31,7 @@ describe('LuxDialogService', () => {
   beforeEach(async () => {
     TestBed.configureTestingModule({
       providers: [
-        provideNoopAnimations(),
+        { provide: MATERIAL_ANIMATIONS, useValue: { animationsDisabled: true } },
         provideLuxComponentsConfig({
           labelConfiguration: {
             allUppercase: true,

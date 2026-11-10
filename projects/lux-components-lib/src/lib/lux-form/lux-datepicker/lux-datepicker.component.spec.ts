@@ -6,7 +6,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormField, form, required, validate } from '@angular/forms/signals';
 import { By } from '@angular/platform-browser';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { LuxA11yTestHelper, LuxOverlayHelper, LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { TranslocoService } from '@jsverse/transloco';
 import { of } from 'rxjs';
@@ -46,7 +45,6 @@ describe('LuxDatepickerComponent', () => {
     TestBed.configureTestingModule({
       providers: [
         LuxConsoleService,
-        provideNoopAnimations(),
         provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideHttpClientTesting(),
         provideLuxTranslocoTesting()
