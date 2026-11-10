@@ -8,7 +8,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatError } from '@angular/material/form-field';
 import { By } from '@angular/platform-browser';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { LuxA11yTestHelper, LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { Observable, of } from 'rxjs';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
@@ -25,7 +24,6 @@ describe('LuxRadioComponent', () => {
       providers: [
         LuxConsoleService,
         { provide: LuxMediaQueryObserverService, useClass: MockMediaObserver },
-        provideNoopAnimations(),
         provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideHttpClientTesting(),
         provideLuxTranslocoTesting()

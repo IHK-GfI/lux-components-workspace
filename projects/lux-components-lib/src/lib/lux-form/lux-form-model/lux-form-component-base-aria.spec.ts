@@ -4,7 +4,6 @@ import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { Component, signal, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxConsoleService } from '../../lux-util/lux-console.service';
@@ -17,13 +16,7 @@ describe('LuxFormComponentBase - Namenskaskade (labelledBy)', () => {
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
-      providers: [
-        LuxConsoleService,
-        provideNoopAnimations(),
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting(),
-        provideLuxTranslocoTesting()
-      ]
+      providers: [LuxConsoleService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting(), provideLuxTranslocoTesting()]
     }).compileComponents();
   });
 
@@ -94,13 +87,7 @@ describe('LuxFormComponentBase - Dev-Warnungen (checkA11yName)', () => {
   beforeEach(async () => {
     vi.useFakeTimers();
     TestBed.configureTestingModule({
-      providers: [
-        LuxConsoleService,
-        provideNoopAnimations(),
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting(),
-        provideLuxTranslocoTesting()
-      ]
+      providers: [LuxConsoleService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting(), provideLuxTranslocoTesting()]
     }).compileComponents();
   });
 

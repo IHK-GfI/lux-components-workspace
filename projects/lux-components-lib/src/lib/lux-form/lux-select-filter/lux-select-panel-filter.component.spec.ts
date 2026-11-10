@@ -2,7 +2,6 @@ import { describe, it, beforeEach, expect, vi } from 'vitest';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxSelectFilterDirective } from './lux-select-filter.directive';
 import { LuxSelectPanelFilterComponent } from './lux-select-panel-filter.component';
@@ -15,12 +14,7 @@ describe('LuxSelectPanelFilterComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [LuxSelectPanelFilterComponent],
-      providers: [
-        provideNoopAnimations(),
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting(),
-        provideLuxTranslocoTesting()
-      ]
+      providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting(), provideLuxTranslocoTesting()]
     }).compileComponents();
 
     directive = createDirectiveMock(true);

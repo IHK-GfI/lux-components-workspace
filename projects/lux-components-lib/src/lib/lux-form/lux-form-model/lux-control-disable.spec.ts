@@ -14,7 +14,6 @@ import { LuxAutocompleteComponent } from '../lux-autocomplete/lux-autocomplete.c
 import { LuxCheckboxComponent } from '../lux-checkbox/lux-checkbox.component';
 import { LuxDatepickerComponent } from '../lux-datepicker/lux-datepicker.component';
 
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { LuxFileInputComponent } from '../lux-file/lux-file-input/lux-file-input.component';
 import { LuxFileListComponent } from '../lux-file/lux-file-list/lux-file-list.component';
 import { LuxInputComponent } from '../lux-input/lux-input.component';
@@ -32,7 +31,6 @@ describe('LuxControlDisable', () => {
     TestBed.configureTestingModule({
       providers: [
         LuxConsoleService,
-        provideNoopAnimations(),
         provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideHttpClientTesting(),
         provideLuxTranslocoTesting()

@@ -10,7 +10,6 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { LuxOverlayHelper, LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { of, throwError } from 'rxjs';
 import { provideLuxTranslocoTesting } from '../../../../testing/transloco-test.provider';
@@ -35,7 +34,6 @@ describe('LuxFileListComponent', () => {
             notAppliedTo: []
           }
         }),
-        provideNoopAnimations(),
         provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideHttpClientTesting(),
         provideLuxTranslocoTesting(),

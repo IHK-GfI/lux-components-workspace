@@ -6,7 +6,6 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxHttpErrorInterceptor } from './lux-http-error-interceptor';
@@ -21,12 +20,7 @@ describe('LuxHttpErrorComponent', () => {
   beforeEach(async () => {
     vi.useFakeTimers();
     TestBed.configureTestingModule({
-      providers: [
-        provideNoopAnimations(),
-        provideHttpClient(withXhr(), withInterceptorsFromDi()),
-        provideHttpClientTesting(),
-        provideLuxTranslocoTesting()
-      ]
+      providers: [provideHttpClient(withXhr(), withInterceptorsFromDi()), provideHttpClientTesting(), provideLuxTranslocoTesting()]
     }).compileComponents();
   });
 

@@ -1,0 +1,49 @@
+$animation-duration: 200ms;
+
+// Die Deckkraft (0/1) wird über ein Style-Binding gesetzt, die Seitennavigation blendet dadurch weich ein und aus.
+.lux-side-nav {
+  transition: opacity $animation-duration;
+}
+
+// Das Overlay wird nur bei geöffneter Seitennavigation gerendert und ist dann voll deckend.
+.lux-side-nav-overlay {
+  opacity: 1;
+}
+
+.lux-side-nav-overlay--enter {
+  animation: lux-side-nav-overlay-fade-in $animation-duration;
+}
+
+.lux-side-nav-overlay--leave {
+  animation: lux-side-nav-overlay-fade-out $animation-duration forwards;
+}
+
+// animation: none, damit das Overlay sofort entfernt wird und Angular nicht auf ein Animationsende wartet.
+@media (prefers-reduced-motion: reduce) {
+  .lux-side-nav {
+    transition: none;
+  }
+
+  .lux-side-nav-overlay--enter,
+  .lux-side-nav-overlay--leave {
+    animation: none;
+  }
+}
+
+@keyframes lux-side-nav-overlay-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes lux-side-nav-overlay-fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}

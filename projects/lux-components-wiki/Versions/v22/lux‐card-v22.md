@@ -57,6 +57,8 @@
 | luxExpandedChange | boolean | Event, welches beim Ein- und Ausklappen der Card ausgelöst wird. Enthält als Event-Payload den aktuellen luxExpanded-Wert. |
 | luxAfterExpansion | void    | Event, welches nach dem Ende der Ein- bzw. Ausklappanimation der Card ausgelöst wird.                                      |
 
+Das Auf- und Zuklappen wird ohne `@angular/animations` umgesetzt (`animate.enter`/`animate.leave` und Web Animations API). Die Animation lässt sich global über `cardExpansionAnimationActive` in der [Config](config-v22) abschalten und wird bei aktivierter Bewegungsreduzierung des Betriebssystems (`prefers-reduced-motion`) übersprungen.
+
 ## Components
 
 ### LuxIconComponent

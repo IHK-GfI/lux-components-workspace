@@ -53,6 +53,17 @@ lux-side-nav {
 
 lux-side-nav {
   .lux-side-nav-item {
+    // Hover/Fokus/Selektion zeichnet der Eintrag auf der ganzen Zeile (Hover- und Fokus-State-Layer
+    // sind bereits über lux-app-header abgeschaltet). Ohne diese Override würde der Browser beim
+    // Halten der Leertaste (:active) zusätzlich den Pressed-State-Layer nur hinter dem Button zeigen.
+    lux-button {
+      @include mat.button-overrides(
+        (
+          text-pressed-state-layer-opacity: 0
+        )
+      );
+    }
+
     &.lux-side-nav-item-selected {
       @include luxfocus.lux-selected-mixin;
       color: var(--lux-theme-on-selected-color);
@@ -63,10 +74,6 @@ lux-side-nav {
           )
         );
       }
-    }
-
-    &:focus:not(.lux-side-nav-disabled) {
-      @include luxfocus.focus-dark-mixin;
     }
 
     &:focus-within:not(.lux-side-nav-disabled) {
