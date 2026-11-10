@@ -19,16 +19,21 @@
       }
     </form>
   </lux-dialog-content>
-  <lux-dialog-actions>
+  <lux-dialog-actions class="lux-dialog-actions-stacked">
     @if (data().hasLink) {
       <lux-button
-        class="lux-quill-link-dialog-remove lux-mr-4"
+        class="lux-quill-link-dialog-remove"
         [luxStroked]="true"
         [luxLabel]="'luxc.quill.link.remove' | transloco"
         (luxClicked)="remove()"
       ></lux-button>
     }
-    <lux-button class="lux-quill-link-dialog-cancel lux-mr-4" [luxStroked]="true" [luxLabel]="'luxc.quill.link.cancel' | transloco" (luxClicked)="cancel()"></lux-button>
+    <lux-button
+      class="lux-quill-link-dialog-cancel"
+      [luxStroked]="true"
+      [luxLabel]="'luxc.quill.link.cancel' | transloco"
+      (luxClicked)="cancel()"
+    ></lux-button>
     <lux-button
       class="lux-quill-link-dialog-apply"
       luxColor="primary"

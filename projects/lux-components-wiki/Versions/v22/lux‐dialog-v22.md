@@ -78,6 +78,19 @@ Diese Component soll die Aktionsschaltflächen des Dialogs darstellen.
 | -------- | ------------------ |
 | selector | lux-dialog-actions |
 
+Die Aktionen werden zentriert nebeneinander angezeigt und brechen bei Platzmangel um. Den Abstand zwischen den Schaltflächen (16px, auch nach einem Umbruch) setzt das Theme, die Schaltflächen benötigen daher keine eigenen Margins (z.B. `lux-mr-4`).
+
+| CSS-Klasse                 | Beschreibung                                                                                                                                                                                                |
+| -------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| lux-dialog-actions-stacked | Auf kleinen Bildschirmen (kleiner als `md`) stehen die Schaltflächen untereinander und nutzen die volle Breite. Runde und reine Icon-Buttons behalten ihre Größe. Der Preset-Dialog verwendet diese Klasse. |
+
+```html
+<lux-dialog-actions class="lux-dialog-actions-stacked">
+  <lux-button luxLabel="Abbrechen" [luxStroked]="true" (luxClicked)="luxDialogRef.closeDialog(false)" />
+  <lux-button luxLabel="Speichern" luxColor="primary" [luxFlat]="true" (luxClicked)="luxDialogRef.closeDialog(true)" />
+</lux-dialog-actions>
+```
+
 ## Classes / Interfaces
 
 ### ILuxDialogAction
