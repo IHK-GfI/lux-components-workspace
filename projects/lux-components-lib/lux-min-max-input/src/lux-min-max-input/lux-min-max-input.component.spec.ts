@@ -152,6 +152,58 @@ describe('LuxMinMaxInputComponent', () => {
       expect(emitted).toEqual([]);
     });
 
+    it('Sollte eine Seite mit Grenzfehler aus dem Wert nehmen und die andere behalten', async () => {
+      await setup({ luxBounds: { max: 100 } });
+      await typeInto(0, '50');
+      await blur(0);
+      await typeInto(1, '80');
+      await blur(1);
+      expect(emitted.at(-1)).toEqual({ min: 50, max: 80 });
+
+      await typeInto(0, '150');
+
+      expect(emitted.at(-1)).toEqual({ max: 80 });
+    });
+
+    it('Sollte einen zurückgehaltenen Wert übernehmen, wenn neue Grenzen ihn gültig machen', async () => {
+      await setup({ luxBounds: { max: 100 } });
+      await typeInto(0, '150');
+      await blur(0);
+      expect(messageText()).toBe('Von: Der Wert darf höchstens 100 sein.');
+      expect(emitted).toEqual([]);
+
+      fixture.componentRef.setInput('luxBounds', { max: 200 });
+      await settle();
+
+      expect(messageText()).toBe('');
+      expect(emitted.at(-1)).toEqual({ min: 150 });
+    });
+
+    it('Sollte bei wertabhängigen Grenzen des Nachbarfelds nicht blockieren', async () => {
+      await setup();
+      await typeInto(0, '1');
+      await blur(0);
+      expect(emitted.at(-1)).toEqual({ min: 1 });
+      // Die Anwendung leitet die Grenzen von Bis aus dem Von-Wert ab.
+      fixture.componentRef.setInput('luxMaxFieldBounds', { min: 1, max: 8 });
+      await settle();
+
+      await typeInto(1, '20');
+      await blur(1);
+      expect(messageText()).toBe('Bis: Zulässig sind Werte von 1 bis 8.');
+      expect(emitted.at(-1)).toEqual({ min: 1 });
+
+      await typeInto(0, '15');
+      await blur(0);
+      expect(emitted.at(-1)).toEqual({ min: 15 });
+
+      fixture.componentRef.setInput('luxMaxFieldBounds', { min: 15, max: 22 });
+      await settle();
+
+      expect(emitted.at(-1)).toEqual({ min: 15, max: 20 });
+      expect(messageText()).toBe('');
+    });
+
     it('Sollte Grenzwerte in der Meldung nicht runden', async () => {
       await setup({ luxBounds: { min: 0.125 } });
       await typeInto(0, '0.12');
@@ -592,6 +644,24 @@ describe('LuxMinMaxInputComponent als ControlValueAccessor', () => {
     await settleFixture(fixture);
 
     expect(host.control.value).toEqual({ min: 1 });
+  });
+
+  it('Sollte das FormControl ungültig machen, solange ein Feld einen Fehler hat (Validator)', async () => {
+    const input = allInputs(fixture)[1];
+    input.value = '0';
+    input.dispatchEvent(new Event('input'));
+    await settleFixture(fixture);
+
+    expect(host.control.value).toEqual({ min: 1 });
+    expect(host.control.invalid).toBe(true);
+    expect(host.control.errors?.['luxMinMaxInput']).toBeTruthy();
+
+    input.value = '5';
+    input.dispatchEvent(new Event('input'));
+    await settleFixture(fixture);
+
+    expect(host.control.valid).toBe(true);
+    expect(host.control.value).toEqual({ min: 1, max: 5 });
   });
 
   it('Sollte beide Felder deaktivieren, wenn das FormControl deaktiviert wird (setDisabledState)', async () => {

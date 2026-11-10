@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, effect, signal, untracked } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { LuxInputAcComponent, LuxSelectAcComponent, LuxToggleAcComponent } from '@ihk-gfi/lux-components';
 import { LuxMinMaxBounds, LuxMinMaxInputComponent, LuxMinMaxValue } from '@ihk-gfi/lux-components/lux-min-max-input';
@@ -78,6 +78,7 @@ export class MinMaxInputExampleComponent {
   });
 
   // Wertabhängige Grenze: Bis liegt höchstens 7 Tage nach Von. Rechnet die Anwendung, nicht die Komponente.
+  // Ein Bis außerhalb der neuen Grenze fällt aus dem Wert und wird wieder übernommen, sobald es gültig ist.
   dateMaxFieldBounds = computed<LuxMinMaxBounds<string> | undefined>(() => {
     const von = this.dateValue().min;
     if (!this.limitToWeek() || !von) {
@@ -85,15 +86,4 @@ export class MinMaxInputExampleComponent {
     }
     return { min: von, max: addDays(von, 7) };
   });
-
-  constructor() {
-    // Ein schon übernommener Bis-Wert kann die neue, vom Von-Wert abhängige Grenze verletzen; dann setzt ihn die Anwendung zurück.
-    effect(() => {
-      const limit = this.dateMaxFieldBounds()?.max;
-      const bis = this.dateValue().max;
-      if (limit && bis && Date.parse(bis) > Date.parse(limit)) {
-        untracked(() => this.dateValue.update((value) => ({ min: value.min })));
-      }
-    });
-  }
 }

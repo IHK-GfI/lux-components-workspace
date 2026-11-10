@@ -5,8 +5,10 @@ import {
   ControlValueAccessor,
   FormControl,
   FormGroup,
+  NG_VALIDATORS,
   NG_VALUE_ACCESSOR,
   ValidationErrors,
+  Validator,
   ValidatorFn
 } from '@angular/forms';
 import {
@@ -47,7 +49,8 @@ const sameRange = (a: LuxMinMaxValue<number | string>, b: LuxMinMaxValue<number 
  * Die Komponente kümmert sich nur um die Bereichslogik: leer heißt unbegrenzt, Von nicht größer als Bis, Grenzen gesamt
  * oder je Seite, eine gemeinsame Meldung unter beiden Feldern, Prüfung erst beim Verlassen eines Feldes. Formatierung und
  * Eingabefilterung übernehmen die Felder. Der Wert steht als Two-Way-Model `luxValue` und als ControlValueAccessor
- * (Reactive Forms, ngModel) zur Verfügung.
+ * (Reactive Forms, ngModel) zur Verfügung. Als Validator meldet sie dem FormControl den Fehler `luxMinMaxInput`,
+ * solange ein Feld einen Bereichs-, Grenz- oder Datumsfehler hat.
  *
  * Der Typparameter T ist der Werttyp der Felder (number bei luxType="number", string bei luxType="date") und wird aus der
  * Bindung abgeleitet, damit enger typisierte Signale der Anwendung mit [(luxValue)] funktionieren.
@@ -66,10 +69,15 @@ const sameRange = (a: LuxMinMaxValue<number | string>, b: LuxMinMaxValue<number 
       provide: NG_VALUE_ACCESSOR,
       useExisting: LuxMinMaxInputComponent,
       multi: true
+    },
+    {
+      provide: NG_VALIDATORS,
+      useExisting: LuxMinMaxInputComponent,
+      multi: true
     }
   ]
 })
-export class LuxMinMaxInputComponent<T extends number | string = number | string> implements ControlValueAccessor {
+export class LuxMinMaxInputComponent<T extends number | string = number | string> implements ControlValueAccessor, Validator {
   private static nextUniqueId = 0;
 
   /** Feldtyp beider Seiten: Zahlenfeld oder Datepicker. */
@@ -173,6 +181,8 @@ export class LuxMinMaxInputComponent<T extends number | string = number | string
   private lastEmitted: LuxMinMaxValue<T> | undefined;
   private onChange: (value: LuxMinMaxValue<T>) => void = () => {};
   private onTouched: () => void = () => {};
+  private onValidatorChange: () => void = () => {};
+  private lastValidationKey = 'null';
 
   constructor() {
     effect(() => {
@@ -183,7 +193,11 @@ export class LuxMinMaxInputComponent<T extends number | string = number | string
 
     effect(() => {
       this.effectiveBounds();
-      untracked(() => this.revalidate());
+      // Neue Grenzen können einen zurückgehaltenen Wert gültig machen oder eine Seite ungültig werden lassen.
+      untracked(() => {
+        this.revalidate();
+        this.emitIfValid();
+      });
     });
 
     effect(() => {
@@ -246,6 +260,24 @@ export class LuxMinMaxInputComponent<T extends number | string = number | string
 
   setDisabledState(isDisabled: boolean): void {
     this.luxDisabled.set(isDisabled);
+  }
+
+  // Validator
+
+  /** Fehler je Seite, solange ein Feld einen Bereichs-, Grenz- oder Datumsfehler hat; unabhängig von der Anzeige. */
+  validate(): ValidationErrors | null {
+    const errors: Partial<Record<Side, ValidationErrors>> = {};
+    for (const side of SIDES) {
+      const sideErrors = this.fieldErrors(side);
+      if (sideErrors) {
+        errors[side] = sideErrors;
+      }
+    }
+    return Object.keys(errors).length > 0 ? { luxMinMaxInput: errors } : null;
+  }
+
+  registerOnValidatorChange(fn: () => void): void {
+    this.onValidatorChange = fn;
   }
 
   // Beim Tippen kann eine Meldung nur verschwinden oder sich ändern; neue entstehen beim Verlassen.
@@ -324,12 +356,13 @@ export class LuxMinMaxInputComponent<T extends number | string = number | string
   }
 
   private rangeErrorsOf(side: Side, own: number | undefined, otherRaw: unknown): ValidationErrors | null {
+    return rangeErrors(side, own, toComparable(otherRaw, this.luxType()) ?? undefined, this.comparableBounds(side));
+  }
+
+  private comparableBounds(side: Side): { min?: number; max?: number } {
     const type = this.luxType();
     const { min, max } = this.effectiveBounds()[side];
-    return rangeErrors(side, own, toComparable(otherRaw, type) ?? undefined, {
-      min: toComparable(min, type) ?? undefined,
-      max: toComparable(max, type) ?? undefined
-    });
+    return { min: toComparable(min, type) ?? undefined, max: toComparable(max, type) ?? undefined };
   }
 
   private tighter(a: number | string | undefined, b: number | string | undefined, kind: 'lower' | 'upper'): number | string | undefined {
@@ -363,6 +396,16 @@ export class LuxMinMaxInputComponent<T extends number | string = number | string
     this.form.controls.max.updateValueAndValidity({ emitEvent: false });
     const checked = this.checked;
     this.message.set(checked ? this.messageFor(checked.side, this.form.controls[checked.side].errors) : null);
+    this.notifyValidatorChange();
+  }
+
+  // Lässt das FormControl die Validatoren neu auswerten, wenn sich der Fehlerzustand geändert hat.
+  private notifyValidatorChange(): void {
+    const key = JSON.stringify(this.validate());
+    if (key !== this.lastValidationKey) {
+      this.lastValidationKey = key;
+      this.onValidatorChange();
+    }
   }
 
   private resetChecked(): void {
@@ -411,34 +454,59 @@ export class LuxMinMaxInputComponent<T extends number | string = number | string
 
   // Unabhängig von der Anzeige: die Validatoren der Controls sind absichtlich unvollständig.
   private emitIfValid(): void {
-    const { min, max } = this.form.controls;
-    if (this.form.disabled || SIDES.some((side) => this.hasError(side))) {
+    this.notifyValidatorChange();
+    if (this.form.disabled) {
       return;
     }
-    const nextMin = isEmpty(min.value) ? undefined : (min.value as number | string);
-    const nextMax = isEmpty(max.value) ? undefined : (max.value as number | string);
+    const next = this.acceptedRange();
+    if (!next) {
+      return;
+    }
     const current = this.luxValue();
-    if (current.min === nextMin && current.max === nextMax) {
+    if (current.min === next.min && current.max === next.max) {
       return;
-    }
-    const next = {} as LuxMinMaxValue<T>;
-    if (nextMin !== undefined) {
-      next.min = nextMin as T;
-    }
-    if (nextMax !== undefined) {
-      next.max = nextMax as T;
     }
     this.lastEmitted = next;
     this.luxValue.set(next);
     this.onChange(next);
   }
 
-  private hasError(side: Side): boolean {
+  /**
+   * Der zu emittierende Bereich: nur Seiten, die in sich gültig sind (lesbar und innerhalb der Grenzen); eine Seite
+   * mit Grenzfehler fehlt. Widersprechen sich beide gültigen Seiten (Von größer Bis), gibt es keinen neuen Bereich (null)
+   * und der letzte gültige bleibt stehen.
+   */
+  private acceptedRange(): LuxMinMaxValue<T> | null {
+    const accepted = {} as LuxMinMaxValue<T>;
+    const comparable: Partial<Record<Side, number>> = {};
+    for (const side of SIDES) {
+      const control = this.form.controls[side];
+      const own = toComparable(control.value, this.luxType());
+      if (own === undefined || own === null || control.errors?.['matDatepickerParse']) {
+        continue;
+      }
+      if (rangeErrors(side, own, undefined, this.comparableBounds(side))) {
+        continue;
+      }
+      accepted[side] = control.value as T;
+      comparable[side] = own;
+    }
+    if (comparable.min !== undefined && comparable.max !== undefined && comparable.min > comparable.max) {
+      return null;
+    }
+    return accepted;
+  }
+
+  // Fehler eines Feldes für den Validator: unlesbarer Wert, Bereichs- oder Grenzfehler.
+  private fieldErrors(side: Side): ValidationErrors | null {
     const control = this.form.controls[side];
     if (control.errors?.['matDatepickerParse']) {
-      return true;
+      return { matDatepickerParse: true };
     }
     const own = toComparable(control.value, this.luxType());
-    return own !== null && this.rangeErrorsOf(side, own, this.form.controls[this.other(side)].value) !== null;
+    if (own === null) {
+      return { invalidValue: true };
+    }
+    return this.rangeErrorsOf(side, own, this.form.controls[this.other(side)].value);
   }
 }
