@@ -10,10 +10,13 @@ lux-conditional {
   display: contents;
 }
 
-// Höhe ohne JavaScript: das Panel animiert seine einzige Grid-Zeile zwischen 0fr und 1fr
+// Höhe ohne JavaScript: das Panel animiert seine einzige Grid-Zeile zwischen 0fr und 1fr.
+// Die Spalte braucht ein Minimum von 0: die implizite auto-Spalte würde die Min-Content-Breite des Inhalts
+// annehmen (z. B. Feld mit Chips, Tabelle) und das Panel über den Container hinaus wachsen lassen.
 .lux-conditional__panel {
   display: grid;
   grid-template-rows: 1fr;
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .lux-conditional__content {

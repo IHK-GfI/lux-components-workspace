@@ -16,6 +16,19 @@ class MockComponent {
   readonly label = signal<string | undefined>('Details');
 }
 
+@Component({
+  imports: [LuxConditionalDirective],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `
+    <div id="container" style="width: 320px">
+      <div *luxConditional="true" id="content">
+        <div style="width: 1000px">Kind mit großer Min-Content-Breite</div>
+      </div>
+    </div>
+  `
+})
+class WideContentMockComponent {}
+
 describe('LuxConditionalDirective', () => {
   let fixture: ComponentFixture<MockComponent>;
   let mock: MockComponent;
@@ -159,6 +172,23 @@ describe('LuxConditionalDirective', () => {
 
       expect(panels().length).toBe(1);
       expect(fixture.nativeElement.querySelectorAll('#content').length).toBe(1);
+    });
+  });
+
+  describe('Layout', () => {
+    beforeEach(() => configure(false));
+
+    it('Sollte den Inhalt auf die Breite des Containers begrenzen, auch bei großer Min-Content-Breite', async () => {
+      const layoutFixture = TestBed.createComponent(WideContentMockComponent);
+      layoutFixture.detectChanges();
+      await layoutFixture.whenStable();
+      const width = (selector: string): number =>
+        (layoutFixture.nativeElement.querySelector(selector) as HTMLElement).getBoundingClientRect().width;
+
+      expect(width('#container')).toBe(320);
+      expect(width('.lux-conditional__panel')).toBe(320);
+      expect(width('.lux-conditional__content')).toBe(320);
+      expect(width('#content')).toBe(320);
     });
   });
 });
