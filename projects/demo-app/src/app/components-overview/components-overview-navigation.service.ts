@@ -82,6 +82,7 @@ export class ComponentsOverviewNavigationService implements OnDestroy {
     this.create('form', 'File-List'),
     this.create('form', 'File-Upload'),
     this.create('form', 'Input-Ac'),
+    this.create('form', 'Min-Max-Input', DemoMarkerType.New),
     this.create('form', 'Quill', DemoMarkerType.New),
     this.create('form', 'Radio-Button-Ac'),
     this.create('form', 'Select-Ac', DemoMarkerType.Updated),

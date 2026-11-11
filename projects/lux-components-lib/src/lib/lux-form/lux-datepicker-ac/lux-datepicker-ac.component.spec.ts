@@ -531,6 +531,32 @@ describe('LuxDatepickerAcComponent', () => {
       expect(matErrorEl.nativeElement.innerText.trim()).toEqual('Das Datum überschreitet den Maximalwert');
     }));
 
+    it('Sollte die Grenzen aufheben, wenn luxMinDate und luxMaxDate auf null gesetzt werden', fakeAsync(() => {
+      // Vorbedingungen testen
+      testComponent.minDate = '10/20/2015';
+      testComponent.maxDate = '10/25/2015';
+      LuxTestHelper.wait(fixture);
+      expect(datepickerComponent.min).not.toBeNull();
+      expect(datepickerComponent.max).not.toBeNull();
+
+      // Änderungen durchführen
+      testComponent.minDate = null;
+      testComponent.maxDate = null;
+      LuxTestHelper.wait(fixture);
+
+      // Nachbedingungen testen
+      expect(datepickerComponent.min).toBeNull();
+      expect(datepickerComponent.max).toBeNull();
+
+      // Ein Wert außerhalb der früheren Grenzen ist jetzt gültig
+      testComponent.value = '2015-10-19T00:00:00.000Z';
+      LuxTestHelper.wait(fixture);
+      datepickerComponent.formControl.markAsTouched();
+      datepickerComponent.formControl.updateValueAndValidity();
+      LuxTestHelper.wait(fixture);
+      expect(fixture.debugElement.query(By.css('mat-error'))).toBeFalsy();
+    }));
+
     it('LuxMaxDate als ISO-String ohne Zeitzoneninfo mit später Uhrzeit', fakeAsync(() => {
       // Vorbedingungen testen
       let matErrorEl = fixture.debugElement.query(By.css('mat-error'));
@@ -962,6 +988,50 @@ describe('LuxDatepickerAcComponent', () => {
     }));
   });
 
+  describe('luxAriaDescribedby', () => {
+    let fixture: ComponentFixture<LuxDatepickerDescribedbyComponent>;
+    let testComponent: LuxDatepickerDescribedbyComponent;
+    let datepicker: LuxDatepickerAcComponent;
+    let input: HTMLInputElement;
+
+    beforeEach(fakeAsync(() => {
+      fixture = TestBed.createComponent(LuxDatepickerDescribedbyComponent);
+      testComponent = fixture.componentInstance;
+      fixture.detectChanges();
+      flush();
+      datepicker = fixture.debugElement.query(By.directive(LuxDatepickerAcComponent)).componentInstance;
+      input = fixture.debugElement.query(By.css('input')).nativeElement;
+    }));
+
+    it('Sollte die externe Id vor die eigene Hinweis-Id stellen', fakeAsync(() => {
+      testComponent.hint = 'Ein Hinweis';
+      LuxTestHelper.wait(fixture);
+      expect(input.getAttribute('aria-describedby')).toEqual(datepicker.uid + '-hint');
+
+      testComponent.describedby = 'externe-meldung';
+      LuxTestHelper.wait(fixture);
+
+      expect(input.getAttribute('aria-describedby')).toEqual('externe-meldung ' + datepicker.uid + '-hint');
+    }));
+
+    it('Sollte bei luxNoBottomLabel nicht auf die ausgeblendete Fehlerzeile verweisen', fakeAsync(() => {
+      testComponent.required = true;
+      LuxTestHelper.wait(fixture);
+      datepicker.formControl.markAsTouched();
+      datepicker.formControl.updateValueAndValidity();
+      LuxTestHelper.wait(fixture);
+      expect(datepicker.errorMessage).toBeTruthy();
+      expect(input.getAttribute('aria-describedby')).toEqual(datepicker.uid + '-error');
+
+      testComponent.noBottomLabel = true;
+      testComponent.describedby = 'externe-meldung';
+      LuxTestHelper.wait(fixture);
+
+      expect(fixture.debugElement.query(By.css('mat-error'))).toBeNull();
+      expect(input.getAttribute('aria-describedby')).toEqual('externe-meldung');
+    }));
+  });
+
   describe('A11y', () => {
     let fixture: ComponentFixture<LuxDatepickerA11yComponent>;
     let testComponent: LuxDatepickerA11yComponent;
@@ -1029,8 +1099,8 @@ class LuxNoFormAttributeTestComponent {
   disabled?: boolean;
   readonly = false;
   required = false;
-  minDate?: string;
-  maxDate?: string;
+  minDate?: string | null;
+  maxDate?: string | null;
   startDate?: string;
   customFilter?: LuxDateFilterAcFn;
   showToggle = true;
@@ -1115,4 +1185,23 @@ class LuxDatepickerA11yComponent {
   disabled = false;
   readonly = false;
   required = false;
+}
+
+@Component({
+  template: `
+    <lux-datepicker-ac
+      luxLabel="Datum"
+      [luxHint]="hint"
+      [luxRequired]="required"
+      [luxNoBottomLabel]="noBottomLabel"
+      [luxAriaDescribedby]="describedby"
+    ></lux-datepicker-ac>
+  `,
+  imports: [LuxDatepickerAcComponent]
+})
+class LuxDatepickerDescribedbyComponent {
+  hint?: string;
+  required = false;
+  noBottomLabel = false;
+  describedby?: string;
 }

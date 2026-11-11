@@ -145,7 +145,7 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
    * Entfernt den unteren Bereich (Hint, Fehlermeldung, Counter) aus dem DOM.
    * Achtung, bewusste Entscheidung: Damit entfällt auch die per aria-describedby
    * referenzierte Fehlermeldung. Nur einsetzen, wenn Fehler an anderer Stelle
-   * wahrnehmbar gemacht werden.
+   * wahrnehmbar gemacht werden, z.B. über luxAriaDescribedby (lux-input-ac, lux-datepicker-ac) auf eine gemeinsame Meldung.
    */
   @Input() luxNoBottomLabel = false;
   /**
@@ -182,6 +182,16 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
       return undefined;
     }
     return this.formLabelComponent || this.luxLabel ? this.uid + '-label' : undefined;
+  }
+
+  /**
+   * Verkettet eine externe Id (Input luxAriaDescribedby der Komponente) mit der eigenen Id der Hinweis- bzw. Fehlerzeile.
+   * Die eigene Id wird nur geliefert, wenn die Zeile auch gerendert wird (nicht bei luxNoBottomLabel
+   * oder luxNoLabels), damit aria-describedby nie auf eine Id zeigt, die nicht im DOM ist.
+   */
+  protected joinDescribedBy(externalId: string | undefined, ownId: string | undefined): string | undefined {
+    const ids = [externalId, this.luxNoBottomLabel || this.luxNoLabels ? undefined : ownId].filter((id) => !!id);
+    return ids.length > 0 ? ids.join(' ') : undefined;
   }
 
   get luxFormGroup(): FormGroup {

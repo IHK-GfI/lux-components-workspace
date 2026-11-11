@@ -1268,6 +1268,121 @@ describe('LuxInputAcComponent', () => {
     }));
   });
 
+  describe('luxMin, luxMax und luxStep (luxType="number")', () => {
+    let fixture: ComponentFixture<LuxInputNumberLimitsComponent>;
+    let testComponent: LuxInputNumberLimitsComponent;
+
+    beforeEach(fakeAsync(() => {
+      fixture = TestBed.createComponent(LuxInputNumberLimitsComponent);
+      testComponent = fixture.componentInstance;
+      fixture.detectChanges();
+    }));
+
+    it('Sollte min, max und step als Attribute am Zahlenfeld setzen', fakeAsync(() => {
+      const input = fixture.debugElement.query(By.css('input[type="number"]'));
+      expect(input.nativeElement.getAttribute('min')).toBeNull();
+      expect(input.nativeElement.getAttribute('max')).toBeNull();
+      expect(input.nativeElement.getAttribute('step')).toBeNull();
+
+      testComponent.min = 0;
+      testComponent.max = 100;
+      testComponent.step = 5;
+      LuxTestHelper.wait(fixture);
+
+      expect(input.nativeElement.getAttribute('min')).toEqual('0');
+      expect(input.nativeElement.getAttribute('max')).toEqual('100');
+      expect(input.nativeElement.getAttribute('step')).toEqual('5');
+    }));
+
+    it('Sollte die Attribute wieder entfernen, wenn die Grenzen aufgehoben werden', fakeAsync(() => {
+      const input = fixture.debugElement.query(By.css('input[type="number"]'));
+      testComponent.min = 10;
+      testComponent.max = 20;
+      testComponent.step = 2;
+      LuxTestHelper.wait(fixture);
+      expect(input.nativeElement.getAttribute('min')).toEqual('10');
+
+      testComponent.min = undefined;
+      testComponent.max = undefined;
+      testComponent.step = undefined;
+      LuxTestHelper.wait(fixture);
+
+      expect(input.nativeElement.getAttribute('min')).toBeNull();
+      expect(input.nativeElement.getAttribute('max')).toBeNull();
+      expect(input.nativeElement.getAttribute('step')).toBeNull();
+    }));
+
+    it('Sollte bei einem Wert außerhalb von luxMin/luxMax keinen Angular-Validierungsfehler erzeugen', fakeAsync(() => {
+      const luxInput: LuxInputAcComponent = fixture.debugElement.query(By.directive(LuxInputAcComponent)).componentInstance;
+      const input = fixture.debugElement.query(By.css('input[type="number"]'));
+      testComponent.min = 0;
+      testComponent.max = 100;
+      LuxTestHelper.wait(fixture);
+
+      LuxTestHelper.setInputValue(input.nativeElement, '150', fixture);
+      LuxTestHelper.wait(fixture);
+
+      expect(luxInput.formControl.value as unknown).toEqual(150);
+      expect(luxInput.formControl.errors).toBeNull();
+    }));
+  });
+
+  describe('luxAriaDescribedby', () => {
+    let fixture: ComponentFixture<LuxInputDescribedbyComponent>;
+    let testComponent: LuxInputDescribedbyComponent;
+    let luxInput: LuxInputAcComponent;
+    let input: HTMLInputElement;
+
+    beforeEach(fakeAsync(() => {
+      fixture = TestBed.createComponent(LuxInputDescribedbyComponent);
+      testComponent = fixture.componentInstance;
+      fixture.detectChanges();
+      luxInput = fixture.debugElement.query(By.directive(LuxInputAcComponent)).componentInstance;
+      input = fixture.debugElement.query(By.css('input')).nativeElement;
+    }));
+
+    it('Sollte die externe Id vor die eigene Hinweis-Id stellen', fakeAsync(() => {
+      testComponent.hint = 'Ein Hinweis';
+      LuxTestHelper.wait(fixture);
+      expect(input.getAttribute('aria-describedby')).toEqual(luxInput.uid + '-hint');
+
+      testComponent.describedby = 'externe-meldung';
+      LuxTestHelper.wait(fixture);
+
+      expect(input.getAttribute('aria-describedby')).toEqual('externe-meldung ' + luxInput.uid + '-hint');
+    }));
+
+    it('Sollte nur die externe Id liefern, wenn es weder Hinweis noch Fehler gibt', fakeAsync(() => {
+      expect(input.getAttribute('aria-describedby')).toBeNull();
+
+      testComponent.describedby = 'externe-meldung';
+      LuxTestHelper.wait(fixture);
+
+      expect(input.getAttribute('aria-describedby')).toEqual('externe-meldung');
+    }));
+
+    it('Sollte bei luxNoBottomLabel nicht auf die ausgeblendete Fehlerzeile verweisen', fakeAsync(() => {
+      testComponent.required = true;
+      LuxTestHelper.wait(fixture);
+      luxInput.formControl.markAsTouched();
+      luxInput.formControl.updateValueAndValidity();
+      LuxTestHelper.wait(fixture);
+      expect(luxInput.errorMessage).toBeTruthy();
+      expect(input.getAttribute('aria-describedby')).toEqual(luxInput.uid + '-error');
+
+      testComponent.noBottomLabel = true;
+      LuxTestHelper.wait(fixture);
+
+      expect(fixture.debugElement.query(By.css('mat-error'))).toBeNull();
+      expect(input.getAttribute('aria-describedby')).toBeNull();
+
+      testComponent.describedby = 'externe-meldung';
+      LuxTestHelper.wait(fixture);
+
+      expect(input.getAttribute('aria-describedby')).toEqual('externe-meldung');
+    }));
+  });
+
   describe('A11y', () => {
     let fixture: ComponentFixture<LuxInputA11yComponent>;
     let testComponent: LuxInputA11yComponent;
@@ -1745,4 +1860,33 @@ class LuxInputA11yComponent {
   readonly = false;
   required = false;
   noTopLabel = false;
+}
+
+@Component({
+  template: ` <lux-input-ac luxType="number" luxLabel="Anzahl" [luxMin]="min" [luxMax]="max" [luxStep]="step"></lux-input-ac> `,
+  imports: [LuxInputAcComponent]
+})
+class LuxInputNumberLimitsComponent {
+  min?: number;
+  max?: number;
+  step?: number;
+}
+
+@Component({
+  template: `
+    <lux-input-ac
+      luxLabel="Anzahl"
+      [luxHint]="hint"
+      [luxRequired]="required"
+      [luxNoBottomLabel]="noBottomLabel"
+      [luxAriaDescribedby]="describedby"
+    ></lux-input-ac>
+  `,
+  imports: [LuxInputAcComponent]
+})
+class LuxInputDescribedbyComponent {
+  hint?: string;
+  required = false;
+  noBottomLabel = false;
+  describedby?: string;
 }

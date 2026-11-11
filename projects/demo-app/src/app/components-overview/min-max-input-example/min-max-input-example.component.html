@@ -1,0 +1,112 @@
+<example-base-structure
+  exampleTitle="Min-Max-Input"
+  exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/lux%E2%80%90min%E2%80%90max%E2%80%90input-v21"
+>
+  <example-base-content>
+    <div class="lux-flex lux-flex-col">
+      <h3>Zahl ohne Reactive-Form</h3>
+      <lux-min-max-input
+        luxTagId="minmax_number"
+        [luxLabel]="label()"
+        [luxMinLabel]="minLabel()"
+        [luxMaxLabel]="maxLabel()"
+        [luxUnit]="unit()"
+        [luxStep]="step()"
+        [luxBounds]="numberBounds()"
+        [(luxValue)]="numberValue"
+        [(luxDisabled)]="disabled"
+        (luxValueChange)="log(showOutputEvents(), 'luxValueChange', $event)"
+      ></lux-min-max-input>
+      <example-value [value]="numberValue()"></example-value>
+    </div>
+
+    <div class="lux-flex lux-flex-col">
+      <h3>Zeitraum (luxType="date")</h3>
+      <p class="lux-hint">
+        Ist "Bis höchstens 7 Tage nach Von" eingeschaltet (Optionen, Erweitert), rechnet die Beispielseite aus dem Von-Datum die Grenzen des
+        Bis-Felds (luxMaxFieldBounds) und übergibt sie der Komponente.
+      </p>
+      <lux-min-max-input
+        luxTagId="minmax_date"
+        luxType="date"
+        luxLabel="Zeitraum"
+        [luxMaxFieldBounds]="dateMaxFieldBounds()"
+        [(luxValue)]="dateValue"
+        [(luxDisabled)]="disabled"
+        (luxValueChange)="log(showOutputEvents(), 'luxValueChange', $event)"
+      ></lux-min-max-input>
+      <example-value [value]="dateValue()"></example-value>
+    </div>
+
+    <div class="lux-flex lux-flex-col" [formGroup]="form">
+      <h3>Beispiel in Reactive-Form</h3>
+      <lux-min-max-input
+        luxTagId="minmax_form"
+        [formControlName]="controlBinding"
+        [luxLabel]="label()"
+        [luxMinLabel]="minLabel()"
+        [luxMaxLabel]="maxLabel()"
+        [luxUnit]="unit()"
+        [luxStep]="step()"
+        [luxBounds]="numberBounds()"
+        [(luxDisabled)]="disabled"
+      ></lux-min-max-input>
+      <example-form-value [form]="form" [controlBinding]="controlBinding"></example-form-value>
+    </div>
+  </example-base-content>
+
+  <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
+    <div class="lux-hint lux-p-2">
+      Die Prüfung läuft erst beim Verlassen eines Feldes. Markiert wird nur das zuletzt verlassene Feld, die Meldung steht unter beiden
+      Feldern. Ein leeres Feld bedeutet "keine Begrenzung".
+    </div>
+    <lux-toggle-ac
+      luxLabel="Output-Events loggen"
+      luxHint="(Console --> F12/CMD+ALT+I)"
+      [(luxChecked)]="showOutputEvents"
+      [luxNoTopLabel]="true"
+    ></lux-toggle-ac>
+    <lux-input-ac
+      luxLabel="luxLabel"
+      luxHint="Sichtbare Legende der Gruppe. Ohne Text bleibt sie nur für Screenreader erhalten."
+      [(luxValue)]="label"
+    ></lux-input-ac>
+    <lux-input-ac luxLabel="luxMinLabel" luxHint="Label des Von-Felds, Standard ist Von." [(luxValue)]="minLabel"></lux-input-ac>
+    <lux-input-ac luxLabel="luxMaxLabel" luxHint="Label des Bis-Felds, Standard ist Bis." [(luxValue)]="maxLabel"></lux-input-ac>
+    <lux-input-ac
+      luxLabel="luxUnit"
+      luxHint="Einheit als Suffix beider Zahlenfelder, z. B. kg oder Personen."
+      [(luxValue)]="unit"
+    ></lux-input-ac>
+    <lux-input-ac
+      luxLabel="luxBounds.min"
+      luxType="number"
+      luxHint="Untere Grenze beider Felder. Leer bedeutet unbegrenzt."
+      [(luxValue)]="boundsMin"
+    ></lux-input-ac>
+    <lux-input-ac
+      luxLabel="luxBounds.max"
+      luxType="number"
+      luxHint="Obere Grenze beider Felder. Leer bedeutet unbegrenzt."
+      [(luxValue)]="boundsMax"
+    ></lux-input-ac>
+    <example-form-disable [form]="form" [controlBinding]="controlBinding" [(disabled)]="disabled"></example-form-disable>
+  </example-base-simple-options>
+
+  <example-base-advanced-options class="lux-flex lux-flex-col lux-gap-4">
+    <lux-select-ac
+      luxLabel="luxStep"
+      luxHint="Schrittweite der Zahlenfelder für Pfeiltasten und Spinner."
+      [luxOptions]="stepOptions"
+      luxOptionLabelProp="label"
+      [luxPickValue]="(item) => item.value"
+      [(luxSelected)]="step"
+    ></lux-select-ac>
+    <lux-toggle-ac
+      luxLabel="Bis höchstens 7 Tage nach Von"
+      luxHint="Beispiel für wertabhängige Grenzen im Abschnitt Zeitraum (luxMaxFieldBounds)."
+      [(luxChecked)]="limitToWeek"
+      [luxNoTopLabel]="true"
+    ></lux-toggle-ac>
+  </example-base-advanced-options>
+</example-base-structure>

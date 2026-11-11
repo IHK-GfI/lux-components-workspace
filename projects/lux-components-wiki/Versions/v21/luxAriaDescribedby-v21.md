@@ -34,3 +34,15 @@ Html
 <lux-button luxLabel="Speichern" luxAriaDescribedby="save-hint"></lux-button>
 <div id="save-hint">Bitte vergessen Sie nicht, die AGBs zu akzeptieren!</div>
 ```
+
+### Formularfelder
+
+`lux-input-ac` und `lux-datepicker-ac` besitzen einen gleichnamigen Input `luxAriaDescribedby` (wie bei `luxAriaLabel` und `luxAriaLabelledby`).
+Er wird am nativen Eingabeelement vor die eigene Hinweis- bzw. Fehler-Id gestellt, zum Beispiel für eine gemeinsame Meldung mehrerer Felder.
+Ist die Direktive im Konsumenten importiert und wird das Attribut an einer dieser Komponenten gesetzt, landet es zusätzlich am Hostelement.
+
+```html
+<lux-input-ac luxLabel="Von" luxAriaDescribedby="bereich-meldung"></lux-input-ac>
+<lux-input-ac luxLabel="Bis" luxAriaDescribedby="bereich-meldung"></lux-input-ac>
+<p id="bereich-meldung" role="status">Von: Der Wert darf nicht größer als 100 sein.</p>
+```

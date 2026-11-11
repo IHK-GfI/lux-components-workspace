@@ -1,0 +1,60 @@
+<fieldset class="lux-min-max-input__group" [disabled]="luxDisabled()">
+  <legend class="lux-min-max-input__legend" [class.lux-sr-only]="!luxLabel()">
+    {{ luxLabel() || ('luxc.min-max-input.default_label' | transloco) }}
+  </legend>
+  <div class="lux-min-max-input__fields">
+    @for (side of sides; track side) {
+      @switch (luxType()) {
+        @case ('date') {
+          <lux-datepicker-ac
+            [luxTagId]="tagIdFor(side)"
+            [luxLabel]="labels()[side]"
+            [luxFormGroup]="form"
+            [luxControlBinding]="side"
+            [luxMinDate]="dateLimits()[side].min"
+            [luxMaxDate]="dateLimits()[side].max"
+            [luxNoBottomLabel]="true"
+            [luxErrorCallback]="fieldErrorText"
+            [luxAriaDescribedby]="messageId()"
+            (luxBlur)="onBlur(side)"
+          ></lux-datepicker-ac>
+        }
+        @default {
+          <lux-input-ac
+            luxType="number"
+            luxAutocomplete="off"
+            [luxTagId]="tagIdFor(side)"
+            [luxLabel]="labels()[side]"
+            [luxFormGroup]="form"
+            [luxControlBinding]="side"
+            [luxStep]="luxStep()"
+            [luxMin]="numberLimits()[side].min"
+            [luxMax]="numberLimits()[side].max"
+            [luxNoBottomLabel]="true"
+            [luxErrorCallback]="fieldErrorText"
+            [luxAriaDescribedby]="messageId()"
+            (luxBlur)="onBlur(side)"
+          >
+            @if (luxUnit()) {
+              <lux-input-ac-suffix>{{ luxUnit() }}</lux-input-ac-suffix>
+            }
+          </lux-input-ac>
+        }
+      }
+    }
+  </div>
+  <p class="lux-min-max-input__message" [id]="messageId()" role="status" aria-live="polite">
+    @if (message(); as current) {
+      <span class="lux-form-error-container">
+        <lux-icon
+          class="lux-form-error-icon"
+          luxIconName="lux-interface-alert-warning-triangle"
+          luxIconSize="0.875rem"
+          luxPadding="1px"
+          luxMargin="0px 2px 0px 0px"
+        ></lux-icon>
+        <span class="lux-form-error-label">{{ 'luxc.min-max-input.errors.' + current.key | transloco: messageParams() }}</span>
+      </span>
+    }
+  </p>
+</fieldset>

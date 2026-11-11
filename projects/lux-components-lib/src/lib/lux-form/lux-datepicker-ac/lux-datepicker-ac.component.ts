@@ -82,6 +82,11 @@ export class LuxDatepickerAcComponent<T = any> extends LuxFormInputBaseClass<T> 
   @Input() luxMaxDate: string | null = null;
   @Input() luxMinDate: string | null = null;
   @Input() luxReferenceControl?: LuxReferenceControl;
+  /**
+   * Id eines externen beschreibenden Elements (z.B. eine gemeinsame Meldung mehrerer Felder).
+   * Wird im "aria-describedby" des nativen Eingabeelements vor die eigene Hinweis- bzw. Fehler-Id gestellt.
+   */
+  @Input() luxAriaDescribedby?: string;
 
   @ViewChild(MatDatepicker) matDatepicker?: MatDatepicker<any>;
   @ViewChild('datepickerInput', { read: ElementRef }) datepickerInput?: ElementRef;
@@ -158,15 +163,23 @@ export class LuxDatepickerAcComponent<T = any> extends LuxFormInputBaseClass<T> 
     if (simpleChanges['luxLocale'] && simpleChanges['luxLocale'].currentValue) {
       this.dateAdapter.setLocale(simpleChanges['luxLocale'].currentValue);
     }
-    if (simpleChanges['luxMaxDate'] && typeof simpleChanges['luxMaxDate'].currentValue === 'string') {
-      this.max = this.parseCalendarDate(simpleChanges['luxMaxDate'].currentValue);
+    if (simpleChanges['luxMaxDate']) {
+      this.max = this.parseLimit(simpleChanges['luxMaxDate'].currentValue);
     }
-    if (simpleChanges['luxMinDate'] && typeof simpleChanges['luxMinDate'].currentValue === 'string') {
-      this.min = this.parseCalendarDate(simpleChanges['luxMinDate'].currentValue);
+    if (simpleChanges['luxMinDate']) {
+      this.min = this.parseLimit(simpleChanges['luxMinDate'].currentValue);
     }
     if (simpleChanges['luxStartDate'] && typeof simpleChanges['luxStartDate'].currentValue === 'string') {
       this.start = this.parseCalendarDate(simpleChanges['luxStartDate'].currentValue);
     }
+  }
+
+  /**
+   * Parst eine Grenze (Min- bzw. Maxdatum). Alles außer einem String, also auch null und undefined, hebt die Grenze auf.
+   * @param value
+   */
+  private parseLimit(value: unknown): Date | null {
+    return typeof value === 'string' ? this.parseCalendarDate(value) : null;
   }
 
   /**
@@ -245,13 +258,16 @@ export class LuxDatepickerAcComponent<T = any> extends LuxFormInputBaseClass<T> 
   }
 
   descripedBy() {
+    return this.joinDescribedBy(this.luxAriaDescribedby, this.ownDescribedBy());
+  }
+
+  private ownDescribedBy(): string | undefined {
     if (this.errorMessage) {
       return this.uid + '-error';
-    } else {
-      return (this.formHintComponent || this.luxHint) && (!this.luxHintShowOnlyOnFocus || (this.luxHintShowOnlyOnFocus && this.focused))
-        ? this.uid + '-hint'
-        : undefined;
     }
+    return (this.formHintComponent || this.luxHint) && (!this.luxHintShowOnlyOnFocus || (this.luxHintShowOnlyOnFocus && this.focused))
+      ? this.uid + '-hint'
+      : undefined;
   }
 
   /**
