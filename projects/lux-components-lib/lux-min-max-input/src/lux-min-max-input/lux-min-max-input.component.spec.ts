@@ -9,7 +9,7 @@ import { LuxDatepickerAcComponent, LuxInputAcComponent } from '@ihk-gfi/lux-comp
 import { LuxA11yTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../src/testing/transloco-test.provider';
 import { LuxMinMaxInputComponent } from './lux-min-max-input.component';
-import { LuxMinMaxType, LuxMinMaxValue } from './lux-min-max-input-types';
+import { LuxMinMaxBounds, LuxMinMaxType, LuxMinMaxValue } from './lux-min-max-input-types';
 
 const PROVIDERS = [
   provideNoopAnimations(),
@@ -202,6 +202,18 @@ describe('LuxMinMaxInputComponent', () => {
 
       expect(emitted.at(-1)).toEqual({ min: 15, max: 20 });
       expect(messageText()).toBe('');
+    });
+
+    it('Sollte bei engeren Grenzen einen übernommenen Wert behalten und die verletzte Seite melden', async () => {
+      await setup({}, { min: 10, max: 50 });
+
+      fixture.componentRef.setInput('luxBounds', { max: 30 });
+      await settle();
+
+      expect(emitted).toEqual([]);
+      expect(inputs().map((el) => el.value)).toEqual(['10', '50']);
+      expect(messageText()).toBe('Bis: Der Wert darf höchstens 30 sein.');
+      expect(isMarked()).toEqual([false, true]);
     });
 
     it('Sollte Grenzwerte in der Meldung nicht runden', async () => {
@@ -664,6 +676,29 @@ describe('LuxMinMaxInputComponent als ControlValueAccessor', () => {
     expect(host.control.value).toEqual({ min: 1, max: 5 });
   });
 
+  it('Sollte einen ungültigen Startwert unverändert lassen und das Control weder ändern noch dirty machen', async () => {
+    host.bounds = { max: 0 };
+    await settleFixture(fixture);
+
+    expect(allInputs(fixture).map((el) => el.value)).toEqual(['1', '']);
+    expect(host.control.value).toEqual({ min: 1 });
+    expect(host.control.pristine).toBe(true);
+    expect(host.control.invalid).toBe(true);
+  });
+
+  it('Sollte bei writeValue kein luxValueChange auslösen', async () => {
+    host.control.setValue({ min: 3, max: 8 });
+    await settleFixture(fixture);
+    expect(allInputs(fixture).map((el) => el.value)).toEqual(['3', '8']);
+    expect(host.changes).toEqual([]);
+
+    host.control.reset();
+    await settleFixture(fixture);
+
+    expect(allInputs(fixture).map((el) => el.value)).toEqual(['1', '']);
+    expect(host.changes).toEqual([]);
+  });
+
   it('Sollte beide Felder deaktivieren, wenn das FormControl deaktiviert wird (setDisabledState)', async () => {
     host.control.disable();
     await settleFixture(fixture);
@@ -676,9 +711,18 @@ describe('LuxMinMaxInputComponent als ControlValueAccessor', () => {
 });
 
 @Component({
-  template: ` <lux-min-max-input luxLabel="Anzahl" [formControl]="control"></lux-min-max-input> `,
+  template: `
+    <lux-min-max-input
+      luxLabel="Anzahl"
+      [formControl]="control"
+      [luxBounds]="bounds"
+      (luxValueChange)="changes.push($event)"
+    ></lux-min-max-input>
+  `,
   imports: [LuxMinMaxInputComponent, ReactiveFormsModule]
 })
 class MinMaxFormHostComponent {
   readonly control = new FormControl<LuxMinMaxValue<number | string>>({ min: 1 }, { nonNullable: true });
+  bounds: LuxMinMaxBounds<number | string> = {};
+  readonly changes: LuxMinMaxValue<number | string>[] = [];
 }

@@ -36,7 +36,7 @@
 - Eine gemeinsame Meldung unter beiden Feldern nennt das Feld und den verletzten Grenzwert.
 - Geprüft wird erst beim Verlassen eines Feldes, nicht beim Tippen.
 
-Der Wert ist ein Objekt `{ min?: T; max?: T }`. Bei `luxType="number"` ist `T` eine Zahl, bei `luxType="date"` ein ISO-String (Kalendertag als UTC-Mitternacht, wie bei `lux-datepicker-ac`). Er enthält nur Seiten, die gültig sind: Eine Seite mit Grenz- oder Datumsfehler fehlt; widersprechen sich beide Seiten (Von größer Bis), bleibt der letzte gültige Bereich stehen. Die Komponente ist generisch über `T`; der Typ wird aus der Bindung abgeleitet, sodass `[(luxValue)]` auch mit einem `signal<LuxMinMaxValue<string>>()` funktioniert.
+Der Wert ist ein Objekt `{ min?: T; max?: T }`. Bei `luxType="number"` ist `T` eine Zahl, bei `luxType="date"` ein ISO-String (Kalendertag als UTC-Mitternacht, wie bei `lux-datepicker-ac`). Die Komponente ändert ihn nur als Folge einer Benutzereingabe und übernimmt dabei nur Seiten, die gültig sind: Eine Seite mit Grenz- oder Datumsfehler fehlt; widersprechen sich beide Seiten (Von größer Bis), bleibt der letzte gültige Bereich stehen. Ein von außen gesetzter Wert bleibt auch dann stehen, wenn er die Grenzen verletzt. Die Komponente ist generisch über `T`; der Typ wird aus der Bindung abgeleitet, sodass `[(luxValue)]` auch mit einem `signal<LuxMinMaxValue<string>>()` funktioniert.
 
 ```typescript
 export type LuxMinMaxType = 'number' | 'date';
@@ -78,9 +78,9 @@ export type LuxMinMaxBounds<T extends number | string = number> = LuxMinMaxValue
 
 `lux-min-max-input` implementiert `ControlValueAccessor` und `Validator` und funktioniert mit `formControlName`, `[formControl]` und `[(ngModel)]`. Der Formwert ist ein `LuxMinMaxValue`.
 
-- Das FormControl erhält nur gültige Seiten (siehe [Allgemein](#allgemein)). Bei Von größer Bis behält das Control seinen letzten gültigen Bereich.
+- Das FormControl erhält nur gültige Seiten (siehe [Allgemein](#allgemein)). Bei Von größer Bis behält das Control seinen letzten gültigen Bereich. Das Control wird nur durch Benutzereingaben geändert und "dirty".
 - Solange ein Feld einen Bereichs-, Grenz- oder Datumsfehler hat, ist das Control ungültig: `errors.luxMinMaxInput` enthält je Seite die Fehler (`range`, `belowMin`, `aboveMax`, `outOfBounds`, `matDatepickerParse`). Das gilt schon beim Tippen, die Meldung in der Komponente erscheint erst beim Verlassen des Feldes.
-- Ein von außen gesetzter Wert (`setValue()`, `patchValue()`) wird angezeigt, ohne das Control als "dirty" zu markieren. Eine stehende Meldung wird dabei gelöscht.
+- Ein von außen gesetzter Wert (`setValue()`, `patchValue()`, `reset()`) wird angezeigt, ohne das Control als "dirty" zu markieren und ohne `luxValueChange` auszulösen; das gilt auch für einen Wert, der die Grenzen verletzt (das Control ist dann ungültig). Eine stehende Meldung wird dabei gelöscht.
 - Das Control gilt als "touched", sobald eines der beiden Felder verlassen wurde.
 - Die Fehlerdarstellung übernimmt die Komponente selbst (gemeinsame Meldung). Eigene Validatoren am FormControl prüfen nur den übernommenen Bereich und zeigen keine Meldung in der Komponente an.
 
@@ -93,7 +93,7 @@ Die Komponente prüft ein Feld erst, wenn es den Fokus verliert. Dadurch stören
 - Nur das zuletzt verlassene Feld wird geprüft und bei einem Fehler markiert (roter Rahmen, `aria-invalid="true"`). Das andere Feld wird nie markiert.
 - Beim Tippen kann eine Meldung nur verschwinden, nie entstehen: Wird das markierte Feld geändert, ist die Prüfung bis zum nächsten Verlassen aufgehoben. Wird das Nachbarfeld so geändert, dass das Paar gültig wird, verschwindet die Meldung ebenfalls.
 - Verlässt man ein fehlerfreies Feld, bleibt eine noch gültige Meldung des anderen Feldes stehen.
-- Eine Seite mit Grenzfehler wird nicht in `luxValue` übernommen, bei Von größer Bis bleibt der letzte gültige Bereich. Die Eingabe im Feld bleibt stehen, damit sie korrigiert werden kann, und wird übernommen, sobald sie gültig ist (auch wenn das durch neue Grenzen geschieht).
+- Eine Eingabe mit Grenzfehler wird nicht in `luxValue` übernommen, bei Von größer Bis bleibt der letzte gültige Bereich. Die Eingabe im Feld bleibt stehen, damit sie korrigiert werden kann, und wird übernommen, sobald sie gültig ist (auch wenn das durch neue Grenzen geschieht).
 
 ### Meldungen
 
@@ -126,7 +126,7 @@ Hinweis zu Datumsfeldern: Der Datepicker prüft seine Kalendergrenzen schon beim
 
 ### Wertabhängige Grenzen
 
-Hängt eine Grenze vom Wert der anderen Seite ab (etwa "Bis höchstens 7 Tage nach Von"), rechnet die Anwendung die Grenze aus `luxValue` und übergibt sie als `luxMaxFieldBounds` bzw. `luxMinFieldBounds`, siehe [Beispiel 2](#2-zeitraum-bis-höchstens-7-tage-nach-von). Verletzt ein bereits übernommener Wert eine neue Grenze, fällt diese Seite aus `luxValue`; der Eintrag bleibt im Feld stehen und wird wieder übernommen, sobald eine spätere Grenze ihn zulässt. Eine Meldung dazu erscheint nur, wenn das Feld das zuletzt verlassene ist; im Formular ist das Control in dieser Zeit ungültig.
+Hängt eine Grenze vom Wert der anderen Seite ab (etwa "Bis höchstens 7 Tage nach Von"), rechnet die Anwendung die Grenze aus `luxValue` und übergibt sie als `luxMaxFieldBounds` bzw. `luxMinFieldBounds`, siehe [Beispiel 2](#2-zeitraum-bis-höchstens-7-tage-nach-von). Verletzt ein bereits übernommener Wert eine neue Grenze, bleibt er in `luxValue` und im Feld stehen; die Seite wird gemeldet und markiert, im Formular ist das Control ungültig. Eine noch nicht übernommene Eingabe (etwa ein zuvor abgelehntes Bis) wird übernommen, sobald eine neue Grenze sie zulässt.
 
 ### Zahlformat
 

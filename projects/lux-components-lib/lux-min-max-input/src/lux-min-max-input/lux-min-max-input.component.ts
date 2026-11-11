@@ -33,6 +33,8 @@ interface Message {
 }
 
 const SIDES: readonly Side[] = ['min', 'max'];
+// Standard des Models; am Objekt erkennbar, damit es einen per writeValue() gesetzten Formularwert nicht überschreibt.
+const EMPTY_RANGE: LuxMinMaxValue<never> = Object.freeze({});
 const RANGE_KEYS = ['range', 'belowMin', 'aboveMax', 'outOfBounds'] as const;
 const BOUND_KEYS: Record<(typeof RANGE_KEYS)[number], string> = {
   range: 'range',
@@ -83,7 +85,7 @@ export class LuxMinMaxInputComponent<T extends number | string = number | string
   /** Feldtyp beider Seiten: Zahlenfeld oder Datepicker. */
   readonly luxType = input<LuxMinMaxType>('number');
   /** Aktueller Bereich; ein leeres Feld fehlt im Objekt. Ändert sich nur bei gültigem Bereich. Zahl als number, Datum als ISO-String. */
-  readonly luxValue = model<LuxMinMaxValue<T>>({});
+  readonly luxValue = model<LuxMinMaxValue<T>>(EMPTY_RANGE);
   /** Sichtbare Gruppenlegende; ohne Angabe nur für Screenreader ("Wertebereich"). */
   readonly luxLabel = input<string>('');
   /** Label des Von-Felds, Standard aus der Übersetzung ("Von"). */
@@ -111,6 +113,8 @@ export class LuxMinMaxInputComponent<T extends number | string = number | string
   protected readonly uid = computed(() => this.luxId() || `lux-min-max-input-${this.uniqueId}`);
   protected readonly messageId = computed(() => this.uid() + '-message');
   protected readonly message = signal<Message | null>(null);
+  // Der zuletzt übernommene Bereich (Model oder Formularwert); Grundlage für Vorbegrenzung und Emission.
+  private readonly current = signal<LuxMinMaxValue<T>>(EMPTY_RANGE);
 
   // Zuletzt verlassenes Feld und sein Vergleichswert in dem Moment; Bereichsfehler gibt es nur für dieses Feld.
   private checked: { side: Side; comparable: number | undefined | null } | null = null;
@@ -142,7 +146,7 @@ export class LuxMinMaxInputComponent<T extends number | string = number | string
   // Grenzen je Feld, zusätzlich eingeengt durch den gültigen Wert des Nachbarfelds.
   private readonly neighbourLimits = computed<Record<Side, Limits>>(() => {
     const bounds = this.effectiveBounds();
-    const { min, max } = this.luxValue();
+    const { min, max } = this.current();
     return {
       min: { min: bounds.min.min, max: this.tighter(bounds.min.max, max, 'upper') },
       max: { min: this.tighter(bounds.max.min, min, 'lower'), max: bounds.max.max }
@@ -188,16 +192,18 @@ export class LuxMinMaxInputComponent<T extends number | string = number | string
     effect(() => {
       const type = this.luxType();
       const value = this.luxValue();
-      untracked(() => this.sync(type, value));
+      untracked(() => {
+        if (value === EMPTY_RANGE && this.previousValue !== undefined) {
+          // Unberührtes Standard-Model nach einem writeValue(): der Formularwert bleibt.
+          return;
+        }
+        this.sync(type, value);
+      });
     });
 
     effect(() => {
       this.effectiveBounds();
-      // Neue Grenzen können einen zurückgehaltenen Wert gültig machen oder eine Seite ungültig werden lassen.
-      untracked(() => {
-        this.revalidate();
-        this.emitIfValid();
-      });
+      untracked(() => this.onBoundsChange());
     });
 
     effect(() => {
@@ -247,7 +253,8 @@ export class LuxMinMaxInputComponent<T extends number | string = number | string
   // ControlValueAccessor
 
   writeValue(value: LuxMinMaxValue<T> | null): void {
-    this.luxValue.set(value ?? {});
+    // Nicht über das Model: ein von außen gesetzter Wert löst kein luxValueChange aus.
+    this.sync(this.luxType(), value ?? {});
   }
 
   registerOnChange(fn: (value: LuxMinMaxValue<T>) => void): void {
@@ -408,6 +415,47 @@ export class LuxMinMaxInputComponent<T extends number | string = number | string
     }
   }
 
+  private boundsInitialized = false;
+
+  // Neue Grenzen: eine ausstehende Eingabe übernehmen, wenn sie jetzt gültig ist; eine Seite, die die Grenze
+  // neu verletzt, melden. Ein übernommener Wert wird nie ohne Benutzereingabe geändert.
+  private onBoundsChange(): void {
+    this.revalidate();
+    if (!this.boundsInitialized) {
+      this.boundsInitialized = true;
+      return;
+    }
+    if (this.hasPendingInput()) {
+      this.emitIfValid();
+    }
+    this.reportInvalidSide();
+  }
+
+  // Steht in einem Feld etwas anderes als im übernommenen Bereich?
+  private hasPendingInput(): boolean {
+    const current = this.current();
+    return SIDES.some((side) => {
+      const raw = this.form.controls[side].value;
+      return (isEmpty(raw) ? undefined : raw) !== current[side];
+    });
+  }
+
+  // Ohne stehende Meldung wird die erste Seite mit Fehler wie ein verlassenes Feld geprüft und markiert.
+  private reportInvalidSide(): void {
+    if (this.message() || this.form.disabled) {
+      return;
+    }
+    const side = SIDES.find((candidate) => this.fieldErrors(candidate));
+    if (!side) {
+      return;
+    }
+    const control = this.form.controls[side];
+    this.checked = { side, comparable: toComparable(control.value, this.luxType()) };
+    control.updateValueAndValidity({ emitEvent: false });
+    control.markAsTouched();
+    this.message.set(this.messageFor(side, control.errors));
+  }
+
   private resetChecked(): void {
     this.checked = null;
     this.message.set(null);
@@ -426,6 +474,7 @@ export class LuxMinMaxInputComponent<T extends number | string = number | string
         const cleared: LuxMinMaxValue<T> = {};
         this.previousValue = cleared;
         this.lastEmitted = cleared;
+        this.current.set(cleared);
         this.luxValue.set(cleared);
         this.onChange(cleared);
         return;
@@ -434,13 +483,14 @@ export class LuxMinMaxInputComponent<T extends number | string = number | string
     this.writeControls(value);
   }
 
-  private writeControls(value: LuxMinMaxValue<number | string>): void {
+  private writeControls(value: LuxMinMaxValue<T>): void {
     // Der erste Lauf nach einer eigenen Emission ist ihr Echo, eventuell vom Elternteil geklont.
     const isEcho = this.lastEmitted !== undefined && sameRange(value, this.lastEmitted);
     this.lastEmitted = undefined;
     if (isEcho) {
       return;
     }
+    this.current.set(value);
     this.resetChecked();
     for (const side of SIDES) {
       const control = this.form.controls[side];
@@ -462,11 +512,12 @@ export class LuxMinMaxInputComponent<T extends number | string = number | string
     if (!next) {
       return;
     }
-    const current = this.luxValue();
+    const current = this.current();
     if (current.min === next.min && current.max === next.max) {
       return;
     }
     this.lastEmitted = next;
+    this.current.set(next);
     this.luxValue.set(next);
     this.onChange(next);
   }
