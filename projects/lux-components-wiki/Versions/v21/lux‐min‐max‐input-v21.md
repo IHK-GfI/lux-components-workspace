@@ -97,16 +97,16 @@ Die Komponente prüft ein Feld erst, wenn es den Fokus verliert. Dadurch stören
 
 ### Meldungen
 
-Die Meldung erscheint unter beiden Feldern und nennt das Feldlabel und den verletzten Grenzwert. Zahlen und Daten werden in der aktiven Sprache formatiert.
+Die Meldung erscheint unter beiden Feldern und nennt das Feldlabel und den verletzten Grenzwert, immer in der Form "Label: Beschreibung". Zahlen und Daten werden in der aktiven Sprache formatiert.
 
-| Fall                                      | Meldung (deutsch)                       |
-| ----------------------------------------- | --------------------------------------- |
-| Von verlassen, Von größer als Bis         | Von darf nicht größer als 100 sein.     |
-| Bis verlassen, Bis kleiner als Von        | Bis darf nicht kleiner als 200 sein.    |
-| Wert außerhalb, nur untere Grenze gesetzt | Von: Der Wert muss mindestens 0 sein.   |
-| Wert außerhalb, nur obere Grenze gesetzt  | Bis: Der Wert darf höchstens 100 sein.  |
-| Wert außerhalb, beide Grenzen gesetzt     | Von: Zulässig sind Werte von 0 bis 100. |
-| Datum nicht lesbar (`luxType="date"`)     | Von: Bitte ein gültiges Datum eingeben. |
+| Fall                                      | Meldung (deutsch)                              |
+| ----------------------------------------- | ---------------------------------------------- |
+| Von verlassen, Von größer als Bis         | Von: Der Wert darf nicht größer als 100 sein.  |
+| Bis verlassen, Bis kleiner als Von        | Bis: Der Wert darf nicht kleiner als 200 sein. |
+| Wert außerhalb, nur untere Grenze gesetzt | Von: Der Wert muss mindestens 0 sein.          |
+| Wert außerhalb, nur obere Grenze gesetzt  | Bis: Der Wert darf höchstens 100 sein.         |
+| Wert außerhalb, beide Grenzen gesetzt     | Von: Der Wert muss zwischen 0 und 100 liegen.  |
+| Datum nicht lesbar (`luxType="date"`)     | Von: Der Wert ist kein gültiges Datum.         |
 
 Die Texte liegen unter den Schlüsseln `luxc.min-max-input.*` und lassen sich wie alle LUX-Texte über Transloco überschreiben.
 

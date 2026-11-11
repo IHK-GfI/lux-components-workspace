@@ -90,7 +90,7 @@ describe('LuxMinMaxInputComponent', () => {
       await typeInto(1, '100');
       await blur(1);
 
-      expect(messageText()).toBe('Bis darf nicht kleiner als 200 sein.');
+      expect(messageText()).toBe('Bis: Der Wert darf nicht kleiner als 200 sein.');
       expect(invalidStates()).toEqual(['false', 'true']);
       expect(fieldErrorLines()).toBe(0);
       expect(emitted.at(-1)).toEqual({ min: 200 });
@@ -109,7 +109,7 @@ describe('LuxMinMaxInputComponent', () => {
       await typeInto(0, '200');
       await blur(0);
 
-      expect(messageText()).toBe('Von darf nicht größer als 100 sein.');
+      expect(messageText()).toBe('Von: Der Wert darf nicht größer als 100 sein.');
       expect(invalidStates()).toEqual(['true', 'false']);
       expect(emitted.at(-1)).toEqual({ max: 100 });
     });
@@ -122,7 +122,7 @@ describe('LuxMinMaxInputComponent', () => {
       expect(messageText()).toBe('');
 
       await blur(1);
-      expect(messageText()).toBe('Bis darf nicht kleiner als 5 sein.');
+      expect(messageText()).toBe('Bis: Der Wert darf nicht kleiner als 5 sein.');
 
       await typeInto(1, '10');
       expect(messageText()).toBe('');
@@ -147,7 +147,7 @@ describe('LuxMinMaxInputComponent', () => {
       await typeInto(0, '150');
       await blur(0);
 
-      expect(messageText()).toBe('Von: Zulässig sind Werte von 0 bis 100.');
+      expect(messageText()).toBe('Von: Der Wert muss zwischen 0 und 100 liegen.');
       expect(inputs()[0].value).toBe('150');
       expect(emitted).toEqual([]);
     });
@@ -192,7 +192,7 @@ describe('LuxMinMaxInputComponent', () => {
 
       await typeInto(1, '20');
       await blur(1);
-      expect(messageText()).toBe('Bis: Zulässig sind Werte von 1 bis 8.');
+      expect(messageText()).toBe('Bis: Der Wert muss zwischen 1 und 8 liegen.');
       expect(emitted.at(-1)).toEqual({ min: 1 });
 
       await typeInto(0, '15');
@@ -245,7 +245,7 @@ describe('LuxMinMaxInputComponent', () => {
 
       await typeInto(1, '5');
       await blur(1);
-      expect(messageText()).toBe('Bis: Zulässig sind Werte von 10 bis 20.');
+      expect(messageText()).toBe('Bis: Der Wert muss zwischen 10 und 20 liegen.');
       expect(emitted.at(-1)).toEqual({ min: 1 });
     });
 
@@ -254,7 +254,7 @@ describe('LuxMinMaxInputComponent', () => {
       await typeInto(1, '120');
       await blur(1);
 
-      expect(messageText()).toBe('Bis: Zulässig sind Werte von 0 bis 100.');
+      expect(messageText()).toBe('Bis: Der Wert muss zwischen 0 und 100 liegen.');
     });
 
     it('Sollte luxMinFieldBounds nur auf das Von-Feld anwenden, innerhalb von luxBounds', async () => {
@@ -301,7 +301,7 @@ describe('LuxMinMaxInputComponent', () => {
       expect(invalidStates()).toEqual(['false', 'false']);
 
       await blur(1);
-      expect(messageText()).toBe('Bis darf nicht kleiner als 200 sein.');
+      expect(messageText()).toBe('Bis: Der Wert darf nicht kleiner als 200 sein.');
     });
 
     it('Sollte die Meldung des anderen Feldes behalten, wenn ein fehlerfreies Feld verlassen wird', async () => {
@@ -427,14 +427,14 @@ describe('LuxMinMaxInputComponent', () => {
       await blur(0);
       await typeInto(1, '100');
       await blur(1);
-      expect(messageText()).toBe('Bis darf nicht kleiner als 200 sein.');
+      expect(messageText()).toBe('Bis: Der Wert darf nicht kleiner als 200 sein.');
 
       fixture.componentRef.setInput('luxDisabled', true);
       await settle();
       fixture.componentRef.setInput('luxDisabled', false);
       await settle();
 
-      expect(messageText()).toBe('Bis darf nicht kleiner als 200 sein.');
+      expect(messageText()).toBe('Bis: Der Wert darf nicht kleiner als 200 sein.');
       expect(isMarked()).toEqual([false, true]);
     });
 
@@ -519,7 +519,7 @@ describe('LuxMinMaxInputComponent', () => {
       await typeInto(0, 'abc');
       await blur(0);
 
-      expect(messageText()).toBe('Von: Bitte ein gültiges Datum eingeben.');
+      expect(messageText()).toBe('Von: Der Wert ist kein gültiges Datum.');
       expect(emitted).toEqual([]);
     });
 
@@ -539,7 +539,7 @@ describe('LuxMinMaxInputComponent', () => {
       await settle();
       await blur(1);
 
-      expect(messageText()).toBe('Bis darf nicht kleiner als 10.05.26 sein.');
+      expect(messageText()).toBe('Bis: Der Wert darf nicht kleiner als 10.05.26 sein.');
       expect(emitted).toEqual([]);
 
       fixture.componentRef.setInput('luxValue', { min: '2026-05-10T00:00:00.000Z', max: '2026-06-01T00:00:00.000Z' });
