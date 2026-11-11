@@ -152,7 +152,7 @@ describe('LuxMinMaxInputComponent', () => {
       expect(emitted).toEqual([]);
     });
 
-    it('Sollte eine Seite mit Grenzfehler aus dem Wert nehmen und die andere behalten', async () => {
+    it('Sollte für eine ungültige Eingabe den zuletzt übernommenen Wert der Seite behalten', async () => {
       await setup({ luxBounds: { max: 100 } });
       await typeInto(0, '50');
       await blur(0);
@@ -161,8 +161,10 @@ describe('LuxMinMaxInputComponent', () => {
       expect(emitted.at(-1)).toEqual({ min: 50, max: 80 });
 
       await typeInto(0, '150');
+      expect(emitted.at(-1)).toEqual({ min: 50, max: 80 });
 
-      expect(emitted.at(-1)).toEqual({ max: 80 });
+      await typeInto(0, '70');
+      expect(emitted.at(-1)).toEqual({ min: 70, max: 80 });
     });
 
     it('Sollte einen zurückgehaltenen Wert übernehmen, wenn neue Grenzen ihn gültig machen', async () => {

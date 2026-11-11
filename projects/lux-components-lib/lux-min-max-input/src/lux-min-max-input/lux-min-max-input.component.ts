@@ -523,29 +523,32 @@ export class LuxMinMaxInputComponent<T extends number | string = number | string
   }
 
   /**
-   * Der zu emittierende Bereich: nur Seiten, die in sich gültig sind (lesbar und innerhalb der Grenzen); eine Seite
-   * mit Grenzfehler fehlt. Widersprechen sich beide gültigen Seiten (Von größer Bis), gibt es keinen neuen Bereich (null)
-   * und der letzte gültige bleibt stehen.
+   * Der zu emittierende Bereich: Je Seite die Eingabe, wenn sie gültig ist (lesbar, innerhalb der Grenzen, kein
+   * Widerspruch zur anderen Seite), sonst der zuletzt übernommene Wert dieser Seite. Ergäbe das Von größer Bis,
+   * gibt es keinen neuen Bereich (null) und der letzte gültige bleibt stehen.
    */
   private acceptedRange(): LuxMinMaxValue<T> | null {
-    const accepted = {} as LuxMinMaxValue<T>;
-    const comparable: Partial<Record<Side, number>> = {};
+    const type = this.luxType();
+    const previous = this.current();
+    const next = {} as LuxMinMaxValue<T>;
     for (const side of SIDES) {
       const control = this.form.controls[side];
-      const own = toComparable(control.value, this.luxType());
-      if (own === undefined || own === null || control.errors?.['matDatepickerParse']) {
-        continue;
+      const own = toComparable(control.value, type);
+      const valid =
+        own !== null &&
+        !control.errors?.['matDatepickerParse'] &&
+        (own === undefined || !this.rangeErrorsOf(side, own, this.form.controls[this.other(side)].value));
+      const value = valid ? (own === undefined ? undefined : (control.value as T)) : previous[side];
+      if (value !== undefined) {
+        next[side] = value;
       }
-      if (rangeErrors(side, own, undefined, this.comparableBounds(side))) {
-        continue;
-      }
-      accepted[side] = control.value as T;
-      comparable[side] = own;
     }
-    if (comparable.min !== undefined && comparable.max !== undefined && comparable.min > comparable.max) {
+    const min = toComparable(next.min, type);
+    const max = toComparable(next.max, type);
+    if (min !== undefined && min !== null && max !== undefined && max !== null && min > max) {
       return null;
     }
-    return accepted;
+    return next;
   }
 
   // Fehler eines Feldes für den Validator: unlesbarer Wert, Bereichs- oder Grenzfehler.
