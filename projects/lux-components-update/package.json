@@ -1,6 +1,6 @@
 {
   "name": "@ihk-gfi/lux-components-update",
-  "version": "21.10.0",
+  "version": "21.11.0",
   "description": "Schematics für die Aktualisierung von LUX-Applikationen",
   "private": false,
   "publishConfig": {
