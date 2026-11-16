@@ -2,10 +2,13 @@ import { NgClass } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   AfterViewInit,
+  AnimationCallbackEvent,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   DestroyRef,
+  Injector,
+  afterNextRender,
   computed,
   contentChild,
   contentChildren,
@@ -23,7 +26,6 @@ import { LuxTagIdDirective } from '../../lux-directives/lux-tag-id/lux-tag-id.di
 import { LuxIconComponent } from '../../lux-icon/lux-icon/lux-icon.component';
 import { luxOutputObserved } from '../../lux-util/lux-output-observed';
 import { LuxUtil } from '../../lux-util/lux-util';
-import { expansionAnim } from './lux-card-model/lux-card-animations';
 import { LuxCardActionsComponent } from './lux-card-subcomponents/lux-card-actions.component';
 import { LuxCardContentExpandedComponent } from './lux-card-subcomponents/lux-card-content-expanded.component';
 import { LuxCardContentComponent } from './lux-card-subcomponents/lux-card-content.component';
@@ -34,7 +36,6 @@ import { LuxCardInfoComponent } from './lux-card-subcomponents/lux-card-info.com
 @Component({
   selector: 'lux-card',
   templateUrl: './lux-card.component.html',
-  animations: [expansionAnim],
   imports: [
     MatCard,
     LuxTagIdDirective,
@@ -104,6 +105,8 @@ export class LuxCardComponent implements AfterViewInit {
   private componentsConfigService = inject(LuxComponentsConfigService);
   private cdr = inject(ChangeDetectorRef);
   private destroyRef = inject(DestroyRef);
+  private injector = inject(Injector);
+  private initialRenderDone = false;
 
   readonly effectiveTagId = computed(() => this.luxTagId() || this.luxTitle());
   // Steuert die Klickbar-Darstellung der Card (Cursor, Tabindex).
@@ -115,6 +118,10 @@ export class LuxCardComponent implements AfterViewInit {
       this.animationDisabled = !config.cardExpansionAnimationActive;
       this.cdr.markForCheck();
     });
+
+    // Die read-Phase läuft nach Angulars Enter-Animationen (mixedReadWrite). So gilt eine initial
+    // aufgeklappte Karte während ihres ersten Renderns noch nicht als animierbar.
+    afterNextRender({ read: () => (this.initialRenderDone = true) }, { injector: this.injector });
   }
 
   changeContentExpansion(event: any) {
@@ -143,24 +150,61 @@ export class LuxCardComponent implements AfterViewInit {
   }
 
   /**
-   * Gibt den Status der Animation zurück.
-   */
-  getAnimState(): string {
-    return this.luxExpanded() ? 'expand' : 'void';
-  }
-
-  /**
    * Gibt die Dauer der Animation abhängig davon, ob sie via Config deaktiviert wurden oder nicht zurück.
    */
   getAnimDuration() {
-    return this.animationDisabled ? 0 : 300;
+    return this.animationDisabled || !this.initialRenderDone ? 0 : 300;
   }
 
   /**
-   * Wird am Ende der Ausklapp-Animation aufgerufen und setzt das animationActive-Flag auf false und gibt ein Event
-   * über den luxAfterExpansion-EventEmitter ab.
+   * Animiert das Ein- bzw. Ausklappen des erweiterten Karteninhalts (Höhe und Deckkraft).
+   * Die Höhe wird per Web Animations API aus der gemessenen Inhaltshöhe berechnet, weil CSS allein
+   * nicht zuverlässig von bzw. auf `height: auto` animieren kann.
+   * Ohne Animation (Config, prefers-reduced-motion, fehlende API) wird sofort abgeschlossen.
+   */
+  animateExpansion(event: AnimationCallbackEvent, expanding: boolean) {
+    const element = event.target as HTMLElement;
+    const duration = this.getAnimDuration();
+
+    if (duration === 0 || typeof element.animate !== 'function' || this.prefersReducedMotion()) {
+      this.finishExpansion(event);
+      return;
+    }
+
+    // offsetHeight statt getBoundingClientRect(), weil CSS-Transforms von Vorfahren die Höhe sonst verfälschen.
+    const expandedFrame = { height: `${element.offsetHeight}px`, opacity: 1, overflow: 'hidden' };
+    const collapsedFrame = { height: '0px', opacity: 0, overflow: 'hidden' };
+
+    const animation = element.animate(expanding ? [collapsedFrame, expandedFrame] : [expandedFrame, collapsedFrame], {
+      duration,
+      easing: 'ease-in-out',
+      fill: expanding ? 'none' : 'forwards'
+    });
+
+    const complete = () => this.finishExpansion(event);
+    animation.finished.then(complete, complete);
+  }
+
+  /**
+   * Wird am Ende der Ein- bzw. Ausklapp-Animation aufgerufen und gibt ein Event über luxAfterExpansion ab.
    */
   expansionDone() {
     this.luxAfterExpansion.emit();
+  }
+
+  /**
+   * Schließt die Animation ab. Das erste Rendern einer initial aufgeklappten Karte zählt nicht als Aufklappen,
+   * und nach dem Zerstören der Karte darf das Output nicht mehr emittieren.
+   */
+  private finishExpansion(event: AnimationCallbackEvent) {
+    event.animationComplete();
+
+    if (this.initialRenderDone && !this.destroyRef.destroyed) {
+      this.expansionDone();
+    }
+  }
+
+  private prefersReducedMotion(): boolean {
+    return typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
   }
 }

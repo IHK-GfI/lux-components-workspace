@@ -2,7 +2,6 @@ import { Platform } from '@angular/cdk/platform';
 import { Directive, effect, ElementRef, inject, input, NgZone } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MAT_RIPPLE_GLOBAL_OPTIONS, MatRipple, RippleGlobalOptions } from '@angular/material/core';
-import { ANIMATION_MODULE_TYPE } from '@angular/platform-browser/animations';
 import { LuxComponentsConfigService } from '../../lux-components-config/lux-components-config.service';
 
 @Directive({
@@ -18,7 +17,6 @@ export class LuxRippleDirective extends MatRipple {
   private luxNgZone = inject(NgZone);
   private luxPlatform = inject(Platform);
   private luxGlobalOptions = inject<RippleGlobalOptions>(MAT_RIPPLE_GLOBAL_OPTIONS, { optional: true });
-  private luxAnimationMode = inject(ANIMATION_MODULE_TYPE, { optional: true });
 
   private readonly config = toSignal(this.configService.config, { requireSync: true });
 

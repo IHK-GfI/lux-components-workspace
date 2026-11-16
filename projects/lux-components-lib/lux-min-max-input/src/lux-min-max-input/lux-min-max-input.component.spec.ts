@@ -4,7 +4,6 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { LuxDatepickerComponent, LuxInputComponent } from '@ihk-gfi/lux-components';
 import { LuxA11yTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { beforeEach, describe, expect, it } from 'vitest';
@@ -13,7 +12,6 @@ import { LuxMinMaxInputComponent } from './lux-min-max-input.component';
 import { LuxMinMaxBounds, LuxMinMaxType, LuxMinMaxValue } from './lux-min-max-input-types';
 
 const PROVIDERS = [
-  provideNoopAnimations(),
   provideHttpClient(withInterceptorsFromDi()),
   provideHttpClientTesting(),
   provideLuxTranslocoTesting()

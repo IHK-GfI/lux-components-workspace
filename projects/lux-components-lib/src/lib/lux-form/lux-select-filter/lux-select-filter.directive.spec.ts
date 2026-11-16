@@ -3,7 +3,6 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ElementRef } from '@angular/core';
 import { MatSelect, MatSelectModule } from '@angular/material/select';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { LuxSelectFilterDirective } from './lux-select-filter.directive';
 import { LuxSelectFilterUtils } from './lux-select-filter.utils';
@@ -50,7 +49,7 @@ describe('LuxSelectFilterDirective', () => {
   beforeEach(async () => {
     vi.useFakeTimers();
     await TestBed.configureTestingModule({
-      imports: [NoopAnimationsModule, TestComponent]
+      imports: [TestComponent]
     }).compileComponents();
 
     fixture = TestBed.createComponent(TestComponent);

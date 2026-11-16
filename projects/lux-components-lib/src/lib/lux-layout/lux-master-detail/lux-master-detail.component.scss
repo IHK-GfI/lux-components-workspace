@@ -23,9 +23,29 @@
       display: none;
     }
 
+    // Der Spinner wird per display: none ausgeblendet, beim Einblenden startet die Animation daher jedes Mal neu.
+    &.lux-spinner-fade-in {
+      animation: lux-master-spinner-fade-in 1s;
+    }
+
     ::ng-deep mat-progress-spinner {
       flex: 0 0 auto;
     }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lux-master-view-ac .lux-master-progress-container.lux-spinner-fade-in {
+    animation: none;
+  }
+}
+
+@keyframes lux-master-spinner-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
 

@@ -233,16 +233,11 @@ export * from './lib/lux-layout/lux-app-header/lux-app-header-subcomponents/lux-
 export * from './lib/lux-layout/lux-app-header/lux-app-header-subcomponents/lux-app-header-right-nav/lux-app-header-right-nav.component';
 export * from './lib/lux-layout/lux-app-header/lux-app-header-subcomponents/lux-lang-select/lux-lang-select.component';
 export * from './lib/lux-layout/lux-app-header/lux-app-header-subcomponents/lux-lang-select/lux-locale';
-export {
-  sideNavAnimation,
-  sideNavOverlayAnimation
-} from './lib/lux-layout/lux-app-header/lux-app-header-subcomponents/lux-side-nav/lux-side-nav-model/lux-side-nav-animations';
 export * from './lib/lux-layout/lux-app-header/lux-app-header-subcomponents/lux-side-nav/lux-side-nav-subcomponents/lux-side-nav-footer.component';
 export * from './lib/lux-layout/lux-app-header/lux-app-header-subcomponents/lux-side-nav/lux-side-nav-subcomponents/lux-side-nav-header.component';
 export * from './lib/lux-layout/lux-app-header/lux-app-header-subcomponents/lux-side-nav/lux-side-nav-subcomponents/lux-side-nav-item.component';
 export * from './lib/lux-layout/lux-app-header/lux-app-header-subcomponents/lux-side-nav/lux-side-nav.component';
 export * from './lib/lux-layout/lux-app-header/lux-app-header.component';
-export { expansionAnim } from './lib/lux-layout/lux-card/lux-card-model/lux-card-animations';
 export * from './lib/lux-layout/lux-card/lux-card-subcomponents/lux-card-actions.component';
 export * from './lib/lux-layout/lux-card/lux-card-subcomponents/lux-card-content-expanded.component';
 export * from './lib/lux-layout/lux-card/lux-card-subcomponents/lux-card-content.component';

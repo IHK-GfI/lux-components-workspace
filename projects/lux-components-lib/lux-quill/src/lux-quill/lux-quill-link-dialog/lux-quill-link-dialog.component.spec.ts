@@ -3,7 +3,6 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl } from '@angular/forms';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { LuxDialogService } from '@ihk-gfi/lux-components';
 import { LuxA11yTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../../src/testing/transloco-test.provider';
@@ -28,7 +27,7 @@ describe('LuxQuillLinkDialogComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [DialogHostComponent],
-      providers: [provideNoopAnimations(), provideLuxTranslocoTesting()]
+      providers: [provideLuxTranslocoTesting()]
     }).compileComponents();
 
     fixture = TestBed.createComponent(DialogHostComponent);

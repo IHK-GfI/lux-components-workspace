@@ -3,10 +3,9 @@ import { describe, it, test, beforeEach, afterEach, expect, vi } from 'vitest';
 
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { ChangeDetectionStrategy, Component, signal, viewChild } from '@angular/core';
+import { afterNextRender, ChangeDetectionStrategy, Component, Injector, signal, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxIconComponent } from '../../lux-icon/lux-icon/lux-icon.component';
@@ -20,12 +19,7 @@ describe('LuxCardComponent', () => {
   beforeEach(async () => {
     vi.useFakeTimers();
     TestBed.configureTestingModule({
-      providers: [
-        provideHttpClient(withXhr(), withInterceptorsFromDi()),
-        provideHttpClientTesting(),
-        provideNoopAnimations(),
-        provideLuxTranslocoTesting()
-      ]
+      providers: [provideHttpClient(withXhr(), withInterceptorsFromDi()), provideHttpClientTesting(), provideLuxTranslocoTesting()]
     }).compileComponents();
   });
 
@@ -248,6 +242,147 @@ describe('LuxCardComponent', () => {
       expect(contentEl.nativeElement.innerHTML).toEqual('Lorem ipsum');
       expect(expandedEl).toBeNull();
       expect(toggleEl.nativeElement.innerHTML).toContain('lux-interface-arrows-button-down');
+    });
+  });
+
+  describe('Animation beim Auf- und Zuklappen', () => {
+    let fixture: ComponentFixture<ExpandedCardComponent>;
+    let card: LuxCardComponent;
+    let element: HTMLElement;
+    let animateSpy: ReturnType<typeof vi.fn>;
+    let finished: Promise<void>;
+
+    beforeEach(async () => {
+      fixture = TestBed.createComponent(ExpandedCardComponent);
+      await LuxTestHelper.wait(fixture);
+      card = fixture.componentInstance.card();
+      card.animationDisabled = false;
+
+      finished = Promise.resolve();
+      animateSpy = vi.fn().mockReturnValue({ finished });
+      element = document.createElement('div');
+      element.animate = animateSpy as unknown as HTMLElement['animate'];
+    });
+
+    it('Sollte beim Aufklappen von Höhe 0 auf die Inhaltshöhe animieren und danach abschließen', async () => {
+      Object.defineProperty(element, 'offsetHeight', { value: 120 });
+      const animationComplete = vi.fn();
+
+      card.animateExpansion({ target: element, animationComplete }, true);
+
+      const [keyframes, options] = animateSpy.mock.calls[0];
+      expect(keyframes[0]).toEqual(expect.objectContaining({ height: '0px', opacity: 0 }));
+      expect(keyframes[1]).toEqual(expect.objectContaining({ height: '120px', opacity: 1 }));
+      expect(options).toEqual(expect.objectContaining({ duration: 300, fill: 'none' }));
+      expect(animationComplete).not.toHaveBeenCalled();
+
+      await finished;
+      await Promise.resolve();
+      expect(animationComplete).toHaveBeenCalledTimes(1);
+    });
+
+    it('Sollte beim Zuklappen auf Höhe 0 animieren und den Endzustand halten', async () => {
+      Object.defineProperty(element, 'offsetHeight', { value: 120 });
+      const animationComplete = vi.fn();
+
+      card.animateExpansion({ target: element, animationComplete }, false);
+
+      const [keyframes, options] = animateSpy.mock.calls[0];
+      expect(keyframes[0]).toEqual(expect.objectContaining({ height: '120px', opacity: 1 }));
+      expect(keyframes[1]).toEqual(expect.objectContaining({ height: '0px', opacity: 0 }));
+      expect(options).toEqual(expect.objectContaining({ duration: 300, fill: 'forwards' }));
+
+      await finished;
+      await Promise.resolve();
+      expect(animationComplete).toHaveBeenCalledTimes(1);
+    });
+
+    it('Sollte ohne Animation sofort abschließen, wenn die Animation per Config deaktiviert ist', () => {
+      card.animationDisabled = true;
+      const animationComplete = vi.fn();
+
+      card.animateExpansion({ target: element, animationComplete }, true);
+
+      expect(animateSpy).not.toHaveBeenCalled();
+      expect(animationComplete).toHaveBeenCalledTimes(1);
+    });
+
+    it('Sollte ohne Animation sofort abschließen, wenn prefers-reduced-motion aktiv ist', () => {
+      vi.stubGlobal('matchMedia', () => ({ matches: true }));
+      const animationComplete = vi.fn();
+
+      card.animateExpansion({ target: element, animationComplete }, false);
+      vi.unstubAllGlobals();
+
+      expect(animateSpy).not.toHaveBeenCalled();
+      expect(animationComplete).toHaveBeenCalledTimes(1);
+    });
+
+    it('Sollte sofort abschließen, wenn die Web Animations API nicht verfügbar ist', () => {
+      const animationComplete = vi.fn();
+
+      card.animateExpansion({ target: document.createElement('div'), animationComplete }, true);
+
+      expect(animationComplete).toHaveBeenCalledTimes(1);
+    });
+
+    it('Sollte während des ersten Renderns nicht animieren, danach schon', async () => {
+      const durations: number[] = [];
+      const initialFixture = TestBed.createComponent(ExpandedCardComponent);
+      afterNextRender(() => durations.push(initialFixture.componentInstance.card().getAnimDuration()), {
+        injector: TestBed.inject(Injector)
+      });
+
+      await LuxTestHelper.wait(initialFixture);
+
+      expect(durations).toEqual([0]);
+      expect(initialFixture.componentInstance.card().getAnimDuration()).toBe(300);
+    });
+
+    it('Sollte luxAfterExpansion erst nach dem Ende der Animation auslösen', async () => {
+      Object.defineProperty(element, 'offsetHeight', { value: 120 });
+      const afterExpansion = vi.fn();
+      card.luxAfterExpansion.subscribe(afterExpansion);
+
+      card.animateExpansion({ target: element, animationComplete: vi.fn() }, true);
+      expect(afterExpansion).not.toHaveBeenCalled();
+
+      await finished;
+      await Promise.resolve();
+      expect(afterExpansion).toHaveBeenCalledTimes(1);
+    });
+
+    it('Sollte luxAfterExpansion auch ohne Animation auslösen', () => {
+      card.animationDisabled = true;
+      const afterExpansion = vi.fn();
+      card.luxAfterExpansion.subscribe(afterExpansion);
+
+      card.animateExpansion({ target: element, animationComplete: vi.fn() }, false);
+
+      expect(afterExpansion).toHaveBeenCalledTimes(1);
+    });
+
+    it('Sollte nach dem Zerstören der Karte abschließen, ohne luxAfterExpansion auszulösen', () => {
+      card.animationDisabled = true;
+      const animationComplete = vi.fn();
+      fixture.destroy();
+
+      expect(() => card.animateExpansion({ target: element, animationComplete }, false)).not.toThrow();
+      expect(animationComplete).toHaveBeenCalledTimes(1);
+    });
+
+    it('Sollte animationend aus dem Inhalt nicht an den animierten Container weitergeben', async () => {
+      card.luxExpanded.set(true);
+      await LuxTestHelper.wait(fixture);
+      const container: HTMLElement = fixture.nativeElement.querySelector('div.lux-card-content-expanded');
+      const listener = vi.fn();
+      container.addEventListener('animationend', listener);
+      const child = document.createElement('span');
+      container.querySelector('lux-card-content-expanded')!.appendChild(child);
+
+      child.dispatchEvent(new Event('animationend', { bubbles: true }));
+
+      expect(listener).not.toHaveBeenCalled();
     });
   });
 

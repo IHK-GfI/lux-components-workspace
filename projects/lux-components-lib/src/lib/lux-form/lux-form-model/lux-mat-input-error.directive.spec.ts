@@ -4,7 +4,6 @@ import { Component, Type, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { FormField, form, minError, required, validate } from '@angular/forms/signals';
 import { By } from '@angular/platform-browser';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
@@ -91,7 +90,6 @@ describe('LuxMatInputErrorDirective', () => {
     vi.useFakeTimers();
     TestBed.configureTestingModule({
       providers: [
-        provideNoopAnimations(),
         provideHttpClient(withInterceptorsFromDi()),
         provideHttpClientTesting(),
         provideLuxTranslocoTesting()

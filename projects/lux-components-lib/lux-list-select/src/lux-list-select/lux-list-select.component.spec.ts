@@ -4,7 +4,6 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { By } from '@angular/platform-browser';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { LuxButtonComponent, LuxInfiniteScrollDirective } from '@ihk-gfi/lux-components';
 import { LuxPageEvent } from '@ihk-gfi/lux-components/lux-paginator';
 import { LuxA11yTestHelper, LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
@@ -89,7 +88,7 @@ describe('LuxListSelectComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [MockHostComponent],
-      providers: [provideLuxTranslocoTesting(), provideNoopAnimations()]
+      providers: [provideLuxTranslocoTesting()]
     }).compileComponents();
 
     fixture = TestBed.createComponent(MockHostComponent);

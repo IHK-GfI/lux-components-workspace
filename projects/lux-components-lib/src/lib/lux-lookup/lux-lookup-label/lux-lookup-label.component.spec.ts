@@ -4,7 +4,6 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ChangeDetectionStrategy, Component, Injectable, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { of } from 'rxjs';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxConsoleService } from '../../lux-util/lux-console.service';
@@ -19,7 +18,6 @@ describe('LuxLookupLabelComponent', () => {
       providers: [
         provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideHttpClientTesting(),
-        provideNoopAnimations(),
         provideLuxTranslocoTesting(),
         LuxLookupHandlerService,
         LuxConsoleService,
@@ -96,7 +94,6 @@ describe('Parameter-Check', () => {
       providers: [
         provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideHttpClientTesting(),
-        provideNoopAnimations(),
         LuxLookupHandlerService,
         LuxConsoleService
       ]

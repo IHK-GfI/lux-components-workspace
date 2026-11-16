@@ -15,12 +15,11 @@ import { LuxTabsComponent } from './lux-tabs.component';
 
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
 
 describe('LuxTabsComponent', () => {
   beforeEach(async () => {
     TestBed.configureTestingModule({
-      providers: [provideNoopAnimations(), provideHttpClient(withXhr(), withInterceptorsFromDi()), provideHttpClientTesting()]
+      providers: [provideHttpClient(withXhr(), withInterceptorsFromDi()), provideHttpClientTesting()]
     }).compileComponents();
   });
 

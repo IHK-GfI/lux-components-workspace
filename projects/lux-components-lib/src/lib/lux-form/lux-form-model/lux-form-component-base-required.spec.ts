@@ -5,7 +5,6 @@ import { ChangeDetectionStrategy, Component, Signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { of } from 'rxjs';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
@@ -78,7 +77,6 @@ describe('LuxFormComponentBase - required-Erkennung in Reactive Forms', () => {
         LuxConsoleService,
         LuxLookupHandlerService,
         { provide: LuxLookupService, useValue: { getLookupTable: () => of([]) } },
-        provideNoopAnimations(),
         provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideHttpClientTesting(),
         provideLuxTranslocoTesting()

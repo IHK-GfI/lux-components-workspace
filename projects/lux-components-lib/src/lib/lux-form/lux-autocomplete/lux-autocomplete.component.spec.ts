@@ -6,7 +6,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { FormField, form, required } from '@angular/forms/signals';
 import { By } from '@angular/platform-browser';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { LuxA11yTestHelper, LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.component';
@@ -21,7 +20,7 @@ interface TestOption {
 describe('LuxAutocompleteComponent', () => {
   beforeEach(async () => {
     TestBed.configureTestingModule({
-      providers: [provideNoopAnimations(), provideLuxTranslocoTesting(), LuxConsoleService]
+      providers: [provideLuxTranslocoTesting(), LuxConsoleService]
     }).compileComponents();
   });
 

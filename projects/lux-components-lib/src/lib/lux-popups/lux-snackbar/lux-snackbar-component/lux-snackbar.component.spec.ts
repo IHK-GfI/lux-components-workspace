@@ -5,7 +5,6 @@ import { Component, Injectable, NgModule, ChangeDetectionStrategy } from '@angul
 import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { By } from '@angular/platform-browser';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../../testing/transloco-test.provider';
 import { LuxMenuItemComponent } from '../../../lux-action/lux-menu/lux-menu-subcomponents/lux-menu-item.component';
@@ -23,12 +22,7 @@ describe('LuxSnackbarComponent', () => {
     vi.useFakeTimers();
     TestBed.configureTestingModule({
       imports: [MockSnackbarModule],
-      providers: [
-        provideNoopAnimations(),
-        provideHttpClient(withXhr(), withInterceptorsFromDi()),
-        provideHttpClientTesting(),
-        provideLuxTranslocoTesting()
-      ]
+      providers: [provideHttpClient(withXhr(), withInterceptorsFromDi()), provideHttpClientTesting(), provideLuxTranslocoTesting()]
     });
   });
 

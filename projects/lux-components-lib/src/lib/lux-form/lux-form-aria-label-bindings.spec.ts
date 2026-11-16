@@ -4,7 +4,6 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../testing/transloco-test.provider';
 import { LuxConsoleService } from '../lux-util/lux-console.service';
@@ -26,13 +25,7 @@ describe('Form-Controls - aria-label/aria-labelledby am nativen Eingabefeld', ()
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
-      providers: [
-        LuxConsoleService,
-        provideNoopAnimations(),
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting(),
-        provideLuxTranslocoTesting()
-      ]
+      providers: [LuxConsoleService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting(), provideLuxTranslocoTesting()]
     }).compileComponents();
   });
 
@@ -132,13 +125,7 @@ describe('Form-Controls - Namenskaskade bei aria-labelledby-Controls (Select)', 
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
-      providers: [
-        LuxConsoleService,
-        provideNoopAnimations(),
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting(),
-        provideLuxTranslocoTesting()
-      ]
+      providers: [LuxConsoleService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting(), provideLuxTranslocoTesting()]
     }).compileComponents();
   });
 
@@ -199,13 +186,7 @@ describe('Form-Controls - Slider/Checkbox/Toggle', () => {
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
-      providers: [
-        LuxConsoleService,
-        provideNoopAnimations(),
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting(),
-        provideLuxTranslocoTesting()
-      ]
+      providers: [LuxConsoleService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting(), provideLuxTranslocoTesting()]
     }).compileComponents();
   });
 
@@ -288,13 +269,7 @@ describe('Form-Controls - Chips: kein toter aria-labelledby-Verweis', () => {
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
-      providers: [
-        LuxConsoleService,
-        provideNoopAnimations(),
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting(),
-        provideLuxTranslocoTesting()
-      ]
+      providers: [LuxConsoleService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting(), provideLuxTranslocoTesting()]
     }).compileComponents();
   });
 

@@ -2,7 +2,6 @@ import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { LuxTooltipDirective } from '@ihk-gfi/lux-components';
 import { LuxA11yTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../../src/testing/transloco-test.provider';
@@ -20,7 +19,7 @@ describe('LuxQuillToolbarComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ToolbarHostComponent],
-      providers: [provideNoopAnimations(), provideLuxTranslocoTesting()]
+      providers: [provideLuxTranslocoTesting()]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ToolbarHostComponent);

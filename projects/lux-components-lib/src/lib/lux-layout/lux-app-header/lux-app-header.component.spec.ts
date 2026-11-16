@@ -6,7 +6,6 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ChangeDetectionStrategy, Component, signal, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
 import { LuxOverlayHelper, LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
@@ -27,7 +26,6 @@ describe('LuxAppHeaderComponent', () => {
     TestBed.configureTestingModule({
       providers: [
         LuxConsoleService,
-        provideNoopAnimations(),
         provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideHttpClientTesting(),
         provideLuxTranslocoTesting()
@@ -178,6 +176,54 @@ describe('LuxAppHeaderComponent', () => {
       expect(fixture.debugElement.query(By.css('.lux-side-nav-overlay')).nativeElement.style.display).toEqual('');
     });
 
+    it('Sollte das lux-side-nav nach dem Schließen ausblenden, wenn keine Transition läuft', async () => {
+      const sideNavDebugEl = fixture.debugElement.query(By.directive(LuxSideNavComponent));
+      const wrapperEl: HTMLElement = sideNavDebugEl.nativeElement.firstElementChild;
+      expect(wrapperEl.style.visibility).toEqual('hidden');
+
+      fixture.debugElement.query(By.css('.lux-side-nav-trigger button')).nativeElement.click();
+      await LuxTestHelper.wait(fixture);
+      expect(wrapperEl.style.visibility).toEqual('visible');
+
+      sideNavDebugEl.componentInstance.close();
+      await LuxTestHelper.wait(fixture);
+      expect(wrapperEl.style.visibility).toEqual('hidden');
+    });
+
+    it('Sollte das lux-side-nav erst nach dem Ende der Transition ausblenden', async () => {
+      const sideNavDebugEl = fixture.debugElement.query(By.directive(LuxSideNavComponent));
+      const wrapperEl: HTMLElement = sideNavDebugEl.nativeElement.firstElementChild;
+      const sideNavEl: HTMLElement = fixture.debugElement.query(By.css('.lux-side-nav')).nativeElement;
+
+      sideNavDebugEl.componentInstance.open();
+      await LuxTestHelper.wait(fixture);
+      expect(wrapperEl.style.visibility).toEqual('visible');
+
+      let finishTransition!: () => void;
+      const finished = new Promise<void>((resolve) => (finishTransition = resolve));
+      sideNavEl.getAnimations = (() => [{ finished }]) as unknown as HTMLElement['getAnimations'];
+
+      sideNavDebugEl.componentInstance.close();
+      await LuxTestHelper.wait(fixture);
+      expect(wrapperEl.style.visibility).toEqual('visible');
+
+      finishTransition();
+      await LuxTestHelper.wait(fixture);
+      expect(wrapperEl.style.visibility).toEqual('hidden');
+    });
+
+    it('Sollte open() auf ein bereits geöffnetes lux-side-nav nicht als neue Animation behandeln', async () => {
+      const sideNav: LuxSideNavComponent = fixture.debugElement.query(By.directive(LuxSideNavComponent)).componentInstance;
+      sideNav.open();
+      await LuxTestHelper.wait(fixture);
+      const finishSpy = vi.spyOn(sideNav, 'updateSideNavAfterAnimationIsFinished');
+
+      sideNav.open();
+      await LuxTestHelper.wait(fixture);
+
+      expect(finishSpy).not.toHaveBeenCalled();
+    });
+
     it('Sollte den lux-side-nav-header und lux-side-nav-footer darstellen', async () => {
       expect(fixture.debugElement.query(By.css('.test-side-nav-header')).nativeElement.textContent.trim()).toEqual('SideNav-Header');
       expect(fixture.debugElement.query(By.css('.test-side-nav-footer')).nativeElement.textContent.trim()).toEqual('SideNav-Footer');
@@ -258,6 +304,46 @@ describe('LuxAppHeaderComponent', () => {
       // Nachbedingungen prüfen
       expect(fixture.debugElement.queryAll(By.css('.lux-side-nav-item button'))[0].nativeElement.disabled).toBe(true);
       expect(fixture.debugElement.queryAll(By.css('.lux-side-nav-item button'))[1].nativeElement.disabled).toBe(true);
+    });
+
+    it('Sollte pro lux-side-nav-item genau einen Tab-Stopp besitzen', async () => {
+      testComponent.createSideNavItems(2);
+      await LuxTestHelper.wait(fixture);
+
+      const focusableSelector = 'button:not([disabled]), a[href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+      const items = fixture.debugElement.queryAll(By.css('.lux-side-nav-item'));
+      expect(items.length).toBe(2);
+      for (const item of items) {
+        const element: HTMLElement = item.nativeElement;
+        expect(element.matches(focusableSelector)).toBe(false);
+        expect(element.querySelectorAll(focusableSelector).length).toBe(1);
+      }
+    });
+
+    it('Sollte Enter und Leertaste auf einem lux-side-nav-item nur über den nativen Button-Klick verarbeiten', async () => {
+      const spy = vi.spyOn(testComponent, 'onClick').mockReturnValue(undefined);
+      testComponent.createSideNavItems(1);
+      testComponent.sideNavItems()[0].expandable = true;
+      testComponent.refreshSideNavItems();
+      await LuxTestHelper.wait(fixture);
+
+      const sideNavItem: LuxSideNavItemComponent = fixture.debugElement.query(By.directive(LuxSideNavItemComponent)).componentInstance;
+      const button: HTMLButtonElement = fixture.debugElement.query(By.css('.lux-side-nav-item button')).nativeElement;
+      expect(sideNavItem.luxExpanded()).toBe(true);
+
+      // Tastendruck auf dem Button: Der Wrapper darf das hochblubbernde keydown nicht zusätzlich als Klick werten
+      for (const key of ['Enter', ' ']) {
+        button.dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true }));
+        await LuxTestHelper.wait(fixture);
+      }
+      expect(spy).not.toHaveBeenCalled();
+      expect(sideNavItem.luxExpanded()).toBe(true);
+
+      // Der native Klick (den der Browser bei Enter/Leertaste auslöst) schaltet genau einmal um
+      button.click();
+      await LuxTestHelper.wait(fixture);
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(sideNavItem.luxExpanded()).toBe(false);
     });
 
     it('Sollte lux-side-nav-items selektieren', async () => {
@@ -636,6 +722,7 @@ class MockIconClickedAppHeaderComponent {
                   [luxIconName]="sideNavItem.iconName"
                   [luxSelected]="sideNavItem.selected"
                   [luxCloseOnClick]="sideNavItem.closeOnClick"
+                  [luxExpandable]="sideNavItem.expandable"
                   (luxClicked)="onClick(sideNavItem)"
                 ></lux-side-nav-item>
               }
@@ -708,6 +795,7 @@ class MockAppHeaderComponent {
       iconName: string;
       selected: boolean;
       closeOnClick: boolean;
+      expandable: boolean;
       ignoreThisItem: boolean;
     }[]
   >([]);
@@ -733,6 +821,7 @@ class MockAppHeaderComponent {
       iconName: string;
       selected: boolean;
       closeOnClick: boolean;
+      expandable: boolean;
       ignoreThisItem: boolean;
     }[] = [];
 
@@ -743,6 +832,7 @@ class MockAppHeaderComponent {
         iconName: 'lux-interface-validation-check',
         selected: false,
         closeOnClick: false,
+        expandable: false,
         ignoreThisItem: false
       });
     }

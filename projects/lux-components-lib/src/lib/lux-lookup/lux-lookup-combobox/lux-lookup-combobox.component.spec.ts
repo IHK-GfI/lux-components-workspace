@@ -9,7 +9,6 @@ import { ChangeDetectionStrategy, Component, signal, viewChild } from '@angular/
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormField, form, required } from '@angular/forms/signals';
 import { By } from '@angular/platform-browser';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { Observable, of } from 'rxjs';
 import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
@@ -33,7 +32,6 @@ describe('LuxLookupComboboxComponent', () => {
       providers: [
         provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideHttpClientTesting(),
-        provideNoopAnimations(),
         provideLuxTranslocoTesting(),
         LuxLookupHandlerService,
         LuxConsoleService,
