@@ -699,6 +699,9 @@ export class LuxQuillComponent implements ControlValueAccessor, AfterContentInit
   }
 
   private fetchErrorMessage(errors: ValidationErrors): string {
+    // Macht den umgebenden computed() abhängig vom Sprachwechsel (translate() liefert nur eine Momentaufnahme).
+    this.tService.activeLang();
+
     if (this.formField) {
       // Reihenfolge wie bei den übrigen LUX-FormControls: eigene Meldung, Callback, Meldung aus dem Schema, Standardtext.
       return (

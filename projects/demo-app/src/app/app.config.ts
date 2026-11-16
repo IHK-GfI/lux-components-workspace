@@ -50,10 +50,9 @@ export const appConfig: ApplicationConfig = {
       const available = t.getAvailableLangs().map((l) => (l as LangDefinition).id);
       const chosen = cookieLang && available.includes(cookieLang) ? cookieLang : 'de';
 
-      // Sprache setzen bevor Komponenten erstellt werden.
-      t.setActiveLang(chosen);
-      // Sicherstellen, dass Ressourcen geladen sind bevor Bootstrap finalisiert.
-      return firstValueFrom(t.load(chosen));
+      // Erst laden, dann aktivieren (bevor Komponenten erstellt werden), damit nichts den
+      // Missing-Key-Wert einer noch nicht geladenen Sprache anzeigt.
+      return firstValueFrom(t.load(chosen)).then(() => t.setActiveLang(chosen));
     }),
     { provide: LuxAppHeaderAcSessionTimerService, useClass: MockAppHeaderAcLuxSessionTimerService },
     appConsentProvider

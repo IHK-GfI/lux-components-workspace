@@ -9,8 +9,8 @@
     <lux-menu-item
       class="lux-lang-select-menu-item"
       [luxLabel]="item.label"
-      [luxClass]="item.code === translocoService.getActiveLang() ? 'lux-selected-item-ac' : ''"
-      [luxDisabled]="item.code === translocoService.getActiveLang()"
+      [luxClass]="item.code === translocoService.activeLang() ? 'lux-selected-item-ac' : ''"
+      [luxDisabled]="item.code === translocoService.activeLang()"
       (luxClicked)="onLocaleChanged(item)"
     />
   }

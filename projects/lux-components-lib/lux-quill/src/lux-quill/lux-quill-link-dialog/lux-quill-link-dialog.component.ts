@@ -81,9 +81,14 @@ export class LuxQuillLinkDialogComponent implements OnInit {
   protected readonly model = signal({ url: '', text: '' });
   protected readonly linkForm = form(this.model, (path) => {
     required(path.url);
-    validate(path.url, ({ value }) =>
-      isAllowedUrl(value()) ? undefined : { kind: LUX_QUILL_URL_ERROR, message: this.tService.translate('luxc.quill.link.url_invalid') }
-    );
+    validate(path.url, ({ value }) => {
+      if (isAllowedUrl(value())) {
+        return undefined;
+      }
+      // activeLang() macht die Validierung abhängig vom Sprachwechsel.
+      this.tService.activeLang();
+      return { kind: LUX_QUILL_URL_ERROR, message: this.tService.translate('luxc.quill.link.url_invalid') };
+    });
     required(path.text, { when: () => this.data().askForText });
   });
 

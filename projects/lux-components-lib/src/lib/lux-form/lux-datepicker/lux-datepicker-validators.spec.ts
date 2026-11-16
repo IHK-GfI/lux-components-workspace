@@ -1,3 +1,4 @@
+import { computed } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import type { FieldContext } from '@angular/forms/signals';
 import { TranslocoService } from '@jsverse/transloco';
@@ -96,6 +97,20 @@ describe('luxDateValue', () => {
     min = '2029-05-30';
     expect(validator(ctxFor('2029-05-25'))).toMatchObject({ kind: 'matDatepickerMin' });
   });
+
+  it('sollte die message nach einem Sprachwechsel neu berechnen, wenn sie in einem computed gelesen wird', () => {
+    const validator = createValidator({ min: () => '2029-05-20' });
+    const result = TestBed.runInInjectionContext(() => computed(() => validator(ctxFor('2029-05-19'))));
+
+    const messageDe = tService.translate('luxc.datepicker.error_message.min');
+    expect((result() as { message: string }).message).toBe(messageDe);
+
+    tService.setActiveLang('en');
+
+    const messageEn = tService.translate('luxc.datepicker.error_message.min');
+    expect(messageEn).not.toBe(messageDe);
+    expect((result() as { message: string }).message).toBe(messageEn);
+  });
 });
 
 describe('luxDateTimeValue', () => {
@@ -143,5 +158,20 @@ describe('luxDateTimeValue', () => {
 
     expect(validator(ctxFor('2029-05-25T14:30'))).toBeUndefined();
     expect(validator(ctxFor('2029-05-26T14:30'))).toMatchObject({ kind: 'matDatepickerFilter' });
+  });
+
+  it('sollte die message nach einem Sprachwechsel neu berechnen, wenn sie in einem computed gelesen wird', () => {
+    const tService = TestBed.inject(TranslocoService);
+    const validator = createValidator({ minTime: () => '08:00' });
+    const result = TestBed.runInInjectionContext(() => computed(() => validator(ctxFor('2029-05-25T07:59'))));
+
+    const messageDe = tService.translate('luxc.timepicker.error_message.min');
+    expect((result() as { message: string }).message).toBe(messageDe);
+
+    tService.setActiveLang('en');
+
+    const messageEn = tService.translate('luxc.timepicker.error_message.min');
+    expect(messageEn).not.toBe(messageDe);
+    expect((result() as { message: string }).message).toBe(messageEn);
   });
 });

@@ -43,12 +43,31 @@ export class LuxLangSelectComponent implements OnInit {
     }
     const newLocale = this.allSupportedLocaleArr.find((item) => item.code === locale);
     if (newLocale) {
-      this.translocoService.setActiveLang(locale);
+      this.activateLocale(newLocale.code);
     }
   }
 
   onLocaleChanged(locale: LuxLocale) {
-    this.cookieService.set(this.cookieName, locale.code, undefined, this.cookiePath);
-    this.translocoService.setActiveLang(locale.code);
+    this.activateLocale(locale.code, () => this.cookieService.set(this.cookieName, locale.code, undefined, this.cookiePath));
+  }
+
+  /**
+   * Vor dem Sprachwechsel erst laden, damit Komponenten nicht kurz Keys anzeigen. Schlägt das
+   * Laden fehl, wird nicht gewechselt und onActivated nicht aufgerufen: Ohne fallbackLang bleibt
+   * die bisherige Sprache aktiv, mit fallbackLang aktiviert Transloco selbst die Fallback-Sprache.
+   */
+  private activateLocale(code: string, onActivated?: () => void) {
+    this.translocoService.load(code).subscribe({
+      next: () => {
+        // Mit fallbackLang liefert load() bei einem Fehler die Fallback-Übersetzungen; die
+        // angeforderte Sprache ist dann nicht geladen.
+        if (!this.translocoService.getTranslation().has(code)) {
+          return;
+        }
+        this.translocoService.setActiveLang(code);
+        onActivated?.();
+      },
+      error: () => undefined
+    });
   }
 }

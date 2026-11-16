@@ -2,6 +2,7 @@
 
 - [LUX-Components](#lux-components)
   - [DeepWiki/Support](#deepwikisupport)
+  - [Voraussetzungen](#voraussetzungen)
   - [Config](#config)
   - [Layout](#layout)
   - [Komponenten](#komponenten)
@@ -25,6 +26,16 @@ Sie können dort:
 - **Probleme und Lösungen** recherchieren
 
 Das [DeepWiki](https://deepwiki.com/IHK-GfI/lux-components-workspace) bietet eine zentrale Anlaufstelle für alle Fragen rund um LUX-Components.
+
+## Voraussetzungen
+
+Die LUX-Components benötigen mindestens `@jsverse/transloco` in der Version 8.3.0 (`^8.3.0`). Die Texte der Komponenten folgen dadurch einem Sprachwechsel zur Laufzeit (`TranslocoService.setActiveLang()`), da intern das Signal `TranslocoService.activeLang` verwendet wird.
+
+Wer die Sprache nicht über `lux-lang-select` bzw. `lux-lang-select-ac` wechselt, muss die Übersetzungen der neuen Sprache vor `setActiveLang()` laden. Andernfalls zeigen die Komponenten statt der Texte die Übersetzungs-Keys an:
+
+```ts
+this.translocoService.load('en').subscribe(() => this.translocoService.setActiveLang('en'));
+```
 
 ## Config
 

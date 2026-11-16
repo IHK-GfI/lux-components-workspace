@@ -97,6 +97,7 @@ Bitte zuerst die vollständige Anleitung lesen und danach mit dem Update beginne
 1. **Wichtig!** Bitte alle Änderungen in der [CHANGELOG.md](https://github.com/IHK-GfI/lux-components-workspace/blob/main/projects/lux-components-lib/CHANGELOG.md) und die [Breaking Changes](#breaking-changes) durchlesen.
 1. LUX-Components auf die letzte Version `21.x.x` (siehe [Version 21.x.x](update-guide-v21)) aktualisieren.
 1. Node auf 22 (mindestens 22.22.3) oder 24 (mindestens 24.15.0, empfohlen) aktualisieren. Node 20 wird von Angular 22 nicht mehr unterstützt (siehe auch [Ergänzung für JAST-Projekte](#ergänzung-für-jast-projekte)).
+1. `@jsverse/transloco` mindestens auf die Version `^8.3.0` aktualisieren. Ab dieser Version steht `TranslocoService.activeLang` als Signal zur Verfügung, damit übersetzte Texte der LUX-Components einem Sprachwechsel zur Laufzeit folgen.
 
 #### Breaking Changes
 

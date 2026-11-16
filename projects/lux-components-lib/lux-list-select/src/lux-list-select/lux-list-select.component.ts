@@ -17,8 +17,20 @@ import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { LuxPageEvent, LuxPaginatorComponent } from '@ihk-gfi/lux-components/lux-paginator';
-import { translateSignal, TranslocoPipe } from '@jsverse/transloco';
-import { ILuxMessage, LuxBadgeComponent, LuxIconComponent, LuxInfiniteScrollDirective, LuxInputAcComponent, LuxInputAcPrefixComponent, LuxLabelComponent, LuxMessageBoxComponent, LuxProgressComponent, LuxTagIdDirective } from '@ihk-gfi/lux-components';
+import { TranslocoPipe } from '@jsverse/transloco';
+import {
+  ILuxMessage,
+  LuxBadgeComponent,
+  LuxIconComponent,
+  LuxInfiniteScrollDirective,
+  LuxInputAcComponent,
+  LuxInputAcPrefixComponent,
+  LuxLabelComponent,
+  LuxMessageBoxComponent,
+  LuxProgressComponent,
+  LuxTagIdDirective,
+  luxTranslateSignal
+} from '@ihk-gfi/lux-components';
 import { LuxListSelectItemComponent } from './lux-list-select-subcomponents/lux-list-select-item.component';
 import { ILuxListSelectHttpDao } from './lux-list-select-model/lux-list-select-http-dao.interface';
 import { LuxListSelectActionPosition, LuxListSelectMode, LuxListSelectSize } from './lux-list-select-model/lux-list-select-types';
@@ -132,7 +144,7 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
   protected daoTotalCount = this.dataSource.daoTotalCount;
   protected serverMode = computed(() => !!this.luxHttpDao());
 
-  private defaultListLabel = translateSignal('luxc.list-select.arialabel');
+  private defaultListLabel = luxTranslateSignal('luxc.list-select.arialabel');
   protected listLabel = computed(() => this.luxLabel() ?? this.defaultListLabel());
   protected filteredItems = computed(() => {
     const items = this.luxItems();

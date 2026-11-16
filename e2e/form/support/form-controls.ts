@@ -131,7 +131,6 @@ export const FORM_CONTROLS: FormControlSpec[] = [
     role: 'textbox',
     label: 'Label',
     requiredMessage: () => luxMessage('util.error_message.required'),
-    signalFormRequiredMessage: 'Bitte einen Wert eingeben',
     field: inputField,
     leaveEmpty: clearAndBlur(inputField),
     enterValue: fillAndBlur(inputField, 'Hallo'),

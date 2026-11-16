@@ -141,6 +141,22 @@ describe('LuxButtonToggleComponent', () => {
     expect(error.nativeElement.textContent).toContain('Das ist ein Pflichtfeld');
   });
 
+  it('aktualisiert die Required-Fehlermeldung bei Sprachwechsel', async () => {
+    const tService = TestBed.inject(TranslocoService);
+    fixture.componentRef.setInput('luxRequired', true);
+    fixture.detectChanges();
+
+    const group = fixture.debugElement.query(By.css('mat-button-toggle-group'));
+    group.triggerEventHandler('focusout', {});
+    fixture.detectChanges();
+    expect(fixture.debugElement.query(By.css('.lux-button-toggle-error')).nativeElement.textContent).toContain('Das ist ein Pflichtfeld');
+
+    tService.setActiveLang('en');
+    await LuxTestHelper.wait(fixture);
+
+    expect(fixture.debugElement.query(By.css('.lux-button-toggle-error')).nativeElement.textContent).toContain('Required');
+  });
+
   it('aktualisiert den aria-label Fallback bei Sprachwechsel und respektiert Override', async () => {
     const tService = TestBed.inject(TranslocoService);
 
