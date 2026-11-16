@@ -1,4 +1,6 @@
 import { Directive, ElementRef, OnInit, Renderer2, effect, inject, input, untracked } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { FormField } from '@angular/forms/signals';
 import { LuxAutocompleteComponent } from '../../lux-form/lux-autocomplete/lux-autocomplete.component';
 import { LuxCheckboxComponent } from '../../lux-form/lux-checkbox/lux-checkbox.component';
 import { LuxDatepickerComponent } from '../../lux-form/lux-datepicker/lux-datepicker.component';
@@ -41,6 +43,7 @@ export class LuxFilterItemDirective implements OnInit {
 
   private elRef = inject(ElementRef);
   private renderer = inject(Renderer2);
+  private readonly formField = inject(FormField, { optional: true, self: true });
 
   constructor() {
     if (this.inputAuthentic) {
@@ -93,7 +96,8 @@ export class LuxFilterItemDirective implements OnInit {
   }
 
   ngOnInit(): void {
-    const controlBinding = this.formComponent.luxControlBinding();
+    const field = this.formField?.field();
+    const controlBinding = field ? String(field().keyInParent()) : this.formComponent.luxControlBinding?.();
 
     if (!controlBinding) {
       throw Error(`Die Formularkomponente "${this.formComponent.luxLabel()}" hat kein Binding!`);
@@ -104,10 +108,12 @@ export class LuxFilterItemDirective implements OnInit {
       controlBinding,
       this.formComponent
     );
+    this.filterItem.field = field;
     this.filterItem.color = this.luxFilterColor();
     this.filterItem.defaultValues = this.luxFilterDefaultValues();
     this.filterItem.value = this.luxFilterDefaultValues()[0];
-    this.filterItem.component.formControl.setValue(this.filterItem.value);
+    this.filterItem.resetValue = field && this.luxFilterDefaultValues()[0] === undefined ? field().value() : this.filterItem.value;
+    this.legacyFormControl()?.setValue(this.filterItem.value);
     this.filterItem.hidden = this.luxFilterHidden();
     this.filterItem.disabled = this.luxFilterDisabled();
 
@@ -179,6 +185,7 @@ export class LuxFilterItemDirective implements OnInit {
 
   private updateHiddenState(hidden: boolean) {
     if (this.filterItem) {
+      this.filterItem.hidden = hidden;
       // Wenn ein Filterelement ausgeblendet wird, wird es zusätzlich deaktiviert,
       // um es in der Filterkomponente leichter behandeln zu können. An die CSS-Klasse 'lux-display-none'
       // kommt man dynamisch nicht so einfach heran.
@@ -191,14 +198,19 @@ export class LuxFilterItemDirective implements OnInit {
         // eigener Effect bei einer Änderung wiederum handleFormDisabledState() aufruft - ein
         // unbedingter Aufruf hier würde also bei jedem Effect-Lauf erneut disable()/enable() auslösen
         // und nie zur Ruhe kommen (siehe Endlosschleife in der Filter-Demo).
-        if (!this.filterItem.component.formControl.disabled) {
-          this.filterItem.component.formControl.disable();
+        //
+        // Im Signal-Modus gibt es kein FormControl: Wert und Chips blendet die Filter-Form über
+        // filterItem.hidden aus, aus der Validierung nimmt das Schema das Feld per hidden(path, ...).
+        const formControl = this.legacyFormControl();
+        if (formControl && !formControl.disabled) {
+          formControl.disable();
         }
       } else {
         this.renderer.removeClass(this.elRef.nativeElement, 'lux-display-none-important');
 
-        if (this.filterItem.component.formControl.disabled) {
-          this.filterItem.component.formControl.enable();
+        const formControl = this.legacyFormControl();
+        if (formControl && formControl.disabled) {
+          formControl.enable();
         }
       }
     }
@@ -206,12 +218,23 @@ export class LuxFilterItemDirective implements OnInit {
 
   private updateDisabledState(disabled: boolean) {
     if (this.filterItem) {
+      if (this.filterItem.field) {
+        if (disabled) {
+          throw new Error('luxFilterDisabled wird mit [formField] nicht unterstützt. Das Feld im Signal-Form-Schema deaktivieren.');
+        }
+        return;
+      }
       // Guard aus demselben Grund wie in updateHiddenState().
-      if (disabled && !this.filterItem.component.formControl.disabled) {
-        this.filterItem.component.formControl.disable();
-      } else if (!disabled && this.filterItem.component.formControl.disabled) {
-        this.filterItem.component.formControl.enable();
+      const formControl = this.legacyFormControl();
+      if (disabled && formControl && !formControl.disabled) {
+        formControl.disable();
+      } else if (!disabled && formControl && formControl.disabled) {
+        formControl.enable();
       }
     }
+  }
+
+  private legacyFormControl(): FormControl | undefined {
+    return this.filterItem.field ? undefined : this.filterItem.component.formControl;
   }
 }
