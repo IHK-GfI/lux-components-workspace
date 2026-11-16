@@ -248,7 +248,7 @@ body {
 }
 
 .mat-mdc-dialog-container {
-  background-color: var(--lux-theme-app-content-bg) !important;
+  background-color: var(--lux-theme-app-content-bg);
 }
 
 // für Demo
@@ -337,7 +337,7 @@ lux-card.lux-card-grow {
 }
 
 .lux-vertical-align-baseline {
-  vertical-align: baseline !important;
+  vertical-align: baseline;
 }
 
 .lux-black-semi-transparent {
@@ -353,15 +353,15 @@ lux-card.lux-card-grow {
 }
 
 .lux-bold {
-  font-weight: bold !important;
+  font-weight: bold;
 }
 
 .lux-uppercase {
-  text-transform: uppercase !important;
+  text-transform: uppercase;
 }
 
 .lux-lowercase {
-  text-transform: lowercase !important;
+  text-transform: lowercase;
 }
 
 .lux-hyphenate {

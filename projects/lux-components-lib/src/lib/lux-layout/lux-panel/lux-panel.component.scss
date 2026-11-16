@@ -20,15 +20,15 @@
 
 .lux-panel-mobile {
   .mat-expansion-panel-header {
-    padding: 0 12px !important;
+    padding: 0 12px;
 
     &.lux-dynamic-height {
-      padding: 11px 12px !important;
+      padding: 11px 12px;
     }
   }
 
   ::ng-deep .mat-expansion-panel-body {
-    padding: 0 12px 8px !important;
+    padding: 0 12px 8px;
 
     .mat-expansion-panel-header,
     .mat-expansion-panel-content {

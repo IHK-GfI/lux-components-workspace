@@ -89,7 +89,7 @@ lux-chips {
   lux-form-control-wrapper.lux-hide-input-border .lux-form-control-container-authentic {
     border: none;
     padding: 0;
-    box-shadow: none !important; // den Focus-indicator für das Inputausblenden
+    box-shadow: none; // den Focus-indicator für das Inputausblenden
   }
 
   // Pfeil-Icon

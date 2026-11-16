@@ -53,7 +53,7 @@ lux-input {
 
     button:not([disabled]):focus,
     button:not([disabled]):focus-visible {
-      outline-color: transparent !important; // In V22 wieder entfernen, wenn alle !important entfernt wurden
+      outline-color: transparent;
     }
   }
 }

@@ -27,21 +27,21 @@ Kachel `lux-tile` (u.a. für das Theme Green). Die Variante für das Theme Authe
 
 ### @Input
 
-| Name                         | Typ     | Beschreibung                                                                                                                                                   |
-| ---------------------------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| luxLabel                     | string  | Enthält das Label, welches unten im Tile angezeigt wird.                                                                                                       |
-| luxLabelTruncateAfterOneLine | boolean | Gibt an, ob das _luxLabel_ nach der ersten Zeile abgeschnitten wird. Default: false. |
-| luxLabelTruncateAfterTwoLines | boolean | Gibt an, ob das _luxLabel_ nach der zweiten Zeile abgeschnitten wird. Default: false. |
-| luxTagId                     | string  | [LUX-Tag-Id](luxTagId-v22#direkte-konfiguration) für die automatischen Tests.                                                                                  |
-| luxCounter                   | number  | Zeigt eine Zahl auf der rechten, oberen Seite des Tiles an.                                                                                                    |
-| luxCounterCap | number | Die Obergrenze für den luxCounter. Wenn der luxCounter größer als der luxCounterCap ist, wird der luxCounterCap mit einem zusätzlichen '+'-Symbol dargestellt. Default: 10. |
-| luxShowNotification          | boolean | Bestimmt, ob das Symbol für Notifikationen an der rechten, oberen Seite des Tiles dargestellt wird.                                                            |
-| luxShowShadow | boolean | Bestimmt, ob ein Schatten um die Kachel angezeigt werden soll. Default: true. |
+| Name                          | Typ     | Beschreibung                                                                                                                                                                |
+| ----------------------------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| luxLabel                      | string  | Enthält das Label, welches unten im Tile angezeigt wird.                                                                                                                    |
+| luxLabelTruncateAfterOneLine  | boolean | Gibt an, ob das _luxLabel_ nach der ersten Zeile abgeschnitten wird. Default: false.                                                                                        |
+| luxLabelTruncateAfterTwoLines | boolean | Gibt an, ob das _luxLabel_ nach der zweiten Zeile abgeschnitten wird. Default: false.                                                                                       |
+| luxTagId                      | string  | [LUX-Tag-Id](luxTagId-v22#direkte-konfiguration) für die automatischen Tests.                                                                                               |
+| luxCounter                    | number  | Zeigt eine Zahl auf der rechten, oberen Seite des Tiles an.                                                                                                                 |
+| luxCounterCap                 | number  | Die Obergrenze für den luxCounter. Wenn der luxCounter größer als der luxCounterCap ist, wird der luxCounterCap mit einem zusätzlichen '+'-Symbol dargestellt. Default: 10. |
+| luxShowNotification           | boolean | Bestimmt, ob das Symbol für Notifikationen an der rechten, oberen Seite des Tiles dargestellt wird.                                                                         |
+| luxShowShadow                 | boolean | Bestimmt, ob ein Schatten um die Kachel angezeigt werden soll. Default: true.                                                                                               |
 
 ### @Output
 
-| Name       | Typ   | Beschreibung                                              |
-| ---------- | ----- | --------------------------------------------------------- |
+| Name       | Typ  | Beschreibung                                              |
+| ---------- | ---- | --------------------------------------------------------- |
 | luxClicked | void | Event, das ausgelöst wird, wenn das Tile angeklickt wird. |
 
 ## Styleguide
@@ -60,7 +60,7 @@ Html
 
 ```html
 <lux-tile luxLabel="Kalender">
-  <lux-icon luxIconName="lux-interface-calendar" luxIconSize="1x" />
+  <lux-icon luxIconName="lux-interface-calendar" />
 </lux-tile>
 ```
 
@@ -93,7 +93,6 @@ Html
 >
   <lux-icon
     luxIconName="lux-interface-setting-hammer"
-    luxIconSize="1x"
     luxColor="green"
     [luxRounded]="true"
   />
@@ -128,6 +127,6 @@ Html
 
 ```html
 <lux-tile luxLabel="Kalender" [luxShowShadow]="false">
-  <lux-icon luxIconName="lux-interface-calendar" luxIconSize="1x" />
+  <lux-icon luxIconName="lux-interface-calendar" />
 </lux-tile>
 ```

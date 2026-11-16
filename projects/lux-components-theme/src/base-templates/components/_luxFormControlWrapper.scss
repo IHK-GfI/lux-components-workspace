@@ -26,7 +26,7 @@
   background-color: var(--lux-theme-form-error-msg-background);
   border-radius: 4px;
   padding-right: 2px;
-  color: var(--mat-sys-on-error-container) !important;
+  color: var(--mat-sys-on-error-container);
   box-shadow:
     -18px 0px 0 0 var(--lux-theme-form-error-msg-background),
     -18px -1px 0 0 var(--lux-theme-form-error-msg-background),
@@ -173,7 +173,7 @@ lux-form-control-wrapper,
       .lux-form-control-character-counter-authentic {
         min-width: 40px;
         margin-left: 2px;
-        color: var(--lux-theme-dark-secondary-text) !important;
+        color: var(--lux-theme-dark-secondary-text);
         text-align: end;
 
         &:only-child {

@@ -3,8 +3,8 @@
 @use "../common/luxfocus";
 
 @mixin lux-hovered-mixin-green {
-  background-color: var(--lux-theme-hover-color) !important;
-  color: (--lux-theme-on-hover-color) !important;
+  background-color: var(--lux-theme-hover-color);
+  color: (--lux-theme-on-hover-color);
   border-radius: var(--lux-theme-app-header-item-border-radius);
 }
 
@@ -83,14 +83,14 @@ lux-app-header {
             button {
               padding: 0;
               min-width: 45px;
-              max-height: 45px !important;
-              min-height: 45px !important;
+              max-height: 45px;
+              min-height: 45px;
             }
 
             &.lux-button-with-label button {
               padding: 0 4px;
-              max-height: 45px !important;
-              min-height: 45px !important;
+              max-height: 45px;
+              min-height: 45px;
 
               lux-icon.lux-button-icon {
                 display: inline-block;
@@ -112,10 +112,10 @@ lux-app-header {
           padding-top: 0;
           padding-bottom: 0;
           margin: 2px;
-          font-weight: normal !important;
+          font-weight: normal;
 
           .lux-button-label {
-            font-weight: normal !important;
+            font-weight: normal;
           }
 
           &:not(.mat-accent):not(.mat-warn):not(.mat-primary):not([disabled]) {
@@ -139,8 +139,8 @@ lux-app-header {
           }
 
           &.lux-button-rounded {
-            width: 36px !important;
-            height: 36px !important;
+            width: 36px;
+            height: 36px;
             justify-content: center;
             display: inline-flex;
             @include luxelevations.lux-elevation-z0;
@@ -167,7 +167,7 @@ lux-app-header {
       .lux-header-user-short {
         margin-right: 5px;
         > span {
-          display: flex !important;
+          display: flex;
           justify-content: center;
           width: 25px;
           border: 1px solid;
@@ -359,7 +359,7 @@ lux-app-header {
     }
 
     &:hover {
-      background-color: var(--lux-theme-hover-color) !important;
+      background-color: var(--lux-theme-hover-color);
       color: var(--lux-theme-primary-20);
     }
   }
@@ -369,35 +369,35 @@ lux-app-header {
       @include luxfocus.focus-dark-mixin;
       border-radius: var(--lux-theme-app-header-item-border-radius);
     }
-    color: var(--lux-theme-primary-20) !important;
+    color: var(--lux-theme-primary-20);
 
     &.mat-accent lux-icon {
-      color: var(--lux-theme-accent-70) !important;
+      color: var(--lux-theme-accent-70);
     }
 
     &.mat-warn lux-icon {
-      color: var(--lux-theme-warn-50) !important;
+      color: var(--lux-theme-warn-50);
     }
 
     &.mat-primary lux-icon {
-      color: var(--lux-theme-primary-20) !important;
+      color: var(--lux-theme-primary-20);
     }
 
     &:hover {
-      color: var(--lux-theme-primary-20) !important;
-      background-color: var(--lux-theme-hover-color) !important;
+      color: var(--lux-theme-primary-20);
+      background-color: var(--lux-theme-hover-color);
       border-radius: var(--lux-theme-app-header-item-border-radius);
 
       &.mat-accent lux-icon {
-        color: var(--lux-theme-accent-70) !important;
+        color: var(--lux-theme-accent-70);
       }
 
       &.mat-warn lux-icon {
-        color: var(--lux-theme-warn-50) !important;
+        color: var(--lux-theme-warn-50);
       }
 
       &.mat-primary lux-icon {
-        color: var(--lux-theme-primary-20) !important;
+        color: var(--lux-theme-primary-20);
       }
     }
   }
@@ -422,7 +422,7 @@ lux-app-header {
 
       & lux-icon,
       .lux-header-username {
-        color: var(--lux-theme-primary-20) !important;
+        color: var(--lux-theme-primary-20);
       }
     }
   }

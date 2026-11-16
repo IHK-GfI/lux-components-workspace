@@ -72,7 +72,7 @@ lux-stepper {
 
   // falls eine lux-card als erste component im step-content ist, die margins von ihr entfernen
   lux-step-content > lux-card > mat-card {
-    margin: 0 !important;
+    margin: 0;
   }
 
   .mat-horizontal-content-container {
@@ -92,13 +92,13 @@ lux-stepper {
   //Anpassung für die vertikale Ausrichtung
   lux-stepper-vertical {
     .mat-step-label {
-      height: 44px !important;
+      height: 44px;
     }
     .mat-step-optional {
       bottom: 0;
     }
     .mat-vertical-content {
-      padding: 0 !important;
+      padding: 0;
     }
     .mat-step-header {
       padding-left: 10px;
@@ -243,7 +243,7 @@ lux-stepper {
 
       .lux-stepper-edited-icon,
       .lux-stepper-normal-icon {
-        margin: 0 !important;
+        margin: 0;
       }
     }
 
@@ -252,7 +252,7 @@ lux-stepper {
         display: none;
       }
       .mat-step-icon {
-        margin: 0 !important;
+        margin: 0;
       }
     }
   }

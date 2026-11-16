@@ -18,7 +18,7 @@ lux-file-preview-toolbar {
   padding: 8px;
   lux-button {
     &.lux-button-disabled button {
-      background-color: rgba(gray, 0.5) !important;
+      background-color: rgba(gray, 0.5);
     }
 
     &.lux-file-preview-toolbar-close-button {
@@ -88,6 +88,6 @@ lux-file-preview-imgviewer {
 .cdk-overlay-backdrop.cdk-overlay-backdrop-showing {
   &.lux-file-preview-backdrop {
     background: #000;
-    opacity: 0.8 !important;
+    opacity: 0.8;
   }
 }

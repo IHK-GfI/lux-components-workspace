@@ -18,14 +18,20 @@ lux-filter-form {
   mat-chip-row.mat-mdc-standard-chip {
     height: 24px;
 
-    span.mat-mdc-chip-action {
-      padding-left: 6px !important;
+    // Die zweite Klasse hebt die Regel über Materials Chip-Padding (--with-trailing-action).
+    span.mat-mdc-chip-action.mdc-evolution-chip__action--primary {
+      padding-inline-start: 6px;
     }
 
     lux-icon {
+      // !important ist nötig: lux-chips setzt den Abstand des Icons per luxMargin als Inline-Style.
       margin: 0 !important;
-      padding-left: 4px !important;
-      padding-right: 4px !important;
+    }
+
+    // Die zusätzlichen Klassen heben die Regel über Materials Padding der Entfernen-Aktion.
+    lux-icon.mat-mdc-chip-remove.mdc-evolution-chip__action--secondary {
+      padding-left: 4px;
+      padding-right: 4px;
     }
   }
 
@@ -39,12 +45,12 @@ lux-filter-form {
     }
 
     div.lux-form-control-label-authentic {
-      min-height: 0 !important;
+      min-height: 0;
     }
   }
 
   .filterPanel .mat-action-row {
-    padding: 0 !important;
+    padding: 0;
     border: none;
   }
 
@@ -61,22 +67,22 @@ lux-filter-form {
         max-width: 36px;
         background-color: transparent;
         color: var(--lux-theme-primary-20);
-        padding: 0px !important;
-        margin: 0px 4px !important;
+        padding: 0px;
+        margin: 0px 4px;
 
         @include luxelevations.lux-elevation-z0;
       }
     }
     .lux-filter-menu-trigger button:not([disabled]).mat-fab.lux-button-rounded:hover {
-      background-color: transparent !important;
+      background-color: transparent;
       color: var(--lux-theme-hover-color);
     }
     .lux-filter-menu-trigger button:not([disabled]).mat-fab.lux-button-rounded:focus-visible {
       @include luxfocus.focus-dark-mixin-inline;
-      background-color: transparent !important;
+      background-color: transparent;
     }
     .lux-filter-menu-trigger button:not([disabled]).mat-fab.lux-button-rounded:active {
-      background-color: transparent !important;
+      background-color: transparent;
       color: var(--lux-theme-primary-10);
     }
   }

@@ -103,7 +103,7 @@ lux-file-upload {
 
       border: 1px solid var(--lux-theme-warn-20);
       border-radius: var(--lux-theme-app-border-radius);
-      color: var(--lux-theme-warn-20) !important;
+      color: var(--lux-theme-warn-20);
       background-color: var(--lux-theme-form-error-msg-background);
       padding: 18px 15px 15px 26px;
       margin-top: 16px;
@@ -134,8 +134,8 @@ lux-file-upload {
 
           .lux-button-icon .lux-icon {
             color: var(--lux-theme-warn-20);
-            width: 1.125rem !important;
-            height: 1.125rem !important;
+            width: 1.125rem;
+            height: 1.125rem;
           }
         }
       }
@@ -154,7 +154,7 @@ lux-file-upload {
       border-radius: 4px;
       padding-left: 2px;
       padding-right: 2px;
-      color: var(--mat-sys-on-error-container) !important;
+      color: var(--mat-sys-on-error-container);
     }
 
     .lux-file-upload-hint-container {
@@ -233,8 +233,8 @@ lux-file-upload {
           align-items: center;
 
           mat-icon {
-            width: 1.125rem !important;
-            height: 1.125rem !important;
+            width: 1.125rem;
+            height: 1.125rem;
           }
 
           button {

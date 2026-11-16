@@ -80,6 +80,7 @@ lux-menu {
       justify-content: center;
 
       .lux-progress-small mat-progress-spinner {
+        // !important ist nötig: MatProgressSpinner setzt width/height als Inline-Style.
         width: var(--lux-theme-button-text-text-size) !important;
         height: var(--lux-theme-button-text-text-size) !important;
       }
@@ -225,14 +226,20 @@ lux-menu {
 //Styling für das neue Panel mit Sektionen und das Large Panel
 .lux-menu-section-panel,
 .lux-menu-section-panel:not(.lux-menu-panel-large) {
-  min-width: 260px !important;
+  min-width: 260px;
   max-width: 100%;
 }
 
 .lux-menu-section-panel,
 .lux-menu-section-panel:has(.lux-menu-panel-large) {
-  min-width: 360px !important;
+  min-width: 360px;
   max-width: 100%;
+}
+
+// Beide Klassen liegen auf demselben Panel. Die höhere Spezifität ist nötig, weil Materials
+// gleich spezifisches .mat-mdc-menu-panel { min-width } zur Laufzeit später eingefügt wird.
+.lux-menu-section-panel.lux-menu-panel-large {
+  min-width: 360px;
 }
 
 .lux-menu-section-panel {
@@ -258,7 +265,7 @@ lux-menu {
   }
 
   .lux-menu-item-badge-right {
-    min-width: 0px !important;
+    min-width: 0px;
     margin-left: auto;
     align-self: center;
     display: flex;
@@ -336,7 +343,7 @@ lux-menu {
   }
 
   .lux-menu-item-selected {
-    background-color: var(--lux-theme-primary-90) !important;
+    background-color: var(--lux-theme-primary-90);
     text-decoration-line: underline;
     text-decoration-style: solid;
     text-decoration-thickness: 10%;
@@ -361,6 +368,11 @@ lux-menu {
       text-underline-offset: 5%;
       text-underline-position: from-font;
     }
+  }
+
+  // Muss Materials Hover- und Fokus-Hintergrund (.mat-mdc-menu-item:not([disabled]):hover) übertreffen.
+  .mat-mdc-menu-item.lux-menu-item-selected:not([disabled]) {
+    background-color: var(--lux-theme-primary-90);
   }
 
   .lux-menu-item-badge-right {

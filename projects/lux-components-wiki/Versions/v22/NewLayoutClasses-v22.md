@@ -44,7 +44,7 @@ Siehe dazu: [Austauschmöglichkeiten für Angular/Flex-Layout](Replace-FxLayout-
 | lux-inline-block           | display: inline-block;    | Erzeugt einen Block-Container als inline Element.                                                                                                                                                                          |
 | lux-inline-grid            | display: inline-grid;     | Erzeugt einen Grid-Container als inline Element.                                                                                                                                                                           |
 | lux-display-none           | display: none;            | Das Element wird nicht gerendert und aus dem DOM entfernt. Der Platz wird von den anderen Elementen der Seite eingenommen. Soll der Platz freigehalten werden und das Element nur nicht angzeigt werden, nutze lux-hidden! |
-| lux-display-none-important | display: none !important; | Nur im Notfall zu gebrauchen                                                                                                                                                                                               |
+| lux-display-none-important | display: none !important; | Als letzte Ausnahme, wenn eine Anwendung die Sichtbarkeit von Komponenten gezielt übersteuern muss                                                                                                                         |
 
 ## 2. Flex Basis
 
