@@ -18,7 +18,6 @@ interface StepperLargePrevButtonDummyForm {
   iconName: FormControl<string | undefined>;
   color: FormControl<LuxThemePalette | undefined>;
   iconShowRight: FormControl<boolean | undefined>;
-  alignIconWithLabel: FormControl<boolean | undefined>;
 }
 
 @Component({
@@ -45,16 +44,13 @@ export class StepperLargeExampleStepPrevButtonComponent extends LuxStepperLargeS
       }),
       iconName: new FormControl<string | undefined>(prevButtonConfig.iconName, { nonNullable: true }),
       color: new FormControl<LuxThemePalette | undefined>(prevButtonConfig.color, { nonNullable: true }),
-      iconShowRight: new FormControl<boolean | undefined>(prevButtonConfig.iconShowRight, { nonNullable: true }),
-      alignIconWithLabel: new FormControl<boolean | undefined>(prevButtonConfig.alignIconWithLabel, { nonNullable: true })
+      iconShowRight: new FormControl<boolean | undefined>(prevButtonConfig.iconShowRight, { nonNullable: true })
     });
   }
 
   ngOnInit(): void {
     this.luxTitle.set('Konfiguration: Zurück-Button');
     this.luxVetoFn.set(this.createVetoPromise.bind(this));
-
-    this.form.get('alignIconWithLabel')!.disable();
 
     this.luxCompleted.set(this.form.valid);
 

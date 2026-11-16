@@ -18,7 +18,6 @@ interface StepperLargeFinButtonDummyForm {
   iconName: FormControl<string | undefined>;
   color: FormControl<LuxThemePalette | undefined>;
   iconShowRight: FormControl<boolean | undefined>;
-  alignIconWithLabel: FormControl<boolean | undefined>;
 }
 
 @Component({
@@ -45,16 +44,13 @@ export class StepperLargeExampleStepFinButtonComponent extends LuxStepperLargeSt
       }),
       iconName: new FormControl<string | undefined>(finButtonConfig.iconName, { nonNullable: true }),
       color: new FormControl<LuxThemePalette | undefined>(finButtonConfig.color, { nonNullable: true }),
-      iconShowRight: new FormControl<boolean | undefined>(finButtonConfig.iconShowRight, { nonNullable: true }),
-      alignIconWithLabel: new FormControl<boolean | undefined>(finButtonConfig.alignIconWithLabel, { nonNullable: true })
+      iconShowRight: new FormControl<boolean | undefined>(finButtonConfig.iconShowRight, { nonNullable: true })
     });
   }
 
   ngOnInit(): void {
     this.luxTitle.set('Konfiguration: Abschließen-Button');
     this.luxVetoFn.set(this.createVetoPromise.bind(this));
-
-    this.form.get('alignIconWithLabel')!.disable();
 
     this.luxCompleted.set(this.form.valid);
 
