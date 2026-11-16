@@ -1,6 +1,9 @@
+import { describe, it, beforeEach, expect, vi, type Mock } from 'vitest';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { LuxConditionalAnnouncer } from './lux-conditional-announcer.service';
+import { LuxConditionalHostComponent } from './lux-conditional-host.component';
 import { LuxConditionalDirective } from './lux-conditional.directive';
 
 @Component({
@@ -32,7 +35,7 @@ class WideContentMockComponent {}
 describe('LuxConditionalDirective', () => {
   let fixture: ComponentFixture<MockComponent>;
   let mock: MockComponent;
-  let announcer: jasmine.SpyObj<LuxConditionalAnnouncer>;
+  let announcer: { announceAdded: Mock; announceRemoved: Mock };
 
   const panels = (): HTMLElement[] => Array.from(fixture.nativeElement.querySelectorAll('.lux-conditional__panel'));
   const content = (): HTMLElement | null => fixture.nativeElement.querySelector('#content');
@@ -53,7 +56,7 @@ describe('LuxConditionalDirective', () => {
   };
 
   const configure = (animationsEnabled: boolean): void => {
-    announcer = jasmine.createSpyObj<LuxConditionalAnnouncer>('LuxConditionalAnnouncer', ['announceAdded', 'announceRemoved']);
+    announcer = { announceAdded: vi.fn(), announceRemoved: vi.fn() };
     TestBed.configureTestingModule({
       imports: [MockComponent],
       providers: [{ provide: LuxConditionalAnnouncer, useValue: announcer }],
@@ -89,10 +92,10 @@ describe('LuxConditionalDirective', () => {
       await createFixture(false);
 
       await toggle(true);
-      expect(announcer.announceAdded).toHaveBeenCalledOnceWith('Details');
+      expect(announcer.announceAdded).toHaveBeenCalledExactlyOnceWith('Details');
 
       await toggle(false);
-      expect(announcer.announceRemoved).toHaveBeenCalledOnceWith('Details');
+      expect(announcer.announceRemoved).toHaveBeenCalledExactlyOnceWith('Details');
     });
 
     it('Sollte ohne Label nie ansagen', async () => {
@@ -136,29 +139,34 @@ describe('LuxConditionalDirective', () => {
       await fixture.whenStable();
     };
 
+    // jsdom hat kein Element.getAnimations(), dadurch sind animate.enter/animate.leave hier wirkungslos und die
+    // Animationsklassen erscheinen nie im DOM. Prüfbar ist nur, wann die Direktive die Enter-Animation aktiviert.
+    const animateEnter = (): boolean =>
+      fixture.debugElement.query(By.directive(LuxConditionalHostComponent)).componentInstance.animateEnter();
+
     beforeEach(() => configure(true));
 
     it('Sollte einen initial sichtbaren Bereich nicht animieren', async () => {
       await createFixture(true);
 
-      expect(panels()[0].classList).not.toContain('lux-conditional__panel--enter');
+      expect(animateEnter()).toBe(false);
     });
 
-    it('Sollte beim Einblenden die Enter-Klasse setzen', async () => {
+    it('Sollte die Enter-Animation beim Einblenden aktivieren', async () => {
       await createFixture(false);
+      expect(animateEnter()).toBe(false);
 
       await toggle(true);
 
-      expect(panels()[0].classList).toContain('lux-conditional__panel--enter');
+      expect(animateEnter()).toBe(true);
     });
 
-    it('Sollte den Inhalt erst nach der Leave-Animation entfernen', async () => {
+    it('Sollte den Inhalt nach dem Ausblenden entfernen', async () => {
       await createFixture(true);
 
       await toggle(false);
-      expect(panels()[0]?.classList).toContain('lux-conditional__panel--leave');
-
       await waitForLeave();
+
       expect(panels().length).toBe(0);
       expect(content()).toBeNull();
     });
@@ -178,17 +186,16 @@ describe('LuxConditionalDirective', () => {
   describe('Layout', () => {
     beforeEach(() => configure(false));
 
+    // jsdom hat keine Layout-Engine (getBoundingClientRect() liefert immer 0), die tatsächliche Breite prüft
+    // deshalb die VRT. Hier wird die Regel abgesichert, die das Wachsen über den Container verhindert: Ohne
+    // Minimum von 0 nähme die implizite auto-Spalte die Min-Content-Breite des Inhalts an.
     it('Sollte den Inhalt auf die Breite des Containers begrenzen, auch bei großer Min-Content-Breite', async () => {
       const layoutFixture = TestBed.createComponent(WideContentMockComponent);
       layoutFixture.detectChanges();
       await layoutFixture.whenStable();
-      const width = (selector: string): number =>
-        (layoutFixture.nativeElement.querySelector(selector) as HTMLElement).getBoundingClientRect().width;
+      const panel = layoutFixture.nativeElement.querySelector('.lux-conditional__panel') as HTMLElement;
 
-      expect(width('#container')).toBe(320);
-      expect(width('.lux-conditional__panel')).toBe(320);
-      expect(width('.lux-conditional__content')).toBe(320);
-      expect(width('#content')).toBe(320);
+      expect(getComputedStyle(panel).gridTemplateColumns).toBe('minmax(0, 1fr)');
     });
   });
 });

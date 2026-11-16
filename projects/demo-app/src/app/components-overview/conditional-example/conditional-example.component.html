@@ -1,6 +1,6 @@
 <example-base-structure
   exampleTitle="Conditional"
-  exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/luxConditional-v21"
+  exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/luxConditional-v22"
 >
   <example-base-content class="lux-flex lux-flex-col lux-gap-4">
     <div class="lux-highlight-section lux-flex lux-flex-col lux-gap-2">
@@ -10,32 +10,20 @@
         "Eingeblendet: Arbeitgeber, Eintrittsdatum".
       </p>
       <div class="example-form lux-flex lux-flex-col">
-        <lux-radio-ac
+        <lux-radio
           luxLabel="Beschäftigung"
           luxTagId="conditional-employment"
           [luxOptions]="employmentOptions"
-          [(luxSelected)]="employment"
+          [(value)]="employment"
           [luxOrientationVertical]="false"
           [luxNoBottomLabel]="true"
-        ></lux-radio-ac>
+        />
 
-        <lux-input-ac
-          *luxConditional="isEmployed(); announce: 'Arbeitgeber'"
-          luxLabel="Arbeitgeber"
-          luxTagId="conditional-employer"
-        ></lux-input-ac>
-        <lux-input-ac
-          *luxConditional="isEmployed(); announce: 'Eintrittsdatum'"
-          luxLabel="Eintrittsdatum"
-          luxTagId="conditional-entry-date"
-        ></lux-input-ac>
-        <lux-input-ac
-          *luxConditional="isSelfEmployed(); announce: 'Tätigkeit'"
-          luxLabel="Tätigkeit"
-          luxTagId="conditional-activity"
-        ></lux-input-ac>
+        <lux-input *luxConditional="isEmployed(); announce: 'Arbeitgeber'" luxLabel="Arbeitgeber" luxTagId="conditional-employer" />
+        <lux-input *luxConditional="isEmployed(); announce: 'Eintrittsdatum'" luxLabel="Eintrittsdatum" luxTagId="conditional-entry-date" />
+        <lux-input *luxConditional="isSelfEmployed(); announce: 'Tätigkeit'" luxLabel="Tätigkeit" luxTagId="conditional-activity" />
 
-        <lux-input-ac luxLabel="Anmerkungen" luxTagId="conditional-remarks"></lux-input-ac>
+        <lux-input luxLabel="Anmerkungen" luxTagId="conditional-remarks" />
       </div>
     </div>
 
@@ -43,18 +31,18 @@
       <h3>Card einblenden</h3>
       <p>Die Checkbox blendet eine ganze Card ein. Die Direktive funktioniert an beliebigen Elementen und Komponenten.</p>
       <div class="example-form lux-flex lux-flex-col lux-gap-4">
-        <lux-checkbox-ac
+        <lux-checkbox
           luxLabel="Abweichende Rechnungsadresse"
           luxTagId="conditional-billing-address"
-          [(luxChecked)]="differentBillingAddress"
+          [(checked)]="differentBillingAddress"
           [luxNoLabels]="true"
-        ></lux-checkbox-ac>
+        />
 
         <lux-card *luxConditional="differentBillingAddress(); announce: 'Rechnungsadresse'" luxTitle="Rechnungsadresse">
           <lux-card-content>
-            <lux-input-ac luxLabel="Straße und Hausnummer" luxTagId="conditional-billing-street"></lux-input-ac>
-            <lux-input-ac luxLabel="Postleitzahl" luxTagId="conditional-billing-zip"></lux-input-ac>
-            <lux-input-ac luxLabel="Ort" luxTagId="conditional-billing-city"></lux-input-ac>
+            <lux-input luxLabel="Straße und Hausnummer" luxTagId="conditional-billing-street" />
+            <lux-input luxLabel="Postleitzahl" luxTagId="conditional-billing-zip" />
+            <lux-input luxLabel="Ort" luxTagId="conditional-billing-city" />
           </lux-card-content>
         </lux-card>
       </div>
@@ -67,21 +55,21 @@
         eine Mehrfachauswahl mit langen Einträgen.
       </p>
       <div class="example-form lux-flex lux-flex-col lux-gap-4">
-        <lux-checkbox-ac
+        <lux-checkbox
           luxLabel="Zuständigkeiten angeben"
           luxTagId="conditional-responsibilities"
-          [(luxChecked)]="showDepartments"
+          [(checked)]="showDepartments"
           [luxNoLabels]="true"
-        ></lux-checkbox-ac>
+        />
 
-        <lux-select-ac
+        <lux-select
           *luxConditional="showDepartments(); announce: 'Abteilungen'"
           luxLabel="Abteilungen"
           luxTagId="conditional-departments"
           [luxOptions]="departmentOptions"
           [luxMultiple]="true"
-          [(luxSelected)]="departments"
-        ></lux-select-ac>
+          [(value)]="departments"
+        />
       </div>
     </div>
   </example-base-content>

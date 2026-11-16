@@ -1,30 +1,30 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
-    ILuxFileObject,
-    LuxAutocompleteAcComponent,
-    LuxButtonComponent,
-    LuxCardActionsComponent,
-    LuxCardComponent,
-    LuxCardContentComponent,
-    LuxCheckboxAcComponent,
-    LuxChipAcGroupComponent,
-    LuxChipsAcComponent,
-    LuxDatepickerAcComponent,
-    LuxDatetimepickerAcComponent,
-    LuxDividerComponent,
-    LuxFileInputAcComponent,
-    LuxFileListComponent,
-    LuxIconComponent,
-    LuxInputAcComponent,
-    LuxInputAcPrefixComponent,
-    LuxInputAcSuffixComponent,
-    LuxRadioAcComponent,
-    LuxSelectAcComponent,
-    LuxSliderAcComponent,
-    LuxTextareaAcComponent,
-    LuxTextboxComponent,
-    LuxToggleAcComponent
+  ILuxFileObject,
+  LuxAutocompleteComponent,
+  LuxButtonComponent,
+  LuxCardActionsComponent,
+  LuxCardComponent,
+  LuxCardContentComponent,
+  LuxCheckboxComponent,
+  LuxChipGroupComponent,
+  LuxChipsComponent,
+  LuxDatepickerComponent,
+  LuxDatetimepickerComponent,
+  LuxDividerComponent,
+  LuxFileInputComponent,
+  LuxFileListComponent,
+  LuxIconComponent,
+  LuxInputComponent,
+  LuxInputPrefixComponent,
+  LuxInputSuffixComponent,
+  LuxRadioComponent,
+  LuxSelectComponent,
+  LuxSliderComponent,
+  LuxTextareaComponent,
+  LuxTextboxComponent,
+  LuxToggleComponent
 } from '@ihk-gfi/lux-components';
 
 interface DummyForm {
@@ -46,7 +46,7 @@ interface DummyForm {
   selector: 'lux-baseline-card',
   templateUrl: './baseline-card.component.html',
   styleUrls: ['./baseline-card.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxIconComponent,
     LuxTextboxComponent,
@@ -56,31 +56,28 @@ interface DummyForm {
     LuxCardContentComponent,
     LuxCardComponent,
     ReactiveFormsModule,
-    LuxAutocompleteAcComponent,
-    LuxCheckboxAcComponent,
-    LuxChipsAcComponent,
-    LuxChipAcGroupComponent,
-    LuxDatepickerAcComponent,
-    LuxDatetimepickerAcComponent,
-    LuxFileInputAcComponent,
+    LuxAutocompleteComponent,
+    LuxCheckboxComponent,
+    LuxChipsComponent,
+    LuxChipGroupComponent,
+    LuxDatepickerComponent,
+    LuxDatetimepickerComponent,
+    LuxFileInputComponent,
     LuxFileListComponent,
-    LuxInputAcComponent,
-    LuxInputAcPrefixComponent,
-    LuxInputAcSuffixComponent,
-    LuxRadioAcComponent,
-    LuxSelectAcComponent,
-    LuxSliderAcComponent,
-    LuxTextareaAcComponent,
-    LuxToggleAcComponent
+    LuxInputComponent,
+    LuxInputPrefixComponent,
+    LuxInputSuffixComponent,
+    LuxRadioComponent,
+    LuxSelectComponent,
+    LuxSliderComponent,
+    LuxTextareaComponent,
+    LuxToggleComponent
   ]
 })
 export class BaselineCardComponent {
-  testHint = 'Hinweistext';
-  testOption: any = null;
-  disabledForm = false;
-  readonly = false;
-  disabled = false;
-  test = false;
+  readonly testHint = 'Hinweistext';
+  readonly testOption = signal<unknown>(null);
+  readonly disabled = signal(false);
 
   options = [
     { label: 'Option 1', value: 'A' },
@@ -105,11 +102,14 @@ export class BaselineCardComponent {
     { label: 'Disabled', value: 'disabledState' },
     { label: 'Readonly', value: 'readOnlyState' }
   ];
-  selectedState: any = this.stateOptions[0];
+  readonly selectedState = signal(this.stateOptions[0]);
 
   chipItems: string[] = ['Chip 0', 'Chip 1', 'Chip 2'];
   chipOptions: string[] = ['Neuer Chip 1', 'Neuer Chip 2', 'Neuer Chip 3'];
   form: FormGroup;
+
+  readonly disabledForm = computed(() => this.selectedState().value === 'disabledState');
+  readonly readonly = computed(() => this.selectedState().value === 'readOnlyState');
 
   constructor() {
     this.form = new FormGroup<DummyForm>({
@@ -147,22 +147,5 @@ export class BaselineCardComponent {
       }
       this.form.get(key)!.updateValueAndValidity();
     });
-  }
-
-  switchStates() {
-    switch (this.selectedState.value) {
-      case 'disabledState':
-        this.disabledForm = true;
-        this.readonly = false;
-        break;
-      case 'readOnlyState':
-        this.disabledForm = false;
-        this.readonly = true;
-        break;
-      default:
-        this.disabledForm = false;
-        this.readonly = false;
-        break;
-    }
   }
 }

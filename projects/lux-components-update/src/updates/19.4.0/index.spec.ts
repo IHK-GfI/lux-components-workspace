@@ -5,6 +5,7 @@ import { getDep } from '../../utility/dependencies';
 import { appOptions, workspaceOptions } from '../../utility/test';
 import { UtilConfig } from '../../utility/util';
 import { fixEmptySchematicArray, update190400 } from './index';
+import { lastValueFrom } from 'rxjs';
 
 describe('update190400', () => {
   let appTree: UnitTestTree;
@@ -31,7 +32,7 @@ describe('update190400', () => {
   });
 
   describe('[Rule] update190400', () => {
-    it('Sollte die Abhängigkeiten aktualisieren', (done) => {
+    it('Sollte die Abhängigkeiten aktualisieren', async () => {
       appTree.overwrite(
         '/package.json',
         `
@@ -60,23 +61,17 @@ describe('update190400', () => {
         `
       );
 
-      callRule(update190400(testOptions), appTree, context).subscribe(
-        (successTree) => {
-          expect(getDep(appTree, '@ihk-gfi/lux-components').version).not.toEqual('19.2.0');
-          expect(getDep(appTree, '@ihk-gfi/lux-components').version).toEqual('19.4.0');
+      const successTree = await lastValueFrom(callRule(update190400(testOptions), appTree, context));
+      expect(getDep(appTree, '@ihk-gfi/lux-components').version).not.toEqual('19.2.0');
+      expect(getDep(appTree, '@ihk-gfi/lux-components').version).toEqual('19.4.0');
 
-          expect(getDep(appTree, '@ihk-gfi/lux-components-theme').version).not.toEqual('19.0.0');
-          expect(getDep(appTree, '@ihk-gfi/lux-components-theme').version).toEqual('19.2.0');
-
-          done();
-        },
-        (reason) => expect(reason).toBeUndefined()
-      );
+      expect(getDep(appTree, '@ihk-gfi/lux-components-theme').version).not.toEqual('19.0.0');
+      expect(getDep(appTree, '@ihk-gfi/lux-components-theme').version).toEqual('19.2.0');
     });
   });
 
   describe('[Rule] fixEmptySchematicArray', () => {
-    it('Sollte das leere Schematic-Array in angular.json entfernen', (done) => {
+    it('Sollte das leere Schematic-Array in angular.json entfernen', async () => {
       const angularJsonPath = (testOptions.path ?? '') + '/angular.json';
       appTree.create(
         angularJsonPath,
@@ -96,15 +91,9 @@ describe('update190400', () => {
         `
       );
 
-      callRule(fixEmptySchematicArray(testOptions), appTree, context).subscribe(
-        (successTree) => {
-          const content = successTree.read(angularJsonPath)?.toString();
-          expect(content).not.toContain('"schematicCollections"');
-
-          done();
-        },
-        (reason) => expect(reason).toBeUndefined()
-      );
+      const successTree = await lastValueFrom(callRule(fixEmptySchematicArray(testOptions), appTree, context));
+      const content = successTree.read(angularJsonPath)?.toString();
+      expect(content).not.toContain('"schematicCollections"');
     });
   });
 });

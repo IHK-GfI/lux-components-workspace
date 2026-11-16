@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { LuxButtonComponent, LuxFormHintComponent, LuxInputAcComponent, LuxToggleAcComponent } from '@ihk-gfi/lux-components';
+import { LuxButtonComponent, LuxFormHintComponent, LuxInputComponent, LuxToggleComponent } from '@ihk-gfi/lux-components';
 import { LuxLeaveGuardBase } from '@ihk-gfi/lux-components/lux-leave-guard';
 import { LuxLoadingService } from '@ihk-gfi/lux-components/lux-loading';
 import { debounceTime, distinctUntilChanged, finalize, Subject, switchMap, tap, timer } from 'rxjs';
@@ -20,8 +20,8 @@ const FILTER_DEBOUNCE_MS = 600;
   imports: [
     LuxButtonComponent,
     LuxFormHintComponent,
-    LuxInputAcComponent,
-    LuxToggleAcComponent,
+    LuxInputComponent,
+    LuxToggleComponent,
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,
     ExampleBaseSimpleOptionsComponent
@@ -32,15 +32,16 @@ export class LeaveGuardExampleComponent extends LuxLeaveGuardBase {
   protected readonly saveDurationSeconds = SAVE_DURATION_MS / 1000;
 
   protected readonly name = signal<string | null>('');
-  private readonly savedName = signal('');
-  protected readonly dirty = computed(() => (this.name() ?? '') !== this.savedName());
   protected readonly filterTerm = signal('');
   protected readonly log = signal<{ time: string; text: string }[]>([]);
   protected readonly permanentlyBlocked = signal(false);
 
+  private readonly savedName = signal('');
   private readonly filterTrigger = new Subject<string>();
   private releasePermanentBlock?: () => void;
   private requestCounter = 0;
+
+  protected readonly dirty = computed(() => (this.name() ?? '') !== this.savedName());
 
   constructor() {
     super();

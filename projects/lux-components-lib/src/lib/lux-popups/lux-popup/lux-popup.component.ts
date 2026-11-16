@@ -4,19 +4,18 @@ import { TemplatePortal } from '@angular/cdk/portal';
 import { ScrollDispatcher } from '@angular/cdk/scrolling';
 import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
 import {
+  ChangeDetectionStrategy,
   Component,
-  ContentChild,
-  EventEmitter,
   NgZone,
   OnDestroy,
-  Output,
   TemplateRef,
-  ViewChild,
   ViewContainerRef,
+  contentChild,
   effect,
   inject,
   input,
-  ChangeDetectionStrategy
+  output,
+  viewChild
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { LuxPopupActionsDirective } from './lux-popup-actions.directive';
@@ -29,30 +28,30 @@ let nextPopupId = 0;
   selector: 'lux-popup',
   templateUrl: './lux-popup.component.html',
   exportAs: 'luxPopup',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [NgTemplateOutlet]
 })
 export class LuxPopupComponent implements OnDestroy {
-  private overlay = inject(Overlay);
-  private viewContainerRef = inject(ViewContainerRef);
-  private zone = inject(NgZone);
-  private dir = inject(Directionality, { optional: true });
-  private document = inject(DOCUMENT);
-  private scrollDispatcher = inject(ScrollDispatcher);
-
-  @ContentChild(LuxPopupActionsDirective) actions?: LuxPopupActionsDirective;
-  @ViewChild('popupTemplate', { static: true }) popupTemplate!: TemplateRef<unknown>;
-
   readonly luxTitle = input<string | undefined>();
   readonly luxPersistent = input(false);
   readonly luxMinWidth = input(220);
   readonly luxMaxWidth = input(360);
   readonly luxAriaLabel = input<string | undefined>();
 
-  @Output() luxOpened = new EventEmitter<void>();
-  @Output() luxClosed = new EventEmitter<LuxPopupCloseReason>();
+  readonly luxOpened = output<void>();
+  readonly luxClosed = output<LuxPopupCloseReason>();
+
+  readonly actions = contentChild(LuxPopupActionsDirective);
+  readonly popupTemplate = viewChild.required<TemplateRef<unknown>>('popupTemplate');
 
   popupId = `lux-popup-${nextPopupId++}`;
+
+  private overlay = inject(Overlay);
+  private viewContainerRef = inject(ViewContainerRef);
+  private zone = inject(NgZone);
+  private dir = inject(Directionality, { optional: true });
+  private document = inject(DOCUMENT);
+  private scrollDispatcher = inject(ScrollDispatcher);
 
   private overlayRef?: OverlayRef;
   private portal?: TemplatePortal<unknown>;
@@ -62,11 +61,6 @@ export class LuxPopupComponent implements OnDestroy {
   private pendingCloseReason: LuxPopupCloseReason = 'program';
   private focusedElementBeforeOpen?: HTMLElement | null;
   private scrollSubscription?: Subscription;
-
-  constructor() {
-    this.setupOverlaySizeEffect();
-    this.setupPersistentClassEffect();
-  }
 
   get role(): 'dialog' | 'tooltip' {
     return this.luxPersistent() ? 'dialog' : 'tooltip';
@@ -78,6 +72,16 @@ export class LuxPopupComponent implements OnDestroy {
 
   get maxWidthPx() {
     return Math.max(this.minWidthPx, this.luxMaxWidth());
+  }
+
+  constructor() {
+    this.setupOverlaySizeEffect();
+    this.setupPersistentClassEffect();
+  }
+
+  ngOnDestroy() {
+    this.removeOverlayListeners();
+    this.overlayRef?.dispose();
   }
 
   open(trigger: LuxPopupTriggerDirective) {
@@ -106,7 +110,7 @@ export class LuxPopupComponent implements OnDestroy {
     }
 
     if (!this.portal) {
-      this.portal = new TemplatePortal(this.popupTemplate, this.viewContainerRef);
+      this.portal = new TemplatePortal(this.popupTemplate(), this.viewContainerRef);
     }
 
     if (!this.overlayRef.hasAttached()) {
@@ -142,6 +146,60 @@ export class LuxPopupComponent implements OnDestroy {
     }
   }
 
+  isOpen(): boolean {
+    return !!this.overlayRef?.hasAttached();
+  }
+
+  isOpenFor(trigger: LuxPopupTriggerDirective): boolean {
+    return this.currentTrigger === trigger && this.isOpen();
+  }
+
+  handlePopupKeydown(event: KeyboardEvent) {
+    if (!this.luxPersistent() || !this.overlayRef) {
+      return;
+    }
+
+    if (event.key === 'Escape') {
+      event.stopPropagation();
+      event.preventDefault();
+      this.close('escape');
+      return;
+    }
+
+    if (event.key !== 'Tab') {
+      return;
+    }
+
+    const overlayElement = this.overlayRef.overlayElement;
+    const target = event.target as HTMLElement | null;
+
+    if (!target || !overlayElement.contains(target)) {
+      return;
+    }
+
+    const focusables = this.getFocusableElements(overlayElement);
+    if (!focusables.length) {
+      return;
+    }
+
+    const first = focusables[0];
+    const last = focusables[focusables.length - 1];
+
+    if (!event.shiftKey && target === last) {
+      event.preventDefault();
+      this.close();
+      this.focusTriggerElement();
+      return;
+    }
+
+    if (event.shiftKey && target === first) {
+      event.preventDefault();
+      this.close();
+      this.focusTriggerElement();
+      return;
+    }
+  }
+
   private shouldRestoreFocus(reason: LuxPopupCloseReason): boolean {
     switch (reason) {
       case 'outside':
@@ -152,19 +210,6 @@ export class LuxPopupComponent implements OnDestroy {
       default:
         return true;
     }
-  }
-
-  isOpen(): boolean {
-    return !!this.overlayRef?.hasAttached();
-  }
-
-  isOpenFor(trigger: LuxPopupTriggerDirective): boolean {
-    return this.currentTrigger === trigger && this.isOpen();
-  }
-
-  ngOnDestroy() {
-    this.removeOverlayListeners();
-    this.overlayRef?.dispose();
   }
 
   private handleOverlayDetached() {
@@ -333,56 +378,10 @@ export class LuxPopupComponent implements OnDestroy {
 
     this.zone.runOutsideAngular(() => {
       setTimeout(() => {
-        const element = this.overlayRef?.overlayElement.querySelector('.lux-popup') as HTMLElement | null;
+        const element = this.overlayRef?.overlayElement?.querySelector('.lux-popup') as HTMLElement | null;
         element?.focus();
       });
     });
-  }
-
-  handlePopupKeydown(event: KeyboardEvent) {
-    if (!this.luxPersistent() || !this.overlayRef) {
-      return;
-    }
-
-    if (event.key === 'Escape') {
-      event.stopPropagation();
-      event.preventDefault();
-      this.close('escape');
-      return;
-    }
-
-    if (event.key !== 'Tab') {
-      return;
-    }
-
-    const overlayElement = this.overlayRef.overlayElement;
-    const target = event.target as HTMLElement | null;
-
-    if (!target || !overlayElement.contains(target)) {
-      return;
-    }
-
-    const focusables = this.getFocusableElements(overlayElement);
-    if (!focusables.length) {
-      return;
-    }
-
-    const first = focusables[0];
-    const last = focusables[focusables.length - 1];
-
-    if (!event.shiftKey && target === last) {
-      event.preventDefault();
-      this.close();
-      this.focusTriggerElement();
-      return;
-    }
-
-    if (event.shiftKey && target === first) {
-      event.preventDefault();
-      this.close();
-      this.focusTriggerElement();
-      return;
-    }
   }
 
   private focusTriggerElement() {

@@ -4,7 +4,7 @@
       @if (!$last) {
         <li
           class="lux-breadcrumb-item"
-          [ngClass]="{ 'lux-breadcrumb-item-mobile': mobileView, 'lux-breadcrumb-item-dotted': isDottedEntry($first, $last) }"
+          [ngClass]="{ 'lux-breadcrumb-item-mobile': mobileView(), 'lux-breadcrumb-item-dotted': isDottedEntry($first, $last) }"
         >
           <a
             (click)="onEntryClick($event, item)"
@@ -17,13 +17,13 @@
           </a>
           <lux-icon
             luxIconName="lux-interface-arrows-right"
-            [luxIconSize]="mobileView ? '18px' : '20px'"
+            [luxIconSize]="mobileView() ? '18px' : '20px'"
             luxPadding="0.25rem 0.1875rem 0.25rem 0.375rem"
-          ></lux-icon>
+          />
         </li>
       } @else {
-        <li class="lux-breadcrumb-item-current" aria-current="page" [ngClass]="{ 'lux-breadcrumb-current-item-mobile': mobileView }">
-          <span class="lux-breadcrumb-item-title" [attr.title]='item.name' [attr.aria-label]="item.name">{{ item.name }}</span>
+        <li class="lux-breadcrumb-item-current" aria-current="page" [ngClass]="{ 'lux-breadcrumb-current-item-mobile': mobileView() }">
+          <span class="lux-breadcrumb-item-title" [attr.title]="item.name" [attr.aria-label]="item.name">{{ item.name }}</span>
         </li>
       }
     }

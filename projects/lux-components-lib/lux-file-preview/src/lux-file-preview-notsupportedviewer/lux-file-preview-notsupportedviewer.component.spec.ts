@@ -1,7 +1,8 @@
+import { describe, it, beforeEach, expect } from 'vitest';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { PortalModule } from '@angular/cdk/portal';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LUX_FILE_PREVIEW_DATA } from '../lux-file-preview-config';
 import { LuxFilePreviewRef } from '../lux-file-preview-ref';
 import { LuxFilePreviewComponent } from '../lux-file-preview.component';
@@ -25,7 +26,7 @@ describe('LuxFilePreviewNotSupportedViewerComponent', () => {
     }
   };
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       imports: [OverlayModule, PortalModule, LuxFilePreviewNotSupportedViewerComponent, LuxFilePreviewComponent],
       schemas: [NO_ERRORS_SCHEMA],
@@ -38,7 +39,7 @@ describe('LuxFilePreviewNotSupportedViewerComponent', () => {
         { provide: LUX_FILE_PREVIEW_DATA, useValue: previewData }
       ]
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(LuxFilePreviewNotSupportedViewerComponent);

@@ -1,9 +1,10 @@
+import { describe, it, beforeEach, expect } from 'vitest';
 // noinspection DuplicatedCode
 
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
-import { fakeAsync, TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
@@ -14,17 +15,17 @@ import { LuxAppFooterLinkService } from './lux-app-footer-link.service';
 import { LuxAppFooterComponent } from './lux-app-footer.component';
 
 describe('LuxAppFooterComponent', () => {
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       providers: [provideHttpClient(withXhr(), withInterceptorsFromDi()), provideHttpClientTesting(), provideLuxTranslocoTesting()]
     }).compileComponents();
-  }));
+  });
 
   describe('App-Footer-Buttons', () => {
-    it('Sollte die Buttonreihenfolge beibehalten', fakeAsync(() => {
+    it('Sollte die Buttonreihenfolge beibehalten', async () => {
       const fixture = TestBed.createComponent(MockAppFooterButtonOrderComponent);
       const testComponent = fixture.componentInstance;
-      LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
 
       let footerButtons = fixture.debugElement.queryAll(By.css('button span.lux-button-label'));
       expect(footerButtons.length).toEqual(3);
@@ -35,6 +36,7 @@ describe('LuxAppFooterComponent', () => {
       testComponent.nextBtn.alwaysVisible = true;
       testComponent.cancelBtn.alwaysVisible = true;
       testComponent.finishBtn.alwaysVisible = true;
+      testComponent.refresh();
       fixture.detectChanges();
 
       footerButtons = fixture.debugElement.queryAll(By.css('button span.lux-button-label'));
@@ -46,6 +48,7 @@ describe('LuxAppFooterComponent', () => {
       testComponent.nextBtn.alwaysVisible = false;
       testComponent.cancelBtn.alwaysVisible = false;
       testComponent.finishBtn.alwaysVisible = false;
+      testComponent.refresh();
       fixture.detectChanges();
 
       footerButtons = fixture.debugElement.queryAll(By.css('button span.lux-button-label'));
@@ -57,6 +60,7 @@ describe('LuxAppFooterComponent', () => {
       testComponent.nextBtn.prio = 3;
       testComponent.cancelBtn.prio = 2;
       testComponent.finishBtn.prio = 1;
+      testComponent.refresh();
       fixture.detectChanges();
 
       footerButtons = fixture.debugElement.queryAll(By.css('button span.lux-button-label'));
@@ -68,6 +72,7 @@ describe('LuxAppFooterComponent', () => {
       testComponent.nextBtn.prio = 1;
       testComponent.cancelBtn.prio = 2;
       testComponent.finishBtn.prio = 3;
+      testComponent.refresh();
       fixture.detectChanges();
 
       footerButtons = fixture.debugElement.queryAll(By.css('button span.lux-button-label'));
@@ -79,6 +84,7 @@ describe('LuxAppFooterComponent', () => {
       testComponent.nextBtn.prio = 2;
       testComponent.cancelBtn.prio = 1;
       testComponent.finishBtn.prio = 3;
+      testComponent.refresh();
       fixture.detectChanges();
 
       footerButtons = fixture.debugElement.queryAll(By.css('button span.lux-button-label'));
@@ -93,6 +99,7 @@ describe('LuxAppFooterComponent', () => {
       testComponent.nextBtn.prio = 1;
       testComponent.cancelBtn.prio = 2;
       testComponent.finishBtn.prio = 3;
+      testComponent.refresh();
       fixture.detectChanges();
 
       footerButtons = fixture.debugElement.queryAll(By.css('button span.lux-button-label'));
@@ -100,9 +107,9 @@ describe('LuxAppFooterComponent', () => {
       expect(footerButtons[0].nativeElement.innerText).toContain('Weiter');
       expect(footerButtons[1].nativeElement.innerText).toContain('Abbrechen');
       expect(footerButtons[2].nativeElement.innerText).toContain('Abschließen');
-    }));
+    });
 
-    it('Sollte identische LuxAppFooterButtonInfos über den Konstruktor und die generateInfo-Method erzeugen', fakeAsync(() => {
+    it('Sollte identische LuxAppFooterButtonInfos über den Konstruktor und die generateInfo-Method erzeugen', async () => {
       const label = 'Weiter';
       const cmd = 'next';
       const prio = 5;
@@ -161,9 +168,9 @@ describe('LuxAppFooterComponent', () => {
       expect(infoConstruktor.alwaysVisible).toEqual(infoMethod.alwaysVisible);
       expect(infoConstruktor.tooltip).toEqual(infoMethod.tooltip);
       expect(infoConstruktor.onClick).toEqual(infoMethod.onClick);
-    }));
+    });
 
-    it('Sollte eine LuxAppFooterButtonInfo über ein Teilobjekt erzeugen', fakeAsync(() => {
+    it('Sollte eine LuxAppFooterButtonInfo über ein Teilobjekt erzeugen', async () => {
       const label = 'Weiter';
       const cmd = 'next';
       const disabled = false;
@@ -183,27 +190,27 @@ describe('LuxAppFooterComponent', () => {
       expect(infoMethod.alwaysVisible).toEqual(false);
       expect(infoMethod.tooltip).toEqual('');
       expect(infoMethod.onClick).toEqual(onClick);
-    }));
+    });
   });
 
   describe('App-Footer-Links', () => {
-    it('Sollte die Linkreihenfolge beibehalten', fakeAsync(() => {
+    it('Sollte die Linkreihenfolge beibehalten', async () => {
       const fixture = TestBed.createComponent(MockAppFooterLinkOrderComponent);
-      LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
 
       const footerLinks = fixture.debugElement.queryAll(By.css('a span.lux-button-label'));
       expect(footerLinks).toBeDefined();
       expect(footerLinks.length).toEqual(3);
-      expect(footerLinks[0].nativeElement.innerText).toEqual('Link 1');
-      expect(footerLinks[1].nativeElement.innerText).toEqual('Link 2');
-      expect(footerLinks[2].nativeElement.innerText).toEqual('Link 3');
-    }));
+      expect(footerLinks[0].nativeElement.innerText.trim()).toEqual('Link 1');
+      expect(footerLinks[1].nativeElement.innerText.trim()).toEqual('Link 2');
+      expect(footerLinks[2].nativeElement.innerText.trim()).toEqual('Link 3');
+    });
   });
 });
 
 @Component({
-  template: ` <lux-app-footer luxVersion="0.1.2"></lux-app-footer> `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  template: ` <lux-app-footer luxVersion="0.1.2" /> `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxAppFooterComponent]
 })
 class MockAppFooterButtonOrderComponent {
@@ -227,22 +234,30 @@ class MockAppFooterButtonOrderComponent {
   constructor() {
     this.buttonService.buttonInfos = [this.nextBtn, this.cancelBtn, this.finishBtn];
   }
+
+  // Unter OnPush wird der Footer nur bei einer neuen Emission des BehaviorSubject informiert
+  // (markForCheck()) - eine reine Property-Mutation der bestehenden Button-Objekte reicht nicht.
+  refresh() {
+    this.buttonService.buttonInfos = [this.nextBtn, this.cancelBtn, this.finishBtn];
+  }
 }
 
 @Component({
   selector: 'lux-mock-app-footer-link-order',
-  template: ` <lux-app-footer luxVersion="0.1.3"></lux-app-footer> `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  template: ` <lux-app-footer luxVersion="0.1.3" /> `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxAppFooterComponent]
 })
 class MockAppFooterLinkOrderComponent {
   private linkService = inject(LuxAppFooterLinkService);
 
   constructor() {
+    // alwaysVisible=true, damit die Links unabhängig von der (unter jsdom nicht auswertbaren)
+    // Breakpoint-Erkennung (desktopView) im Test sichtbar sind.
     this.linkService.linkInfos = [
-      new LuxAppFooterLinkInfo('Link 1', 'path1'),
-      new LuxAppFooterLinkInfo('Link 2', 'path2'),
-      new LuxAppFooterLinkInfo('Link 3', 'path3')
+      new LuxAppFooterLinkInfo('Link 1', 'path1', true),
+      new LuxAppFooterLinkInfo('Link 2', 'path2', true),
+      new LuxAppFooterLinkInfo('Link 3', 'path3', true)
     ];
   }
 }

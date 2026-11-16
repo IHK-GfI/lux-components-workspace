@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { LuxUtil } from './lux-util';
 
 // Die Erwartungen werden über toISOString() bzw. die UTC-Getter geprüft
@@ -36,38 +37,38 @@ describe('LuxUtil', () => {
     });
 
     it('Sollte für ungültige Datums- bzw. Zeitbestandteile ein ungültiges Datum liefern', () => {
-      expect(LuxUtil.isDate(LuxUtil.parseISO8601AsUTC('2027-13-01T00:00:00'))).toBeFalse();
-      expect(LuxUtil.isDate(LuxUtil.parseISO8601AsUTC('2027-01-32T00:00:00'))).toBeFalse();
-      expect(LuxUtil.isDate(LuxUtil.parseISO8601AsUTC('2027-01-01T25:00:00'))).toBeFalse();
-      expect(LuxUtil.isDate(LuxUtil.parseISO8601AsUTC('2027-01-01T10:60:00'))).toBeFalse();
+      expect(LuxUtil.isDate(LuxUtil.parseISO8601AsUTC('2027-13-01T00:00:00'))).toBe(false);
+      expect(LuxUtil.isDate(LuxUtil.parseISO8601AsUTC('2027-01-32T00:00:00'))).toBe(false);
+      expect(LuxUtil.isDate(LuxUtil.parseISO8601AsUTC('2027-01-01T25:00:00'))).toBe(false);
+      expect(LuxUtil.isDate(LuxUtil.parseISO8601AsUTC('2027-01-01T10:60:00'))).toBe(false);
     });
 
     it('Sollte für einen String, der kein ISO-String ist, ein ungültiges Datum liefern', () => {
-      expect(LuxUtil.isDate(LuxUtil.parseISO8601AsUTC('abc'))).toBeFalse();
+      expect(LuxUtil.isDate(LuxUtil.parseISO8601AsUTC('abc'))).toBe(false);
     });
   });
 
   describe('isISO8601WithoutTimezone', () => {
     it('Sollte ISO-Strings ohne Zeitzoneninfo erkennen', () => {
-      expect(LuxUtil.isISO8601WithoutTimezone('2027-03-13T00:00:00')).toBeTrue();
-      expect(LuxUtil.isISO8601WithoutTimezone('2027-03-13T00:00:00.1234567')).toBeTrue();
-      expect(LuxUtil.isISO8601WithoutTimezone('2027-03-13t00:00:00')).toBeTrue();
+      expect(LuxUtil.isISO8601WithoutTimezone('2027-03-13T00:00:00')).toBe(true);
+      expect(LuxUtil.isISO8601WithoutTimezone('2027-03-13T00:00:00.1234567')).toBe(true);
+      expect(LuxUtil.isISO8601WithoutTimezone('2027-03-13t00:00:00')).toBe(true);
     });
 
     it('Sollte ISO-Strings mit Zeitzoneninfo nicht erkennen', () => {
-      expect(LuxUtil.isISO8601WithoutTimezone('2027-03-13T00:00:00Z')).toBeFalse();
-      expect(LuxUtil.isISO8601WithoutTimezone('2027-03-13T00:00:00.000z')).toBeFalse();
-      expect(LuxUtil.isISO8601WithoutTimezone('2027-03-13T00:00:00+01:00')).toBeFalse();
-      expect(LuxUtil.isISO8601WithoutTimezone('2027-03-13T00:00:00-05:00')).toBeFalse();
+      expect(LuxUtil.isISO8601WithoutTimezone('2027-03-13T00:00:00Z')).toBe(false);
+      expect(LuxUtil.isISO8601WithoutTimezone('2027-03-13T00:00:00.000z')).toBe(false);
+      expect(LuxUtil.isISO8601WithoutTimezone('2027-03-13T00:00:00+01:00')).toBe(false);
+      expect(LuxUtil.isISO8601WithoutTimezone('2027-03-13T00:00:00-05:00')).toBe(false);
     });
 
     it('Sollte andere Werte nicht erkennen', () => {
-      expect(LuxUtil.isISO8601WithoutTimezone('2027-03-13')).toBeFalse();
-      expect(LuxUtil.isISO8601WithoutTimezone('13.03.2027')).toBeFalse();
-      expect(LuxUtil.isISO8601WithoutTimezone('')).toBeFalse();
-      expect(LuxUtil.isISO8601WithoutTimezone(null)).toBeFalse();
-      expect(LuxUtil.isISO8601WithoutTimezone(undefined)).toBeFalse();
-      expect(LuxUtil.isISO8601WithoutTimezone(new Date())).toBeFalse();
+      expect(LuxUtil.isISO8601WithoutTimezone('2027-03-13')).toBe(false);
+      expect(LuxUtil.isISO8601WithoutTimezone('13.03.2027')).toBe(false);
+      expect(LuxUtil.isISO8601WithoutTimezone('')).toBe(false);
+      expect(LuxUtil.isISO8601WithoutTimezone(null)).toBe(false);
+      expect(LuxUtil.isISO8601WithoutTimezone(undefined)).toBe(false);
+      expect(LuxUtil.isISO8601WithoutTimezone(new Date())).toBe(false);
     });
   });
 });

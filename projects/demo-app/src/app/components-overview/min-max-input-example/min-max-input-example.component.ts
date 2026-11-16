@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { LuxInputAcComponent, LuxSelectAcComponent, LuxToggleAcComponent } from '@ihk-gfi/lux-components';
+import { LuxInputComponent, LuxSelectComponent, LuxToggleComponent } from '@ihk-gfi/lux-components';
 import { LuxMinMaxBounds, LuxMinMaxInputComponent, LuxMinMaxValue } from '@ihk-gfi/lux-components/lux-min-max-input';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
@@ -23,9 +23,9 @@ const addDays = (iso: string, days: number): string => new Date(Date.parse(iso) 
   imports: [
     ReactiveFormsModule,
     LuxMinMaxInputComponent,
-    LuxInputAcComponent,
-    LuxSelectAcComponent,
-    LuxToggleAcComponent,
+    LuxInputComponent,
+    LuxSelectComponent,
+    LuxToggleComponent,
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,
     ExampleBaseSimpleOptionsComponent,

@@ -84,7 +84,7 @@ Wichtiger Hinweis: `writeValue` setzt intern `luxSelected`, wodurch analog zu `l
 ```typescript
 import { Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { LuxListSelectComponent } from '@ihk-gfi/lux-components';
+import { LuxListSelectComponent } from '@ihk-gfi/lux-components/lux-list-select';
 
 interface Adresse {
   title: string;
@@ -217,7 +217,7 @@ Da der DAO bei jedem Laden neue Objektinstanzen liefert, sollte `luxCompareWith`
 Beispiel-DAO mit Paginierung:
 
 ```typescript
-import { ILuxListSelectHttpDao, ILuxListSelectHttpDaoConf, ILuxListSelectHttpDaoStructure } from '@ihk-gfi/lux-components';
+import { ILuxListSelectHttpDao, ILuxListSelectHttpDaoConf, ILuxListSelectHttpDaoStructure } from '@ihk-gfi/lux-components/lux-list-select';
 import { Observable, of } from 'rxjs';
 import { delay } from 'rxjs/operators';
 
@@ -318,7 +318,7 @@ Besitzt die aktive Karte interaktive innere Elemente (Aktions-Template, interakt
 
 ```typescript
 import { Component, signal } from '@angular/core';
-import { LuxListSelectComponent } from '@ihk-gfi/lux-components';
+import { LuxListSelectComponent } from '@ihk-gfi/lux-components/lux-list-select';
 
 interface Adresse {
   title: string;
@@ -355,7 +355,7 @@ export class ExampleComponent {
 
 ```typescript
 import { Component, signal } from '@angular/core';
-import { LuxListSelectComponent } from '@ihk-gfi/lux-components';
+import { LuxListSelectComponent } from '@ihk-gfi/lux-components/lux-list-select';
 
 interface Person {
   title: string;
@@ -400,7 +400,7 @@ Im Client-Modus (ohne `luxHttpDao`) übergibt die aufrufende Seite bei aktiver P
 
 ```typescript
 import { Component, computed, signal } from '@angular/core';
-import { LuxListSelectComponent } from '@ihk-gfi/lux-components';
+import { LuxListSelectComponent } from '@ihk-gfi/lux-components/lux-list-select';
 import { LuxPageEvent } from '@ihk-gfi/lux-components/lux-paginator';
 
 interface Adresse {

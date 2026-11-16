@@ -1,5 +1,5 @@
-import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
-import { LuxAppHeaderAcSessionTimerService, LuxButtonComponent, LuxInputAcComponent, LuxToggleAcComponent } from '@ihk-gfi/lux-components';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
+import { LuxAppHeaderAcSessionTimerService, LuxButtonComponent, LuxInputComponent, LuxToggleComponent } from '@ihk-gfi/lux-components';
 import { DemoMarkerType } from '../../base/status-marker/status-marker.model';
 import { StatusMarkerComponent } from '../../base/status-marker/status-marker.component';
 import { ExampleBaseStructureComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-structure/example-base-structure.component';
@@ -11,31 +11,28 @@ import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-ba
     ExampleBaseStructureComponent,
     ExampleBaseSimpleOptionsComponent,
     LuxButtonComponent,
-    LuxInputAcComponent,
-    LuxToggleAcComponent,
+    LuxInputComponent,
+    LuxToggleComponent,
     StatusMarkerComponent
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './session-timer-example.component.html'
 })
 export class SessionTimerExampleComponent {
   readonly markerTypeNew = DemoMarkerType.New;
-  protected timerService = inject(LuxAppHeaderAcSessionTimerService);
-  startingSeconds = 1800;
+  readonly startingSeconds = signal(1800);
+
+  protected readonly timerService = inject(LuxAppHeaderAcSessionTimerService);
 
   get canExtendSession(): boolean {
     return this.timerService.canExtendSession;
   }
 
-  get canExtendSessionButtonLabel(): string {
-    return this.canExtendSession ? 'canExtendSession auf false setzen' : 'canExtendSession auf true setzen';
+  set canExtendSession(value: boolean) {
+    this.timerService.canExtendSession = value;
   }
 
   setTimer() {
-    this.timerService.resetTimer(this.startingSeconds);
-  }
-
-  toggleCanExtendSession(checked: boolean) {
-    this.timerService.canExtendSession = checked;
+    this.timerService.resetTimer(this.startingSeconds());
   }
 }

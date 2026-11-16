@@ -27,9 +27,7 @@ let nextProgressId = 0;
   imports: [NgClass, MatProgressBar, LuxTagIdDirective, LuxAriaLabelDirective, LuxCustomTagIdDirective, MatProgressSpinner, TranslocoPipe]
 })
 export class LuxProgressComponent {
-  readonly DEFAULT_PROGRESS_COLOR: LuxProgressColor = 'blue';
-
-  animDurationCSS = '';
+  static readonly DEFAULT_PROGRESS_COLOR: LuxProgressColor = 'blue';
 
   readonly luxValue = input(0);
   readonly luxAriaLabel = input('');
@@ -43,7 +41,7 @@ export class LuxProgressComponent {
 
   // Ohne Binding bleibt die Farbe undefined, damit die Standardfarben des Themes greifen (keine lux-color-*-Klasse).
   readonly luxColor = input<LuxProgressColor | undefined, LuxProgressColor | undefined>(undefined, {
-    transform: (value) => LuxProgressColors.find((entry) => entry === value) ?? this.DEFAULT_PROGRESS_COLOR
+    transform: (value) => LuxProgressColors.find((entry) => entry === value) ?? LuxProgressComponent.DEFAULT_PROGRESS_COLOR
   });
 
   readonly luxMode = input<LuxProgressModeType, LuxProgressModeType | undefined>('indeterminate', {

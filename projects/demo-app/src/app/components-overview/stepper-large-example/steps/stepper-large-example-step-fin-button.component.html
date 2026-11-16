@@ -1,5 +1,5 @@
 <ng-template #content>
-  <h2 class="example-lux-stepper-large-h2">{{ luxTitle }}</h2>
+  <h2 class="example-lux-stepper-large-h2">{{ luxTitle() }}</h2>
   <p>
     Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
     sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem
@@ -9,20 +9,20 @@
   </p>
 
   <div [formGroup]="form" class="lux-grid lux-grid-cols-2 lt-lg:lux-grid-cols-1 lux-gap-6">
-    <lux-input-ac luxLabel="Bezeichnung" luxName="stepper-large.example.label" luxControlBinding="label"></lux-input-ac>
-    <lux-input-ac
+    <lux-input luxLabel="Bezeichnung" luxName="stepper-large.example.label" luxControlBinding="label"></lux-input>
+    <lux-input
       luxLabel="Farbe"
       luxName="stepper-large.example.color"
       luxControlBinding="color"
       luxHint="(primary, accent, warn)"
-    ></lux-input-ac>
+    ></lux-input>
 
-    <lux-input-ac luxLabel="Iconname" luxName="stepper-large.example.iconname" luxControlBinding="iconName"></lux-input-ac>
-    <lux-toggle-ac
+    <lux-input luxLabel="Iconname" luxName="stepper-large.example.iconname" luxControlBinding="iconName"></lux-input>
+    <lux-toggle
       luxLabel="Icon rechts anzeigen"
       luxName="stepper-large.example.iconShowRight"
       luxControlBinding="iconShowRight"
-    ></lux-toggle-ac>
+    ></lux-toggle>
   </div>
 
   <p>
@@ -31,6 +31,6 @@
     Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat
     volutpat.
   </p>
-  <lux-stepper-large-example-error-message-box class="lux-mt-5" [luxTitle]="luxTitle" [luxCompleted]="luxCompleted">
+  <lux-stepper-large-example-error-message-box class="lux-mt-5" [luxTitle]="luxTitle()" [luxCompleted]="luxCompleted()">
   </lux-stepper-large-example-error-message-box>
 </ng-template>

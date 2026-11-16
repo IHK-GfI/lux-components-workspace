@@ -1,44 +1,37 @@
+import { describe, it, beforeEach, expect } from 'vitest';
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { discardPeriodicTasks, fakeAsync, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { Viewport } from 'karma-viewport/dist/adapter/viewport';
 import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxAppHeaderAcComponent } from './lux-app-header-ac.component';
 
-declare const viewport: Viewport;
-
 describe('LuxAppHeaderAcComponent', () => {
-  
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [provideLuxTranslocoTesting()]
     }).compileComponents();
   });
-  
+
   describe('luxClicked', () => {
-    it('App-Title sollte angezeigt werden ', fakeAsync(() => {
-      viewport.set('desktop');
+    it('App-Title sollte angezeigt werden ', async () => {
       const fixture = TestBed.createComponent(MockIconsClickedAppHeaderAcComponent);
-      LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
 
       const element = fixture.debugElement.query(By.css('.lux-app-title'));
 
-      LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
 
       expect(element).toBeDefined();
-
-      discardPeriodicTasks();
-    }));
+    });
   });
 });
 
 @Component({
   template: `
-    <lux-app-header-ac luxAppTitle="MyClickTitle" luxAppIconSrc="assets/svg/demoAppLogo.svg" (luxAppLogoClicked)="onClicked()">
-    </lux-app-header-ac>
+    <lux-app-header-ac luxAppTitle="MyClickTitle" luxAppIconSrc="assets/svg/demoAppLogo.svg" (luxAppLogoClicked)="onClicked()" />
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxAppHeaderAcComponent]
 })
 class MockIconsClickedAppHeaderAcComponent {

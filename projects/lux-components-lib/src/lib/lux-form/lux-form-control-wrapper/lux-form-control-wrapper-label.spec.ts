@@ -1,18 +1,19 @@
+import { describe, it, beforeEach, expect } from 'vitest';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { Component } from '@angular/core';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxConsoleService } from '../../lux-util/lux-console.service';
-import { LuxInputAcComponent } from '../lux-input-ac/lux-input-ac.component';
+import { LuxInputComponent } from '../lux-input/lux-input.component';
 
 describe('LuxFormControlWrapper - Label verstecken statt entfernen', () => {
   let fixture: ComponentFixture<WrapperLabelTestComponent>;
   let testComponent: WrapperLabelTestComponent;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       providers: [
         LuxConsoleService,
@@ -22,7 +23,7 @@ describe('LuxFormControlWrapper - Label verstecken statt entfernen', () => {
         provideLuxTranslocoTesting()
       ]
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(WrapperLabelTestComponent);
@@ -106,14 +107,14 @@ describe('LuxFormControlWrapper - Label verstecken statt entfernen', () => {
 });
 
 @Component({
-  imports: [LuxInputAcComponent],
-  template: `<lux-input-ac
+  imports: [LuxInputComponent],
+  template: `<lux-input
     [luxLabel]="label"
     [luxNoTopLabel]="noTopLabel"
     [luxNoLabels]="noLabels"
     [luxAriaLabel]="ariaLabel"
     [luxAriaLabelledby]="ariaLabelledby"
-  ></lux-input-ac>`
+  ></lux-input>`
 })
 class WrapperLabelTestComponent {
   label = 'Nachname';

@@ -1,87 +1,79 @@
 <example-base-structure
   exampleTitle="Progress"
-  exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/lux%E2%80%90progress-v21"
+  exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/lux%E2%80%90progress-v22"
 >
   <example-base-content>
     <div class="lux-flex lux-flex-col lux-gap-4">
-      <div class="lux-app-data-bg lux-flex lux-flex-col lux-gap-3" [ngStyle]="{ backgroundColor: backgroundColor }">
+      <div class="lux-app-data-bg lux-flex lux-flex-col lux-gap-3" [ngStyle]="{ backgroundColor: backgroundColor() }">
         @for (color of colors; track color; let i = $index) {
           <lux-progress
             luxType="Progressbar"
             luxTagId="pb-example-default{{ i }}"
             [luxColor]="color"
-            [luxValue]="value"
-            [luxMode]="mode"
-            [luxSize]="size"
-            [luxMuted]="muted"
-            [luxShowText]="showText"
-            [luxText]="text || undefined"
-            [luxTextPosition]="textPosition"
-          >
-          </lux-progress>
+            [luxValue]="value()"
+            [luxMode]="mode()"
+            [luxSize]="size()"
+            [luxMuted]="muted()"
+            [luxShowText]="showText()"
+            [luxText]="text() || undefined"
+            [luxTextPosition]="textPosition()"
+          />
         }
       </div>
     </div>
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
-    <lux-select-ac [luxOptions]="sizes" [(luxSelected)]="size" luxLabel="luxSize">
+    <lux-select [luxOptions]="sizes" [(value)]="size" luxLabel="luxSize">
       <lux-form-hint>
         Diese Property legt die Größe der Component fest.<br />
         Dabei sind die Eingaben 'small', 'medium' und 'large' erlaubt.
       </lux-form-hint>
-    </lux-select-ac>
+    </lux-select>
     <div class="lux-flex lux-items-center">
-      <lux-toggle-ac
+      <lux-toggle
         luxLabel="Muted (dekorativ)"
         luxHint="Nur verwenden, wenn der Fortschritt zusätzlich als Text angezeigt wird."
-        [(luxChecked)]="muted"
+        [(checked)]="muted"
         [luxNoTopLabel]="true"
-      ></lux-toggle-ac>
-      <app-status-marker [markerType]="markerTypeNew"></app-status-marker>
+      />
+      <app-status-marker [markerType]="markerTypeNew" />
     </div>
     <div class="lux-flex lux-items-center">
-      <lux-toggle-ac luxLabel="Fortschrittstext anzeigen" [(luxChecked)]="showText" [luxNoTopLabel]="true"></lux-toggle-ac>
-      <app-status-marker [markerType]="markerTypeNew"></app-status-marker>
+      <lux-toggle luxLabel="Fortschrittstext anzeigen" [(checked)]="showText" [luxNoTopLabel]="true" />
+      <app-status-marker [markerType]="markerTypeNew" />
     </div>
-    @if (showText) {
+    @if (showText()) {
       <div class="lux-flex lux-items-center">
-        <lux-select-ac [luxOptions]="textPositions" [(luxSelected)]="textPosition" luxLabel="luxTextPosition"></lux-select-ac>
-        <app-status-marker [markerType]="markerTypeNew"></app-status-marker>
+        <lux-select [luxOptions]="textPositions" [(value)]="textPosition" luxLabel="luxTextPosition" />
+        <app-status-marker [markerType]="markerTypeNew" />
       </div>
       <div class="lux-flex lux-items-center">
-        <lux-input-ac
-          luxName="progress_text"
-          [(luxValue)]="text"
-          luxLabel="luxText"
-          luxHint="Leer lassen, um den Prozentwert anzuzeigen."
-        ></lux-input-ac>
-        <app-status-marker [markerType]="markerTypeNew"></app-status-marker>
+        <lux-input luxName="progress_text" [(value)]="text" luxLabel="luxText" luxHint="Leer lassen, um den Prozentwert anzuzeigen." />
+        <app-status-marker [markerType]="markerTypeNew" />
       </div>
     }
-    <lux-select-ac
+    <lux-select
       [luxOptions]="modes"
-      [(luxSelected)]="mode"
+      [(value)]="mode"
       luxLabel="luxMode"
       luxHint="Die Property bestimmt ob die ProgressBar im Modus 'determinate' (= endlich) oder 'indeterminate' (= endlos) ist."
-    >
-    </lux-select-ac>
-    <lux-input-ac luxName="button_background_Color" [(luxValue)]="backgroundColor" luxLabel="Hintergrundfarbe">
+    />
+    <lux-input luxName="button_background_Color" [(value)]="backgroundColor" luxLabel="Hintergrundfarbe">
       <lux-form-hint>Kontrast zwischen Element und Hintergrund prüfen.</lux-form-hint>
-    </lux-input-ac>
-    @if (mode === 'determinate') {
+    </lux-input>
+    @if (mode() === 'determinate') {
       <div class="lux-flex lux-flex-col lux-gap-2">
-        <lux-input-ac
+        <lux-input
           class="lux-flex-auto"
           luxLabel="luxValue"
           luxHint="Diese Property setzt den Wert in dem ProgressBar, vorausgesetzt es ist im Modus 'determinate'"
           luxType="number"
-          [(luxValue)]="value"
+          [(value)]="value"
           [luxNumberAlignLeft]="true"
-        >
-        </lux-input-ac>
+        />
         <div class="lux-flex lux-flex-warp lux-gap-2">
-          <lux-button luxLabel="+10" (luxClicked)="addBarProgress()" luxColor="primary" [luxRaised]="true"></lux-button>
-          <lux-button luxLabel="-10" (luxClicked)="subtractBarProgress()" luxColor="primary" [luxRaised]="true"></lux-button>
+          <lux-button luxLabel="+10" (luxClicked)="addBarProgress()" luxColor="primary" [luxRaised]="true" />
+          <lux-button luxLabel="-10" (luxClicked)="subtractBarProgress()" luxColor="primary" [luxRaised]="true" />
         </div>
       </div>
     }

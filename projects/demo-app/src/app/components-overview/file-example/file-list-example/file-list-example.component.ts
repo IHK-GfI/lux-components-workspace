@@ -1,16 +1,18 @@
-import { AfterViewInit, Component, OnDestroy, QueryList, ViewChild, ViewChildren, inject, ChangeDetectionStrategy } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, inject, signal, viewChildren } from '@angular/core';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormField, disabled, form, readonly, required, validate } from '@angular/forms/signals';
 import {
-    ILuxFileActionConfig,
-    ILuxFileObject,
-    ILuxFilesListActionConfig,
-    LuxAutofocusDirective,
-    LuxDialogService,
-    LuxFileListComponent,
-    LuxFormHintComponent,
-    LuxInputAcComponent,
-    LuxToggleAcComponent,
-    LuxUtil
+  ILuxFileActionConfig,
+  ILuxFileObject,
+  ILuxFilesListActionConfig,
+  LuxAutofocusDirective,
+  LuxDialogService,
+  LuxFileListComponent,
+  LuxFormHintComponent,
+  LuxInputComponent,
+  luxRequiredArray,
+  LuxToggleComponent,
+  LuxUtil
 } from '@ihk-gfi/lux-components';
 import { Subscription } from 'rxjs';
 import { distinctUntilChanged, map, skip, take } from 'rxjs/operators';
@@ -19,6 +21,7 @@ import { ExampleBaseAdvancedOptionsComponent } from '../../../example-base/examp
 import { ExampleBaseSimpleOptionsComponent } from '../../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
 import { ExampleBaseStructureComponent } from '../../../example-base/example-base-root/example-base-subcomponents/example-base-structure/example-base-structure.component';
 import { ExampleFormValueComponent } from '../../../example-base/example-form-value/example-form-value.component';
+import { ExampleSignalFormValueComponent } from '../../../example-base/example-signal-form-value/example-signal-form-value.component';
 import { FileExampleAdvancedOptionsComponent } from '../file-example-advanced-options/file-example-advanced-options.component';
 import { FileExampleSimpleOptionsComponent } from '../file-example-simple-options/file-example-simple-options.component';
 import { FileExampleComponent } from '../file-example.component';
@@ -26,10 +29,10 @@ import { FileExampleComponent } from '../file-example.component';
 @Component({
   selector: 'app-file-list-example',
   templateUrl: './file-list-example.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    LuxToggleAcComponent,
-    LuxInputAcComponent,
+    LuxToggleComponent,
+    LuxInputComponent,
     LuxFormHintComponent,
     LuxFileListComponent,
     LuxAutofocusDirective,
@@ -37,33 +40,76 @@ import { FileExampleComponent } from '../file-example.component';
     ExampleBaseContentComponent,
     ReactiveFormsModule,
     ExampleFormValueComponent,
+    ExampleSignalFormValueComponent,
     ExampleBaseSimpleOptionsComponent,
     FileExampleSimpleOptionsComponent,
     ExampleBaseAdvancedOptionsComponent,
-    FileExampleAdvancedOptionsComponent
+    FileExampleAdvancedOptionsComponent,
+    FormField
   ]
 })
 export class FileListExampleComponent
   extends FileExampleComponent<ILuxFileObject[] | null, ILuxFilesListActionConfig>
   implements AfterViewInit, OnDestroy
 {
-  private dialogService = inject(LuxDialogService);
+  readonly fileLists = viewChildren(LuxFileListComponent);
+  readonly signalModel = signal<ILuxFileObject[] | null>(null);
+  readonly signalForm = form(this.signalModel, (path) => {
+    disabled(path, { when: () => this.disabled() });
+    readonly(path, { when: () => this.readonly() });
+    required(path, { when: () => this.required() });
+    validate(path, luxRequiredArray({ when: () => this.required() }));
+  });
+  readonly plainValue = signal<ILuxFileObject[] | null>(null);
 
-  @ViewChildren(LuxFileListComponent) fileLists!: QueryList<LuxFileListComponent>;
-  @ViewChild('filelistexamplewithoutform', { read: LuxFileListComponent, static: true }) fileBaseWithoutComponent!: LuxFileListComponent;
-  @ViewChild('filelistexamplewithform', { read: LuxFileListComponent, static: true }) fileBaseWithComponent!: LuxFileListComponent;
+  readonly namePrefixAccept = signal('(akzeptiert) ');
+  readonly namePrefixColorAccept = signal('#3e8320');
+  readonly nameSuffixAccept = signal(` (${new Date().toLocaleDateString()})`);
+  readonly nameSuffixColorAccept = signal<string | undefined>(undefined);
 
-  namePrefixAccept = '(akzeptiert) ';
-  namePrefixColorAccept = '#3e8320';
-  nameSuffixAccept = ` (${new Date().toLocaleDateString()})`;
-  nameSuffixColorAccept = undefined;
-
-  namePrefixDecline = '(abgelehnt) ';
-  namePrefixColorDecline = 'red';
-  nameSuffixDecline = ` (${new Date().toLocaleDateString()})`;
-  nameSuffixColorDecline = undefined;
+  readonly namePrefixDecline = signal('(abgelehnt) ');
+  readonly namePrefixColorDecline = signal('red');
+  readonly nameSuffixDecline = signal(` (${new Date().toLocaleDateString()})`);
+  readonly nameSuffixColorDecline = signal<string | undefined>(undefined);
 
   subscriptions: Subscription[] = [];
+
+  customActionConfigs: ILuxFileActionConfig[] = [
+    {
+      disabled: false,
+      hidden: false,
+      iconName: 'lux-interface-edit-write-2',
+      label: 'Dialog öffnen',
+      prio: 15,
+      onClick: (fileObject: ILuxFileObject) => {
+        this.openDialog(fileObject);
+      }
+    }
+  ];
+
+  readonly showPreview = signal(true);
+  readonly multiple = signal(true);
+  readonly heading = signal(4);
+  headingValidator = Validators.pattern('[1-6]');
+
+  private dialogService = inject(LuxDialogService);
+
+  ngAfterViewInit() {
+    this.fileComponents = [...this.fileLists()];
+
+    this.subscriptions.push(
+      this.form
+        .get(this.controlBinding)!
+        .valueChanges.pipe(skip(1), distinctUntilChanged())
+        .subscribe((value) => {
+          console.log('formValueChanged', value);
+        })
+    );
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
+  }
 
   openDialog(fileObject: ILuxFileObject) {
     const dialogRef = this.dialogService.open({
@@ -87,56 +133,39 @@ export class FileListExampleComponent
 
     this.subscriptions.push(
       dialogRef.dialogDeclined.subscribe(() => {
-        fileObject.namePrefix = this.namePrefixDecline;
-        fileObject.namePrefixColor = this.namePrefixColorDecline;
-        fileObject.nameSuffix = this.nameSuffixDecline;
-        fileObject.nameSuffixColor = this.nameSuffixColorDecline;
+        fileObject.namePrefix = this.namePrefixDecline();
+        fileObject.namePrefixColor = this.namePrefixColorDecline();
+        fileObject.nameSuffix = this.nameSuffixDecline();
+        fileObject.nameSuffixColor = this.nameSuffixColorDecline();
+        this.refreshFileLists();
       })
     );
 
     this.subscriptions.push(
       dialogRef.dialogConfirmed.subscribe(() => {
-        fileObject.namePrefix = this.namePrefixAccept;
-        fileObject.namePrefixColor = this.namePrefixColorAccept;
-        fileObject.nameSuffix = this.nameSuffixAccept;
-        fileObject.nameSuffixColor = this.nameSuffixColorAccept;
+        fileObject.namePrefix = this.namePrefixAccept();
+        fileObject.namePrefixColor = this.namePrefixColorAccept();
+        fileObject.nameSuffix = this.nameSuffixAccept();
+        fileObject.nameSuffixColor = this.nameSuffixColorAccept();
+        this.refreshFileLists();
       })
     );
   }
 
-  customActionConfigs: ILuxFileActionConfig[] = [
-    {
-      disabled: false,
-      hidden: false,
-      iconName: 'lux-interface-edit-write-2',
-      label: 'Dialog öffnen',
-      prio: 15,
-      onClick: (fileObject: ILuxFileObject) => {
-        this.openDialog(fileObject);
-      }
-    }
-  ];
-
-  showPreview = true;
-  multiple = true;
-  heading = 4;
-  headingValidator = Validators.pattern('[1-6]');
-
-  protected initUploadActionConfig() {
-    return {
-      disabled: false,
-      disabledHeader: false,
-      hidden: false,
-      hiddenHeader: false,
-      iconName: 'lux-programming-cloud-upload',
-      iconNameHeader: 'lux-programming-cloud-upload',
-      label: 'Hochladen',
-      labelHeader: 'Neue Dateien hochladen',
-      onClick: (files: ILuxFileObject[]) => {
-        this.log(this.showOutputEvents, 'uploadActionConfig onClick', files);
-        this.onUpload(files);
-      }
-    };
+  /**
+   * Der Dialog aus openDialog() haengt nicht im View-Baum der lux-file-list-Instanzen, sondern in einem
+   * CDK-Overlay-Portal. Ein dialogConfirmed/dialogDeclined-Callback markiert daher nicht automatisch die
+   * lux-file-list-Views als dirty. Da fileObject zudem nur mit neuen Properties mutiert wird (gleiche
+   * Array-Referenz), erkennt die Gleichheitspruefung der Signal-Inputs (luxSelected/formField/value/
+   * luxControlBinding) keine Aenderung. Deshalb hier fuer jede der 4 Bindungsvarianten eine neue
+   * Array-Referenz setzen, damit namePrefix/nameSuffix sofort sichtbar werden.
+   */
+  private refreshFileLists() {
+    this.selected.set(this.selected() ? [...this.selected()!] : this.selected());
+    this.signalModel.set(this.signalModel() ? [...this.signalModel()!] : this.signalModel());
+    this.plainValue.set(this.plainValue() ? [...this.plainValue()!] : this.plainValue());
+    const control = this.form.get(this.controlBinding)!;
+    control.setValue(control.value ? [...control.value] : control.value);
   }
 
   initSelected() {
@@ -149,7 +178,7 @@ export class FileListExampleComponent
           file.name = 'example.png';
           file.lastModifiedDate = new Date();
           const fileObject = { name: 'example.png', content: file, type: file.type, size: file.size };
-          this.selected = [
+          this.selected.set([
             fileObject,
             {
               name: 'Lorem ipsum dolor sit amet.pdf',
@@ -157,18 +186,18 @@ export class FileListExampleComponent
               type: 'application/pdf',
               size: loremIpsumPdfBase64.length
             }
-          ];
-          this.form
-            .get(this.controlBinding)!
-            .setValue([
-              fileObject,
-              {
-                name: 'Lorem ipsum dolor sit amet.pdf',
-                content: loremIpsumPdfBlob,
-                type: 'application/pdf',
-                size: loremIpsumPdfBase64.length
-              }
-            ]);
+          ]);
+          this.signalModel.set(this.selected());
+          this.plainValue.set(this.selected());
+          this.form.get(this.controlBinding)!.setValue([
+            fileObject,
+            {
+              name: 'Lorem ipsum dolor sit amet.pdf',
+              content: loremIpsumPdfBlob,
+              type: 'application/pdf',
+              size: loremIpsumPdfBase64.length
+            }
+          ]);
         })
       )
       .subscribe(() => {
@@ -176,21 +205,21 @@ export class FileListExampleComponent
       });
   }
 
-  ngAfterViewInit() {
-    this.fileComponents = this.fileLists.toArray();
-
-    this.subscriptions.push(
-      this.form
-        .get(this.controlBinding)!
-        .valueChanges.pipe(skip(1), distinctUntilChanged())
-        .subscribe((value) => {
-          console.log('formValueChanged', value);
-        })
-    );
-  }
-
-  ngOnDestroy() {
-    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
+  protected initUploadActionConfig() {
+    return {
+      disabled: false,
+      disabledHeader: false,
+      hidden: false,
+      hiddenHeader: false,
+      iconName: 'lux-programming-cloud-upload',
+      iconNameHeader: 'lux-programming-cloud-upload',
+      label: 'Hochladen',
+      labelHeader: 'Neue Dateien hochladen',
+      onClick: (files: ILuxFileObject[]) => {
+        this.log(this.showOutputEvents(), 'uploadActionConfig onClick', files);
+        this.onUpload(files);
+      }
+    };
   }
 }
 

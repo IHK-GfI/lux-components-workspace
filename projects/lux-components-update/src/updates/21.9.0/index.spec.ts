@@ -1,6 +1,7 @@
 import { callRule, SchematicContext } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
+import { lastValueFrom } from 'rxjs';
 import { getDep } from '../../utility/dependencies';
 import { appOptions, workspaceOptions } from '../../utility/test';
 import { Options } from '../../utility/types';
@@ -32,7 +33,7 @@ describe('update210900', () => {
   });
 
   describe('[Rule] update210900', () => {
-    it('Sollte die Abhängigkeiten aktualisieren', (done) => {
+    it('Sollte die Abhängigkeiten aktualisieren', async () => {
       appTree.overwrite(
         '/package.json',
         `
@@ -61,18 +62,12 @@ describe('update210900', () => {
         `
       );
 
-      callRule(update210900(testOptions), appTree, context).subscribe(
-        () => {
-          expect(getDep(appTree, '@ihk-gfi/lux-components').version).not.toEqual('21.8.0');
-          expect(getDep(appTree, '@ihk-gfi/lux-components').version).toEqual('21.9.0');
+      await lastValueFrom(callRule(update210900(testOptions), appTree, context));
+      expect(getDep(appTree, '@ihk-gfi/lux-components').version).not.toEqual('21.8.0');
+      expect(getDep(appTree, '@ihk-gfi/lux-components').version).toEqual('21.9.0');
 
-          expect(getDep(appTree, '@ihk-gfi/lux-components-theme').version).not.toEqual('21.8.0');
-          expect(getDep(appTree, '@ihk-gfi/lux-components-theme').version).toEqual('21.9.0');
-
-          done();
-        },
-        (reason) => expect(reason).toBeUndefined()
-      );
+      expect(getDep(appTree, '@ihk-gfi/lux-components-theme').version).not.toEqual('21.8.0');
+      expect(getDep(appTree, '@ihk-gfi/lux-components-theme').version).toEqual('21.9.0');
     });
   });
 });

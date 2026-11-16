@@ -1,7 +1,7 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
 import { FORM_CONTROLS, FormControlSpec } from './support/form-controls';
-import { EXAMPLE_IN_FORM, EXAMPLE_WITHOUT_FORM, FormExamplePage } from './support/form-example';
+import { EXAMPLES, FormExamplePage } from './support/form-example';
 
 /**
  * axe-Scan der Beispielkarte je Form-Control in den wichtigsten Zuständen.
@@ -15,7 +15,7 @@ const STATES: { name: string; apply: (example: FormExamplePage, spec: FormContro
     name: 'Required mit Fehler',
     apply: async (example, spec) => {
       await example.options.setSwitch('luxRequired', true);
-      for (const heading of [EXAMPLE_WITHOUT_FORM, EXAMPLE_IN_FORM]) {
+      for (const heading of EXAMPLES) {
         const section = example.section(heading, spec.tag);
         await spec.leaveEmpty(section.control);
         await expect(section.error).toBeVisible();

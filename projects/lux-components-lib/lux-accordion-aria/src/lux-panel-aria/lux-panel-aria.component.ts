@@ -1,18 +1,20 @@
-import { AccordionGroup, AccordionPanel, AccordionTrigger, AccordionContent } from '@angular/aria/accordion';
+import { AccordionContent, AccordionGroup, AccordionPanel, AccordionTrigger } from '@angular/aria/accordion';
 import { ScrollDispatcher } from '@angular/cdk/scrolling';
 import {
+  afterNextRender,
   afterRenderEffect,
+  ChangeDetectionStrategy,
   Component,
-  DestroyRef,
   computed,
+  DestroyRef,
   effect,
+  ElementRef,
+  inject,
   input,
   output,
-  inject,
   signal,
   untracked,
-  viewChild,
-  ChangeDetectionStrategy
+  viewChild
 } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { LuxAccordionColor, LuxIconComponent, LuxMediaQueryObserverService, LuxThemeService } from '@ihk-gfi/lux-components';
@@ -24,7 +26,7 @@ import { LuxAccordionAriaBase, LuxAccordionAriaTogglePosition } from '../lux-acc
   styleUrls: ['./lux-panel-aria.component.scss'],
   standalone: true,
   imports: [AccordionPanel, AccordionTrigger, AccordionGroup, LuxIconComponent, AccordionContent],
-  changeDetection: ChangeDetectionStrategy.Eager
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LuxPanelAriaComponent {
   private static panelIdCounter = 0;
@@ -39,6 +41,8 @@ export class LuxPanelAriaComponent {
   protected parent = inject(LuxAccordionAriaBase, { optional: true, host: true, skipSelf: true });
   protected readonly accordionPanel = viewChild.required(AccordionPanel);
   protected readonly accordionTrigger = viewChild.required(AccordionTrigger);
+  private readonly panelHeader = viewChild.required<ElementRef<HTMLElement>>('panelHeader');
+  private readonly triggerButton = viewChild.required<ElementRef<HTMLButtonElement>>('triggerButton');
 
   private readonly theme = toSignal(this.themeService.getThemeAsObservable(), { initialValue: this.themeService.getTheme() });
 
@@ -76,22 +80,40 @@ export class LuxPanelAriaComponent {
   protected stickyHeaderOffset = computed(() => this.luxStickyHeaderOffset() ?? this.parent?.luxStickyHeaderOffset());
   protected readonly hasScrolled = signal(false);
 
-  headerHeightCacheActive = false;
-  expandedHeaderHeightCache?: string;
-  collapsedHeaderHeightCache?: string;
-
   luxOpened = output<void>();
   luxClosed = output<void>();
   luxExpandedChange = output<boolean>();
   luxClickNotAllowed = output<Event>();
 
-  mobile = false;
+  mobile = signal(this.mediaQuery.isSmallerOrEqual('sm'));
 
   constructor() {
     this.parent?.registerPanel(this);
     this.destroyRef.onDestroy(() => this.parent?.unregisterPanel(this));
 
-    this.mobile = this.mediaQuery.isSmallerOrEqual('sm');
+    // Klick und Enter/Leertaste auf dem Trigger schon in der Capture-Phase am Header abfangen: ngAccordionGroup
+    // sitzt auf dem Trigger-Button selbst und schaltet seit @angular/aria 22 bei click/keydown ebenfalls um.
+    // Ein stopPropagation() im Listener am Button käme zu spät (gleiches Element), das Panel würde doppelt
+    // umgeschaltet. Aus der Capture-Phase erreicht das Event den Button gar nicht erst.
+    afterNextRender(() => {
+      const header = this.panelHeader().nativeElement;
+      const onClick = (event: MouseEvent) => {
+        if (this.isTriggerEvent(event)) {
+          this.onHeaderClick(event);
+        }
+      };
+      const onKeydown = (event: KeyboardEvent) => {
+        if (this.isTriggerEvent(event)) {
+          this.toggleFromKeyboard(event);
+        }
+      };
+      header.addEventListener('click', onClick, true);
+      header.addEventListener('keydown', onKeydown, true);
+      this.destroyRef.onDestroy(() => {
+        header.removeEventListener('click', onClick, true);
+        header.removeEventListener('keydown', onKeydown, true);
+      });
+    });
 
     this.scrollDispatcher
       .scrolled(0)
@@ -103,22 +125,7 @@ export class LuxPanelAriaComponent {
     this.mediaQuery
       .getMediaQueryChangedAsObservable()
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        this.mobile = this.mediaQuery.isSmallerOrEqual('sm');
-      });
-
-    // Handle luxDynamicHeaderHeight caching logic
-    effect(() => {
-      const isDynamic = this.effectiveDynamicHeaderHeight();
-      if (isDynamic) {
-        this.headerHeightCacheActive = true;
-        this.expandedHeaderHeightCache = this.getExpandedHeaderHeight();
-        this.collapsedHeaderHeightCache = this.getCollapsedHeaderHeight();
-      } else if (this.headerHeightCacheActive) {
-        // Reset to cached values
-        this.headerHeightCacheActive = false;
-      }
-    });
+      .subscribe(() => this.mobile.set(this.mediaQuery.isSmallerOrEqual('sm')));
 
     let previousExpanded: boolean | undefined;
     effect(() => {
@@ -153,8 +160,8 @@ export class LuxPanelAriaComponent {
   }
 
   protected onHeaderClick(event: Event): void {
-    // Das Umschalten übernimmt diese Komponente selbst (wie in toggleFromKeyboard). Seit @angular/aria 22
-    // reagiert ngAccordionGroup ebenfalls auf click, ohne stopPropagation würde das Panel doppelt umgeschaltet.
+    // Das Umschalten übernimmt diese Komponente selbst (wie in toggleFromKeyboard). Aufgerufen aus der
+    // Capture-Phase am Header, stopPropagation hält das Event von ngAccordionGroup am Button fern.
     event.stopPropagation();
 
     if (this.effectiveDisabled()) {
@@ -173,6 +180,10 @@ export class LuxPanelAriaComponent {
     event.preventDefault();
     event.stopPropagation();
     this.onHeaderClick(event);
+  }
+
+  private isTriggerEvent(event: Event): boolean {
+    return event.target instanceof Node && this.triggerButton().nativeElement.contains(event.target);
   }
 
   protected getCurrentHeaderHeight(expanded: boolean) {

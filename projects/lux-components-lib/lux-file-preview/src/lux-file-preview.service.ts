@@ -24,7 +24,7 @@ export class LuxFilePreviewService {
 
   open(config: LuxFilePreviewConfig): LuxFilePreviewRef {
     const previewConfig = { ...DEFAULT_FILE_PREVIEW_CONFIG, ...config };
-    const activeElement = (document.activeElement instanceof HTMLElement) ? document.activeElement : null;
+    const activeElement = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     const overlayRef = this.createOverlay(previewConfig);
     const previewRef = new LuxFilePreviewRef(overlayRef, activeElement);
     const previewComponent = this.attachDialogContainer(overlayRef, previewRef, previewConfig);

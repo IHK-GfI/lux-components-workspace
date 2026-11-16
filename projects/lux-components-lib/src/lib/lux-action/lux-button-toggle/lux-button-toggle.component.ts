@@ -59,13 +59,6 @@ function optionalBooleanAttribute(value: unknown): boolean | undefined {
 })
 export class LuxButtonToggleComponent<T = unknown> implements ControlValueAccessor, OnInit {
   private static nextUniqueId = 0;
-  private readonly cdr = inject(ChangeDetectorRef);
-  private readonly destroyRef = inject(DestroyRef);
-  private readonly injector = inject(Injector);
-  private readonly controlContainer = inject(ControlContainer, { optional: true });
-  private readonly uniqueId = LuxButtonToggleComponent.nextUniqueId++;
-  private readonly tService = inject(TranslocoService);
-  private readonly defaultAriaLabel = signal(this.tService.translate('luxc.button-toggle.aria_label'));
 
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly groupElement = viewChild(MatButtonToggleGroup, { read: ElementRef<HTMLElement> });
@@ -92,13 +85,59 @@ export class LuxButtonToggleComponent<T = unknown> implements ControlValueAccess
   readonly luxError = input<string | undefined>(undefined);
   readonly luxControlBinding = input<string | undefined>(undefined);
   readonly luxCompareWith = input<(a: T, b: T) => boolean>((a, b) => a === b);
-
-  readonly hintElementId = `lux-button-toggle-hint-${this.uniqueId}`;
-  readonly errorElementId = `lux-button-toggle-error-${this.uniqueId}`;
-
   readonly luxSelected = model<T | undefined>(undefined);
   readonly luxSelectedValues = model<T[]>([]);
 
+  readonly hintElementId: string;
+  readonly errorElementId: string;
+
+  get hasMinimumOptions(): boolean {
+    return this.luxOptions().length >= 2;
+  }
+
+  get isDisabled(): boolean {
+    return this.luxDisabled() || this.cvaDisabled;
+  }
+
+  get hasError(): boolean {
+    return this.isFormInvalid() || this.isRequiredMissingSelection();
+  }
+
+  get shouldShowError(): boolean {
+    return this.hasError && this.isTouchedOrDirty();
+  }
+
+  get errorMessage(): string | undefined {
+    if (!this.shouldShowError) {
+      return undefined;
+    }
+
+    if (this.luxError()) {
+      return this.luxError();
+    }
+
+    if (this.hasRequiredError()) {
+      return this.tService.translate('luxc.button-toggle.error_message.required');
+    }
+
+    return undefined;
+  }
+
+  get hintMessage(): string | undefined {
+    return this.shouldShowError ? undefined : this.luxHint();
+  }
+
+  get ariaLabel(): string {
+    return this.luxAriaLabel() ?? this.defaultAriaLabel();
+  }
+
+  private readonly cdr = inject(ChangeDetectorRef);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly injector = inject(Injector);
+  private readonly controlContainer = inject(ControlContainer, { optional: true });
+  private readonly tService = inject(TranslocoService);
+  private readonly defaultAriaLabel = signal(this.tService.translate('luxc.button-toggle.aria_label'));
+  private readonly uniqueId = LuxButtonToggleComponent.nextUniqueId++;
   private onChange: (value: T | T[] | undefined) => void = () => {};
   private onTouched: () => void = () => {};
   private writingValue = false;
@@ -109,6 +148,9 @@ export class LuxButtonToggleComponent<T = unknown> implements ControlValueAccess
   private boundFormControl: FormControl<T | T[] | null> | null = null;
 
   constructor() {
+    this.hintElementId = `lux-button-toggle-hint-${this.uniqueId}`;
+    this.errorElementId = `lux-button-toggle-error-${this.uniqueId}`;
+
     effect(() => {
       this.validateMinimumOptions();
     });
@@ -251,46 +293,6 @@ export class LuxButtonToggleComponent<T = unknown> implements ControlValueAccess
     });
   }
 
-  get hasMinimumOptions(): boolean {
-    return this.luxOptions().length >= 2;
-  }
-
-  get isDisabled(): boolean {
-    return this.luxDisabled() || this.cvaDisabled;
-  }
-
-  get hasError(): boolean {
-    return this.isFormInvalid() || this.isRequiredMissingSelection();
-  }
-
-  get shouldShowError(): boolean {
-    return this.hasError && this.isTouchedOrDirty();
-  }
-
-  get errorMessage(): string | undefined {
-    if (!this.shouldShowError) {
-      return undefined;
-    }
-
-    if (this.luxError()) {
-      return this.luxError();
-    }
-
-    if (this.hasRequiredError()) {
-      return this.tService.translate('luxc.button-toggle.error_message.required');
-    }
-
-    return undefined;
-  }
-
-  get hintMessage(): string | undefined {
-    return this.shouldShowError ? undefined : this.luxHint();
-  }
-
-  get ariaLabel(): string {
-    return this.luxAriaLabel() ?? this.defaultAriaLabel();
-  }
-
   isChecked(value: T): boolean {
     return this.luxSelectedValues().some((selectedValue) => this.luxCompareWith()(selectedValue, value));
   }
@@ -404,7 +406,6 @@ export class LuxButtonToggleComponent<T = unknown> implements ControlValueAccess
     const optionValue = this.luxOptions().find((option) => this.luxCompareWith()(option.value, selected))?.value;
     if (optionValue !== undefined && optionValue !== selected) {
       this.luxSelected.set(optionValue);
-      this.cdr.markForCheck();
     }
   }
 

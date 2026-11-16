@@ -8,8 +8,8 @@
 
 #main-content {
   &:focus-visible {
-      outline: var(--lux-theme-outline-width) var(--lux-theme-outline-style) var(--lux-theme-outline-color-dark);
-    }
+    outline: var(--lux-theme-outline-width) var(--lux-theme-outline-style) var(--lux-theme-outline-color-dark);
+  }
 }
 
 .example-base-container,

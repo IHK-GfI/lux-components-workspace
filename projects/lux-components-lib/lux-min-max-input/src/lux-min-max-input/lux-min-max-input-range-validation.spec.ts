@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { rangeErrors, toComparable } from './lux-min-max-input-range-validation';
 
 describe('LuxMinMaxInput: toComparable', () => {

@@ -1,5 +1,6 @@
+import { describe, it, beforeEach, expect } from 'vitest';
 import { OverlayModule } from '@angular/cdk/overlay';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LUX_STEPPER_LARGE_OVERLAY_DATA } from './lux-stepper-large-mobile-overlay-data';
 import { LuxStepperLargeMobileOverlayRef } from './lux-stepper-large-mobile-overlay-ref';
 import { LuxStepperLargeMobileOverlayComponent } from './lux-stepper-large-mobile-overlay.component';
@@ -8,7 +9,7 @@ describe('LuxStepperLargeMobileOverlayComponent', () => {
   let component: LuxStepperLargeMobileOverlayComponent;
   let fixture: ComponentFixture<LuxStepperLargeMobileOverlayComponent>;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       imports: [OverlayModule, LuxStepperLargeMobileOverlayComponent],
       providers: [
@@ -16,7 +17,7 @@ describe('LuxStepperLargeMobileOverlayComponent', () => {
         { provide: LUX_STEPPER_LARGE_OVERLAY_DATA, useClass: MockLuxStepperLargeComponent }
       ]
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(LuxStepperLargeMobileOverlayComponent);
@@ -33,7 +34,7 @@ class MockLuxStepperLargeMobileOverlayRef {}
 
 class MockLuxStepperLargeComponent {
   stepperComponent = {
-    luxCurrentStepNumber: 0,
-    luxSteps: []
+    currentStepNumber: 0,
+    steps: () => []
   };
 }

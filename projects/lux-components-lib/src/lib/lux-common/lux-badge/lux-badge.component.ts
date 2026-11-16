@@ -11,12 +11,11 @@ import { LuxBadgeColor, LuxBadgeSize } from '../../lux-util/lux-colors.enum';
   imports: [NgClass, LuxIconComponent]
 })
 export class LuxBadgeComponent {
-  readonly ICON_SIZE: string = '1x';
-  readonly DEFAULT_BADGE_COLOR = 'gray';
-
   readonly luxUppercase = input(true);
   readonly luxIconName = input('');
-  readonly luxColor = input<LuxBadgeColor>(this.DEFAULT_BADGE_COLOR);
+  readonly luxColor = input<LuxBadgeColor>('gray');
   readonly luxMuted = input(false);
   readonly luxSize = input<LuxBadgeSize>('');
+
+  readonly ICON_SIZE = '1x';
 }

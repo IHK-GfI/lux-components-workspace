@@ -6,6 +6,7 @@ import { getDep } from '../../utility/dependencies';
 import { appOptions, workspaceOptions } from '../../utility/test';
 import { UtilConfig } from '../../utility/util';
 import { updatePackageJson } from './index';
+import { lastValueFrom } from 'rxjs';
 
 describe('update190000', () => {
   let appTree: UnitTestTree;
@@ -36,63 +37,49 @@ describe('update190000', () => {
   });
 
   describe('[Rule] updateDependencies', () => {
-    it('Sollte die Abhängigkeiten aktualisieren', (done) => {
+    it('Sollte die Abhängigkeiten aktualisieren', async () => {
       appTree.overwrite('/package.json', packageJson01);
+      const successTree: Tree = await lastValueFrom(callRule(updateDependencies(), appTree, context));
+      expect(getDep(successTree, '@ihk-gfi/lux-components').version).not.toEqual('18.5.0');
+      expect(getDep(successTree, '@ihk-gfi/lux-components').version).toEqual('19.0.0');
 
-      callRule(updateDependencies(), appTree, context).subscribe({
-        next: (successTree: Tree) => {
-          expect(getDep(successTree, '@ihk-gfi/lux-components').version).not.toEqual('18.5.0');
-          expect(getDep(successTree, '@ihk-gfi/lux-components').version).toEqual('19.0.0');
+      expect(getDep(successTree, '@ihk-gfi/lux-components-theme').version).not.toEqual('18.5.0');
+      expect(getDep(successTree, '@ihk-gfi/lux-components-theme').version).toEqual('19.0.0');
 
-          expect(getDep(successTree, '@ihk-gfi/lux-components-theme').version).not.toEqual('18.5.0');
-          expect(getDep(successTree, '@ihk-gfi/lux-components-theme').version).toEqual('19.0.0');
-
-          expect(getDep(successTree, '@angular/core').version).not.toEqual('18.2.12');
-          expect(getDep(successTree, '@angular/core').version).toEqual('^19.2.4');
-
-          done();
-        },
-        error: (reason) => expect(reason).toBeUndefined()
-      });
+      expect(getDep(successTree, '@angular/core').version).not.toEqual('18.2.12');
+      expect(getDep(successTree, '@angular/core').version).toEqual('^19.2.4');
     });
   });
 
   describe('[Rule] updatePackageJson', () => {
-    it('Sollte die package.json anpassen', (done) => {
+    it('Sollte die package.json anpassen', async () => {
       const filePath = testOptions.path + '/package.json';
 
       appTree.create(filePath, packageJson02);
+      const successTree: Tree = await lastValueFrom(callRule(updatePackageJson(testOptions), appTree, context));
+      const content = successTree.read(filePath)?.toString();
 
-      callRule(updatePackageJson(testOptions), appTree, context).subscribe({
-        next: (successTree: Tree) => {
-          const content = successTree.read(filePath)?.toString();
+      expect(content).not.toContain(`"start": "ng serve --public-host=http://localhost:4200",`);
+      expect(content).toContain(`"start": "ng serve --no-hmr",`);
 
-          expect(content).not.toContain(`"start": "ng serve --public-host=http://localhost:4200",`);
-          expect(content).toContain(`"start": "ng serve --no-hmr",`);
+      expect(content).not.toContain(
+        `"build-aot": "node --max_old_space_size=4024 ./node_modules/@angular/cli/bin/ng build --aot --single-bundle --output-hashing none && npm run move-de-files",`
+      );
+      expect(content).toContain(
+        `"build-aot": "node --max_old_space_size=4024 ./node_modules/@angular/cli/bin/ng build --aot --output-hashing none && npm run move-de-files",`
+      );
 
-          expect(content).not.toContain(
-            `"build-aot": "node --max_old_space_size=4024 ./node_modules/@angular/cli/bin/ng build --aot --single-bundle --output-hashing none && npm run move-de-files",`
-          );
-          expect(content).toContain(
-            `"build-aot": "node --max_old_space_size=4024 ./node_modules/@angular/cli/bin/ng build --aot --output-hashing none && npm run move-de-files",`
-          );
+      expect(content).not.toContain(
+        `"buildzentral": "node --max_old_space_size=4024 ./node_modules/@angular/cli/bin/ng build --configuration production --single-bundle --output-hashing none && npm run move-de-files",`
+      );
+      expect(content).toContain(
+        `"buildzentral": "node --max_old_space_size=4024 ./node_modules/@angular/cli/bin/ng build --configuration production --output-hashing none && npm run move-de-files",`
+      );
 
-          expect(content).not.toContain(
-            `"buildzentral": "node --max_old_space_size=4024 ./node_modules/@angular/cli/bin/ng build --configuration production --single-bundle --output-hashing none && npm run move-de-files",`
-          );
-          expect(content).toContain(
-            `"buildzentral": "node --max_old_space_size=4024 ./node_modules/@angular/cli/bin/ng build --configuration production --output-hashing none && npm run move-de-files",`
-          );
+      expect(content).not.toContain(`"start-en": "ng serve --public-host=http://localhost:4200 --configuration en"`);
+      expect(content).toContain(`"start-en": "ng serve --configuration en --no-hmr"`);
 
-          expect(content).not.toContain(`"start-en": "ng serve --public-host=http://localhost:4200 --configuration en"`);
-          expect(content).toContain(`"start-en": "ng serve --configuration en --no-hmr"`);
-
-          expect(content).not.toContain(`"test_no_sm": "ng test --no-sourceMap",`);
-
-          done();
-        },
-        error: (reason) => expect(reason).toBeUndefined()
-      });
+      expect(content).not.toContain(`"test_no_sm": "ng test --no-sourceMap",`);
     });
   });
 });

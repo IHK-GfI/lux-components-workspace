@@ -1,51 +1,52 @@
+import { describe, it, beforeEach, expect } from 'vitest';
 // noinspection DuplicatedCode
 
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.component';
 import { LuxComponentsConfigService } from '../../lux-components-config/lux-components-config.service';
 import { LuxAriaRoleDirective } from './lux-aria-role.directive';
 
 describe('LuxAriaRoleDirective', () => {
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       providers: [LuxComponentsConfigService, provideHttpClient(withXhr(), withInterceptorsFromDi()), provideHttpClientTesting()]
     }).compileComponents();
-  }));
+  });
 
   describe('mit Selector', () => {
     let fixture: ComponentFixture<LuxWithSelectorComponent>;
     let component: LuxWithSelectorComponent;
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(async () => {
       fixture = TestBed.createComponent(LuxWithSelectorComponent);
       component = fixture.componentInstance;
       fixture.detectChanges();
-    }));
+    });
 
     it('Sollte role in den HTML-Button rendern', () => {
       expect(fixture.debugElement.query(By.css('button')).nativeElement.getAttribute('role')).toBeNull();
 
       // role setzen
       let ariaRole: string | undefined = 'menubar';
-      component.ariaRole = ariaRole;
+      component.ariaRole.set(ariaRole);
       fixture.detectChanges();
 
       expect(fixture.debugElement.query(By.css('button')).nativeElement.getAttribute('role')).toEqual(ariaRole);
 
       // role aktualisieren
       ariaRole = 'menuitem';
-      component.ariaRole = ariaRole;
+      component.ariaRole.set(ariaRole);
       fixture.detectChanges();
 
       expect(fixture.debugElement.query(By.css('button')).nativeElement.getAttribute('role')).toEqual(ariaRole);
 
       // role entfernen
       ariaRole = undefined;
-      component.ariaRole = ariaRole;
+      component.ariaRole.set(ariaRole);
       fixture.detectChanges();
 
       expect(fixture.debugElement.query(By.css('button')).nativeElement.getAttribute('role')).toBeNull();
@@ -56,32 +57,32 @@ describe('LuxAriaRoleDirective', () => {
     let fixture: ComponentFixture<LuxWithoutSelectorComponent>;
     let component: LuxWithoutSelectorComponent;
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(async () => {
       fixture = TestBed.createComponent(LuxWithoutSelectorComponent);
       component = fixture.componentInstance;
       fixture.detectChanges();
-    }));
+    });
 
     it('Sollte role in den LUX-BUTTON rendern', () => {
       expect(fixture.debugElement.query(By.css('lux-button')).nativeElement.getAttribute('role')).toBeNull();
 
       // role setzen
       let ariaRole: string | undefined = 'menubar';
-      component.ariaRole = ariaRole;
+      component.ariaRole.set(ariaRole);
       fixture.detectChanges();
 
       expect(fixture.debugElement.query(By.css('lux-button')).nativeElement.getAttribute('role')).toEqual(ariaRole);
 
       // role aktualisieren
       ariaRole = 'menuitem';
-      component.ariaRole = ariaRole;
+      component.ariaRole.set(ariaRole);
       fixture.detectChanges();
 
       expect(fixture.debugElement.query(By.css('lux-button')).nativeElement.getAttribute('role')).toEqual(ariaRole);
 
       // role entfernen
       ariaRole = undefined;
-      component.ariaRole = ariaRole;
+      component.ariaRole.set(ariaRole);
       fixture.detectChanges();
 
       expect(fixture.debugElement.query(By.css('lux-button')).nativeElement.getAttribute('role')).toBeNull();
@@ -92,21 +93,21 @@ describe('LuxAriaRoleDirective', () => {
 @Component({
   selector: 'lux-with-selector',
   template: `
-    <lux-button luxIconName="lux-interface-alert-alarm-bell-2" [luxAriaRole]="ariaRole" luxAriaRoleSelector="button"></lux-button>
+    <lux-button luxIconName="lux-interface-alert-alarm-bell-2" [luxAriaRole]="ariaRole()" luxAriaRoleSelector="button"></lux-button>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxButtonComponent, LuxAriaRoleDirective]
 })
 class LuxWithSelectorComponent {
-  ariaRole?: string;
+  readonly ariaRole = signal<string | undefined>(undefined);
 }
 
 @Component({
   selector: 'lux-without-selector',
-  template: ` <lux-button luxIconName="lux-interface-alert-alarm-bell-2" [luxAriaRole]="ariaRole"></lux-button> `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  template: ` <lux-button luxIconName="lux-interface-alert-alarm-bell-2" [luxAriaRole]="ariaRole()"></lux-button> `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxButtonComponent, LuxAriaRoleDirective]
 })
 class LuxWithoutSelectorComponent {
-  ariaRole?: string;
+  readonly ariaRole = signal<string | undefined>(undefined);
 }

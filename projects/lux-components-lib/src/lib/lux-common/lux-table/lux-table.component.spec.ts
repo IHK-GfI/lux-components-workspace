@@ -1,16 +1,7 @@
+import { describe, it, beforeEach, afterEach, expect, vi } from 'vitest';
 // noinspection DuplicatedCode
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import {
-  ComponentFixture,
-  discardPeriodicTasks,
-  fakeAsync,
-  flush,
-  flushMicrotasks,
-  inject,
-  TestBed,
-  tick,
-  waitForAsync
-} from '@angular/core/testing';
+import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { MockMediaObserverService } from '../../lux-util/testing/mock-media-observer.service';
 import { ICustomCSSConfig } from './lux-table-custom-css-config.interface';
 
@@ -37,8 +28,21 @@ declare interface TableItem {
   c2: any;
 }
 
+/**
+ * Führt die Change Detection aus und arbeitet nur sofort fällige Timer und Microtasks ab.
+ * Anders als LuxTestHelper.wait(fixture) ohne Dauer (vi.runAllTimersAsync) werden laufende
+ * Requests (z. B. delay) und der Filter-Debounce dabei nicht vorgespult, sodass sich der
+ * Ladezustand währenddessen prüfen lässt.
+ */
+async function detectChangesAndFlush(fixture: ComponentFixture<unknown>): Promise<void> {
+  fixture.detectChanges();
+  await vi.advanceTimersByTimeAsync(0);
+  fixture.detectChanges();
+}
+
 describe('LuxTableComponent', () => {
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
+    vi.useFakeTimers();
     TestBed.configureTestingModule({
       providers: [
         LuxConsoleService,
@@ -50,118 +54,125 @@ describe('LuxTableComponent', () => {
         { provide: LuxConsoleService, useClass: MockConsoleService }
       ]
     }).compileComponents();
-  }));
+  });
+
+  afterEach(async () => {
+    if (vi.isFakeTimers()) {
+      await vi.runAllTimersAsync();
+    }
+    vi.useRealTimers();
+  });
 
   describe('Übliche Anwendungsfälle (ohne HTTP-DAO)', () => {
     let component: TableComponent;
     let fixture: ComponentFixture<TableComponent>;
     let luxTableComponent: LuxTableComponent;
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(async () => {
       fixture = TestBed.createComponent(TableComponent);
       component = fixture.componentInstance;
       luxTableComponent = fixture.debugElement.query(By.directive(LuxTableComponent)).componentInstance;
-      fixture.detectChanges();
-    }));
+      await LuxTestHelper.wait(fixture);
+    });
 
-    it('Sollte die Progressbar standardmäßig während des Filterns anzeigen', fakeAsync(() => {
+    it('Sollte die Progressbar standardmäßig während des Filterns anzeigen', async () => {
       component.dataSource.set([
         { c1: 1, c2: 'Hydrogen' },
         { c1: 2, c2: 'Helium' }
       ]);
       component.showFilter.set(true);
-      LuxTestHelper.wait(fixture);
+      await detectChangesAndFlush(fixture);
 
-      expect(luxTableComponent.luxShowProgress()).toBeTrue();
+      expect(luxTableComponent.luxShowProgress()).toBe(true);
       expect(fixture.nativeElement.querySelector('.lux-table-progress-container')).not.toBeNull();
-      expect(luxTableComponent.isLoading()).toBeFalse();
+      expect(luxTableComponent.isLoading()).toBe(false);
 
       luxTableComponent.filtered$.next('Hel');
       fixture.detectChanges();
 
-      expect(luxTableComponent.isLoading()).toBeTrue();
-      expect(luxTableComponent.isLoadingResults).toBeTrue();
+      expect(luxTableComponent.isLoading()).toBe(true);
+      expect(luxTableComponent.isLoadingResults).toBe(true);
       expect(fixture.nativeElement.querySelector('lux-progress')).not.toBeNull();
 
-      LuxTestHelper.wait(fixture, 500);
+      await LuxTestHelper.wait(fixture, 500);
 
-      expect(luxTableComponent.isLoading()).toBeFalse();
+      expect(luxTableComponent.isLoading()).toBe(false);
       expect(fixture.nativeElement.querySelector('lux-progress')).toBeNull();
 
-      flush();
-    }));
+      await vi.runAllTimersAsync();
+    });
 
-    it('Sollte den Ladezustand beenden, wenn der Filter während des Debounce deaktiviert wird', fakeAsync(() => {
+    it('Sollte den Ladezustand beenden, wenn der Filter während des Debounce deaktiviert wird', async () => {
       component.showFilter.set(true);
-      LuxTestHelper.wait(fixture);
+      await detectChangesAndFlush(fixture);
 
       luxTableComponent.filtered$.next('Hel');
       fixture.detectChanges();
-      expect(luxTableComponent.isLoading()).toBeTrue();
+      expect(luxTableComponent.isLoading()).toBe(true);
 
       component.showFilter.set(false);
-      LuxTestHelper.wait(fixture);
-      expect(luxTableComponent.isLoading()).toBeFalse();
+      await detectChangesAndFlush(fixture);
+      expect(luxTableComponent.isLoading()).toBe(false);
 
       // Der abgebrochene Debounce darf den Ladezustand auch später nicht mehr ändern
-      LuxTestHelper.wait(fixture, 500);
-      expect(luxTableComponent.isLoading()).toBeFalse();
-    }));
+      await LuxTestHelper.wait(fixture, 500);
+      expect(luxTableComponent.isLoading()).toBe(false);
+    });
 
-    it('Sollte den Ladezustand beenden, wenn derselbe Filter erneut eingegeben wird', fakeAsync(() => {
+    it('Sollte den Ladezustand beenden, wenn derselbe Filter erneut eingegeben wird', async () => {
       component.dataSource.set([
         { c1: 1, c2: 'Hydrogen' },
         { c1: 2, c2: 'Helium' }
       ]);
       component.showFilter.set(true);
-      LuxTestHelper.wait(fixture);
+      await detectChangesAndFlush(fixture);
 
       luxTableComponent.filtered$.next('He');
-      LuxTestHelper.wait(fixture, 500);
-      expect(luxTableComponent.isLoading()).toBeFalse();
+      await LuxTestHelper.wait(fixture, 500);
+      expect(luxTableComponent.isLoading()).toBe(false);
 
       // "Hel" und zurück zu "He": Der Debounce liefert denselben Filter wie zuvor
       luxTableComponent.filtered$.next('Hel');
-      tick(100);
+      await vi.advanceTimersByTimeAsync(100);
       luxTableComponent.filtered$.next('He');
       fixture.detectChanges();
-      expect(luxTableComponent.isLoading()).toBeTrue();
+      expect(luxTableComponent.isLoading()).toBe(true);
 
-      LuxTestHelper.wait(fixture, 500);
-      expect(luxTableComponent.isLoading()).toBeFalse();
+      await LuxTestHelper.wait(fixture, 500);
+      expect(luxTableComponent.isLoading()).toBe(false);
       expect(luxTableComponent.dataSource.filter).toEqual('he');
-    }));
+    });
 
-    it('Sollte Spalten per luxShowColumnSelector und hiddenColumns ausblenden', fakeAsync(() => {
+    it('Sollte Spalten per luxShowColumnSelector und hiddenColumns ausblenden', async () => {
       // Vorbedingungen: Zwei Spalten sichtbar
       component.dataSource.set([
         { c1: 1, c2: 'Hydrogen' },
         { c1: 2, c2: 'Helium' }
       ]);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
       let cells = document.querySelectorAll('th:not(.mat-column-noData');
       expect(cells.length).toBe(2);
 
       // luxShowColumnSelector aktivieren und Spalte c2 ausblenden
       component.showColumnSelector.set(true);
       luxTableComponent.hiddenColumns = ['c2'];
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       cells = document.querySelectorAll('th:not(.mat-column-noData');
       expect(cells.length).toBe(1);
-    }));
+    });
 
-    it('Sollte ausgeblendete Spalten wieder einblenden', fakeAsync(() => {
+    it('Sollte ausgeblendete Spalten wieder einblenden', async () => {
       component.dataSource.set([
         { c1: 1, c2: 'Hydrogen' },
         { c1: 2, c2: 'Helium' }
       ]);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Spalte c2 ausblenden
       luxTableComponent.hiddenColumns = ['c2'];
       component.showColumnSelector.set(true);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
       let cells = document.querySelectorAll('th:not(.mat-column-noData)');
       expect(cells.length).toBe(1);
 
@@ -171,39 +182,39 @@ describe('LuxTableComponent', () => {
       // keine erneute Prüfung der View aus. onHiddenColumnsChange() ist der reguläre Weg (siehe
       // (luxSelectedChange)-Handler im Template) und stößt intern die Neuberechnung + markForCheck() an.
       luxTableComponent.onHiddenColumnsChange([]);
-      fixture.detectChanges();
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
       cells = document.querySelectorAll('th:not(.mat-column-noData)');
       expect(cells.length).toBe(2);
-    }));
+    });
 
-    it('Sollte luxHiddenColumnsChange Event auslösen', fakeAsync(() => {
+    it('Sollte luxHiddenColumnsChange Event auslösen', async () => {
       component.dataSource.set([
         { c1: 1, c2: 'Hydrogen' },
         { c1: 2, c2: 'Helium' }
       ]);
-      LuxTestHelper.wait(fixture);
-      const eventSpy = jasmine.createSpy('eventSpy');
+      await LuxTestHelper.wait(fixture);
+      const eventSpy = vi.fn().mockName('eventSpy');
       luxTableComponent.luxHiddenColumnsChange.subscribe(eventSpy);
 
       // Spalte c2 ausblenden
       component.showColumnSelector.set(true);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       luxTableComponent.onHiddenColumnsChange(['c2']);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
       expect(eventSpy).toHaveBeenCalledWith(['c2']);
 
       // Spalte c2 wieder einblenden
       luxTableComponent.onHiddenColumnsChange([]);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
       expect(eventSpy).toHaveBeenCalledWith([]);
-    }));
+    });
 
     it('Sollte erstellt werden', () => {
       expect(component).toBeTruthy();
     });
 
-    it('Die Zeilen darstellen (inklusive Header und Footer)', fakeAsync(() => {
+    it('Die Zeilen darstellen (inklusive Header und Footer)', async () => {
       // Vorbedingungen testen
       let contentRows = document.querySelectorAll('.mat-mdc-row'); // fixture...selectAll not working....
       let headerRow = document.querySelector('.mat-mdc-header-row');
@@ -218,7 +229,7 @@ describe('LuxTableComponent', () => {
         { c1: 1, c2: 'Hydrogen' },
         { c1: 2, c2: 'Helium' }
       ]);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
       contentRows = document.querySelectorAll('.mat-mdc-row');
@@ -230,10 +241,10 @@ describe('LuxTableComponent', () => {
       expect(headerRow).toBeDefined();
       expect(footerRow).toBeDefined();
 
-      flush();
-    }));
+      await LuxTestHelper.wait(fixture);
+    });
 
-    it('Die Einträge filtern', fakeAsync(() => {
+    it('Die Einträge filtern', async () => {
       // Vorbedingungen testen
       component.dataSource.set([
         { c1: 1, c2: 'Hydrogen' },
@@ -243,14 +254,14 @@ describe('LuxTableComponent', () => {
       ]);
       component.showFilter.set(true);
 
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
       let contentRows = document.querySelectorAll('.mat-mdc-row');
       expect(contentRows.length).toEqual(4);
       expect(luxTableComponent.dataSource.data.length).toEqual(4);
 
       // Änderungen durchführen
       luxTableComponent.filtered$.next('he');
-      LuxTestHelper.wait(fixture, 550);
+      await LuxTestHelper.wait(fixture, 550);
 
       // Nachbedingungen testen
       contentRows = document.querySelectorAll('.mat-mdc-row');
@@ -259,15 +270,15 @@ describe('LuxTableComponent', () => {
 
       // Änderungen durchführen
       luxTableComponent.filtered$.next('s');
-      LuxTestHelper.wait(fixture, 550);
+      await LuxTestHelper.wait(fixture, 550);
 
       // Nachbedingungen testen
       contentRows = document.querySelectorAll('.mat-mdc-row');
       expect(contentRows.length).toEqual(0);
       expect(luxTableComponent.dataSource.data.length).toEqual(4);
-    }));
+    });
 
-    it('Die Paginierung korrekt durchführen', fakeAsync(() => {
+    it('Die Paginierung korrekt durchführen', async () => {
       // Vorbedingungen testen
       component.dataSource.set([
         { c1: 1, c2: 'Hydrogen' },
@@ -291,7 +302,7 @@ describe('LuxTableComponent', () => {
       component.showPagination.set(true);
       component.pageSize.set(5);
 
-      LuxTestHelper.wait(fixture, 300);
+      await LuxTestHelper.wait(fixture);
       let contentRows = document.querySelectorAll('.mat-mdc-row');
       expect(contentRows.length).toEqual(5);
       expect(luxTableComponent.dataSource.data.length).toEqual(17);
@@ -300,11 +311,11 @@ describe('LuxTableComponent', () => {
 
       // Änderungen durchführen
       luxTableComponent.paginator!.nextPage();
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
       luxTableComponent.paginator!.nextPage();
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
       luxTableComponent.paginator!.nextPage();
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
       contentRows = document.querySelectorAll('.mat-mdc-row');
@@ -312,10 +323,10 @@ describe('LuxTableComponent', () => {
       expect(luxTableComponent.dataSource.data.length).toEqual(17);
       expect(luxTableComponent.paginator!.hasNextPage()).toBeFalsy();
 
-      flush();
-    }));
+      await LuxTestHelper.wait(fixture);
+    });
 
-    it('Die Pagination nachträglich aktivieren', fakeAsync(() => {
+    it('Die Pagination nachträglich aktivieren', async () => {
       // Vorbedingungen testen
       component.dataSource.set([
         { c1: 1, c2: 'Hydrogen' },
@@ -325,7 +336,7 @@ describe('LuxTableComponent', () => {
       ]);
       component.pageSize.set(2);
 
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
       let contentRows = document.querySelectorAll('.mat-mdc-row');
       expect(contentRows.length).toEqual(4);
       expect(luxTableComponent.dataSource.data.length).toEqual(4);
@@ -333,15 +344,15 @@ describe('LuxTableComponent', () => {
 
       // Änderungen durchführen
       component.showPagination.set(true);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
       contentRows = document.querySelectorAll('.mat-mdc-row');
       expect(contentRows.length).toEqual(2);
       expect(luxTableComponent.dataSource.data.length).toEqual(4);
-    }));
+    });
 
-    it('Die Einträge sortieren', fakeAsync(() => {
+    it('Die Einträge sortieren', async () => {
       // Vorbedingungen testen
       component.dataSource.set([
         { c1: 1, c2: 'Teta' },
@@ -351,7 +362,7 @@ describe('LuxTableComponent', () => {
       ]);
       component.c1Sortable.set(false);
       component.c2Sortable.set(true);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       let col2FirstElements = document.getElementsByClassName('c2-content');
       const sortHeaders = document.querySelectorAll('th.mat-sort-header:not(.lux-table-header-blocked)');
@@ -368,7 +379,7 @@ describe('LuxTableComponent', () => {
 
       // Änderungen durchführen
       (sortHeaders.item(0) as HTMLButtonElement).click();
-      LuxTestHelper.wait(fixture, 500);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
       col2FirstElements = document.getElementsByClassName('c2-content');
@@ -380,7 +391,7 @@ describe('LuxTableComponent', () => {
 
       // Änderungen durchführen
       (sortHeaders.item(0) as HTMLButtonElement).click();
-      LuxTestHelper.wait(fixture, 500);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
       col2FirstElements = document.getElementsByClassName('c2-content');
@@ -389,12 +400,10 @@ describe('LuxTableComponent', () => {
       expect(col2FirstElements.item(2)!.textContent).toEqual('Beta');
       expect(col2FirstElements.item(1)!.textContent).toEqual('Gamma');
       expect(col2FirstElements.item(0)!.textContent).toEqual('Teta');
+      await LuxTestHelper.wait(fixture);
+    });
 
-      discardPeriodicTasks();
-      flush();
-    }));
-
-    it('Die Einträge mit Sonderzeichen sortieren', fakeAsync(() => {
+    it('Die Einträge mit Sonderzeichen sortieren', async () => {
       // Vorbedingungen testen
       component.dataSource.set([
         { c1: 1, c2: '1234' },
@@ -404,7 +413,7 @@ describe('LuxTableComponent', () => {
         { c1: 5, c2: '  ' }
       ]);
       component.c2Sortable.set(true);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       let col2Elements = document.getElementsByClassName('c2-content');
       const sortHeaders = document.querySelectorAll('th.mat-sort-header:not(.lux-table-header-blocked)');
@@ -419,7 +428,7 @@ describe('LuxTableComponent', () => {
 
       // Änderungen durchführen
       (sortHeaders.item(0) as HTMLButtonElement).click();
-      LuxTestHelper.wait(fixture, 500);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
       col2Elements = document.getElementsByClassName('c2-content');
@@ -432,7 +441,7 @@ describe('LuxTableComponent', () => {
 
       // Änderungen durchführen
       (sortHeaders.item(0) as HTMLButtonElement).click();
-      LuxTestHelper.wait(fixture, 500);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
       col2Elements = document.getElementsByClassName('c2-content');
@@ -442,12 +451,10 @@ describe('LuxTableComponent', () => {
       expect(col2Elements.item(2)!.textContent).toEqual('$ Asdf');
       expect(col2Elements.item(1)!.textContent).toEqual('1234');
       expect(col2Elements.item(0)!.textContent).toEqual('Hallo');
+      await LuxTestHelper.wait(fixture);
+    });
 
-      discardPeriodicTasks();
-      flush();
-    }));
-
-    it('Die Breite korrekt setzen', fakeAsync(() => {
+    it('Die Breite korrekt setzen', async () => {
       // Vorbedingungen testen
       component.dataSource.set([
         { c1: 1, c2: 'Teta' },
@@ -455,13 +462,13 @@ describe('LuxTableComponent', () => {
         { c1: 3, c2: 'Gamma' },
         { c1: 4, c2: 'Alpha' }
       ]);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
       let tableHeaders = document.querySelectorAll('.mat-mdc-header-row:not(.lux-table-header-no-data) th');
       expect(tableHeaders.length).toBe(2);
 
       // Änderungen durchführen
       component.colWidths.set(['5', '25'] as any);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
       tableHeaders = document.querySelectorAll('.mat-mdc-header-row:not(.lux-table-header-no-data) th');
@@ -478,21 +485,21 @@ describe('LuxTableComponent', () => {
         expect((cells.item(0) as HTMLElement).style.width).toEqual('5%');
         expect((cells.item(1) as HTMLElement).style.width).toEqual('25%');
       });
-    }));
+    });
 
-    it('Einzelne Spalten links und rechts fixieren', fakeAsync(() => {
+    it('Einzelne Spalten links und rechts fixieren', async () => {
       // Vorbedingungen testen
       component.dataSource.set([
         { c1: 1, c2: 'Hydrogen' },
         { c1: 2, c2: 'Helium' }
       ]);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
       let stickyElements = document.querySelectorAll('.mat-mdc-row .mat-mdc-table-sticky');
       expect(stickyElements.length).toBe(0);
 
       // Änderungen durchführen
       component.c1Sticky.set(true);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
       stickyElements = document.querySelectorAll('.mat-mdc-row .mat-mdc-table-sticky');
@@ -500,20 +507,20 @@ describe('LuxTableComponent', () => {
 
       // Änderungen durchführen
       component.c2Sticky.set(true);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
       stickyElements = document.querySelectorAll('.mat-mdc-row .mat-mdc-table-sticky');
       expect(stickyElements.length).toBe(4);
-    }));
+    });
 
-    it('Sollte die Custom CSS-Classes einstellen', fakeAsync(() => {
+    it('Sollte die Custom CSS-Classes einstellen', async () => {
       // Vorbedingungen testen
       component.dataSource.set([
         { c1: 1, c2: 'Hydrogen' },
         { c1: 2, c2: 'Helium' }
       ]);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
       let rows = document.getElementsByClassName('mat-mdc-row');
       expect(rows.item(0)!.classList.toString().indexOf('my-custom-class')).toBe(-1);
       expect(rows.item(1)!.classList.toString().indexOf('my-custom-class')).toBe(-1);
@@ -523,7 +530,7 @@ describe('LuxTableComponent', () => {
         class: 'my-custom-class',
         check: (element: TableItem) => element.c1 === 1 || element.c1 === 2
       });
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
       rows = document.getElementsByClassName('mat-mdc-row');
@@ -541,16 +548,17 @@ describe('LuxTableComponent', () => {
           check: (element: TableItem) => element.c2 === 'Hydrogen' || element.c2 === 'Helium'
         }
       ]);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
       rows = document.getElementsByClassName('mat-mdc-row');
       expect(rows.item(0)!.classList.toString().indexOf('my-custom-class-2')).toBeGreaterThan(-1);
       expect(rows.item(1)!.classList.toString().indexOf('my-custom-class-2')).toBeGreaterThan(-1);
-    }));
+    });
 
-    it('Einzelne Columns sollten in speziellen MediaQueries ausgeblendet werden', fakeAsync(
-      inject([LuxMediaQueryObserverService], (mediaObserver: MockMediaObserverService) => {
+    it('Einzelne Columns sollten in speziellen MediaQueries ausgeblendet werden', inject(
+      [LuxMediaQueryObserverService],
+      async (mediaObserver: MockMediaObserverService) => {
         // Vorbedingungen testen
         component.dataSource.set([
           { c1: 1, c2: 'Hydrogen' },
@@ -558,13 +566,13 @@ describe('LuxTableComponent', () => {
         ]);
         component.c1RespAt.set(['xs', 'sm']);
         component.c1RespBeh.set('hide');
-        LuxTestHelper.wait(fixture);
+        await LuxTestHelper.wait(fixture);
         let cells = document.getElementsByClassName('mat-mdc-cell');
         expect(cells.length).toBe(4);
 
         // Änderungen durchführen
         mediaObserver.mediaQueryChanged.next('sm');
-        LuxTestHelper.wait(fixture);
+        await LuxTestHelper.wait(fixture);
 
         // Nachbedingungen testen
         cells = document.getElementsByClassName('mat-mdc-cell');
@@ -572,7 +580,7 @@ describe('LuxTableComponent', () => {
 
         // Änderungen durchführen
         mediaObserver.mediaQueryChanged.next('xs');
-        LuxTestHelper.wait(fixture);
+        await LuxTestHelper.wait(fixture);
 
         // Nachbedingungen testen
         cells = document.getElementsByClassName('mat-mdc-cell');
@@ -580,16 +588,17 @@ describe('LuxTableComponent', () => {
 
         // Änderungen durchführen
         mediaObserver.mediaQueryChanged.next('gt');
-        LuxTestHelper.wait(fixture);
+        await LuxTestHelper.wait(fixture);
 
         // Nachbedingungen testen
         cells = document.getElementsByClassName('mat-mdc-cell');
         expect(cells.length).toBe(4);
-      })
+      }
     ));
 
-    it('Einzelne Columns sollten in speziellen MediaQueries verschoben werden', fakeAsync(
-      inject([LuxMediaQueryObserverService], (mediaObserver: MockMediaObserverService) => {
+    it('Einzelne Columns sollten in speziellen MediaQueries verschoben werden', inject(
+      [LuxMediaQueryObserverService],
+      async (mediaObserver: MockMediaObserverService) => {
         // Vorbedingungen testen
         component.dataSource.set([
           { c1: 1, c2: 'Hydrogen' },
@@ -597,7 +606,7 @@ describe('LuxTableComponent', () => {
         ]);
         component.c1RespAt.set(['xs', 'sm']);
         component.c1RespBeh.set('c2');
-        LuxTestHelper.wait(fixture);
+        await LuxTestHelper.wait(fixture);
         let cells = document.getElementsByClassName('mat-mdc-cell');
         let movedCells = document.getElementsByClassName('lux-moved-header-title');
         expect(cells.length).toBe(4);
@@ -605,7 +614,7 @@ describe('LuxTableComponent', () => {
 
         // Änderungen durchführen
         mediaObserver.mediaQueryChanged.next('sm');
-        LuxTestHelper.wait(fixture);
+        await LuxTestHelper.wait(fixture);
 
         // Nachbedingungen testen
         cells = document.getElementsByClassName('mat-mdc-cell');
@@ -615,7 +624,7 @@ describe('LuxTableComponent', () => {
 
         // Änderungen durchführen
         mediaObserver.mediaQueryChanged.next('xs');
-        LuxTestHelper.wait(fixture);
+        await LuxTestHelper.wait(fixture);
 
         // Nachbedingungen testen
         cells = document.getElementsByClassName('mat-mdc-cell');
@@ -625,7 +634,7 @@ describe('LuxTableComponent', () => {
 
         // Änderungen durchführen
         mediaObserver.mediaQueryChanged.next('gt');
-        LuxTestHelper.wait(fixture);
+        await LuxTestHelper.wait(fixture);
 
         // Nachbedingungen testen
         cells = document.getElementsByClassName('mat-mdc-cell');
@@ -633,12 +642,13 @@ describe('LuxTableComponent', () => {
         expect(cells.length).toBe(4);
         expect(movedCells.length).toBe(0);
 
-        flush();
-      })
+        await LuxTestHelper.wait(fixture);
+      }
     ));
 
-    it('Einzelne Columns sollten in speziellen MediaQueries verschoben werden (ohne Header)', fakeAsync(
-      inject([LuxMediaQueryObserverService], (mediaObserver: MockMediaObserverService) => {
+    it('Einzelne Columns sollten in speziellen MediaQueries verschoben werden (ohne Header)', inject(
+      [LuxMediaQueryObserverService],
+      async (mediaObserver: MockMediaObserverService) => {
         // Vorbedingungen testen
         component.dataSource.set([
           { c1: 1, c2: 'Hydrogen' },
@@ -647,7 +657,7 @@ describe('LuxTableComponent', () => {
         component.c1RespAt.set(['xs', 'sm']);
         component.c1RespBeh.set('c2');
         component.hideHeaders.set(true);
-        LuxTestHelper.wait(fixture);
+        await LuxTestHelper.wait(fixture);
         let cells = document.getElementsByClassName('mat-mdc-cell');
         let movedCells = document.getElementsByClassName('lux-moved-header-title');
         expect(cells.length).toBe(4);
@@ -655,7 +665,7 @@ describe('LuxTableComponent', () => {
 
         // Änderungen durchführen
         mediaObserver.mediaQueryChanged.next('sm');
-        LuxTestHelper.wait(fixture);
+        await LuxTestHelper.wait(fixture);
 
         // Nachbedingungen testen
         cells = document.getElementsByClassName('mat-mdc-cell');
@@ -665,7 +675,7 @@ describe('LuxTableComponent', () => {
 
         // Änderungen durchführen
         mediaObserver.mediaQueryChanged.next('xs');
-        LuxTestHelper.wait(fixture);
+        await LuxTestHelper.wait(fixture);
 
         // Nachbedingungen testen
         cells = document.getElementsByClassName('mat-mdc-cell');
@@ -675,7 +685,7 @@ describe('LuxTableComponent', () => {
 
         // Änderungen durchführen
         mediaObserver.mediaQueryChanged.next('gt');
-        LuxTestHelper.wait(fixture);
+        await LuxTestHelper.wait(fixture);
 
         // Nachbedingungen testen
         cells = document.getElementsByClassName('mat-mdc-cell');
@@ -683,27 +693,28 @@ describe('LuxTableComponent', () => {
         expect(cells.length).toBe(4);
         expect(movedCells.length).toBe(0);
 
-        flush();
-      })
+        await LuxTestHelper.wait(fixture);
+      }
     ));
 
-    it('Sollte eine Fehlermeldung loggen, wenn nur luxResponsiveAt oder luxResponsiveBehaviour gesetzt wurden', fakeAsync(
-      inject([LuxConsoleService], (consoleService: MockConsoleService) => {
-        const respAtSpy = spyOn(consoleService, 'error');
+    it('Sollte eine Fehlermeldung loggen, wenn nur luxResponsiveAt oder luxResponsiveBehaviour gesetzt wurden', inject(
+      [LuxConsoleService],
+      async (consoleService: MockConsoleService) => {
+        const respAtSpy = vi.spyOn(consoleService, 'error').mockReturnValue(undefined);
         // Vorbedingungen testen
-        LuxTestHelper.wait(fixture);
+        await LuxTestHelper.wait(fixture);
         expect(respAtSpy).toHaveBeenCalledTimes(0);
 
         // Änderungen durchführen
         component.c1RespBeh.set('hide');
-        LuxTestHelper.wait(fixture);
+        await LuxTestHelper.wait(fixture);
 
         // Nachbedingungen testen
         expect(respAtSpy).toHaveBeenCalledTimes(1);
 
         // Änderungen durchführen
         component.c2RespAt.set('sm');
-        LuxTestHelper.wait(fixture);
+        await LuxTestHelper.wait(fixture);
 
         // Nachbedingungen testen
         // Da lux-table-column nun Signal-Inputs verwendet und change$ über einen effect() statt
@@ -713,27 +724,27 @@ describe('LuxTableComponent', () => {
         // fehlkonfiguriert erkannt werden) bleibt unverändert, nur die Anzahl der (idempotenten)
         // Neuberechnungen steigt.
         expect(respAtSpy).toHaveBeenCalledTimes(5);
-      })
+      }
     ));
 
-    it('Den Text für leere Daten änderung', fakeAsync(() => {
+    it('Den Text für leere Daten änderung', async () => {
       // Vorbedingungen testen
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
       let noDataText = (document.getElementsByClassName('lux-no-data-text').item(0) as HTMLElement).innerText;
       expect(noDataText).toEqual('Keine Daten gefunden.');
 
       // Änderungen durchführen
       component.noDataText.set('Tetriandoch');
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
       noDataText = (document.getElementsByClassName('lux-no-data-text').item(0) as HTMLElement).innerText;
       expect(noDataText).toEqual('Tetriandoch');
-    }));
+    });
 
-    it('Sollte automatisch die Pagination bei > 100 Einträgen aktivieren', fakeAsync(() => {
+    it('Sollte automatisch die Pagination bei > 100 Einträgen aktivieren', async () => {
       // Vorbedingungen testen
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
       let hiddenPaginator = document.querySelector('lux-paginator.lux-hide');
       expect(hiddenPaginator).toBeDefined();
 
@@ -744,18 +755,18 @@ describe('LuxTableComponent', () => {
       }
       component.dataSource.set(data);
       component.autoPaginate.set(true);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
       hiddenPaginator = document.querySelector('lux-paginator.lux-hide');
       expect(hiddenPaginator).toBeFalsy();
 
-      flush();
-    }));
+      await LuxTestHelper.wait(fixture);
+    });
 
-    it('Sollte nicht automatisch die Pagination bei > 100 Einträgen aktivieren', fakeAsync(() => {
+    it('Sollte nicht automatisch die Pagination bei > 100 Einträgen aktivieren', async () => {
       // Vorbedingungen testen
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
       let hiddenPaginator = document.querySelector('lux-paginator.lux-hide');
       expect(hiddenPaginator).toBeDefined();
 
@@ -765,47 +776,47 @@ describe('LuxTableComponent', () => {
         data.push({ c1: i, c2: 'Demo ' + i });
       }
       component.dataSource.set(data);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
       hiddenPaginator = document.querySelector('lux-paginator.lux-hide');
       expect(hiddenPaginator).toBeDefined();
 
-      flush();
-    }));
+      await LuxTestHelper.wait(fixture);
+    });
 
-    it('Sollte die Borders ausblenden', fakeAsync(() => {
+    it('Sollte die Borders ausblenden', async () => {
       // Vorbedingungen testen
       component.dataSource.set([
         { c1: 1, c2: 'Hydrogen' },
         { c1: 2, c2: 'Helium' }
       ]);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
       let noBorderTable = document.getElementsByClassName('lux-hide-borders');
       expect(noBorderTable.length).toBe(0);
 
       // Änderungen durchführen
       component.hideBorders.set(true);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
       noBorderTable = document.getElementsByClassName('lux-hide-borders');
       expect(noBorderTable.length).toBe(1);
 
-      flush();
-    }));
+      await LuxTestHelper.wait(fixture);
+    });
 
-    it('Sollte den luxNoDataText nicht anzeigen, wenn Daten über ein Signal gesetzt werden (Issue #217)', fakeAsync(() => {
+    it('Sollte den luxNoDataText nicht anzeigen, wenn Daten über ein Signal gesetzt werden (Issue #217)', async () => {
       // Separates Fixture für Signal-basierte Komponente
       const signalFixture = TestBed.createComponent(TableSignalComponent);
       const signalComponent = signalFixture.componentInstance;
 
       // Vorbedingungen testen: Keine Daten → noDataText sichtbar
-      signalFixture.detectChanges();
-      tick();
-      signalFixture.detectChanges();
+      await LuxTestHelper.wait(signalFixture);
+      await LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(signalFixture);
       let noDataRow = document.querySelector('.lux-table-header-no-data');
-      expect(noDataRow?.classList.contains('lux-display-none')).toBeFalse();
+      expect(noDataRow?.classList.contains('lux-display-none')).toBe(false);
 
       // Änderungen durchführen: Signal mit Daten befüllen;
       // nur einen CD-Zyklus ausführen (wie bei Signal-basiertem Angular ohne Zone.js)
@@ -813,101 +824,101 @@ describe('LuxTableComponent', () => {
         { c1: 1, c2: 'Hydrogen' },
         { c1: 2, c2: 'Helium' }
       ]);
-      signalFixture.detectChanges();
+      await LuxTestHelper.wait(signalFixture);
       // setTimeout in luxData-Setter feuert: setzt totalElements und ruft markForCheck() auf.
       // Der nachfolgende detectChanges() verarbeitet die markForCheck()-Anforderung und
       // aktualisiert die View korrekt – noDataText muss jetzt ausgeblendet sein.
-      tick();
-      signalFixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(signalFixture);
 
       // Nachbedingungen testen: noDataText darf NICHT sichtbar sein, da Daten vorhanden sind
       noDataRow = document.querySelector('.lux-table-header-no-data');
-      expect(noDataRow?.classList.contains('lux-display-none')).toBeTrue();
+      expect(noDataRow?.classList.contains('lux-display-none')).toBe(true);
 
-      flush();
-    }));
+      await LuxTestHelper.wait(fixture);
+    });
   });
 
   describe('Striping bei Highlight-Zeilen (Issue #269)', () => {
     let component: TableComponent;
     let fixture: ComponentFixture<TableComponent>;
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(async () => {
       fixture = TestBed.createComponent(TableComponent);
       component = fixture.componentInstance;
-      fixture.detectChanges();
-    }));
+      await LuxTestHelper.wait(fixture);
+    });
 
     const getTableContent = () => fixture.debugElement.query(By.css('.lux-table-content')).nativeElement as HTMLElement;
 
-    it('Sollte das Striping deaktivieren, wenn einer Zeile eine Highlight-Klasse zugewiesen ist', fakeAsync(() => {
+    it('Sollte das Striping deaktivieren, wenn einer Zeile eine Highlight-Klasse zugewiesen ist', async () => {
       // Vorbedingung: Tabelle ohne Highlight-Klassen -> kein lux-table-no-striping
       component.dataSource.set([
         { c1: 1, c2: 'Hydrogen' },
         { c1: 2, c2: 'Helium' }
       ]);
-      LuxTestHelper.wait(fixture);
-      expect(getTableContent().classList.contains('lux-table-no-striping')).toBeFalse();
+      await LuxTestHelper.wait(fixture);
+      expect(getTableContent().classList.contains('lux-table-no-striping')).toBe(false);
 
       // Highlight-Klasse trifft auf eine Zeile zu -> Striping deaktiviert
       component.cssClasses.set([{ class: 'lux-text-highlight-error', check: (element: any) => element.c1 === 1 }]);
-      LuxTestHelper.wait(fixture);
-      expect(getTableContent().classList.contains('lux-table-no-striping')).toBeTrue();
-    }));
+      await LuxTestHelper.wait(fixture);
+      expect(getTableContent().classList.contains('lux-table-no-striping')).toBe(true);
+    });
 
-    it('Sollte das Striping reaktivieren, wenn keine Highlight-Klasse mehr zugewiesen ist', fakeAsync(() => {
+    it('Sollte das Striping reaktivieren, wenn keine Highlight-Klasse mehr zugewiesen ist', async () => {
       component.dataSource.set([
         { c1: 1, c2: 'Hydrogen' },
         { c1: 2, c2: 'Helium' }
       ]);
       component.cssClasses.set([{ class: 'lux-text-highlight-alert', check: () => true }]);
-      LuxTestHelper.wait(fixture);
-      expect(getTableContent().classList.contains('lux-table-no-striping')).toBeTrue();
+      await LuxTestHelper.wait(fixture);
+      expect(getTableContent().classList.contains('lux-table-no-striping')).toBe(true);
 
       // Alle Highlight-Klassen entfernen -> Striping kehrt ohne Neuaufbau zurueck
       component.cssClasses.set([]);
-      LuxTestHelper.wait(fixture);
-      expect(getTableContent().classList.contains('lux-table-no-striping')).toBeFalse();
-    }));
+      await LuxTestHelper.wait(fixture);
+      expect(getTableContent().classList.contains('lux-table-no-striping')).toBe(false);
+    });
 
-    it('Sollte das Striping beibehalten, wenn die Highlight-Klasse auf keine Zeile zutrifft', fakeAsync(() => {
+    it('Sollte das Striping beibehalten, wenn die Highlight-Klasse auf keine Zeile zutrifft', async () => {
       component.dataSource.set([
         { c1: 1, c2: 'Hydrogen' },
         { c1: 2, c2: 'Helium' }
       ]);
       component.cssClasses.set([{ class: 'lux-text-highlight-success', check: (element: any) => element.c1 === 99 }]);
-      LuxTestHelper.wait(fixture);
-      expect(getTableContent().classList.contains('lux-table-no-striping')).toBeFalse();
-    }));
+      await LuxTestHelper.wait(fixture);
+      expect(getTableContent().classList.contains('lux-table-no-striping')).toBe(false);
+    });
 
-    it('Sollte das Striping bei Nicht-Highlight-Klassen beibehalten', fakeAsync(() => {
+    it('Sollte das Striping bei Nicht-Highlight-Klassen beibehalten', async () => {
       component.dataSource.set([
         { c1: 1, c2: 'Hydrogen' },
         { c1: 2, c2: 'Helium' }
       ]);
       component.cssClasses.set([{ class: 'meine-app-klasse', check: () => true }]);
-      LuxTestHelper.wait(fixture);
-      expect(getTableContent().classList.contains('lux-table-no-striping')).toBeFalse();
-    }));
+      await LuxTestHelper.wait(fixture);
+      expect(getTableContent().classList.contains('lux-table-no-striping')).toBe(false);
+    });
 
-    it('Sollte das Striping reaktivieren, wenn ein Datenwechsel die einzige passende Zeile entfernt', fakeAsync(() => {
+    it('Sollte das Striping reaktivieren, wenn ein Datenwechsel die einzige passende Zeile entfernt', async () => {
       // Vorbedingung: Highlight-Klasse trifft auf eine Zeile der aktuellen Daten zu
       component.dataSource.set([
         { c1: 1, c2: 'Hydrogen' },
         { c1: 2, c2: 'Helium' }
       ]);
       component.cssClasses.set([{ class: 'lux-text-highlight-error', check: (element: any) => element.c1 === 1 }]);
-      LuxTestHelper.wait(fixture);
-      expect(getTableContent().classList.contains('lux-table-no-striping')).toBeTrue();
+      await LuxTestHelper.wait(fixture);
+      expect(getTableContent().classList.contains('lux-table-no-striping')).toBe(true);
 
       // Datenwechsel entfernt die einzige passende Zeile, cssClasses bleibt unveraendert
       component.dataSource.set([
         { c1: 3, c2: 'Lithium' },
         { c1: 4, c2: 'Beryllium' }
       ]);
-      LuxTestHelper.wait(fixture);
-      expect(getTableContent().classList.contains('lux-table-no-striping')).toBeFalse();
-    }));
+      await LuxTestHelper.wait(fixture);
+      expect(getTableContent().classList.contains('lux-table-no-striping')).toBe(false);
+    });
   });
 
   describe('HTTP-DAO', () => {
@@ -925,76 +936,76 @@ describe('LuxTableComponent', () => {
       expect(component).toBeTruthy();
     });
 
-    it('Sollte die Progressbar ausblenden, den Platz freigeben und die Tabelle sperren, wenn luxShowProgress false ist', fakeAsync(() => {
+    it('Sollte die Progressbar ausblenden, den Platz freigeben und die Tabelle sperren, wenn luxShowProgress false ist', async () => {
       component.showProgress.set(false);
       component.httpDao().loadData = () =>
         of({ items: component.httpDao().dataSourceFix, totalCount: component.httpDao().dataSourceFix.length }).pipe(delay(1000));
 
-      LuxTestHelper.wait(fixture);
+      await detectChangesAndFlush(fixture);
 
-      expect(luxTableComponent.isLoading()).toBeTrue();
+      expect(luxTableComponent.isLoading()).toBe(true);
       expect(fixture.nativeElement.querySelector('lux-progress')).toBeNull();
       expect(fixture.nativeElement.querySelector('.lux-table-progress-container')).toBeNull();
       expect(luxTableComponent.tableHeightCSSCalc).toContain('calc(100% - 0px');
-      expect(fixture.nativeElement.querySelector('.lux-table-overlay').classList.contains('lux-table-overlay-active')).toBeTrue();
+      expect(fixture.nativeElement.querySelector('.lux-table-overlay').classList.contains('lux-table-overlay-active')).toBe(true);
       expect(fixture.nativeElement.querySelector('.lux-table.lux-pointer-events-none')).not.toBeNull();
 
-      LuxTestHelper.wait(fixture, 1000);
+      await LuxTestHelper.wait(fixture, 1000);
 
-      expect(luxTableComponent.isLoading()).toBeFalse();
-      expect(fixture.nativeElement.querySelector('.lux-table-overlay').classList.contains('lux-table-overlay-active')).toBeFalse();
+      expect(luxTableComponent.isLoading()).toBe(false);
+      expect(fixture.nativeElement.querySelector('.lux-table-overlay').classList.contains('lux-table-overlay-active')).toBe(false);
 
-      flush();
-    }));
+      await vi.runAllTimersAsync();
+    });
 
-    it('Sollte die Progressbar während des Ladens anzeigen, wenn luxShowProgress true ist', fakeAsync(() => {
+    it('Sollte die Progressbar während des Ladens anzeigen, wenn luxShowProgress true ist', async () => {
       component.httpDao().loadData = () =>
         of({ items: component.httpDao().dataSourceFix, totalCount: component.httpDao().dataSourceFix.length }).pipe(delay(1000));
 
-      LuxTestHelper.wait(fixture);
+      await detectChangesAndFlush(fixture);
 
-      expect(luxTableComponent.isLoading()).toBeTrue();
+      expect(luxTableComponent.isLoading()).toBe(true);
       expect(fixture.nativeElement.querySelector('lux-progress')).not.toBeNull();
       expect(luxTableComponent.tableHeightCSSCalc).toContain('calc(100% - 15px');
 
-      LuxTestHelper.wait(fixture, 1000);
+      await LuxTestHelper.wait(fixture, 1000);
 
-      expect(luxTableComponent.isLoading()).toBeFalse();
+      expect(luxTableComponent.isLoading()).toBe(false);
       expect(fixture.nativeElement.querySelector('lux-progress')).toBeNull();
 
-      flush();
-    }));
+      await vi.runAllTimersAsync();
+    });
 
-    it('Sollte die Progressbar ausblenden, wenn luxShowProgress während des Ladens auf false gesetzt wird', fakeAsync(() => {
+    it('Sollte die Progressbar ausblenden, wenn luxShowProgress während des Ladens auf false gesetzt wird', async () => {
       component.httpDao().loadData = () =>
         of({ items: component.httpDao().dataSourceFix, totalCount: component.httpDao().dataSourceFix.length }).pipe(delay(1000));
 
-      LuxTestHelper.wait(fixture);
+      await detectChangesAndFlush(fixture);
       expect(fixture.nativeElement.querySelector('lux-progress')).not.toBeNull();
 
       component.showProgress.set(false);
-      LuxTestHelper.wait(fixture);
+      await detectChangesAndFlush(fixture);
 
-      expect(luxTableComponent.isLoading()).toBeTrue();
+      expect(luxTableComponent.isLoading()).toBe(true);
       expect(fixture.nativeElement.querySelector('lux-progress')).toBeNull();
       expect(luxTableComponent.tableHeightCSSCalc).toContain('calc(100% - 0px');
 
-      flush();
-    }));
+      await vi.runAllTimersAsync();
+    });
 
-    it('Sollte den Platz der Progressbar wiederherstellen, wenn luxShowProgress wieder auf true gesetzt wird', fakeAsync(() => {
+    it('Sollte den Platz der Progressbar wiederherstellen, wenn luxShowProgress wieder auf true gesetzt wird', async () => {
       component.showProgress.set(false);
-      LuxTestHelper.wait(fixture);
+      await detectChangesAndFlush(fixture);
       expect(fixture.nativeElement.querySelector('.lux-table-progress-container')).toBeNull();
       expect(luxTableComponent.tableHeightCSSCalc).toContain('calc(100% - 0px');
 
       component.showProgress.set(true);
-      LuxTestHelper.wait(fixture);
+      await detectChangesAndFlush(fixture);
       expect(fixture.nativeElement.querySelector('.lux-table-progress-container')).not.toBeNull();
       expect(luxTableComponent.tableHeightCSSCalc).toContain('calc(100% - 15px');
 
-      flush();
-    }));
+      await vi.runAllTimersAsync();
+    });
 
     describe('luxLoadingChange', () => {
       beforeEach(() => {
@@ -1002,53 +1013,53 @@ describe('LuxTableComponent', () => {
           of({ items: component.httpDao().dataSourceFix, totalCount: component.httpDao().dataSourceFix.length }).pipe(delay(1000));
       });
 
-      it('Sollte beim Laden true und danach false emittieren', fakeAsync(() => {
-        LuxTestHelper.wait(fixture);
+      it('Sollte beim Laden true und danach false emittieren', async () => {
+        await detectChangesAndFlush(fixture);
         expect(component.loadingChanges).toEqual([true]);
 
-        LuxTestHelper.wait(fixture, 1000);
+        await LuxTestHelper.wait(fixture, 1000);
         expect(component.loadingChanges).toEqual([true, false]);
-      }));
+      });
 
-      it('Sollte asynchron emittieren', fakeAsync(() => {
-        LuxTestHelper.wait(fixture);
-        LuxTestHelper.wait(fixture, 1000);
+      it('Sollte asynchron emittieren', async () => {
+        await detectChangesAndFlush(fixture);
+        await LuxTestHelper.wait(fixture, 1000);
         component.loadingChanges = [];
 
         luxTableComponent.filtered$.next('a');
-        expect(luxTableComponent.isLoading()).toBeTrue();
+        expect(luxTableComponent.isLoading()).toBe(true);
         expect(component.loadingChanges).toEqual([]);
 
-        flushMicrotasks();
+        await Promise.resolve();
         expect(component.loadingChanges).toEqual([true]);
 
-        flush();
-      }));
+        await vi.runAllTimersAsync();
+      });
 
-      it('Sollte beim Filtern nur einmal true und nach dem Laden false emittieren', fakeAsync(() => {
-        LuxTestHelper.wait(fixture);
-        LuxTestHelper.wait(fixture, 1000);
+      it('Sollte beim Filtern nur einmal true und nach dem Laden false emittieren', async () => {
+        await detectChangesAndFlush(fixture);
+        await LuxTestHelper.wait(fixture, 1000);
         component.loadingChanges = [];
 
         luxTableComponent.filtered$.next('a');
-        tick(100);
+        await vi.advanceTimersByTimeAsync(100);
         luxTableComponent.filtered$.next('al');
         fixture.detectChanges();
-        flushMicrotasks();
+        await Promise.resolve();
         expect(component.loadingChanges).toEqual([true]);
 
         // Debounce abwarten: das anschließende Laden über das DAO darf keinen Zwischenstand false emittieren
-        LuxTestHelper.wait(fixture, 500);
+        await LuxTestHelper.wait(fixture, 500);
         expect(component.loadingChanges).toEqual([true]);
-        expect(luxTableComponent.isLoading()).toBeTrue();
+        expect(luxTableComponent.isLoading()).toBe(true);
 
-        LuxTestHelper.wait(fixture, 1000);
+        await LuxTestHelper.wait(fixture, 1000);
         expect(component.loadingChanges).toEqual([true, false]);
-      }));
+      });
 
-      it('Sollte beim Wechsel des luxHttpDAO per Binding ohne NG0100 emittieren', fakeAsync(() => {
-        LuxTestHelper.wait(fixture);
-        LuxTestHelper.wait(fixture, 1000);
+      it('Sollte beim Wechsel des luxHttpDAO per Binding ohne NG0100 emittieren', async () => {
+        await detectChangesAndFlush(fixture);
+        await LuxTestHelper.wait(fixture, 1000);
         component.loadingChanges = [];
 
         // Der Host zeigt tableLoading oberhalb der Tabelle an (normales Feld, kein Signal).
@@ -1056,16 +1067,16 @@ describe('LuxTableComponent', () => {
         const newHttpDao = new TestHttpDao();
         newHttpDao.loadData = () => of({ items: newHttpDao.dataSourceFix, totalCount: newHttpDao.dataSourceFix.length }).pipe(delay(1000));
         component.httpDao.set(newHttpDao);
-        LuxTestHelper.wait(fixture);
+        await detectChangesAndFlush(fixture);
         expect(component.loadingChanges).toEqual([true]);
         expect(fixture.nativeElement.querySelector('.host-table-loading')).not.toBeNull();
 
-        LuxTestHelper.wait(fixture, 1000);
+        await LuxTestHelper.wait(fixture, 1000);
         expect(component.loadingChanges).toEqual([true, false]);
         expect(fixture.nativeElement.querySelector('.host-table-loading')).toBeNull();
-      }));
+      });
 
-      it('Sollte bei überlappenden Requests den alten abbrechen und erst nach dem neuesten false emittieren', fakeAsync(() => {
+      it('Sollte bei überlappenden Requests den alten abbrechen und erst nach dem neuesten false emittieren', async () => {
         const deliveredFilters: (string | undefined)[] = [];
         component.httpDao().loadData = (conf) => {
           const filter = conf.filter;
@@ -1074,100 +1085,100 @@ describe('LuxTableComponent', () => {
             tap(() => deliveredFilters.push(filter))
           );
         };
-        LuxTestHelper.wait(fixture);
-        LuxTestHelper.wait(fixture, 1000);
+        await detectChangesAndFlush(fixture);
+        await LuxTestHelper.wait(fixture, 1000);
         component.loadingChanges = [];
         deliveredFilters.length = 0;
 
         // t=0: Filter "a" -> Request startet nach dem Debounce bei t=500 und würde bis t=1500 dauern
         luxTableComponent.filtered$.next('a');
-        tick(600);
+        await vi.advanceTimersByTimeAsync(600);
         // t=600: Filter "al" -> Request startet bei t=1100 (bricht "a" ab) und dauert bis t=2100
         luxTableComponent.filtered$.next('al');
-        tick(1000);
+        await vi.advanceTimersByTimeAsync(1000);
 
         // t=1600: Der Request für "a" wurde abgebrochen und hat weder Daten noch Ladezustand geändert
         expect(deliveredFilters).toEqual([]);
-        expect(luxTableComponent.isLoading()).toBeTrue();
+        expect(luxTableComponent.isLoading()).toBe(true);
         expect(component.loadingChanges).toEqual([true]);
 
-        tick(500);
+        await vi.advanceTimersByTimeAsync(500);
         fixture.detectChanges();
         expect(deliveredFilters).toEqual(['al']);
         expect(luxTableComponent.dataSource.data[0].c2).toEqual('al');
-        expect(luxTableComponent.isLoading()).toBeFalse();
+        expect(luxTableComponent.isLoading()).toBe(false);
         expect(component.loadingChanges).toEqual([true, false]);
-      }));
+      });
 
-      it('Sollte den Ladezustand beenden, wenn luxHttpDAO während des Ladens entfernt wird', fakeAsync(() => {
+      it('Sollte den Ladezustand beenden, wenn luxHttpDAO während des Ladens entfernt wird', async () => {
         const deliveredItems: unknown[] = [];
         component.httpDao().loadData = () =>
           of({ items: component.httpDao().dataSourceFix, totalCount: component.httpDao().dataSourceFix.length }).pipe(
             delay(1000),
             tap((data: unknown) => deliveredItems.push(data))
           );
-        LuxTestHelper.wait(fixture);
+        await detectChangesAndFlush(fixture);
         expect(component.loadingChanges).toEqual([true]);
 
         component.httpDao.set(undefined as unknown as TestHttpDao);
-        LuxTestHelper.wait(fixture);
-        expect(luxTableComponent.isLoading()).toBeFalse();
+        await detectChangesAndFlush(fixture);
+        expect(luxTableComponent.isLoading()).toBe(false);
         expect(component.loadingChanges).toEqual([true, false]);
 
         // Der abgebrochene Request darf keine veralteten Daten mehr in die Tabelle schreiben
-        flush();
+        await vi.runAllTimersAsync();
         expect(deliveredItems).toEqual([]);
         expect(component.loadingChanges).toEqual([true, false]);
-      }));
+      });
 
-      it('Sollte bei unverändertem Filter den laufenden Request abwarten', fakeAsync(() => {
-        LuxTestHelper.wait(fixture);
-        LuxTestHelper.wait(fixture, 1000);
+      it('Sollte bei unverändertem Filter den laufenden Request abwarten', async () => {
+        await detectChangesAndFlush(fixture);
+        await LuxTestHelper.wait(fixture, 1000);
         component.loadingChanges = [];
 
         // t=0: Filter "a" -> Request von t=500 bis t=1500
         luxTableComponent.filtered$.next('a');
-        tick(600);
+        await vi.advanceTimersByTimeAsync(600);
         // t=600/700: "ab" und zurück zu "a" -> Debounce liefert bei t=1200 wieder "a"
         luxTableComponent.filtered$.next('ab');
-        tick(100);
+        await vi.advanceTimersByTimeAsync(100);
         luxTableComponent.filtered$.next('a');
-        tick(600);
+        await vi.advanceTimersByTimeAsync(600);
 
         // t=1300: Der Request für "a" läuft noch
-        expect(luxTableComponent.isLoading()).toBeTrue();
+        expect(luxTableComponent.isLoading()).toBe(true);
         expect(component.loadingChanges).toEqual([true]);
 
-        tick(200);
-        expect(luxTableComponent.isLoading()).toBeFalse();
+        await vi.advanceTimersByTimeAsync(200);
+        expect(luxTableComponent.isLoading()).toBe(false);
         expect(component.loadingChanges).toEqual([true, false]);
-      }));
+      });
 
-      it('Sollte false emittieren, wenn das DAO ohne Wert abschließt', fakeAsync(() => {
+      it('Sollte false emittieren, wenn das DAO ohne Wert abschließt', async () => {
         component.httpDao().loadData = () => timer(1000).pipe(ignoreElements());
 
-        LuxTestHelper.wait(fixture);
+        await detectChangesAndFlush(fixture);
         expect(component.loadingChanges).toEqual([true]);
 
-        LuxTestHelper.wait(fixture, 1000);
-        expect(luxTableComponent.isLoading()).toBeFalse();
+        await LuxTestHelper.wait(fixture, 1000);
+        expect(luxTableComponent.isLoading()).toBe(false);
         expect(component.loadingChanges).toEqual([true, false]);
-      }));
+      });
 
-      it('Sollte false emittieren und die Tabelle entsperren, wenn das DAO einen Fehler liefert', fakeAsync(() => {
+      it('Sollte false emittieren und die Tabelle entsperren, wenn das DAO einen Fehler liefert', async () => {
         component.httpDao().loadData = () => timer(1000).pipe(switchMap(() => throwError(() => new Error('Serverfehler'))));
 
-        LuxTestHelper.wait(fixture);
+        await detectChangesAndFlush(fixture);
         expect(component.loadingChanges).toEqual([true]);
 
-        LuxTestHelper.wait(fixture, 1000);
-        expect(luxTableComponent.isLoading()).toBeFalse();
+        await LuxTestHelper.wait(fixture, 1000);
+        expect(luxTableComponent.isLoading()).toBe(false);
         expect(component.loadingChanges).toEqual([true, false]);
-        expect(fixture.nativeElement.querySelector('.lux-table-overlay').classList.contains('lux-table-overlay-active')).toBeFalse();
+        expect(fixture.nativeElement.querySelector('.lux-table-overlay').classList.contains('lux-table-overlay-active')).toBe(false);
         expect(luxTableComponent.dataSource.data.length).toEqual(0);
-      }));
+      });
 
-      it('Sollte beim Blättern einen laufenden Request abbrechen', fakeAsync(() => {
+      it('Sollte beim Blättern einen laufenden Request abbrechen', async () => {
         const deliveredPages: (number | undefined)[] = [];
         component.httpDao().loadData = (conf) => {
           const page = conf.page;
@@ -1176,79 +1187,79 @@ describe('LuxTableComponent', () => {
             tap(() => deliveredPages.push(page))
           );
         };
-        LuxTestHelper.wait(fixture);
-        LuxTestHelper.wait(fixture, 1000);
+        await detectChangesAndFlush(fixture);
+        await LuxTestHelper.wait(fixture, 1000);
         component.loadingChanges = [];
         deliveredPages.length = 0;
 
         // t=0: Seite 1 anfordern, t=500: Seite 2 anfordern (bricht Seite 1 ab)
         luxTableComponent.onPaginatorPageChange({ pageIndex: 1, pageSize: 5, length: 50, previousPageIndex: 0 });
-        tick(500);
+        await vi.advanceTimersByTimeAsync(500);
         luxTableComponent.onPaginatorPageChange({ pageIndex: 2, pageSize: 5, length: 50, previousPageIndex: 1 });
 
         // t=1200: Seite 1 wäre jetzt fertig, wurde aber abgebrochen
-        tick(700);
+        await vi.advanceTimersByTimeAsync(700);
         expect(deliveredPages).toEqual([]);
-        expect(luxTableComponent.isLoading()).toBeTrue();
+        expect(luxTableComponent.isLoading()).toBe(true);
         expect(component.loadingChanges).toEqual([true]);
 
         // t=1500: Seite 2 ist fertig
-        tick(300);
+        await vi.advanceTimersByTimeAsync(300);
         expect(deliveredPages).toEqual([2]);
-        expect(luxTableComponent.isLoading()).toBeFalse();
+        expect(luxTableComponent.isLoading()).toBe(false);
         expect(component.loadingChanges).toEqual([true, false]);
-      }));
+      });
 
-      it('Sollte über den veralteten Setter isLoadingResults den Ladezustand setzen und emittieren', fakeAsync(() => {
-        LuxTestHelper.wait(fixture);
-        LuxTestHelper.wait(fixture, 1000);
+      it('Sollte über den veralteten Setter isLoadingResults den Ladezustand setzen und emittieren', async () => {
+        await detectChangesAndFlush(fixture);
+        await LuxTestHelper.wait(fixture, 1000);
         component.loadingChanges = [];
 
         luxTableComponent.isLoadingResults = true;
-        LuxTestHelper.wait(fixture);
-        expect(luxTableComponent.isLoading()).toBeTrue();
-        expect(luxTableComponent.isLoadingResults).toBeTrue();
-        expect(fixture.nativeElement.querySelector('.lux-table-overlay').classList.contains('lux-table-overlay-active')).toBeTrue();
+        await detectChangesAndFlush(fixture);
+        expect(luxTableComponent.isLoading()).toBe(true);
+        expect(luxTableComponent.isLoadingResults).toBe(true);
+        expect(fixture.nativeElement.querySelector('.lux-table-overlay').classList.contains('lux-table-overlay-active')).toBe(true);
         expect(component.loadingChanges).toEqual([true]);
 
         luxTableComponent.isLoadingResults = false;
-        LuxTestHelper.wait(fixture);
-        expect(luxTableComponent.isLoading()).toBeFalse();
+        await detectChangesAndFlush(fixture);
+        expect(luxTableComponent.isLoading()).toBe(false);
         expect(component.loadingChanges).toEqual([true, false]);
-      }));
+      });
 
-      it('Sollte false emittieren, wenn die Tabelle während des Ladens zerstört wird', fakeAsync(() => {
-        LuxTestHelper.wait(fixture);
+      it('Sollte false emittieren, wenn die Tabelle während des Ladens zerstört wird', async () => {
+        await detectChangesAndFlush(fixture);
         expect(component.loadingChanges).toEqual([true]);
 
         fixture.destroy();
         expect(component.loadingChanges).toEqual([true, false]);
 
-        flush();
+        await vi.runAllTimersAsync();
         expect(component.loadingChanges).toEqual([true, false]);
-      }));
+      });
 
-      it('Sollte beim Entfernen der Tabelle per @if während des Ladens mit Signal-Handler kein NG0100 auslösen', fakeAsync(() => {
+      it('Sollte beim Entfernen der Tabelle per @if während des Ladens mit Signal-Handler kein NG0100 auslösen', async () => {
         const toggleFixture = TestBed.createComponent(HttpDaoToggleTableComponent);
         const host = toggleFixture.componentInstance;
         host.httpDao().loadData = () =>
           of({ items: host.httpDao().dataSourceFix, totalCount: host.httpDao().dataSourceFix.length }).pipe(delay(1000));
 
-        LuxTestHelper.wait(toggleFixture);
-        expect(host.tableLoading()).toBeTrue();
+        await detectChangesAndFlush(toggleFixture);
+        expect(host.tableLoading()).toBe(true);
         expect(toggleFixture.nativeElement.querySelector('.host-table-loading')).not.toBeNull();
 
         // Die Tabelle wird während der Change Detection des Hosts zerstört und emittiert dabei synchron false
         host.showTable.set(false);
-        LuxTestHelper.wait(toggleFixture);
-        expect(host.tableLoading()).toBeFalse();
+        await detectChangesAndFlush(toggleFixture);
+        expect(host.tableLoading()).toBe(false);
         expect(toggleFixture.nativeElement.querySelector('.host-table-loading')).toBeNull();
 
-        flush();
-      }));
+        await vi.runAllTimersAsync();
+      });
     });
 
-    it('Die load-Data Funktion des übergebenen DAOs aufrufen', fakeAsync(() => {
+    it('Die load-Data Funktion des übergebenen DAOs aufrufen', async () => {
       // Vorbedingungen testen
       let contentRows = document.querySelectorAll('.mat-mdc-row');
       let headerRow = document.querySelector('.mat-header-row');
@@ -1261,7 +1272,7 @@ describe('LuxTableComponent', () => {
 
       // Änderungen durchführen
       // Abwarten bis das DAO geladen hat (ist asynchron)
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
       contentRows = document.querySelectorAll('.mat-mdc-row');
@@ -1273,13 +1284,13 @@ describe('LuxTableComponent', () => {
       expect(headerRow).toBeDefined();
       expect(footerRow).toBeDefined();
 
-      flush();
-    }));
+      await LuxTestHelper.wait(fixture);
+    });
 
-    it('Sollte nur die Daten nach dem aktuellen Filter setzen', fakeAsync(() => {
+    it('Sollte nur die Daten nach dem aktuellen Filter setzen', async () => {
       // Vorbedingungen testen
       // Abwarten bis das DAO geladen hat (ist asynchron)
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
       let contentRows = document.querySelectorAll('.mat-mdc-row');
 
       expect(contentRows.length).toBe(2);
@@ -1300,15 +1311,15 @@ describe('LuxTableComponent', () => {
           throw new Error('Unreachable');
         }
       };
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       luxTableComponent.filtered$.next('old_filter_text_later_arrival');
-      LuxTestHelper.wait(fixture, 550);
+      await LuxTestHelper.wait(fixture, 550);
 
       luxTableComponent.filtered$.next('new_filter_text_earlier_arrival');
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
-      LuxTestHelper.wait(fixture, 2500);
+      await LuxTestHelper.wait(fixture, 2500);
 
       // Nachbedingungen testen.
       // Hier muss das Resultat dem der neueren Filterung entsprechend und der alte Request ("old_filter...") darf
@@ -1317,66 +1328,66 @@ describe('LuxTableComponent', () => {
 
       expect(contentRows.length).toBe(1);
       expect(luxTableComponent.dataSource.data.length).toEqual(1);
-    }));
+    });
 
-    it('Selektion muss nach dem Setzen eines neuen DAO geleert sein.', fakeAsync(() => {
-      LuxTestHelper.wait(fixture);
+    it('Selektion muss nach dem Setzen eines neuen DAO geleert sein.', async () => {
+      await LuxTestHelper.wait(fixture);
       expect(component.selected().size).toBe(0);
 
       // Änderungen durchführen
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       const firstTd = fixture.debugElement.query(By.css('td.lux-multiselect-td')).nativeElement;
       (firstTd as HTMLElement).click();
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
       expect(component.selected().size).toBe(1);
 
       component.httpDao.set(new TestHttpDao());
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       expect(component.selected().size).toEqual(0);
-    }));
+    });
 
-    it('HTTP-DAO Multiselect: Select-All und Counter funktionieren', fakeAsync(() => {
+    it('HTTP-DAO Multiselect: Select-All und Counter funktionieren', async () => {
       // Vorbedingungen: Daten laden lassen
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
       let counter = document.querySelector('.lux-selected-count') as HTMLElement;
       expect(counter.textContent?.trim()).toBe('0 / 2');
 
       // Select-All via Footer Row
       const footerRow = document.querySelector('.lux-footer-row') as HTMLElement;
       footerRow.click();
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
       counter = document.querySelector('.lux-selected-count') as HTMLElement;
       expect(counter.textContent?.trim()).toBe('2 / 2');
 
       // Deselect all
       footerRow.click();
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
       counter = document.querySelector('.lux-selected-count') as HTMLElement;
       expect(counter.textContent?.trim()).toBe('0 / 2');
-    }));
+    });
 
-    it('multiSelect-Spalte Sortierung ist bei HTTP-DAO + MultiSelect deaktiviert', fakeAsync(() => {
+    it('multiSelect-Spalte Sortierung ist bei HTTP-DAO + MultiSelect deaktiviert', async () => {
       // Vorbedingungen: Tabelle initialisiert
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen: Der Sort-Header der multiSelect-Spalte muss die CSS-Klasse mat-sort-header-disabled tragen
       const multiSelectTh = fixture.nativeElement.querySelector('th.lux-multiselect-th');
       expect(multiSelectTh).toBeTruthy();
-      expect(multiSelectTh.classList.contains('mat-sort-header-disabled')).toBeTrue();
+      expect(multiSelectTh.classList.contains('mat-sort-header-disabled')).toBe(true);
 
-      flush();
-    }));
+      await LuxTestHelper.wait(fixture);
+    });
 
-    it('Sort-Event auf multiSelect-Spalte mit HTTP-DAO + MultiSelect ruft loadHttpDAOData nicht auf', fakeAsync(() => {
+    it('Sort-Event auf multiSelect-Spalte mit HTTP-DAO + MultiSelect ruft loadHttpDAOData nicht auf', async () => {
       // Vorbedingungen: Tabelle initialisiert
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Spy auf loadHttpDAOData erstellen
-      spyOn<any>(luxTableComponent, 'loadHttpDAOData');
+      vi.spyOn(luxTableComponent as any, 'loadHttpDAOData').mockReturnValue(undefined);
 
       // handleSort aufrufen um die Subscription neu zu registrieren
       (luxTableComponent as any).handleSort();
@@ -1384,20 +1395,20 @@ describe('LuxTableComponent', () => {
       // Sort-Event auf multiSelect-Spalte auslösen – soll vom Guard ignoriert werden
       expect(luxTableComponent.sort).toBeTruthy();
       luxTableComponent.sort!.sortChange.emit({ active: 'multiSelect', direction: 'asc' });
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // loadHttpDAOData darf NICHT aufgerufen worden sein
       expect(luxTableComponent['loadHttpDAOData']).not.toHaveBeenCalled();
 
-      flush();
-    }));
+      await LuxTestHelper.wait(fixture);
+    });
 
-    it('Sortierung auf normale Spalten mit HTTP-DAO + MultiSelect ruft loadHttpDAOData auf', fakeAsync(() => {
+    it('Sortierung auf normale Spalten mit HTTP-DAO + MultiSelect ruft loadHttpDAOData auf', async () => {
       // Vorbedingungen: Tabelle initialisiert (HttpDaoTableComponent hat luxMultiSelect=true und luxHttpDAO gesetzt)
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Spy auf loadHttpDAOData erstellen
-      spyOn<any>(luxTableComponent, 'loadHttpDAOData');
+      vi.spyOn(luxTableComponent as any, 'loadHttpDAOData').mockReturnValue(undefined);
 
       // handleSort aufrufen um die Subscription neu zu registrieren
       (luxTableComponent as any).handleSort();
@@ -1405,13 +1416,13 @@ describe('LuxTableComponent', () => {
       // Sort-Event auf eine normale Datenspalte auslösen
       expect(luxTableComponent.sort).toBeTruthy();
       luxTableComponent.sort!.sortChange.emit({ active: 'c2', direction: 'asc' });
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // loadHttpDAOData MUSS aufgerufen worden sein
       expect(luxTableComponent['loadHttpDAOData']).toHaveBeenCalled();
 
-      flush();
-    }));
+      await LuxTestHelper.wait(fixture);
+    });
   });
 
   describe('Multiselect', () => {
@@ -1430,13 +1441,13 @@ describe('LuxTableComponent', () => {
       expect(component).toBeTruthy();
     });
 
-    it('Einträge korrekt selektieren', fakeAsync(() => {
+    it('Einträge korrekt selektieren', async () => {
       // Vorbedingungen testen
       component.dataSource.set([
         { c1: 1, c2: 'Hydrogen' },
         { c1: 2, c2: 'Helium' }
       ]);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
       let multiselectCheckbox = document.getElementsByClassName('lux-multiselect-toggle');
       let multiselectCheckboxAll = document.getElementsByClassName('lux-multiselect-toggle-all');
       expect(multiselectCheckbox.length).toBe(0);
@@ -1445,15 +1456,15 @@ describe('LuxTableComponent', () => {
 
       // Änderungen durchführen
       component.showMultiSelect.set(true);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       const multiselectRow = document.querySelectorAll('.lux-row');
 
       (multiselectRow[0] as HTMLElement).click();
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       (multiselectRow[1] as HTMLElement).click();
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
       multiselectCheckbox = document.getElementsByClassName('lux-multiselect-toggle');
@@ -1461,189 +1472,189 @@ describe('LuxTableComponent', () => {
       expect(multiselectCheckbox.length).toBe(2);
       expect(multiselectCheckboxAll.length).toBe(1);
       expect(component.selected().size).toBe(2);
-    }));
+    });
 
-    it('Alle Einträge korrekt selektieren', fakeAsync(() => {
+    it('Alle Einträge korrekt selektieren', async () => {
       // Vorbedingungen testen
       component.dataSource.set([
         { c1: 1, c2: 'Hydrogen' },
         { c1: 2, c2: 'Helium' }
       ]);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
       expect(component.selected().size).toBe(0);
 
       // Änderungen durchführen
       component.showMultiSelect.set(true);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       const multiselectTriggerAll = document.querySelector('.lux-footer-row');
 
       (multiselectTriggerAll as HTMLElement).click();
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
       expect(component.selected().size).toBe(2);
 
       // Änderungen durchführen
       (multiselectTriggerAll as HTMLElement).click();
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
       expect(component.selected().size).toBe(0);
-    }));
+    });
 
-    it('Alle Einträge mit Filter korrekt selektieren', fakeAsync(() => {
+    it('Alle Einträge mit Filter korrekt selektieren', async () => {
       // Vorbedingungen testen
       component.dataSource.set([
         { c1: 1, c2: 'Hydrogen' },
         { c1: 2, c2: 'Helium' }
       ]);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
       expect(component.selected().size).toBe(0);
 
       // Änderungen durchführen
       component.showMultiSelect.set(true);
       component.showFilter.set(true);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       luxTableComponent.filtered$.next('he');
-      LuxTestHelper.wait(fixture, 550);
+      await LuxTestHelper.wait(fixture, 550);
 
       const multiselectTriggerAll = document.querySelector('.lux-footer-row');
 
       (multiselectTriggerAll as HTMLElement).click();
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
       expect(component.selected().size).toBe(1);
 
       // Änderungen durchführen
       (multiselectTriggerAll as HTMLElement).click();
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
       expect(component.selected().size).toBe(0);
-    }));
+    });
 
-    it('Filter für Multiselect-Tabelle deaktivieren', fakeAsync(() => {
+    it('Filter für Multiselect-Tabelle deaktivieren', async () => {
       // Vorbedingungen testen
       component.dataSource.set([
         { c1: 1, c2: 'Hydrogen' },
         { c1: 2, c2: 'Helium' }
       ]);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
       expect(component.selected().size).toBe(0);
       expect(fixture.debugElement.query(By.css('.lux-table-filter.lux-hide'))).not.toBeNull();
 
       // Änderungen durchführen
       component.showMultiSelect.set(true);
       component.showFilter.set(true);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
       expect(fixture.debugElement.query(By.css('.lux-table-filter.lux-hide'))).toBeNull();
 
       // Änderungen durchführen
       component.showFilter.set(false);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
       expect(fixture.debugElement.query(By.css('.lux-table-filter.lux-hide'))).not.toBeNull();
-    }));
+    });
 
-    it('Alle Einträge programmatisch korrekt selektieren', fakeAsync(() => {
+    it('Alle Einträge programmatisch korrekt selektieren', async () => {
       // Vorbedingungen testen
       component.dataSource.set([
         { c1: 1, c2: 'Hydrogen' },
         { c1: 2, c2: 'Helium' }
       ]);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
       // luxSelected von der TableComponent prüfen, da beim programmatischen Setzen kein Change-Event ausgeführt wird
       expect(luxTableComponent.luxSelected.size).toBe(0);
 
       // Änderungen durchführen
       component.showMultiSelect.set(true);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       component.preselected.set(new Set([component.dataSource()[0], component.dataSource()[1]]));
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
       expect(luxTableComponent.luxSelected.size).toBe(2);
 
       // Änderungen durchführen
       component.preselected.set(new Set());
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
       expect(luxTableComponent.luxSelected.size).toBe(0);
-    }));
+    });
 
-    it('Alle Einträge programmatisch korrekt selektieren (mit pickValueFn)', fakeAsync(() => {
+    it('Alle Einträge programmatisch korrekt selektieren (mit pickValueFn)', async () => {
       // Vorbedingungen testen
       component.dataSource.set([
         { c1: 1, c2: 'Hydrogen' },
         { c1: 2, c2: 'Helium' }
       ]);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
       // luxSelected von der TableComponent prüfen, da beim programmatischen Setzen kein Change-Event ausgeführt wird
       expect(luxTableComponent.luxSelected.size).toBe(0);
 
       // Änderungen durchführen
       component.showMultiSelect.set(true);
       component.pickFn.set((o) => o.c2);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       component.preselected.set(new Set([component.dataSource()[0], component.dataSource()[1]]));
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
       expect(luxTableComponent.luxSelected.size).toBe(2);
 
       // Änderungen durchführen
       component.preselected.set(new Set());
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
       expect(luxTableComponent.luxSelected.size).toBe(0);
-    }));
+    });
 
-    it('Alle Einträge programmatisch korrekt selektieren (mit compareWithFn)', fakeAsync(() => {
+    it('Alle Einträge programmatisch korrekt selektieren (mit compareWithFn)', async () => {
       // Vorbedingungen testen
       component.dataSource.set([
         { c1: 1, c2: 'Hydrogen' },
         { c1: 2, c2: 'Helium' }
       ]);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
       // luxSelected von der TableComponent prüfen, da beim programmatischen Setzen kein Change-Event ausgeführt wird
       expect(luxTableComponent.luxSelected.size).toBe(0);
 
       // Änderungen durchführen
       component.showMultiSelect.set(true);
       component.compareFn.set((o1, o2) => o1.c1 === o2.c1);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       component.preselected.set(new Set([{ c1: 1, c2: 'Hydrogen' }]));
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
       expect(luxTableComponent.luxSelected.size).toBe(1);
 
       // Änderungen durchführen
       component.preselected.set(new Set());
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
       expect(luxTableComponent.luxSelected.size).toBe(0);
-    }));
+    });
 
-    it('Alle Einträge programmatisch korrekt selektieren (mit compareWithFn und pickValueFn)', fakeAsync(() => {
+    it('Alle Einträge programmatisch korrekt selektieren (mit compareWithFn und pickValueFn)', async () => {
       // Vorbedingungen testen
       component.dataSource.set([
         { c1: 1, c2: 'Hydrogen' },
         { c1: 2, c2: 'Helium' }
       ]);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
       // luxSelected von der TableComponent prüfen, da beim programmatischen Setzen kein Change-Event ausgeführt wird
       expect(luxTableComponent.luxSelected.size).toBe(0);
 
@@ -1651,38 +1662,38 @@ describe('LuxTableComponent', () => {
       component.showMultiSelect.set(true);
       component.compareFn.set((o1_c1, o2_c1) => o1_c1 === o2_c1);
       component.pickFn.set((o) => o.c1);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       component.preselected.set(new Set([{ c1: 1, c2: 'Hydrogen' }]));
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
       expect(luxTableComponent.luxSelected.size).toBe(1);
 
       // Änderungen durchführen
       component.preselected.set(new Set());
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
       expect(luxTableComponent.luxSelected.size).toBe(0);
-    }));
+    });
 
-    it('Selektierte Einträge sortieren', fakeAsync(() => {
+    it('Selektierte Einträge sortieren', async () => {
       // Vorbedingungen testen
       component.dataSource.set([
         { c1: 1, c2: 'Alpha' },
         { c1: 2, c2: 'Beta' }
       ]);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
       expect(component.selected().size).toBe(0);
 
       // Änderungen durchführen
       component.showMultiSelect.set(true);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
       const multiselectRow = document.querySelectorAll('.lux-row');
 
       (multiselectRow[1] as HTMLElement).click();
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
       expect(component.selected().size).toBe(1);
@@ -1690,7 +1701,7 @@ describe('LuxTableComponent', () => {
       // Änderungen durchführen body
       const sortHeader = document.querySelector('th.mat-sort-header');
       (sortHeader as HTMLButtonElement).click();
-      LuxTestHelper.wait(fixture, 500);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
       expect(sortHeader).toBeDefined();
@@ -1701,22 +1712,22 @@ describe('LuxTableComponent', () => {
 
       // Änderungen durchführen
       (sortHeader as HTMLButtonElement).click();
-      LuxTestHelper.wait(fixture, 500);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
       col2FirstElements = document.getElementsByClassName('c2-content');
       expect(col2FirstElements.item(1)!.textContent).toEqual('Beta');
       expect(col2FirstElements.item(0)!.textContent).toEqual('Alpha');
-    }));
+    });
 
-    it('Die korrekte Anzahl selektierter Elemente ausgeben', fakeAsync(() => {
+    it('Die korrekte Anzahl selektierter Elemente ausgeben', async () => {
       // Vorbedingungen testen
       component.dataSource.set([
         { c1: 1, c2: 'Hydrogen' },
         { c1: 2, c2: 'Helium' }
       ]);
       component.showMultiSelect.set(true);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
       let selectedCount = (document.getElementsByClassName('lux-selected-count').item(0) as HTMLElement).innerText;
       expect(selectedCount).toEqual('0 / 2');
 
@@ -1724,7 +1735,7 @@ describe('LuxTableComponent', () => {
       const multiselectRow = document.querySelectorAll('.lux-row');
 
       (multiselectRow[0] as HTMLElement).click();
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
       selectedCount = (document.getElementsByClassName('lux-selected-count').item(0) as HTMLElement).innerText;
@@ -1732,23 +1743,21 @@ describe('LuxTableComponent', () => {
 
       // Änderungen durchführen
       (multiselectRow[1] as HTMLElement).click();
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
       selectedCount = (document.getElementsByClassName('lux-selected-count').item(0) as HTMLElement).innerText;
       expect(selectedCount).toEqual('2 / 2');
-    }));
+    });
   });
 
   describe('Cursor-Hinweis', () => {
     let component: TableCursorComponent;
     let fixture: ComponentFixture<TableCursorComponent>;
-    let luxTableComponent: LuxTableComponent;
 
     beforeEach(() => {
       fixture = TestBed.createComponent(TableCursorComponent);
       component = fixture.componentInstance;
-      luxTableComponent = fixture.debugElement.query(By.directive(LuxTableComponent)).componentInstance;
       fixture.detectChanges();
     });
 
@@ -1756,75 +1765,75 @@ describe('LuxTableComponent', () => {
       return fixture.nativeElement.querySelector('.lux-row') as HTMLElement;
     }
 
-    it('Setzt ohne beobachtete Events und ohne Multiselect keinen Cursor', fakeAsync(() => {
+    it('Setzt ohne beobachtete Events und ohne Multiselect keinen Cursor', async () => {
       component.dataSource.set([{ c1: 1, c2: 'Hydrogen' }]);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       const row = getFirstRow();
-      expect(row.classList.contains('lux-cursor-pointer')).toBeFalse();
-    }));
+      expect(row.classList.contains('lux-cursor-pointer')).toBe(false);
+    });
 
-    it('Setzt ohne Multiselect bei beobachtetem luxSelectedChange einen Cursor', fakeAsync(() => {
+    it('Setzt ohne Multiselect bei beobachtetem luxSelectedChange einen Cursor', async () => {
       component.dataSource.set([{ c1: 1, c2: 'Hydrogen' }]);
-      luxTableComponent.luxSelectedChange.subscribe(() => {});
-      LuxTestHelper.wait(fixture);
+      component.showSelectedChangeCursor.set(true);
+      await LuxTestHelper.wait(fixture);
 
       const row = getFirstRow();
-      expect(row.classList.contains('lux-cursor-pointer')).toBeTrue();
-    }));
+      expect(row.classList.contains('lux-cursor-pointer')).toBe(true);
+    });
 
-    it('Setzt Cursor bei beobachtetem luxSingleClicked', fakeAsync(() => {
+    it('Setzt Cursor bei beobachtetem luxSingleClicked', async () => {
       component.dataSource.set([{ c1: 1, c2: 'Hydrogen' }]);
-      luxTableComponent.luxSingleClicked.subscribe(() => {});
-      LuxTestHelper.wait(fixture);
+      component.showSingleClickedCursor.set(true);
+      await LuxTestHelper.wait(fixture);
 
       const row = getFirstRow();
-      expect(row.classList.contains('lux-cursor-pointer')).toBeTrue();
-    }));
+      expect(row.classList.contains('lux-cursor-pointer')).toBe(true);
+    });
 
-    it('Setzt Cursor bei Multiselect mit beobachtetem luxSelectedChange nur ohne Checkbox-Only-Click', fakeAsync(() => {
+    it('Setzt Cursor bei Multiselect mit beobachtetem luxSelectedChange nur ohne Checkbox-Only-Click', async () => {
       component.dataSource.set([{ c1: 1, c2: 'Hydrogen' }]);
       component.multiSelect.set(true);
       component.multiSelectOnlyCheckboxClick.set(false);
-      luxTableComponent.luxSelectedChange.subscribe(() => {});
-      LuxTestHelper.wait(fixture);
+      component.showSelectedChangeCursor.set(true);
+      await LuxTestHelper.wait(fixture);
 
       let row = getFirstRow();
-      expect(row.classList.contains('lux-cursor-pointer')).toBeTrue();
+      expect(row.classList.contains('lux-cursor-pointer')).toBe(true);
 
       component.multiSelectOnlyCheckboxClick.set(true);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       row = getFirstRow();
-      expect(row.classList.contains('lux-cursor-pointer')).toBeFalse();
-    }));
+      expect(row.classList.contains('lux-cursor-pointer')).toBe(false);
+    });
 
-    it('Setzt bei Multiselect ohne beobachtete Events Cursor nur ohne Checkbox-Only-Click', fakeAsync(() => {
+    it('Setzt bei Multiselect ohne beobachtete Events Cursor nur ohne Checkbox-Only-Click', async () => {
       component.dataSource.set([{ c1: 1, c2: 'Hydrogen' }]);
       component.multiSelect.set(true);
       component.multiSelectOnlyCheckboxClick.set(false);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       let row = getFirstRow();
-      expect(row.classList.contains('lux-cursor-pointer')).toBeTrue();
+      expect(row.classList.contains('lux-cursor-pointer')).toBe(true);
 
       component.multiSelectOnlyCheckboxClick.set(true);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       row = getFirstRow();
-      expect(row.classList.contains('lux-cursor-pointer')).toBeFalse();
-    }));
+      expect(row.classList.contains('lux-cursor-pointer')).toBe(false);
+    });
 
-    it('Setzt bei Multiselect und beobachtetem luxDoubleClicked keinen Cursor', fakeAsync(() => {
+    it('Setzt bei Multiselect und beobachtetem luxDoubleClicked keinen Cursor', async () => {
       component.dataSource.set([{ c1: 1, c2: 'Hydrogen' }]);
       component.multiSelect.set(true);
       component.multiSelectOnlyCheckboxClick.set(false);
-      luxTableComponent.luxDoubleClicked.subscribe(() => {});
-      LuxTestHelper.wait(fixture);
+      component.showDoubleClickedCursor.set(true);
+      await LuxTestHelper.wait(fixture);
 
       const row = getFirstRow();
-      expect(row.classList.contains('lux-cursor-pointer')).toBeFalse();
-    }));
+      expect(row.classList.contains('lux-cursor-pointer')).toBe(false);
+    });
   });
 });
 
@@ -1925,31 +1934,38 @@ class TableComponent {
   showPagination = signal(false);
   showColumnSelector = signal(false);
   showFilter = signal(false);
-  colWidths = signal<number[] | undefined>(undefined);
-  pageSize = signal<number | undefined>(undefined);
-  cssClasses = signal<ICustomCSSConfig | ICustomCSSConfig[] | undefined>(undefined);
+  colWidths = signal<number[]>([]);
+  pageSize = signal<number>(10);
+  cssClasses = signal<ICustomCSSConfig | ICustomCSSConfig[]>([]);
   noDataText = signal('Keine Daten gefunden.');
-  minWidth = signal<number | undefined>(undefined);
+  minWidth = signal<number>(-1);
   containerHeight = signal<number | undefined>(undefined);
   containerWidth = signal<number | undefined>(undefined);
   autoPaginate = signal(false);
   hideBorders = signal(false);
   hideHeaders = signal(false);
-  c1Sortable = signal<boolean | undefined>(undefined);
-  c1Sticky = signal<boolean | undefined>(undefined);
-  c2Sortable = signal<boolean | undefined>(undefined);
-  c2Sticky = signal<boolean | undefined>(undefined);
-  c1RespAt = signal<string[] | undefined>(undefined);
-  c2RespAt = signal<string | string[] | undefined>(undefined);
-  c1RespBeh = signal<string | undefined>(undefined);
-  c2RespBeh = signal<string | undefined>(undefined);
+  c1Sortable = signal<boolean>(false);
+  c1Sticky = signal<boolean>(false);
+  c2Sortable = signal<boolean>(false);
+  c2Sticky = signal<boolean>(false);
+  c1RespAt = signal<string | string[] | null>(null);
+  c2RespAt = signal<string | string[] | null>(null);
+  c1RespBeh = signal<string>('');
+  c2RespBeh = signal<string>('');
 
   constructor() {}
 }
 
 @Component({
   template: `
-    <lux-table [luxData]="dataSource()" [luxMultiSelect]="multiSelect()" [luxMultiSelectOnlyCheckboxClick]="multiSelectOnlyCheckboxClick()">
+    <lux-table
+      [luxData]="dataSource()"
+      [luxMultiSelect]="multiSelect()"
+      [luxMultiSelectOnlyCheckboxClick]="multiSelectOnlyCheckboxClick()"
+      [luxShowSelectedChangeCursor]="showSelectedChangeCursor()"
+      [luxShowSingleClickedCursor]="showSingleClickedCursor()"
+      [luxShowDoubleClickedCursor]="showDoubleClickedCursor()"
+    >
       <lux-table-column luxColumnDef="c1">
         <lux-table-column-header>
           <ng-template>C1</ng-template>
@@ -1979,6 +1995,9 @@ class TableCursorComponent {
   dataSource = signal<TableItem[]>([]);
   multiSelect = signal(false);
   multiSelectOnlyCheckboxClick = signal(false);
+  showSelectedChangeCursor = signal(false);
+  showSingleClickedCursor = signal(false);
+  showDoubleClickedCursor = signal(false);
 
   constructor() {}
 }
@@ -2043,6 +2062,7 @@ class HttpDaoTableComponent {
   loadingChanges: boolean[] = [];
   tableLoading = false;
   selected = signal(new Set());
+  showColumnSelector = false;
 
   constructor() {}
 
@@ -2072,7 +2092,7 @@ class HttpDaoTableComponent {
       </lux-table>
     }
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxTableComponent, LuxTableColumnComponent, LuxTableColumnHeaderComponent, LuxTableColumnContentComponent]
 })
 class HttpDaoToggleTableComponent {
@@ -2133,7 +2153,7 @@ class HttpDaoToggleTableComponent {
 class TableMultiselectComponent {
   dataSource = signal<TableItem[]>([]);
   selected = signal(new Set());
-  preselected = signal<Set<TableItem> | undefined>(undefined);
+  preselected = signal<Set<TableItem>>(new Set<TableItem>());
   showPagination = signal(false);
   showFilter = signal(false);
   showMultiSelect = signal(false);

@@ -27,7 +27,7 @@ test('luxBezeichnung schaltet zwischen Kurz- und Langtext um', async ({ page }) 
   await example.options.setText('luxTableKey', '2');
   await expect(label).toHaveText('Bellux');
 
-  await selectOption(example.options.card.locator('lux-select-ac'), 'lang');
+  await selectOption(example.options.card.locator('lux-select'), 'lang');
 
   await expect(label).toHaveText('Belgien und Luxemburg');
 });

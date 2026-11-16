@@ -1,35 +1,35 @@
+import { describe, it, beforeEach, expect } from 'vitest';
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, TestBed, waitForAsync } from '@angular/core/testing';
+import { ChangeDetectionStrategy, Component, Signal } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { of } from 'rxjs';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
-import { LuxLookupAutocompleteAcComponent } from '../../lux-lookup/lux-lookup-autocomplete-ac/lux-lookup-autocomplete-ac.component';
-import { LuxLookupComboboxAcComponent } from '../../lux-lookup/lux-lookup-combobox-ac/lux-lookup-combobox-ac.component';
+import { LuxLookupAutocompleteComponent } from '../../lux-lookup/lux-lookup-autocomplete/lux-lookup-autocomplete.component';
+import { LuxLookupComboboxComponent } from '../../lux-lookup/lux-lookup-combobox/lux-lookup-combobox.component';
 import { LuxFieldValues, LuxLookupParameters } from '../../lux-lookup/lux-lookup-model/lux-lookup-parameters';
 import { LuxLookupHandlerService } from '../../lux-lookup/lux-lookup-service/lux-lookup-handler.service';
 import { LuxLookupService } from '../../lux-lookup/lux-lookup-service/lux-lookup.service';
 import { LuxConsoleService } from '../../lux-util/lux-console.service';
-import { LuxAutocompleteAcComponent } from '../lux-autocomplete-ac/lux-autocomplete-ac.component';
-import { LuxCheckboxAcComponent } from '../lux-checkbox-ac/lux-checkbox-ac.component';
-import { LuxChipsAcComponent } from '../lux-chips-ac/lux-chips-ac.component';
-import { LuxDatepickerAcComponent } from '../lux-datepicker-ac/lux-datepicker-ac.component';
-import { LuxDatetimepickerAcComponent } from '../lux-datetimepicker-ac/lux-datetimepicker-ac.component';
-import { LuxFileInputAcComponent } from '../lux-file/lux-file-input-ac/lux-file-input-ac.component';
+import { LuxAutocompleteComponent } from '../lux-autocomplete/lux-autocomplete.component';
+import { LuxCheckboxComponent } from '../lux-checkbox/lux-checkbox.component';
+import { LuxChipsComponent } from '../lux-chips/lux-chips.component';
+import { LuxDatepickerComponent } from '../lux-datepicker/lux-datepicker.component';
+import { LuxDatetimepickerComponent } from '../lux-datetimepicker/lux-datetimepicker.component';
+import { LuxFileInputComponent } from '../lux-file/lux-file-input/lux-file-input.component';
 import { LuxFileListComponent } from '../lux-file/lux-file-list/lux-file-list.component';
 import { LuxFileUploadComponent } from '../lux-file/lux-file-upload/lux-file-upload.component';
-import { LuxInputAcComponent } from '../lux-input-ac/lux-input-ac.component';
-import { LuxRadioAcComponent } from '../lux-radio-ac/lux-radio-ac.component';
-import { LuxSelectAcComponent } from '../lux-select-ac/lux-select-ac.component';
-import { LuxSliderAcComponent } from '../lux-slider-ac/lux-slider-ac.component';
-import { LuxTextareaAcComponent } from '../lux-textarea-ac/lux-textarea-ac.component';
+import { LuxInputComponent } from '../lux-input/lux-input.component';
+import { LuxRadioComponent } from '../lux-radio/lux-radio.component';
+import { LuxSelectComponent } from '../lux-select/lux-select.component';
+import { LuxSliderComponent } from '../lux-slider/lux-slider.component';
+import { LuxTextareaComponent } from '../lux-textarea/lux-textarea.component';
 import { LuxTimepickerComponent } from '../lux-timepicker/lux-timepicker.component';
-import { LuxToggleAcComponent } from '../lux-toggle-ac/lux-toggle-ac.component';
-import { LuxFormComponentBase } from './lux-form-component-base.class';
+import { LuxToggleComponent } from '../lux-toggle/lux-toggle.component';
 
 type Komponente =
   | 'input'
@@ -75,7 +75,7 @@ const komponenten: { komponente: Komponente; requiredValidator: ValidatorFn }[] 
 // Geprüft wird vor allem, dass ein einmal erkanntes required wieder freigegeben wird. Sonst hielte die
 // [required]-Bindung der Komponente das Control dauerhaft required und damit ungültig (Issue #240).
 describe('LuxFormComponentBase - required-Erkennung in Reactive Forms', () => {
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       providers: [
         LuxConsoleService,
@@ -87,90 +87,84 @@ describe('LuxFormComponentBase - required-Erkennung in Reactive Forms', () => {
         provideLuxTranslocoTesting()
       ]
     }).compileComponents();
-  }));
+  });
 
-  function erstelle(komponente: Komponente, validatorFactory: (host: LuxRequiredTestComponent) => ValidatorFn) {
+  async function erstelle(komponente: Komponente, validatorFactory: (host: LuxRequiredTestComponent) => ValidatorFn) {
     const fixture = TestBed.createComponent(LuxRequiredTestComponent);
     const host = fixture.componentInstance;
     host.komponente = komponente;
 
     const control = host.form.get('feld')!;
     control.setValidators(validatorFactory(host));
-    warte(fixture);
+    await warte(fixture);
 
-    const luxComponent: LuxFormComponentBase = fixture.debugElement.query(By.css('#feld')).componentInstance;
+    const luxComponent: { luxRequired: Signal<boolean> } = fixture.debugElement.query(By.css('#feld')).componentInstance;
 
     return { fixture, host, control, luxComponent };
   }
 
-  function aktualisiere(fixture: ComponentFixture<LuxRequiredTestComponent>, control: AbstractControl) {
+  async function aktualisiere(fixture: ComponentFixture<LuxRequiredTestComponent>, control: AbstractControl) {
     control.updateValueAndValidity();
-    warte(fixture);
+    await warte(fixture);
   }
 
-  function warte(fixture: ComponentFixture<LuxRequiredTestComponent>) {
-    LuxTestHelper.wait(fixture);
-    flush();
+  async function warte(fixture: ComponentFixture<LuxRequiredTestComponent>) {
+    await LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
     fixture.detectChanges();
   }
 
   komponenten.forEach(({ komponente, requiredValidator }) => {
     describe(komponente, () => {
-      it('Sollte required in Validators.compose erkennen und beim Entfernen wieder freigeben', fakeAsync(() => {
+      it('Sollte required in Validators.compose erkennen und beim Entfernen wieder freigeben', async () => {
         const composed = Validators.compose([requiredValidator, Validators.nullValidator])!;
-        const { fixture, control, luxComponent } = erstelle(komponente, () => composed);
+        const { fixture, control, luxComponent } = await erstelle(komponente, () => composed);
 
-        expect(luxComponent.luxRequired).withContext('compose beim Start').toBeTrue();
+        expect(luxComponent.luxRequired(), 'compose beim Start').toBe(true);
 
         control.removeValidators(composed);
-        aktualisiere(fixture, control);
+        await aktualisiere(fixture, control);
 
-        expect(luxComponent.luxRequired).withContext('nach removeValidators(compose)').toBeFalse();
-        expect(control.hasError('required')).withContext('required-Fehler nach removeValidators(compose)').toBeFalse();
+        expect(luxComponent.luxRequired(), 'nach removeValidators(compose)').toBe(false);
+        expect(control.hasError('required'), 'required-Fehler nach removeValidators(compose)').toBe(false);
 
         control.addValidators(composed);
-        aktualisiere(fixture, control);
+        await aktualisiere(fixture, control);
 
-        expect(luxComponent.luxRequired).withContext('compose nachträglich hinzugefügt').toBeTrue();
+        expect(luxComponent.luxRequired(), 'compose nachträglich hinzugefügt').toBe(true);
+      });
 
-        discardPeriodicTasks();
-      }));
+      it('Sollte ein von Anfang an direkt gesetztes required per removeValidators() wieder freigeben', async () => {
+        const { fixture, control, luxComponent } = await erstelle(komponente, () => requiredValidator);
 
-      it('Sollte ein von Anfang an direkt gesetztes required per removeValidators() wieder freigeben', fakeAsync(() => {
-        const { fixture, control, luxComponent } = erstelle(komponente, () => requiredValidator);
-
-        expect(luxComponent.luxRequired).withContext('required beim Start').toBeTrue();
+        expect(luxComponent.luxRequired(), 'required beim Start').toBe(true);
 
         control.removeValidators(requiredValidator);
-        aktualisiere(fixture, control);
+        await aktualisiere(fixture, control);
 
-        expect(luxComponent.luxRequired).withContext('nach removeValidators(required)').toBeFalse();
-        expect(control.hasError('required')).withContext('required-Fehler nach removeValidators(required)').toBeFalse();
+        expect(luxComponent.luxRequired(), 'nach removeValidators(required)').toBe(false);
+        expect(control.hasError('required'), 'required-Fehler nach removeValidators(required)').toBe(false);
+      });
 
-        discardPeriodicTasks();
-      }));
-
-      it('Sollte einen bedingten required-Validator nach updateValueAndValidity() neu bewerten', fakeAsync(() => {
-        const { fixture, host, control, luxComponent } = erstelle(
+      it('Sollte einen bedingten required-Validator nach updateValueAndValidity() neu bewerten', async () => {
+        const { fixture, host, control, luxComponent } = await erstelle(
           komponente,
           (testHost) => (c: AbstractControl) => (testHost.bedingung ? requiredValidator(c) : null)
         );
 
-        expect(luxComponent.luxRequired).withContext('Bedingung aus').toBeFalse();
+        expect(luxComponent.luxRequired(), 'Bedingung aus').toBe(false);
 
         host.bedingung = true;
-        aktualisiere(fixture, control);
+        await aktualisiere(fixture, control);
 
-        expect(luxComponent.luxRequired).withContext('Bedingung an').toBeTrue();
+        expect(luxComponent.luxRequired(), 'Bedingung an').toBe(true);
 
         host.bedingung = false;
-        aktualisiere(fixture, control);
+        await aktualisiere(fixture, control);
 
-        expect(luxComponent.luxRequired).withContext('Bedingung wieder aus').toBeFalse();
-        expect(control.hasError('required')).withContext('required-Fehler bei Bedingung aus').toBeFalse();
-
-        discardPeriodicTasks();
-      }));
+        expect(luxComponent.luxRequired(), 'Bedingung wieder aus').toBe(false);
+        expect(control.hasError('required'), 'required-Fehler bei Bedingung aus').toBe(false);
+      });
     });
   });
 });
@@ -180,43 +174,37 @@ describe('LuxFormComponentBase - required-Erkennung in Reactive Forms', () => {
     <form [formGroup]="form">
       @switch (komponente) {
         @case ('input') {
-          <lux-input-ac luxLabel="Feld" luxControlBinding="feld" id="feld"></lux-input-ac>
+          <lux-input luxLabel="Feld" luxControlBinding="feld" id="feld"></lux-input>
         }
         @case ('textarea') {
-          <lux-textarea-ac luxLabel="Feld" luxControlBinding="feld" id="feld"></lux-textarea-ac>
+          <lux-textarea luxLabel="Feld" luxControlBinding="feld" id="feld"></lux-textarea>
         }
         @case ('select') {
-          <lux-select-ac
-            luxLabel="Feld"
-            [luxOptions]="options"
-            luxOptionLabelProp="label"
-            luxControlBinding="feld"
-            id="feld"
-          ></lux-select-ac>
+          <lux-select luxLabel="Feld" [luxOptions]="options" luxOptionLabelProp="label" luxControlBinding="feld" id="feld"></lux-select>
         }
         @case ('radio') {
-          <lux-radio-ac luxLabel="Feld" [luxOptions]="options" luxOptionLabelProp="label" luxControlBinding="feld" id="feld"></lux-radio-ac>
+          <lux-radio luxLabel="Feld" [luxOptions]="options" luxOptionLabelProp="label" luxControlBinding="feld" id="feld"></lux-radio>
         }
         @case ('autocomplete') {
-          <lux-autocomplete-ac luxLabel="Feld" [luxOptions]="options" luxControlBinding="feld" id="feld"></lux-autocomplete-ac>
+          <lux-autocomplete luxLabel="Feld" [luxOptions]="options" luxControlBinding="feld" id="feld"></lux-autocomplete>
         }
         @case ('chips') {
-          <lux-chips-ac luxLabel="Feld" luxControlBinding="feld" id="feld"></lux-chips-ac>
+          <lux-chips luxLabel="Feld" luxControlBinding="feld" id="feld"></lux-chips>
         }
         @case ('datepicker') {
-          <lux-datepicker-ac luxLabel="Feld" luxControlBinding="feld" id="feld"></lux-datepicker-ac>
+          <lux-datepicker luxLabel="Feld" luxControlBinding="feld" id="feld"></lux-datepicker>
         }
         @case ('datetimepicker') {
-          <lux-datetimepicker-ac luxLabel="Feld" luxControlBinding="feld" id="feld"></lux-datetimepicker-ac>
+          <lux-datetimepicker luxLabel="Feld" luxControlBinding="feld" id="feld"></lux-datetimepicker>
         }
         @case ('timepicker') {
           <lux-timepicker luxLabel="Feld" luxControlBinding="feld" id="feld"></lux-timepicker>
         }
         @case ('slider') {
-          <lux-slider-ac luxLabel="Feld" luxControlBinding="feld" id="feld"></lux-slider-ac>
+          <lux-slider luxLabel="Feld" luxControlBinding="feld" id="feld"></lux-slider>
         }
         @case ('fileInput') {
-          <lux-file-input-ac luxLabel="Feld" luxControlBinding="feld" id="feld"></lux-file-input-ac>
+          <lux-file-input luxLabel="Feld" luxControlBinding="feld" id="feld"></lux-file-input>
         }
         @case ('fileUpload') {
           <lux-file-upload luxLabel="Feld" luxControlBinding="feld" id="feld"></lux-file-upload>
@@ -225,7 +213,7 @@ describe('LuxFormComponentBase - required-Erkennung in Reactive Forms', () => {
           <lux-file-list luxLabel="Feld" luxControlBinding="feld" id="feld"></lux-file-list>
         }
         @case ('lookupAutocomplete') {
-          <lux-lookup-autocomplete-ac
+          <lux-lookup-autocomplete
             luxLabel="Feld"
             luxTableNo="5"
             luxLookupId="lookupAutocomplete"
@@ -233,10 +221,10 @@ describe('LuxFormComponentBase - required-Erkennung in Reactive Forms', () => {
             [luxParameters]="lookupParameters"
             luxControlBinding="feld"
             id="feld"
-          ></lux-lookup-autocomplete-ac>
+          ></lux-lookup-autocomplete>
         }
         @case ('lookupCombobox') {
-          <lux-lookup-combobox-ac
+          <lux-lookup-combobox
             luxLabel="Feld"
             luxTableNo="5"
             luxLookupId="lookupCombobox"
@@ -244,37 +232,37 @@ describe('LuxFormComponentBase - required-Erkennung in Reactive Forms', () => {
             [luxParameters]="lookupParameters"
             luxControlBinding="feld"
             id="feld"
-          ></lux-lookup-combobox-ac>
+          ></lux-lookup-combobox>
         }
         @case ('checkbox') {
-          <lux-checkbox-ac luxLabel="Feld" luxControlBinding="feld" id="feld"></lux-checkbox-ac>
+          <lux-checkbox luxLabel="Feld" luxControlBinding="feld" id="feld"></lux-checkbox>
         }
         @case ('toggle') {
-          <lux-toggle-ac luxLabel="Feld" luxControlBinding="feld" id="feld"></lux-toggle-ac>
+          <lux-toggle luxLabel="Feld" luxControlBinding="feld" id="feld"></lux-toggle>
         }
       }
     </form>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ReactiveFormsModule,
-    LuxInputAcComponent,
-    LuxTextareaAcComponent,
-    LuxSelectAcComponent,
-    LuxRadioAcComponent,
-    LuxAutocompleteAcComponent,
-    LuxChipsAcComponent,
-    LuxDatepickerAcComponent,
-    LuxDatetimepickerAcComponent,
+    LuxInputComponent,
+    LuxTextareaComponent,
+    LuxSelectComponent,
+    LuxRadioComponent,
+    LuxAutocompleteComponent,
+    LuxChipsComponent,
+    LuxDatepickerComponent,
+    LuxDatetimepickerComponent,
     LuxTimepickerComponent,
-    LuxSliderAcComponent,
-    LuxFileInputAcComponent,
+    LuxSliderComponent,
+    LuxFileInputComponent,
     LuxFileUploadComponent,
     LuxFileListComponent,
-    LuxLookupAutocompleteAcComponent,
-    LuxLookupComboboxAcComponent,
-    LuxCheckboxAcComponent,
-    LuxToggleAcComponent
+    LuxLookupAutocompleteComponent,
+    LuxLookupComboboxComponent,
+    LuxCheckboxComponent,
+    LuxToggleComponent
   ]
 })
 class LuxRequiredTestComponent {

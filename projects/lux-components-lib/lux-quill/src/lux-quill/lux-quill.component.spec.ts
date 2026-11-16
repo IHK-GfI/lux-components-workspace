@@ -1,7 +1,10 @@
+import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import type { MockInstance } from 'vitest';
 import { CdkMenuTrigger } from '@angular/cdk/menu';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { disabled, form, FormField, readonly, required } from '@angular/forms/signals';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { LuxDialogRef, LuxDialogService } from '@ihk-gfi/lux-components';
@@ -23,14 +26,14 @@ describe('LuxQuillComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [StandaloneHostComponent, FormHostComponent, NgModelHostComponent],
+      imports: [StandaloneHostComponent, FormHostComponent, SignalFormHostComponent, NgModelHostComponent],
       providers: [provideNoopAnimations(), provideLuxTranslocoTesting()]
     }).compileComponents();
   });
 
   function editorOf(fixture: ComponentFixture<unknown>): Quill {
     const quill = quillComponentOf(fixture).editor();
-    expect(quill).withContext('Quill-Instanz').toBeTruthy();
+    expect(quill, 'Quill-Instanz').toBeTruthy();
     return quill!;
   }
 
@@ -44,7 +47,7 @@ describe('LuxQuillComponent', () => {
 
   function clickToolbar(fixture: ComponentFixture<unknown>, item: string) {
     const button: HTMLButtonElement = fixture.nativeElement.querySelector(`.lux-quill-toolbar-${item}`);
-    expect(button).withContext(`Toolbar-Button ${item}`).toBeTruthy();
+    expect(button, `Toolbar-Button ${item}`).toBeTruthy();
     button.click();
     fixture.detectChanges();
   }
@@ -186,11 +189,11 @@ describe('LuxQuillComponent', () => {
       fixture.detectChanges();
 
       // Nachbedingungen prüfen
-      expect(editorOf(fixture).isEnabled()).toBeFalse();
+      expect(editorOf(fixture).isEnabled()).toBe(false);
       expect(editorRoot(fixture).getAttribute('aria-disabled')).toEqual('true');
       const buttons: HTMLButtonElement[] = Array.from(fixture.nativeElement.querySelectorAll('.lux-quill-toolbar-control'));
       expect(buttons.length).toBeGreaterThan(0);
-      expect(buttons.every((button) => button.disabled)).toBeTrue();
+      expect(buttons.every((button) => button.disabled)).toBe(true);
     });
 
     it('Sollte bei readonly den Editor sperren, die Toolbar ausblenden und lesbar bleiben', () => {
@@ -199,7 +202,7 @@ describe('LuxQuillComponent', () => {
       fixture.detectChanges();
 
       // Nachbedingungen prüfen
-      expect(editorOf(fixture).isEnabled()).toBeFalse();
+      expect(editorOf(fixture).isEnabled()).toBe(false);
       expect(fixture.nativeElement.querySelector('lux-quill-toolbar')).toBeNull();
       expect(editorRoot(fixture).getAttribute('aria-readonly')).toEqual('true');
       expect(editorRoot(fixture).getAttribute('tabindex')).toEqual('0');
@@ -310,7 +313,7 @@ describe('LuxQuillComponent', () => {
         const prevented = pressKey(fixture, 'Tab');
 
         // Nachbedingungen prüfen
-        expect(prevented).toBeTrue();
+        expect(prevented).toBe(true);
         expect(host.value()).toEqual('<p class="ql-indent-1">Hallo Welt</p>');
 
         // Änderungen durchführen
@@ -326,7 +329,7 @@ describe('LuxQuillComponent', () => {
         const prevented = pressKey(fixture, 'Tab');
 
         // Nachbedingungen prüfen
-        expect(prevented).toBeFalse();
+        expect(prevented).toBe(false);
         expect(host.value()).toEqual('<p>Hallo Welt</p>');
       });
 
@@ -337,7 +340,7 @@ describe('LuxQuillComponent', () => {
         const prevented = pressKey(fixture, 'Tab');
 
         // Nachbedingungen prüfen
-        expect(prevented).toBeTrue();
+        expect(prevented).toBe(true);
         expect(host.value()).toEqual('<p class="ql-indent-1">Hallo Welt</p>');
       });
 
@@ -352,7 +355,7 @@ describe('LuxQuillComponent', () => {
         const prevented = pressKey(fixture, 'Tab');
 
         // Nachbedingungen prüfen
-        expect(prevented).toBeFalse();
+        expect(prevented).toBe(false);
         expect(fixture.nativeElement.querySelector('#' + quillComponentOf(fixture).uid() + '-keyboard-hint')).toBeNull();
       });
     });
@@ -374,7 +377,7 @@ describe('LuxQuillComponent', () => {
 
       function clickToolbarHeading() {
         const trigger: HTMLButtonElement = fixture.nativeElement.querySelector('.lux-quill-toolbar-heading');
-        expect(trigger).withContext('Überschriften-Auswahl').toBeTruthy();
+        expect(trigger, 'Überschriften-Auswahl').toBeTruthy();
         trigger.click();
         fixture.detectChanges();
       }
@@ -393,7 +396,7 @@ describe('LuxQuillComponent', () => {
           fixture.detectChanges();
           clickToolbarHeading();
           const item = document.querySelector<HTMLElement>('.lux-quill-heading-menu-item');
-          expect(item).withContext('Menü geöffnet').toBeTruthy();
+          expect(item, 'Menü geöffnet').toBeTruthy();
 
           // Änderungen durchführen: Fokus ins Menü, dann direkt auf ein Element außerhalb.
           item!.focus();
@@ -401,7 +404,7 @@ describe('LuxQuillComponent', () => {
           fixture.detectChanges();
 
           // Nachbedingungen prüfen: Solange das Menü offen ist, gilt die Komponente nicht als verlassen.
-          expect(fixture.nativeElement.querySelector('mat-error')).withContext('Menü offen').toBeNull();
+          expect(fixture.nativeElement.querySelector('mat-error'), 'Menü offen').toBeNull();
 
           // Änderungen durchführen: Menü schließt (z.B. durch den Klick nach außen).
           fixture.debugElement.query(By.directive(CdkMenuTrigger)).injector.get(CdkMenuTrigger).close();
@@ -409,7 +412,7 @@ describe('LuxQuillComponent', () => {
           fixture.detectChanges();
 
           // Nachbedingungen prüfen
-          expect(fixture.nativeElement.querySelector('mat-error')).withContext('nach dem Schließen').not.toBeNull();
+          expect(fixture.nativeElement.querySelector('mat-error'), 'nach dem Schließen').not.toBeNull();
         } finally {
           outside.remove();
         }
@@ -429,7 +432,7 @@ describe('LuxQuillComponent', () => {
         fixture.detectChanges();
 
         // Nachbedingungen prüfen
-        expect(quillComponentOf(fixture)['focused']()).toBeTrue();
+        expect(quillComponentOf(fixture)['focused']()).toBe(true);
       });
 
       it('Sollte im Kommentar-Preset keine Überschriften anbieten und eingefügte Überschriften zu Text machen', () => {
@@ -524,13 +527,13 @@ describe('LuxQuillComponent', () => {
 
     describe('Links', () => {
       let dialogResult: LuxQuillLinkDialogResult;
-      let openSpy: jasmine.Spy;
+      let openSpy: MockInstance;
 
       beforeEach(() => {
         dialogResult = undefined;
-        openSpy = spyOn(TestBed.inject(LuxDialogService), 'openComponent').and.callFake(
-          () => ({ dialogClosed: of(dialogResult) }) as unknown as LuxDialogRef
-        );
+        openSpy = vi
+          .spyOn(TestBed.inject(LuxDialogService), 'openComponent')
+          .mockImplementation(() => ({ dialogClosed: of(dialogResult) }) as unknown as LuxDialogRef);
         host.value.set('<p>Hallo Welt</p>');
         fixture.detectChanges();
       });
@@ -538,7 +541,7 @@ describe('LuxQuillComponent', () => {
       it('Sollte das Öffnen des Link-Dialogs nicht als Verlassen der Komponente werten', () => {
         // Vorbedingungen testen
         const closed = new Subject<LuxQuillLinkDialogResult>();
-        openSpy.and.callFake(() => ({ dialogClosed: closed.asObservable() }) as unknown as LuxDialogRef);
+        openSpy.mockImplementation(() => ({ dialogClosed: closed.asObservable() }) as unknown as LuxDialogRef);
         host.required.set(true);
         host.value.set('');
         fixture.detectChanges();
@@ -552,7 +555,7 @@ describe('LuxQuillComponent', () => {
 
         // Nachbedingungen prüfen
         expect(openSpy).toHaveBeenCalled();
-        expect(fixture.nativeElement.querySelector('mat-error')).withContext('Dialog offen').toBeNull();
+        expect(fixture.nativeElement.querySelector('mat-error'), 'Dialog offen').toBeNull();
 
         // Änderungen durchführen: Dialog schließen, danach den Editor verlassen.
         closed.next(undefined);
@@ -561,7 +564,7 @@ describe('LuxQuillComponent', () => {
         fixture.detectChanges();
 
         // Nachbedingungen prüfen
-        expect(fixture.nativeElement.querySelector('mat-error')).withContext('nach dem Verlassen').not.toBeNull();
+        expect(fixture.nativeElement.querySelector('mat-error'), 'nach dem Verlassen').not.toBeNull();
       });
 
       it('Sollte für markierten Text einen Link setzen', () => {
@@ -573,7 +576,7 @@ describe('LuxQuillComponent', () => {
         clickToolbar(fixture, 'link');
 
         // Nachbedingungen prüfen
-        expect(openSpy).toHaveBeenCalledWith(LuxQuillLinkDialogComponent, jasmine.any(Object), {
+        expect(openSpy).toHaveBeenCalledWith(LuxQuillLinkDialogComponent, expect.any(Object), {
           url: '',
           hasLink: false,
           askForText: false
@@ -590,7 +593,7 @@ describe('LuxQuillComponent', () => {
         clickToolbar(fixture, 'link');
 
         // Nachbedingungen prüfen
-        expect(openSpy.calls.mostRecent().args[2]).toEqual({ url: '', hasLink: false, askForText: true });
+        expect(openSpy.mock.lastCall![2]).toEqual({ url: '', hasLink: false, askForText: true });
         expect(host.value()).toContain('<a href="https://www.ihk.de" rel="noopener noreferrer" target="_blank"> IHK</a>');
       });
 
@@ -605,7 +608,7 @@ describe('LuxQuillComponent', () => {
         clickToolbar(fixture, 'link');
 
         // Nachbedingungen prüfen
-        expect(openSpy.calls.mostRecent().args[2]).toEqual({ url: 'https://www.ihk.de', hasLink: true, askForText: false });
+        expect(openSpy.mock.lastCall![2]).toEqual({ url: 'https://www.ihk.de', hasLink: true, askForText: false });
         expect(host.value()).toEqual('<p>Hallo Welt</p>');
       });
 
@@ -618,7 +621,7 @@ describe('LuxQuillComponent', () => {
         const prevented = pressKey(fixture, 'k', { ctrlKey: true });
 
         // Nachbedingungen prüfen
-        expect(prevented).toBeTrue();
+        expect(prevented).toBe(true);
         expect(openSpy).toHaveBeenCalled();
       });
     });
@@ -700,7 +703,7 @@ describe('LuxQuillComponent', () => {
 
       // Nachbedingungen prüfen
       expect(editorOf(fixture).getText()).toEqual('Neu\n');
-      expect(host.form.controls.text.dirty).toBeFalse();
+      expect(host.form.controls.text.dirty).toBe(false);
 
       // Änderungen durchführen
       editorOf(fixture).insertText(0, 'Ganz ', 'user');
@@ -708,7 +711,7 @@ describe('LuxQuillComponent', () => {
 
       // Nachbedingungen prüfen
       expect(host.form.controls.text.value).toEqual('<p>Ganz Neu</p>');
-      expect(host.form.controls.text.dirty).toBeTrue();
+      expect(host.form.controls.text.dirty).toBe(true);
     });
 
     it('Sollte den Required-Validator erkennen und den Fehler nach touched anzeigen', () => {
@@ -731,7 +734,7 @@ describe('LuxQuillComponent', () => {
       fixture.detectChanges();
 
       // Nachbedingungen prüfen
-      expect(host.form.controls.text.touched).toBeTrue();
+      expect(host.form.controls.text.touched).toBe(true);
     });
 
     it('Sollte disable()/enable() am FormControl über [(luxDisabled)] melden', () => {
@@ -740,14 +743,14 @@ describe('LuxQuillComponent', () => {
       fixture.detectChanges();
 
       // Nachbedingungen prüfen
-      expect(host.disabled()).toBeTrue();
+      expect(host.disabled()).toBe(true);
 
       // Änderungen durchführen
       host.form.controls.text.enable();
       fixture.detectChanges();
 
       // Nachbedingungen prüfen
-      expect(host.disabled()).toBeFalse();
+      expect(host.disabled()).toBe(false);
     });
 
     it('Sollte ein von Anfang an deaktiviertes FormControl übernehmen', () => {
@@ -759,9 +762,9 @@ describe('LuxQuillComponent', () => {
       initialFixture.detectChanges();
 
       // Nachbedingungen prüfen
-      expect(initialFixture.componentInstance.disabled()).toBeTrue();
-      expect(initialFixture.componentInstance.form.controls.text.disabled).toBeTrue();
-      expect(editorOf(initialFixture).isEnabled()).toBeFalse();
+      expect(initialFixture.componentInstance.disabled()).toBe(true);
+      expect(initialFixture.componentInstance.form.controls.text.disabled).toBe(true);
+      expect(editorOf(initialFixture).isEnabled()).toBe(false);
     });
 
     it('Sollte ein von Anfang an gesetztes luxDisabled bei aktivem FormControl übernehmen', () => {
@@ -773,9 +776,9 @@ describe('LuxQuillComponent', () => {
       initialFixture.detectChanges();
 
       // Nachbedingungen prüfen
-      expect(initialFixture.componentInstance.disabled()).toBeTrue();
-      expect(initialFixture.componentInstance.form.controls.text.disabled).toBeTrue();
-      expect(editorOf(initialFixture).isEnabled()).toBeFalse();
+      expect(initialFixture.componentInstance.disabled()).toBe(true);
+      expect(initialFixture.componentInstance.form.controls.text.disabled).toBe(true);
+      expect(editorOf(initialFixture).isEnabled()).toBe(false);
     });
 
     it('Sollte luxDisabled auf das FormControl übertragen', () => {
@@ -784,16 +787,16 @@ describe('LuxQuillComponent', () => {
       fixture.detectChanges();
 
       // Nachbedingungen prüfen
-      expect(host.form.controls.text.disabled).toBeTrue();
-      expect(editorOf(fixture).isEnabled()).toBeFalse();
+      expect(host.form.controls.text.disabled).toBe(true);
+      expect(editorOf(fixture).isEnabled()).toBe(false);
 
       // Änderungen durchführen
       host.disabled.set(false);
       fixture.detectChanges();
 
       // Nachbedingungen prüfen
-      expect(host.form.controls.text.enabled).toBeTrue();
-      expect(editorOf(fixture).isEnabled()).toBeTrue();
+      expect(host.form.controls.text.enabled).toBe(true);
+      expect(editorOf(fixture).isEnabled()).toBe(true);
     });
 
     it('Sollte den Disabled-Status des FormControls übernehmen', () => {
@@ -802,14 +805,99 @@ describe('LuxQuillComponent', () => {
       fixture.detectChanges();
 
       // Nachbedingungen prüfen
-      expect(editorOf(fixture).isEnabled()).toBeFalse();
+      expect(editorOf(fixture).isEnabled()).toBe(false);
 
       // Änderungen durchführen
       host.form.controls.text.enable();
       fixture.detectChanges();
 
       // Nachbedingungen prüfen
-      expect(editorOf(fixture).isEnabled()).toBeTrue();
+      expect(editorOf(fixture).isEnabled()).toBe(true);
+    });
+  });
+
+  describe('Signal Forms', () => {
+    let fixture: ComponentFixture<SignalFormHostComponent>;
+    let host: SignalFormHostComponent;
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(SignalFormHostComponent);
+      host = fixture.componentInstance;
+      fixture.detectChanges();
+    });
+
+    it('Sollte den Wert aus dem Signal Form übernehmen und Eingaben zurückmelden', () => {
+      // Vorbedingungen testen
+      expect(editorOf(fixture).getText()).toEqual('Start\n');
+
+      // Änderungen durchführen
+      host.model.set({ text: '<p>Neu</p>' });
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen
+      expect(editorOf(fixture).getText()).toEqual('Neu\n');
+      expect(host.signalForm.text().dirty()).toBe(false);
+
+      // Änderungen durchführen
+      editorOf(fixture).insertText(0, 'Ganz ', 'user');
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen
+      expect(host.model().text).toEqual('<p>Ganz Neu</p>');
+      expect(host.signalForm.text().dirty()).toBe(true);
+    });
+
+    it('Sollte required aus dem Schema übernehmen und dessen Meldung nach touched anzeigen', () => {
+      // Vorbedingungen testen
+      expect(fixture.nativeElement.querySelector('.lux-form-label-authentic').textContent).toContain('*');
+      expect(editorRoot(fixture).getAttribute('aria-required')).toEqual('true');
+
+      // Änderungen durchführen
+      host.model.set({ text: '' });
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen: Ohne touched noch kein Fehler
+      expect(fixture.nativeElement.querySelector('mat-error')).toBeNull();
+
+      // Änderungen durchführen
+      editorRoot(fixture).dispatchEvent(new FocusEvent('focusout', { bubbles: true }));
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen
+      expect(host.signalForm.text().touched()).toBe(true);
+      expect(fixture.nativeElement.querySelector('mat-error').textContent).toContain('Bitte einen Text eingeben');
+      expect(editorRoot(fixture).getAttribute('aria-invalid')).toEqual('true');
+    });
+
+    it('Sollte luxErrorMessage der Meldung aus dem Schema vorziehen', () => {
+      // Änderungen durchführen
+      host.errorMessage.set('Eigene Meldung');
+      host.model.set({ text: '' });
+      host.signalForm.text().markAsTouched();
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen
+      expect(fixture.nativeElement.querySelector('mat-error').textContent).toContain('Eigene Meldung');
+    });
+
+    it('Sollte disabled und readonly aus dem Schema übernehmen', () => {
+      // Änderungen durchführen
+      host.disabled.set(true);
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen
+      expect(editorOf(fixture).isEnabled()).toBe(false);
+      expect(editorRoot(fixture).getAttribute('aria-disabled')).toEqual('true');
+
+      // Änderungen durchführen
+      host.disabled.set(false);
+      host.readonly.set(true);
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen
+      expect(editorOf(fixture).isEnabled()).toBe(false);
+      expect(editorRoot(fixture).getAttribute('aria-disabled')).toBeNull();
+      expect(editorRoot(fixture).getAttribute('aria-readonly')).toEqual('true');
     });
   });
 
@@ -916,7 +1004,7 @@ describe('LuxQuillComponent', () => {
 
       // Nachbedingungen prüfen
       expect(host.form.controls.text.value).toEqual('<p class="lux-quill-heading-2">Titel</p>');
-      expect(host.form.controls.text.dirty).toBeFalse();
+      expect(host.form.controls.text.dirty).toBe(false);
     });
 
     it('Sollte die Quill-Instanz über luxEditorCreated liefern und bei Konfigurationsänderung neu aufbauen', () => {
@@ -972,7 +1060,7 @@ describe('LuxQuillComponent', () => {
       const prevented = pressKey(fixture, 'S', { ctrlKey: true, shiftKey: true });
 
       // Nachbedingungen prüfen
-      expect(prevented).toBeTrue();
+      expect(prevented).toBe(true);
       expect(host.value()).toEqual('<p><s>Hallo</s> Welt</p>');
     });
   });
@@ -1027,7 +1115,13 @@ class StandaloneHostComponent {
 @Component({
   template: `
     <form [formGroup]="form">
-      <lux-quill formControlName="text" luxLabel="Beschreibung" [(luxDisabled)]="disabled" [luxPreset]="preset()" [luxConfig]="config()"></lux-quill>
+      <lux-quill
+        formControlName="text"
+        luxLabel="Beschreibung"
+        [(luxDisabled)]="disabled"
+        [luxPreset]="preset()"
+        [luxConfig]="config()"
+      ></lux-quill>
     </form>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -1039,6 +1133,23 @@ class FormHostComponent {
   config = signal<Partial<LuxQuillConfig> | undefined>(undefined);
   form = new FormGroup({
     text: new FormControl('<p>Start</p>', { nonNullable: true, validators: Validators.required })
+  });
+}
+
+@Component({
+  template: `<lux-quill [formField]="signalForm.text" luxLabel="Anschreiben" [luxErrorMessage]="errorMessage()" />`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [LuxQuillComponent, FormField]
+})
+class SignalFormHostComponent {
+  readonly model = signal({ text: '<p>Start</p>' });
+  readonly disabled = signal(false);
+  readonly readonly = signal(false);
+  readonly errorMessage = signal<string | undefined>(undefined);
+  readonly signalForm = form(this.model, (path) => {
+    required(path.text, { message: 'Bitte einen Text eingeben' });
+    disabled(path.text, { when: () => this.disabled() });
+    readonly(path.text, { when: () => this.readonly() });
   });
 }
 

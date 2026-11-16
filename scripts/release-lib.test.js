@@ -411,6 +411,19 @@ test('Updater-Templates', () => {
   assert.match(lib.updaterSchemaJson('21.10.0'), /"\$id": "luxupdate211000Schema"/);
 });
 
+test('Updater-Templates passen zum Vitest-Updater (chalk als Default-Import, async-Test ohne done)', () => {
+  const index = lib.updaterIndexTs('22.1.0');
+  const spec = lib.updaterSpecTs('22.1.0', '22.0.0');
+
+  assert.match(index, /^import chalk from 'chalk';$/m);
+  assert.match(spec, /^import \{ lastValueFrom \} from 'rxjs';$/m);
+  assert.match(spec, /it\('Sollte die Abhängigkeiten aktualisieren', async \(\) => \{/);
+  assert.match(spec, /await lastValueFrom\(callRule\(update220100\(testOptions\), appTree, context\)\);/);
+  assert.doesNotMatch(spec, /done/);
+  assert.match(spec, /"@angular\/common": "\^22\.0\.0"/);
+  assert.doesNotMatch(spec, /\^21\.0\.0/);
+});
+
 test('Updater-Templates ohne Theme-Release', () => {
   const index = lib.updaterIndexTs('21.10.0', false);
   const spec = lib.updaterSpecTs('21.10.0', '21.9.0', false, '21.8.0');

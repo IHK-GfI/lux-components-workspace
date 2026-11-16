@@ -1,18 +1,21 @@
+import { describe, it, beforeEach, afterEach, expect, vi } from 'vitest';
+import type { Mock } from 'vitest';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component, ViewChild } from '@angular/core';
-import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { Component, signal, viewChild } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
+import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxConsoleService } from '../../lux-util/lux-console.service';
 import { LuxFormLabelComponent } from '../lux-form-control/lux-form-control-subcomponents/lux-form-label.component';
-import { LuxInputAcComponent } from '../lux-input-ac/lux-input-ac.component';
+import { LuxInputComponent } from '../lux-input/lux-input.component';
 
 describe('LuxFormComponentBase - Namenskaskade (labelledBy)', () => {
   let fixture: ComponentFixture<AriaBaseTestComponent>;
   let testComponent: AriaBaseTestComponent;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       providers: [
         LuxConsoleService,
@@ -22,7 +25,7 @@ describe('LuxFormComponentBase - Namenskaskade (labelledBy)', () => {
         provideLuxTranslocoTesting()
       ]
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(AriaBaseTestComponent);
@@ -31,54 +34,65 @@ describe('LuxFormComponentBase - Namenskaskade (labelledBy)', () => {
   });
 
   it('liefert luxAriaLabelledby, wenn gesetzt (höchste Priorität)', () => {
-    testComponent.input.luxAriaLabelledby = 'externes-label-id';
-    testComponent.input.luxAriaLabel = 'Suche';
-    expect(testComponent.input.labelledBy()).toBe('externes-label-id');
+    testComponent.ariaLabelledby.set('externes-label-id');
+    testComponent.ariaLabel.set('Suche');
+    fixture.detectChanges();
+
+    expect(testComponent.input().labelledBy()).toBe('externes-label-id');
   });
 
   it('liefert undefined, wenn nur luxAriaLabel gesetzt ist (aria-label soll greifen)', () => {
-    testComponent.input.luxAriaLabel = 'Suche';
-    expect(testComponent.input.labelledBy()).toBeUndefined();
+    testComponent.ariaLabel.set('Suche');
+    fixture.detectChanges();
+
+    expect(testComponent.input().labelledBy()).toBeUndefined();
   });
 
   it('liefert uid + "-label", wenn nur luxLabel gesetzt ist', () => {
-    expect(testComponent.input.labelledBy()).toBe(testComponent.input.uid + '-label');
+    expect(testComponent.input().labelledBy()).toBe(testComponent.input().uid() + '-label');
   });
 
   it('liefert undefined, wenn weder Label noch Aria-Inputs gesetzt sind', () => {
-    testComponent.input.luxLabel = '';
-    expect(testComponent.input.labelledBy()).toBeUndefined();
+    testComponent.label.set('');
+    fixture.detectChanges();
+
+    expect(testComponent.input().labelledBy()).toBeUndefined();
   });
 
   it('liefert uid + "-label" bei projiziertem lux-form-label ohne luxLabel/Aria-Inputs', () => {
     const projectedFixture = TestBed.createComponent(ProjectedLabelOnlyTestComponent);
     projectedFixture.detectChanges();
-    const input = projectedFixture.componentInstance.input;
+    const input = projectedFixture.componentInstance.input();
 
-    expect(input.labelledBy()).toBe(input.uid + '-label');
+    expect(input.labelledBy()).toBe(input.uid() + '-label');
   });
 });
 
 @Component({
-  imports: [LuxInputAcComponent],
-  template: `<lux-input-ac luxLabel="Nachname"></lux-input-ac>`
+  imports: [LuxInputComponent],
+  template: `<lux-input [luxLabel]="label()" [luxAriaLabel]="ariaLabel()" [luxAriaLabelledby]="ariaLabelledby()"></lux-input>`
 })
 class AriaBaseTestComponent {
-  @ViewChild(LuxInputAcComponent, { static: true }) input!: LuxInputAcComponent;
+  readonly input = viewChild.required(LuxInputComponent);
+
+  readonly label = signal('Nachname');
+  readonly ariaLabel = signal<string | undefined>(undefined);
+  readonly ariaLabelledby = signal<string | undefined>(undefined);
 }
 
 @Component({
-  imports: [LuxInputAcComponent, LuxFormLabelComponent],
-  template: `<lux-input-ac><lux-form-label>Nachname</lux-form-label></lux-input-ac>`
+  imports: [LuxInputComponent, LuxFormLabelComponent],
+  template: `<lux-input><lux-form-label>Nachname</lux-form-label></lux-input>`
 })
 class ProjectedLabelOnlyTestComponent {
-  @ViewChild(LuxInputAcComponent, { static: true }) input!: LuxInputAcComponent;
+  readonly input = viewChild.required(LuxInputComponent);
 }
 
 describe('LuxFormComponentBase - Dev-Warnungen (checkA11yName)', () => {
-  let warnSpy: jasmine.Spy;
+  let warnSpy: Mock;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
+    vi.useFakeTimers();
     TestBed.configureTestingModule({
       providers: [
         LuxConsoleService,
@@ -88,75 +102,77 @@ describe('LuxFormComponentBase - Dev-Warnungen (checkA11yName)', () => {
         provideLuxTranslocoTesting()
       ]
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     const consoleService = TestBed.inject(LuxConsoleService);
-    warnSpy = jasmine.createSpy('warn');
-    spyOnProperty(consoleService, 'warn', 'get').and.returnValue(warnSpy);
+    warnSpy = vi.fn().mockName('warn');
+    vi.spyOn(consoleService as any, 'warn', 'get').mockReturnValue(warnSpy);
   });
 
-  it('warnt, wenn ein Control keinerlei zugänglichen Namen hat', fakeAsync(() => {
+  afterEach(async () => {
+    if (vi.isFakeTimers()) {
+      await vi.runAllTimersAsync();
+    }
+    vi.useRealTimers();
+  });
+
+  it('warnt, wenn ein Control keinerlei zugänglichen Namen hat', async () => {
     const fixture = TestBed.createComponent(NoNameTestComponent);
-    fixture.detectChanges();
-    tick();
+    await LuxTestHelper.wait(fixture);
 
-    expect(warnSpy).toHaveBeenCalledWith(jasmine.stringContaining('keinen zugänglichen Namen'));
-  }));
+    expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('keinen zugänglichen Namen'));
+  });
 
-  it('warnt bei sichtbarem Label plus abweichendem luxAriaLabel (WCAG 2.5.3)', fakeAsync(() => {
+  it('warnt bei sichtbarem Label plus abweichendem luxAriaLabel (WCAG 2.5.3)', async () => {
     const fixture = TestBed.createComponent(ConflictingNameTestComponent);
-    fixture.detectChanges();
-    tick();
+    await LuxTestHelper.wait(fixture);
 
-    expect(warnSpy).toHaveBeenCalledWith(jasmine.stringContaining('2.5.3'));
-  }));
+    expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('2.5.3'));
+  });
 
-  it('warnt nicht, wenn luxLabel gesetzt ist', fakeAsync(() => {
+  it('warnt nicht, wenn luxLabel gesetzt ist', async () => {
     const fixture = TestBed.createComponent(AriaBaseTestComponent);
-    fixture.detectChanges();
-    tick();
+    await LuxTestHelper.wait(fixture);
 
     expect(warnSpy).not.toHaveBeenCalled();
-  }));
+  });
 
-  it('warnt nicht, wenn nur luxAriaLabel gesetzt ist', fakeAsync(() => {
+  it('warnt nicht, wenn nur luxAriaLabel gesetzt ist', async () => {
     const fixture = TestBed.createComponent(AriaOnlyTestComponent);
-    fixture.detectChanges();
-    tick();
+    await LuxTestHelper.wait(fixture);
 
     expect(warnSpy).not.toHaveBeenCalled();
-  }));
+  });
 
-  it('warnt nicht bei projiziertem lux-form-label plus luxAriaLabel (Text hier nicht auslesbar)', fakeAsync(() => {
+  it('warnt nicht bei projiziertem lux-form-label plus luxAriaLabel (Text hier nicht auslesbar)', async () => {
     const fixture = TestBed.createComponent(ProjectedLabelTestComponent);
-    fixture.detectChanges();
-    tick();
+    await LuxTestHelper.wait(fixture);
 
     expect(warnSpy).not.toHaveBeenCalled();
-  }));
+  });
 });
 
 @Component({
-  imports: [LuxInputAcComponent],
-  template: `<lux-input-ac></lux-input-ac>`
+  imports: [LuxInputComponent],
+  template: `<lux-input></lux-input>`
 })
 class NoNameTestComponent {}
 
 @Component({
-  imports: [LuxInputAcComponent],
-  template: `<lux-input-ac luxLabel="Nachname" luxAriaLabel="Familienname"></lux-input-ac>`
+  imports: [LuxInputComponent],
+  template: `<lux-input luxLabel="Nachname" luxAriaLabel="Familienname"></lux-input>`
 })
 class ConflictingNameTestComponent {}
 
 @Component({
-  imports: [LuxInputAcComponent],
-  template: `<lux-input-ac luxAriaLabel="Suchbegriff eingeben"></lux-input-ac>`
+  imports: [LuxInputComponent],
+  template: `<lux-input luxAriaLabel="Suchbegriff eingeben"></lux-input>`
 })
 class AriaOnlyTestComponent {}
 
 @Component({
-  imports: [LuxInputAcComponent, LuxFormLabelComponent],
-  template: `<lux-input-ac luxAriaLabel="Familienname"><lux-form-label>Nachname</lux-form-label></lux-input-ac>`
+  imports: [LuxInputComponent, LuxFormLabelComponent],
+  template: `<lux-input luxAriaLabel="Familienname"><lux-form-label>Nachname</lux-form-label></lux-input>`
 })
 class ProjectedLabelTestComponent {}

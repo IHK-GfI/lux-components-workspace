@@ -4,6 +4,7 @@ import * as path from 'path';
 import { appOptions, workspaceOptions } from '../utility/test';
 import { UtilConfig } from '../utility/util';
 import { updateEnMessages } from './index';
+import { lastValueFrom } from 'rxjs';
 
 describe('updateEnMessages', () => {
   let appTree: UnitTestTree;
@@ -36,7 +37,7 @@ describe('updateEnMessages', () => {
   });
 
   describe('[Rule] updateEnMessages', () => {
-    it('Sollte die englische Übersetzungen aktualisieren', (done) => {
+    it('Sollte die englische Übersetzungen aktualisieren', async () => {
       const filePathDe = '/src/locale/messages.xlf';
       const filePathEn = '/src/locale/messages.en.xlf';
 
@@ -49,19 +50,13 @@ describe('updateEnMessages', () => {
       appTree.create(filePathLCEn, i18nEnLuxC);
       appTree.create(filePathSDEn, i18nEnStamm);
 
-      callRule(updateEnMessages(), appTree, context).subscribe({
-        next: (success) => {
-          expect(success.exists(filePathDe)).toBeTrue();
-          expect(success.exists(filePathEn)).toBeTrue();
-          expect(success.exists(filePathLCEn)).toBeTrue();
-          expect(success.exists(filePathSDEn)).toBeTrue();
+      const success = await lastValueFrom(callRule(updateEnMessages(), appTree, context));
+      expect(success.exists(filePathDe)).toBe(true);
+      expect(success.exists(filePathEn)).toBe(true);
+      expect(success.exists(filePathLCEn)).toBe(true);
+      expect(success.exists(filePathSDEn)).toBe(true);
 
-          expect(success.read(filePathEn)?.toString()).toEqual(i18nEnAppResult);
-
-          done();
-        },
-        error: (reason) => expect(reason).toBeUndefined()
-      });
+      expect(success.read(filePathEn)?.toString()).toEqual(i18nEnAppResult);
     });
   });
 });

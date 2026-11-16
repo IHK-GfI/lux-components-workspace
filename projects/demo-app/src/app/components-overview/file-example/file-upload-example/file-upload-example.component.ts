@@ -1,5 +1,6 @@
-import { AfterViewInit, Component, inject, OnInit, QueryList, ViewChild, ViewChildren, ChangeDetectionStrategy } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, inject, OnInit, signal, viewChild, viewChildren } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { disabled, form, FormField, readonly, required, validate } from '@angular/forms/signals';
 import {
   ILuxFileActionConfig,
   ILuxFileObject,
@@ -9,10 +10,11 @@ import {
   LuxFileRenameDialogComponent,
   LuxFileUploadComponent,
   LuxFormHintComponent,
-  LuxInputAcComponent,
-  LuxInputAcSuffixComponent,
-  LuxSelectAcComponent,
-  LuxToggleAcComponent,
+  LuxInputComponent,
+  LuxInputSuffixComponent,
+  luxRequiredArray,
+  LuxSelectComponent,
+  LuxToggleComponent,
   LuxUtil
 } from '@ihk-gfi/lux-components';
 import { TranslocoService } from '@jsverse/transloco';
@@ -23,17 +25,18 @@ import { ExampleBaseSimpleOptionsComponent } from '../../../example-base/example
 import { ExampleBaseStructureComponent } from '../../../example-base/example-base-root/example-base-subcomponents/example-base-structure/example-base-structure.component';
 import { ExampleFormDisableComponent } from '../../../example-base/example-form-disable/example-form-disable.component';
 import { ExampleFormValueComponent } from '../../../example-base/example-form-value/example-form-value.component';
+import { ExampleSignalFormValueComponent } from '../../../example-base/example-signal-form-value/example-signal-form-value.component';
 import { FileExampleComponent } from '../file-example.component';
 
 @Component({
   selector: 'lux-file-upload-example',
   templateUrl: './file-upload-example.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    LuxToggleAcComponent,
-    LuxSelectAcComponent,
-    LuxInputAcSuffixComponent,
-    LuxInputAcComponent,
+    LuxToggleComponent,
+    LuxSelectComponent,
+    LuxInputSuffixComponent,
+    LuxInputComponent,
     LuxFormHintComponent,
     LuxFileUploadComponent,
     LuxAutofocusDirective,
@@ -41,26 +44,36 @@ import { FileExampleComponent } from '../file-example.component';
     ExampleBaseContentComponent,
     ReactiveFormsModule,
     ExampleFormValueComponent,
+    ExampleSignalFormValueComponent,
     ExampleBaseSimpleOptionsComponent,
     ExampleFormDisableComponent,
-    ExampleBaseAdvancedOptionsComponent
+    ExampleBaseAdvancedOptionsComponent,
+    FormField
   ]
 })
-export class FileUploadExampleComponent extends FileExampleComponent<ILuxFileObject[] | null, ILuxFilesListActionConfig> implements OnInit, AfterViewInit {
-  private tService = inject(TranslocoService);
+export class FileUploadExampleComponent
+  extends FileExampleComponent<ILuxFileObject[] | null, ILuxFilesListActionConfig>
+  implements OnInit, AfterViewInit
+{
+  readonly fileUploads = viewChildren(LuxFileUploadComponent);
+  readonly fileBaseWithoutComponent = viewChild.required('fileBaseWithoutComponent', { read: LuxFileUploadComponent });
+  readonly fileBaseWithComponent = viewChild.required('fileBaseWithComponent', { read: LuxFileUploadComponent });
+  readonly signalModel = signal<ILuxFileObject[] | null>(null);
+  readonly signalForm = form(this.signalModel, (path) => {
+    disabled(path, { when: () => this.disabled() });
+    readonly(path, { when: () => this.readonly() });
+    required(path, { when: () => this.required() });
+    validate(path, luxRequiredArray({ when: () => this.required() }));
+  });
+  readonly plainValue = signal<ILuxFileObject[] | null>(null);
 
-  @ViewChildren(LuxFileUploadComponent) fileUploads!: QueryList<LuxFileUploadComponent>;
-  @ViewChild('fileBaseWithoutComponent', { read: LuxFileUploadComponent, static: true }) fileBaseWithoutComponent!: LuxFileUploadComponent;
-  @ViewChild('fileBaseWithComponent', { read: LuxFileUploadComponent, static: true }) fileBaseWithComponent!: LuxFileUploadComponent;
-
-  dialogService = inject(LuxDialogService);
-  override label = `Zum Hochladen Datei hier ablegen oder `;
-  labelLink = `Datei durchsuchen`;
-  labelLinkShort = `Datei hochladen`;
-  uploadIcon = 'lux-programming-cloud-upload';
-  deleteIcon = '';
-  multiple = true;
-  listOnly = false;
+  override readonly label = signal(`Zum Hochladen Datei hier ablegen oder `);
+  readonly labelLink = signal(`Datei durchsuchen`);
+  readonly labelLinkShort = signal(`Datei hochladen`);
+  readonly uploadIcon = signal('lux-programming-cloud-upload');
+  readonly deleteIcon = signal('');
+  readonly multiple = signal(true);
+  readonly listOnly = signal(false);
 
   customActionConfigs: ILuxFileActionConfig[] = [
     {
@@ -75,58 +88,70 @@ export class FileUploadExampleComponent extends FileExampleComponent<ILuxFileObj
     }
   ];
 
+  private tService = inject(TranslocoService);
+  private dialogService = inject(LuxDialogService);
+
   override ngOnInit() {
-    this.maxSize = 10;
-    this.capture = 'environment';
-    this.accept = '.pdf,.jpeg,.jpg,.png';
-    this.hint = `Sie können Dateien der Typen ${LuxUtil.getAcceptTypesAsMessagePart(this.tService, this.accept)} mit einer Größe bis zu ${
-      this.maxSize
-    } Megabytes hochladen.`;
+    this.maxSize.set(10);
+    this.capture.set('environment');
+    this.accept.set('.pdf,.jpeg,.jpg,.png');
+    this.hint.set(
+      `Sie können Dateien der Typen ${LuxUtil.getAcceptTypesAsMessagePart(this.tService, this.accept())} mit einer Größe bis zu ${this.maxSize()} Megabytes hochladen.`
+    );
     super.ngOnInit();
   }
 
   ngAfterViewInit() {
-    this.fileComponents = this.fileUploads.toArray();
+    this.fileComponents = [...this.fileUploads()];
+
+    const selected = this.selected();
+    if (selected) {
+      this.syncInitialFiles(selected);
+    }
   }
 
   toogleCustomHiddenActionConfig() {
-    this.customActionConfigs[0] = {
-      ...this.customActionConfigs[0],
-      hidden: !this.customActionConfigs[0].hidden,
-    }
+    this.customActionConfigs = [
+      {
+        ...this.customActionConfigs[0],
+        hidden: !this.customActionConfigs[0].hidden
+      }
+    ];
   }
 
   toogleCustomDisabeldActionConfig() {
-    this.customActionConfigs[0] = {
-      ...this.customActionConfigs[0],
-      disabled: !this.customActionConfigs[0].disabled,
-    }
+    this.customActionConfigs = [
+      {
+        ...this.customActionConfigs[0],
+        disabled: !this.customActionConfigs[0].disabled
+      }
+    ];
   }
 
   toogleViewConfig() {
     this.viewActionConfig = {
       ...this.viewActionConfig,
-      hidden: !this.viewActionConfig.hidden,
-    }
+      hidden: !this.viewActionConfig.hidden
+    };
 
     this.viewActionConfigForm = {
       ...this.viewActionConfigForm,
-      hidden: !this.viewActionConfigForm.hidden,
-    }
+      hidden: !this.viewActionConfigForm.hidden
+    };
   }
 
   toogleDeleteHiddenConfig() {
     this.deleteActionConfig = {
       ...this.deleteActionConfig,
-      hidden: !this.deleteActionConfig.hidden,
-    }
+      hidden: !this.deleteActionConfig.hidden
+    };
   }
 
   toogleDeleteDisabledConfig() {
     this.deleteActionConfig = {
       ...this.deleteActionConfig,
-      disabled: !this.deleteActionConfig.disabled,
-    }
+      disabled: !this.deleteActionConfig.disabled
+    };
   }
 
   initSelected() {
@@ -139,13 +164,39 @@ export class FileUploadExampleComponent extends FileExampleComponent<ILuxFileObj
           file.name = 'example.png';
           file.lastModifiedDate = new Date();
           const fileObject = { name: 'example.png', content: file, type: file.type, size: file.size };
-          this.selected = [fileObject];
-          this.form.get(this.controlBinding)!.setValue([fileObject]);
+          const selectedFiles = [fileObject];
+          this.selected.set(selectedFiles);
+          this.signalModel.set(selectedFiles);
+          this.plainValue.set(selectedFiles);
+          this.form.get(this.controlBinding)!.setValue(selectedFiles);
+          this.syncInitialFiles(selectedFiles);
         })
       )
       .subscribe(() => {
         /* Do nothing */
       });
+  }
+
+  private syncInitialFiles(files: ILuxFileObject[]) {
+    this.fileUploads().forEach((fileUpload) => fileUpload.setValue(files));
+  }
+
+  openDialog(fileObject: ILuxFileObject) {
+    const dialogRef = this.dialogService.openComponent(
+      LuxFileRenameDialogComponent,
+      {
+        disableClose: false,
+        width: 'auto',
+        height: 'auto'
+      },
+      fileObject
+    );
+
+    dialogRef.dialogClosed.subscribe((newFileName: any) => {
+      if (typeof newFileName === 'string' && newFileName.length > 0) {
+        fileObject.name = newFileName;
+      }
+    });
   }
 
   protected initUploadActionConfig() {
@@ -159,23 +210,9 @@ export class FileUploadExampleComponent extends FileExampleComponent<ILuxFileObj
       label: 'Hochladen',
       labelHeader: 'Neue Dateien hochladen',
       onClick: (files: ILuxFileObject[]) => {
-        this.log(this.showOutputEvents, 'uploadActionConfig onClick', files);
+        this.log(this.showOutputEvents(), 'uploadActionConfig onClick', files);
         this.onUpload(files);
       }
     };
-  }
-
-  openDialog(fileObject: ILuxFileObject) {
-    const dialogRef = this.dialogService.openComponent(LuxFileRenameDialogComponent,{
-      disableClose: false,
-      width: 'auto',
-      height: 'auto',
-    }, fileObject);
-
-    dialogRef.dialogClosed.subscribe((newFileName: any) => {
-      if (typeof newFileName === 'string' && newFileName.length > 0) {
-        fileObject.name = newFileName;
-      }
-    });
   }
 }

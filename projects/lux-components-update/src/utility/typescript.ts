@@ -328,14 +328,14 @@ export function removeImport(tree: Tree, filePath: string, packageName: string, 
 }
 
 export function addComponentImport(tree: Tree, filePath: string, importName: string, logMessage = true) {
-  addComponent(tree, filePath, "imports", importName, logMessage);
+  addComponent(tree, filePath, 'imports', importName, logMessage);
 }
 
 export function addComponentProvider(tree: Tree, filePath: string, importName: string, logMessage = true) {
-  addComponent(tree, filePath, "providers", importName, logMessage);
+  addComponent(tree, filePath, 'providers', importName, logMessage);
 }
 
-export function addComponent(tree: Tree, filePath: string, property:string, importName: string, logMessage = true) {
+export function addComponent(tree: Tree, filePath: string, property: string, importName: string, logMessage = true) {
   const content = (tree.read(filePath) as Buffer).toString();
   const fileName = filePath.substring(filePath.lastIndexOf('/') + 1, filePath.length);
   const sourceFile = ts.createSourceFile(`${fileName}`, content, ts.ScriptTarget.Latest, true);

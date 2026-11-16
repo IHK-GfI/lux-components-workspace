@@ -1,4 +1,4 @@
-import { Directive, Input } from '@angular/core';
+import { Directive, input } from '@angular/core';
 import { LuxAriaBase } from './lux-aria-base';
 
 @Directive({
@@ -6,36 +6,24 @@ import { LuxAriaBase } from './lux-aria-base';
 })
 export class LuxAriaExpandedDirective extends LuxAriaBase<boolean> {
   protected ariaTagName = 'aria-expanded';
-  _luxAriaExpanded?: boolean;
 
-  @Input() luxAriaExpandedSelector?: string;
-
-  @Input()
-  get luxAriaExpanded() {
-    return this._luxAriaExpanded;
-  }
-
-  set luxAriaExpanded(expanded: boolean | undefined) {
-    this._luxAriaExpanded = expanded;
-
-    this.renderAria();
-  }
-
-  constructor() {
-    super();
-    if (!this.luxAriaExpandedSelector) {
-      const tagName = this.elementRef.nativeElement.tagName.toLowerCase();
-      if (tagName === 'lux-button') {
-        this.luxAriaExpandedSelector = 'button';
-      }
-    }
-  }
+  readonly luxAriaExpandedSelector = input<string>();
+  readonly luxAriaExpanded = input<boolean>();
 
   getSelector(): string | undefined {
-    return this.luxAriaExpandedSelector;
+    if (this.luxAriaExpandedSelector()) {
+      return this.luxAriaExpandedSelector();
+    }
+
+    const tagName = this.elementRef.nativeElement.tagName.toLowerCase();
+    if (tagName === 'lux-button') {
+      return 'button';
+    }
+
+    return undefined;
   }
 
   getValue(): boolean | undefined {
-    return this._luxAriaExpanded;
+    return this.luxAriaExpanded();
   }
 }

@@ -80,7 +80,7 @@ Es wird empfohlen, das Layout mit den Components aus dem [Layout](#layout) zu er
 - [lux-stepper-large](lux‐stepper‐large-v19)
 - [lux-tabs](lux‐tabs-v19)
 - [lux-tile](lux‐tile-v19)
-- [lux-tile (green)](lux‐tile-green-v19)
+- [lux-tile (green)](lux‐tile‐green-v19)
 
 ### Misc
 
@@ -106,7 +106,7 @@ Es wird empfohlen, das Layout mit den Components aus dem [Layout](#layout) zu er
 - [lux-table](lux‐table-v19)
 - [lux‐tenant‐logo](lux‐tenant‐logo-v19)
 - [lux-textbox](lux‐textbox-v19)
-- [lux-tour-hint](lux-tour-hint-v19)
+- [lux-tour-hint](lux‐tour‐hint-v19)
 
 ### Directives
 

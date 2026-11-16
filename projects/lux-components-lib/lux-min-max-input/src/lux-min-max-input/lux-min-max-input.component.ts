@@ -12,11 +12,11 @@ import {
   ValidatorFn
 } from '@angular/forms';
 import {
-  LuxDatepickerAcComponent,
+  LuxDatepickerComponent,
   LuxErrorCallbackFnType,
   LuxIconComponent,
-  LuxInputAcComponent,
-  LuxInputAcSuffixComponent
+  LuxInputComponent,
+  LuxInputSuffixComponent
 } from '@ihk-gfi/lux-components';
 import { translateSignal, TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { isEmpty, rangeErrors, toComparable } from './lux-min-max-input-range-validation';
@@ -46,7 +46,7 @@ const BOUND_KEYS: Record<(typeof RANGE_KEYS)[number], string> = {
 const sameRange = (a: LuxMinMaxValue<number | string>, b: LuxMinMaxValue<number | string>): boolean => a.min === b.min && a.max === b.max;
 
 /**
- * Bereichseingabe "Von / Bis" mit wählbarem Feldtyp: Zahlenfeld (lux-input-ac) oder Datepicker (lux-datepicker-ac).
+ * Bereichseingabe "Von / Bis" mit wählbarem Feldtyp: Zahlenfeld (lux-input) oder Datepicker (lux-datepicker).
  *
  * Die Komponente kümmert sich nur um die Bereichslogik: leer heißt unbegrenzt, Von nicht größer als Bis, Grenzen gesamt
  * oder je Seite, eine gemeinsame Meldung unter beiden Feldern, Prüfung erst beim Verlassen eines Feldes. Formatierung und
@@ -59,7 +59,7 @@ const sameRange = (a: LuxMinMaxValue<number | string>, b: LuxMinMaxValue<number 
  */
 @Component({
   selector: 'lux-min-max-input',
-  imports: [LuxInputAcComponent, LuxInputAcSuffixComponent, LuxDatepickerAcComponent, LuxIconComponent, TranslocoPipe],
+  imports: [LuxInputComponent, LuxInputSuffixComponent, LuxDatepickerComponent, LuxIconComponent, TranslocoPipe],
   templateUrl: './lux-min-max-input.component.html',
   styleUrl: './lux-min-max-input.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

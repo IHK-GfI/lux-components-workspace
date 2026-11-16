@@ -34,7 +34,7 @@ test('conditional-states', async ({ page }) => {
   // Mehrfachauswahl mit langen Einträgen: das Panel darf nicht breiter als die Spalte werden (#374).
   await card.getByRole('checkbox', { name: 'Zuständigkeiten angeben' }).check();
   await expectPanels(['Tätigkeit', 'Rechnungsadresse', 'Abteilungen']);
-  const departments = card.locator('lux-select-ac');
+  const departments = card.locator('lux-select');
   const column = card.locator('.example-form').last();
   expect((await departments.boundingBox())?.width).toBeLessThanOrEqual((await column.boundingBox())!.width);
   await screenshotSoft(page, card, 'conditional-abteilungen.png');

@@ -1,14 +1,14 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, DoCheck, OnDestroy, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, DoCheck, OnDestroy, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import {
   LuxAriaLabelDirective,
   LuxButtonComponent,
   LuxFormHintComponent,
-  LuxInputAcComponent,
+  LuxInputComponent,
   LuxMenuComponent,
   LuxMenuItemComponent,
   LuxStorageService,
-  LuxToggleAcComponent
+  LuxToggleComponent
 } from '@ihk-gfi/lux-components';
 import { Observable, Subscription } from 'rxjs';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
@@ -20,14 +20,14 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
   selector: 'app-storage-example',
   templateUrl: './storage-example.component.html',
   styleUrls: ['./storage-example.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxMenuComponent,
     LuxMenuItemComponent,
     LuxButtonComponent,
     LuxAriaLabelDirective,
-    LuxToggleAcComponent,
-    LuxInputAcComponent,
+    LuxToggleComponent,
+    LuxInputComponent,
     LuxFormHintComponent,
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,
@@ -39,33 +39,37 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
 export class StorageExampleComponent implements OnDestroy, DoCheck {
   luxStorageService = inject(LuxStorageService);
 
-  key = 'Storage_Example_Key';
-  value: string | null = '';
-  sensitive = false;
+  readonly key = signal('Storage_Example_Key');
+  readonly value = signal<string | null>('');
+  readonly sensitive = signal(false);
 
   value$: Observable<string | null>;
   valueSubscription: Subscription;
-  localKeys: string[] = [];
-  storageLength = 0;
+  readonly localKeys = signal<string[]>([]);
+  readonly storageLength = signal(0);
 
   constructor() {
-    this.value$ = this.luxStorageService.getItemAsObservable(this.key);
+    const initialKey = this.key();
+    this.value$ = this.luxStorageService.getItemAsObservable(initialKey);
 
+    // Das Value-Feld spiegelt den gespeicherten Wert nur, solange es noch zum vorbelegten Key gehört. Nach
+    // dem Hinzufügen (Key wird geleert) darf ein späteres Aktualisieren/Löschen des Eintrags das Formular nicht mehr füllen.
     this.valueSubscription = this.value$.subscribe((newValue) => {
-      this.value = newValue;
+      if (this.key() === initialKey) {
+        this.value.set(newValue);
+      }
     });
   }
 
   ngDoCheck() {
     const len = this.luxStorageService.length;
     const keys = this.luxStorageService.getKeys();
-    const keysChanged =
-      keys.length !== this.localKeys.length ||
-      keys.some((key, index) => key !== this.localKeys[index]);
+    const localKeys = this.localKeys();
+    const keysChanged = keys.length !== localKeys.length || keys.some((key, index) => key !== localKeys[index]);
 
-    if (len !== this.storageLength || keysChanged) {
-      this.storageLength = len;
-      this.localKeys = keys;
+    if (len !== this.storageLength() || keysChanged) {
+      this.storageLength.set(len);
+      this.localKeys.set(keys);
     }
   }
 
@@ -73,31 +77,31 @@ export class StorageExampleComponent implements OnDestroy, DoCheck {
     this.valueSubscription.unsubscribe();
   }
 
-  updateExisting(key: string, luxInput: LuxInputAcComponent) {
-    if (!luxInput.luxValue) {
+  updateExisting(key: string, luxInput: LuxInputComponent) {
+    if (!luxInput.value()) {
       throw Error('Null is not allowed!');
     }
 
-    this.luxStorageService.setItem(key, luxInput.luxValue, false);
-    luxInput.luxValue = '';
+    this.luxStorageService.setItem(key, luxInput.value(), false);
+    luxInput.setValue('');
   }
 
   submit() {
-    this.luxStorageService.setItem(this.key, this.value ? this.value : '', this.sensitive);
-    this.key = '';
-    this.value = '';
-    this.sensitive = false;
+    this.luxStorageService.setItem(this.key(), this.value() ? this.value()! : '', this.sensitive());
+    this.key.set('');
+    this.value.set('');
+    this.sensitive.set(false);
   }
 
   clearAll() {
     this.luxStorageService.clearAll();
-    this.value = '';
-    this.value$ = this.luxStorageService.getItemAsObservable(this.key);
+    this.value.set('');
+    this.value$ = this.luxStorageService.getItemAsObservable(this.key());
   }
 
   clearSensitiveItems() {
     this.luxStorageService.clearSensitiveItems();
-    this.value = '';
-    this.value$ = this.luxStorageService.getItemAsObservable(this.key);
+    this.value.set('');
+    this.value$ = this.luxStorageService.getItemAsObservable(this.key());
   }
 }

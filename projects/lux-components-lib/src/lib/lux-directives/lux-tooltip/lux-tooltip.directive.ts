@@ -1,4 +1,4 @@
-import { AfterViewInit, Directive, ElementRef, HostListener, inject, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
+import { AfterViewInit, Directive, effect, ElementRef, inject, input, OnDestroy } from '@angular/core';
 import { MatTooltip, TooltipPosition } from '@angular/material/tooltip';
 import { LuxTooltipTruncationWatcher } from './lux-tooltip-truncation';
 import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.component';
@@ -10,15 +10,19 @@ import { LuxAppHeaderActionNavItemComponent } from '../../lux-layout/lux-app-hea
 
 @Directive({
   selector: '[luxTooltip]',
-  exportAs: 'luxTooltip'
+  exportAs: 'luxTooltip',
+  host: {
+    '(longpress)': '_handleLongPress()',
+    '(document:keydown.escape)': '_handleEscape()'
+  }
 })
-export class LuxTooltipDirective extends MatTooltip implements OnChanges, AfterViewInit, OnDestroy {
-  @Input() luxTooltip = '???';
-  @Input() luxTooltipHideDelay = 0;
-  @Input() luxTooltipShowDelay = 0;
-  @Input() luxTooltipPosition: TooltipPosition = 'above';
-  @Input() luxTooltipDisabled = false;
-  @Input() luxTooltipIfTruncated = false;
+export class LuxTooltipDirective extends MatTooltip implements AfterViewInit, OnDestroy {
+  readonly luxTooltip = input('???');
+  readonly luxTooltipHideDelay = input(0);
+  readonly luxTooltipShowDelay = input(0);
+  readonly luxTooltipPosition = input<TooltipPosition>('above');
+  readonly luxTooltipDisabled = input(false);
+  readonly luxTooltipIfTruncated = input(false);
 
   luxButton = inject(LuxButtonComponent, { optional: true });
   luxLink = inject(LuxLinkComponent, { optional: true });
@@ -31,20 +35,39 @@ export class LuxTooltipDirective extends MatTooltip implements OnChanges, AfterV
   private truncationWatcher?: LuxTooltipTruncationWatcher;
   private viewInitialized = false;
 
-  @HostListener('longpress') _handleLongPress() {
-    super.show(this.luxTooltipShowDelay);
+  _handleLongPress() {
+    super.show(this.luxTooltipShowDelay());
   }
 
-  @HostListener('document:keydown.escape') _handleEscape() {
+  _handleEscape() {
     super.hide(0);
   }
 
+  constructor() {
+    super();
+
+    effect(() => {
+      this.message = this.luxTooltip();
+      this.hideDelay = this.luxTooltipHideDelay();
+      this.showDelay = this.luxTooltipShowDelay();
+      this.position = this.luxTooltipPosition();
+
+      // Vor ngAfterViewInit steht das Layout noch nicht bereit, der Watcher wird erst
+      // dort gestartet. Danach reagiert dieser Effect auf ein Umschalten von
+      // luxTooltipIfTruncated zur Laufzeit.
+      if (this.viewInitialized) {
+        this.syncTruncationWatch();
+      }
+      this.syncDisabledState();
+    });
+  }
+
   override show(delay?: number): void {
-    super.show(delay || this.luxTooltipShowDelay);
+    super.show(delay || this.luxTooltipShowDelay());
   }
 
   override hide(delay?: number): void {
-    super.hide(delay || this.luxTooltipHideDelay);
+    super.hide(delay || this.luxTooltipHideDelay());
   }
 
   override ngAfterViewInit(): void {
@@ -57,13 +80,11 @@ export class LuxTooltipDirective extends MatTooltip implements OnChanges, AfterV
     if (this.luxLinkPlain) {
       this.luxLinkPlain.tooltipDirective = this;
     }
-    if (this.luxActionNavAc && this.luxActionNavAc.buttonComponent) {
-      
-      this.luxActionNavAc.buttonComponent.tooltipDirective = this;
+    if (this.luxActionNavAc && this.luxActionNavAc.buttonComponent()) {
+      this.luxActionNavAc.buttonComponent()!.tooltipDirective = this;
     }
-    if (this.luxActionNav && this.luxActionNav.buttonComponent) {
-      
-      this.luxActionNav.buttonComponent.tooltipDirective = this;
+    if (this.luxActionNav && this.luxActionNav.buttonComponent()) {
+      this.luxActionNav.buttonComponent()!.tooltipDirective = this;
     }
     if (this.luxMenu && this.luxMenu.defaultTriggerComponent) {
       this.luxMenu.defaultTriggerComponent.tooltipDirective = this;
@@ -75,21 +96,6 @@ export class LuxTooltipDirective extends MatTooltip implements OnChanges, AfterV
     super.ngAfterViewInit();
   }
 
-  ngOnChanges(_simpleChanges: SimpleChanges) {
-    this.message = this.luxTooltip;
-    this.hideDelay = this.luxTooltipHideDelay;
-    this.showDelay = this.luxTooltipShowDelay;
-    this.position = this.luxTooltipPosition;
-
-    // Vor ngAfterViewInit steht das Layout noch nicht bereit, der Watcher wird erst
-    // dort gestartet. Danach reagiert diese Methode auf ein Umschalten von
-    // luxTooltipIfTruncated zur Laufzeit.
-    if (this.viewInitialized) {
-      this.syncTruncationWatch();
-    }
-    this.syncDisabledState();
-  }
-
   override ngOnDestroy(): void {
     this.truncationWatcher?.disconnect();
     super.ngOnDestroy();
@@ -97,7 +103,7 @@ export class LuxTooltipDirective extends MatTooltip implements OnChanges, AfterV
 
   /** Startet bzw. stoppt die Truncation-Beobachtung passend zu luxTooltipIfTruncated. */
   private syncTruncationWatch(): void {
-    if (this.luxTooltipIfTruncated) {
+    if (this.luxTooltipIfTruncated()) {
       this.truncationWatcher ??= new LuxTooltipTruncationWatcher(this.elementRef.nativeElement, () => this.syncDisabledState());
       this.truncationWatcher.connect();
     } else {
@@ -111,7 +117,7 @@ export class LuxTooltipDirective extends MatTooltip implements OnChanges, AfterV
    * angezeigt werden soll und der Text gerade vollständig passt.
    */
   private syncDisabledState(): void {
-    const hiddenBecauseItFits = this.luxTooltipIfTruncated && !(this.truncationWatcher?.isTruncated ?? false);
-    this.disabled = this.luxTooltipDisabled || hiddenBecauseItFits;
+    const hiddenBecauseItFits = this.luxTooltipIfTruncated() && !(this.truncationWatcher?.isTruncated ?? false);
+    this.disabled = this.luxTooltipDisabled() || hiddenBecauseItFits;
   }
 }

@@ -1,29 +1,33 @@
-import { Component, ContentChild, Input, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, contentChild, input, model, TemplateRef } from '@angular/core';
 import { LuxBadgeNotificationColor } from '../../../lux-directives/lux-badge-notification/lux-badge-notification.directive';
 
 @Component({
   selector: 'lux-tab',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: ''
 })
 export class LuxTabComponent {
-  @Input() luxTitle = '';
-  @Input() luxIconName?: string;
-  @Input() luxCounter?: number;
-  @Input() luxCounterCap = 10;
-  @Input() luxShowNotification?: boolean;
-  @Input() luxNotificationColor: LuxBadgeNotificationColor = 'accent';
-  @Input() luxDisabled = false;
-  @Input() luxTagIdHeader?: string;
-  @Input() luxTagIdContent?: string;
-  @Input() luxImageSrc?: string;
-  @Input() luxImageAlign: 'left' | 'center' | 'right' = 'center';
-  @Input() luxImageWidth = '36px';
-  @Input() luxImageHeight = '36px';
+  readonly luxTitle = model('');
+  readonly luxIconName = input<string | undefined>();
+  readonly luxCounter = input<number | undefined>();
+  readonly luxCounterCap = input(10);
+  readonly luxShowNotification = input<boolean | undefined>();
+  readonly luxNotificationColor = input<LuxBadgeNotificationColor>('accent');
+  readonly luxDisabled = input(false);
+  readonly luxTagIdHeader = model<string | undefined>();
+  readonly luxTagIdContent = model<string | undefined>();
+  readonly luxImageSrc = input<string | undefined>();
+  readonly luxImageAlign = input<'left' | 'center' | 'right'>('center');
+  readonly luxImageWidth = input('36px');
+  readonly luxImageHeight = input('36px');
 
-  @ContentChild(TemplateRef) contentTemplate!: TemplateRef<any>;
+  readonly contentTemplate = contentChild.required(TemplateRef);
 
   onTabActivated() {
     // Wird aufgerufen, wenn der Tab aktiviert wird (sichtbar wird).
+  }
+
+  getContentTemplate() {
+    return this.contentTemplate();
   }
 }

@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, inject, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, OnDestroy, OnInit, output, signal } from '@angular/core';
 import { MatCard, MatCardContent } from '@angular/material/card';
 import { Subscription } from 'rxjs';
 import { LuxBadgeNotificationDirective } from '../../lux-directives/lux-badge-notification/lux-badge-notification.directive';
@@ -10,32 +10,36 @@ import { LuxMediaQueryObserverService } from '../../lux-util/lux-media-query-obs
 @Component({
   selector: 'lux-tile',
   templateUrl: './lux-tile.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatCard, LuxTagIdDirective, NgClass, LuxBadgeNotificationDirective, MatCardContent, LuxTooltipDirective]
 })
 export class LuxTileComponent implements OnInit, OnDestroy {
+  private static readonly notificationNewClass = 'lux-notification-new';
+  private static readonly notificationReadClass = 'lux-notification-read';
+
+  readonly luxLabel = input<string | undefined>();
+  readonly luxLabelTruncateAfterOneLine = input(false);
+  readonly luxLabelTruncateAfterTwoLines = input(false);
+  readonly luxTagId = input<string | undefined>();
+  readonly luxShowNotification = input<boolean | undefined>();
+  readonly luxCounter = input<number | undefined>();
+  readonly luxCounterCap = input(10);
+  readonly luxShowShadow = input(true);
+
+  readonly luxClicked = output<void>();
+
+  readonly mobileView = signal(false);
+
   private queryService = inject(LuxMediaQueryObserverService);
+  private subscription?: Subscription;
 
-  private static _notificationNewClass = 'lux-notification-new';
-  private static _notificationReadClass = 'lux-notification-read';
-
-  @Input() luxLabel?: string;
-  @Input() luxLabelTruncateAfterOneLine = false;
-  @Input() luxLabelTruncateAfterTwoLines = false;
-  @Input() luxTagId?: string;
-  @Input() luxShowNotification?: boolean;
-  @Input() luxCounter?: number;
-  @Input() luxCounterCap = 10;
-  @Input() luxShowShadow = true;
-
-  @Output() luxClicked = new EventEmitter<Event>();
-
-  mobileView?: boolean;
-  subscription?: Subscription;
+  readonly notificationIconColorClass = computed(() =>
+    this.luxShowNotification() ? LuxTileComponent.notificationNewClass : LuxTileComponent.notificationReadClass
+  );
 
   ngOnInit() {
     this.subscription = this.queryService.getMediaQueryChangedAsObservable().subscribe((query) => {
-      this.mobileView = query === 'xs' || query === 'sm';
+      this.mobileView.set(query === 'xs' || query === 'sm');
     });
   }
 
@@ -47,9 +51,5 @@ export class LuxTileComponent implements OnInit, OnDestroy {
 
   clicked() {
     this.luxClicked.emit();
-  }
-
-  getNotificationIconColorClass(): string {
-    return this.luxShowNotification ? LuxTileComponent._notificationNewClass : LuxTileComponent._notificationReadClass;
   }
 }

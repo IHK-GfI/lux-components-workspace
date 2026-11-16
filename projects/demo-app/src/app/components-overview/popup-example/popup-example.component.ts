@@ -1,17 +1,17 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import {
   LuxAriaLabelDirective,
   LuxButtonComponent,
-  LuxInputAcComponent,
+  LuxInputComponent,
   LuxLinkComponent,
   LuxPopupActionsDirective,
   LuxPopupCloseReason,
   LuxPopupComponent,
   LuxPopupPosition,
   LuxPopupTriggerDirective,
-  LuxSelectAcComponent,
-  LuxTextareaAcComponent,
-  LuxToggleAcComponent
+  LuxSelectComponent,
+  LuxTextareaComponent,
+  LuxToggleComponent
 } from '@ihk-gfi/lux-components';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
@@ -21,7 +21,7 @@ import { PopupExampleInfoPopupComponent } from './popup-example-info-popup.compo
 @Component({
   selector: 'app-popup-example',
   templateUrl: './popup-example.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,
@@ -31,24 +31,24 @@ import { PopupExampleInfoPopupComponent } from './popup-example-info-popup.compo
     LuxPopupActionsDirective,
     LuxButtonComponent,
     LuxLinkComponent,
-    LuxInputAcComponent,
-    LuxTextareaAcComponent,
-    LuxSelectAcComponent,
-    LuxToggleAcComponent,
+    LuxInputComponent,
+    LuxTextareaComponent,
+    LuxSelectComponent,
+    LuxToggleComponent,
     PopupExampleInfoPopupComponent,
     LuxAriaLabelDirective
   ]
 })
 export class PopupExampleComponent {
-  title = 'Kontextinformationen';
-  text = 'Die Popup-Komponente zeigt erweiterte Tooltips mit mehrzeiligen Texten an.';
-  showDelay = 500;
-  hideDelay = 120;
-  minWidth = 240;
-  maxWidth = 360;
-  position: LuxPopupPosition = 'above';
-  disabled = false;
-  positionOptions: LuxPopupPosition[] = ['above', 'below', 'before', 'after', 'left', 'right'];
+  readonly title = signal('Kontextinformationen');
+  readonly text = signal('Die Popup-Komponente zeigt erweiterte Tooltips mit mehrzeiligen Texten an.');
+  readonly showDelay = signal(500);
+  readonly hideDelay = signal(120);
+  readonly minWidth = signal(240);
+  readonly maxWidth = signal(360);
+  readonly position = signal<LuxPopupPosition>('above');
+  readonly disabled = signal(false);
+  readonly positionOptions: LuxPopupPosition[] = ['above', 'below', 'before', 'after', 'left', 'right'];
 
   onAction(popup: LuxPopupComponent, actionLabel: string) {
     console.log(`Action "${actionLabel}" clicked!`);

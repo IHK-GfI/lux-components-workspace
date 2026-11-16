@@ -1,47 +1,42 @@
 <div class="configContainer">
-  <lux-toggle-ac
+  <lux-toggle
     luxLabel="Logo-Clicked loggen"
     luxHint="(Console --> F12/CMD+ALT+I)"
-    (luxCheckedChange)="onShowLogoClickedEvents($event)"
+    (checkedChange)="onShowLogoClickedEvents($event)"
     [luxNoTopLabel]="true"
-  ></lux-toggle-ac>
+  ></lux-toggle>
 
-  <lux-select-ac
+  <lux-select
     class=""
-    [(luxSelected)]="tenantLogoConfig.luxTenantKey"
+    [(value)]="tenantLogoConfig().luxTenantKey"
     luxOptionLabelProp="label"
     [luxPickValue]="pickValueKeyFn"
     [luxOptions]="tenantKeyArr"
     luxLabel="luxTenantKey"
     luxHint="Diese Property legt den Schlüssel für den Tenant fest, dessen Image gezeigt werden soll."
-  ></lux-select-ac>
+  ></lux-select>
 
-  <lux-select-ac [(luxSelected)]="tenantLogoConfig.luxTenantVariant" [luxOptions]="tenantVariantArr" luxLabel="luxTenantVariant">
+  <lux-select [(value)]="tenantLogoConfig().luxTenantVariant" [luxOptions]="tenantVariantArr" luxLabel="luxTenantVariant">
     <ng-template let-option>{{ option }}</ng-template>
     <lux-form-hint>
       Diese Property legt die Variante für den Tenant fest.<br />
       Wenn der Variant leer gelassen wird, wechselt die Komponente je nach Media Query die Variante
-      <span [style]="{ 'font-weight': tenantLogoConfig.luxTenantVariant ? '' : 'bold' }">automatisch</span>.
-      @if (!tenantLogoConfig.luxTenantVariant) {
+      <span [style]="{ 'font-weight': tenantLogoConfig().luxTenantVariant ? '' : 'bold' }">automatisch</span>.
+      @if (!tenantLogoConfig().luxTenantVariant) {
         <div>
           <br />
           Automatisch ausgewählt: <b>{{ actualTenantVariant }}</b>
         </div>
       }
     </lux-form-hint>
-  </lux-select-ac>
+  </lux-select>
 
-  <lux-input-ac
+  <lux-input
     luxName="luxTenantLogoHeight"
     luxLabel="luxTenantLogoHeight"
     luxHint="Diese Property legt die Höhe des Tenant Logos fest."
-    [(luxValue)]="tenantLogoConfig.luxTenantLogoHeight"
-  ></lux-input-ac>
+    [(value)]="tenantLogoConfig().luxTenantLogoHeight"
+  ></lux-input>
 
-  <lux-input-ac
-    luxName="luxTenantLogoSrc"
-    luxLabel="Benutzte Tenant Lookup Url"
-    [luxDisabled]="true"
-    [luxValue]="logoTenantSrc"
-  ></lux-input-ac>
+  <lux-input luxName="luxTenantLogoSrc" luxLabel="Benutzte Tenant Lookup Url" [luxDisabled]="true" [value]="logoTenantSrc"></lux-input>
 </div>

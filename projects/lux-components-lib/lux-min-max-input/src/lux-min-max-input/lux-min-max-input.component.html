@@ -6,7 +6,7 @@
     @for (side of sides; track side) {
       @switch (luxType()) {
         @case ('date') {
-          <lux-datepicker-ac
+          <lux-datepicker
             [luxTagId]="tagIdFor(side)"
             [luxLabel]="labels()[side]"
             [luxFormGroup]="form"
@@ -17,10 +17,10 @@
             [luxErrorCallback]="fieldErrorText"
             [luxAriaDescribedby]="messageId()"
             (luxBlur)="onBlur(side)"
-          ></lux-datepicker-ac>
+          />
         }
         @default {
-          <lux-input-ac
+          <lux-input
             luxType="number"
             luxAutocomplete="off"
             [luxTagId]="tagIdFor(side)"
@@ -36,9 +36,9 @@
             (luxBlur)="onBlur(side)"
           >
             @if (luxUnit()) {
-              <lux-input-ac-suffix>{{ luxUnit() }}</lux-input-ac-suffix>
+              <lux-input-suffix>{{ luxUnit() }}</lux-input-suffix>
             }
-          </lux-input-ac>
+          </lux-input>
         }
       }
     }
@@ -52,7 +52,7 @@
           luxIconSize="0.875rem"
           luxPadding="1px"
           luxMargin="0px 2px 0px 0px"
-        ></lux-icon>
+        />
         <span class="lux-form-error-label">{{ 'luxc.min-max-input.errors.' + current.key | transloco: messageParams() }}</span>
       </span>
     }

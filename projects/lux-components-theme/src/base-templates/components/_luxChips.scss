@@ -1,6 +1,7 @@
 @use "@angular/material" as mat;
 
-lux-chips-ac {
+lux-chips-ac,
+lux-chips {
   @include mat.chips-overrides(
     (
       container-shape-radius: 20px,
@@ -121,6 +122,13 @@ lux-chips-ac {
   .lux-chips-autocomplete-icon.lux-disabled {
     color: var(--lux-theme-dark-disabled-text);
     cursor: default;
+  }
+
+  // Readonly: Verbleibende Chips bleiben lesbar, aber nicht mehr bedienbar (kein Hinzufügen/Entfernen)
+  &.lux-form-control-readonly {
+    .lux-chips-input-container {
+      pointer-events: none;
+    }
   }
 
   // Fokus

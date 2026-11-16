@@ -1,20 +1,13 @@
-import { Component, HostBinding, Input, OnChanges, SimpleChanges, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
 @Component({
   selector: 'example-base-content',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    '[class.example-content-centered]': 'exampleCentered()'
+  },
   template: '<ng-content></ng-content>'
 })
-export class ExampleBaseContentComponent implements OnChanges {
-  @Input() exampleCentered = false;
-
-  @HostBinding('class.example-content-centered') centered = false;
-
-  constructor() {}
-
-  ngOnChanges(simpleChanges: SimpleChanges) {
-    if (simpleChanges['exampleCentered']) {
-      this.centered = simpleChanges['exampleCentered'].currentValue;
-    }
-  }
+export class ExampleBaseContentComponent {
+  readonly exampleCentered = input(false);
 }

@@ -48,8 +48,6 @@ export class LuxDialogRef<T = any> {
     return this._data;
   }
 
-  constructor() {}
-
   /**
    * (Re-)Initialisiert diese Dialog-Referenz neu.
    * @param matDialogRef

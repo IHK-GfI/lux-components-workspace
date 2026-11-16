@@ -1,3 +1,4 @@
+import { describe, it, beforeEach, afterEach, expect, vi } from 'vitest';
 import { TestBed } from '@angular/core/testing';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxRelativeTimestampPipe } from './lux-relative-timestamp.pipe';
@@ -15,18 +16,16 @@ describe('LuxRelativeTimestampPipe', () => {
   }
 
   beforeEach(() => {
-    jasmine.clock().install();
-    jasmine.clock().mockDate(fixedNow);
+    vi.useFakeTimers();
+    vi.setSystemTime(fixedNow);
 
     TestBed.configureTestingModule({
-      providers: [
-        provideLuxTranslocoTesting()
-      ]
+      providers: [provideLuxTranslocoTesting()]
     }).compileComponents();
   });
 
   afterEach(() => {
-    jasmine.clock().uninstall();
+    vi.useRealTimers();
   });
 
   it('create an instance', () => {

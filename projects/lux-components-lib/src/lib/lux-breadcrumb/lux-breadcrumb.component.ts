@@ -1,6 +1,6 @@
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnDestroy, inject, input, output } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { LuxIconComponent } from '../lux-icon/lux-icon/lux-icon.component';
 import { LuxMediaQueryObserverService } from '../lux-util/lux-media-query-observer.service';
 import { ILuxBreadcrumbEntry } from './lux-breadcrumb-model/lux-breadcrumb-entry.interface';
@@ -11,9 +11,7 @@ import { ILuxBreadcrumbEntry } from './lux-breadcrumb-model/lux-breadcrumb-entry
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [NgClass, LuxIconComponent]
 })
-export class LuxBreadcrumbComponent implements OnDestroy {
-  private mediaQueryService = inject(LuxMediaQueryObserverService);
-
+export class LuxBreadcrumbComponent {
   readonly luxEntries = input<ILuxBreadcrumbEntry[] | undefined>([]);
 
   /**
@@ -28,18 +26,12 @@ export class LuxBreadcrumbComponent implements OnDestroy {
 
   luxClicked = output<ILuxBreadcrumbEntry>();
 
-  mobileView: boolean;
-  subscriptions: Subscription[] = [];
+  private readonly mediaQueryService = inject(LuxMediaQueryObserverService);
+  private readonly activeMediaQuery = toSignal(this.mediaQueryService.getMediaQueryChangedAsObservable(), {
+    initialValue: this.mediaQueryService.activeMediaQuery
+  });
 
-  constructor() {
-    this.mobileView = this.mediaQueryService.activeMediaQuery === 'xs' || this.mediaQueryService.activeMediaQuery === 'sm';
-
-    this.subscriptions.push(
-      this.mediaQueryService.getMediaQueryChangedAsObservable().subscribe((query) => {
-        this.mobileView = query === 'xs' || query === 'sm';
-      })
-    );
-  }
+  readonly mobileView = computed(() => this.activeMediaQuery() === 'xs' || this.activeMediaQuery() === 'sm');
 
   isCollapsedMode(): boolean {
     return this.luxShowOnlyFirstAndLast() && (this.luxEntries()?.length ?? 0) > 2;
@@ -56,11 +48,5 @@ export class LuxBreadcrumbComponent implements OnDestroy {
 
   clicked(item: ILuxBreadcrumbEntry) {
     this.luxClicked.emit(item);
-  }
-
-  ngOnDestroy() {
-    this.subscriptions.forEach((sub) => {
-      sub.unsubscribe();
-    });
   }
 }

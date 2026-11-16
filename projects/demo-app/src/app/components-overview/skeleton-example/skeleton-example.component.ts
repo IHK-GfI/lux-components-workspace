@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { LuxButtonComponent, LuxFormHintComponent, LuxInputAcComponent, LuxRadioAcComponent, LuxToggleAcComponent } from '@ihk-gfi/lux-components';
+import { LuxButtonComponent, LuxFormHintComponent, LuxInputComponent, LuxRadioComponent, LuxToggleComponent } from '@ihk-gfi/lux-components';
 import { LuxSkeletonComponent, LuxSkeletonVariant } from '@ihk-gfi/lux-components/lux-skeleton';
 import { Subject, switchMap, tap, timer } from 'rxjs';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
@@ -23,10 +23,10 @@ interface ExamplePerson {
   imports: [
     LuxButtonComponent,
     LuxFormHintComponent,
-    LuxInputAcComponent,
-    LuxRadioAcComponent,
+    LuxInputComponent,
+    LuxRadioComponent,
     LuxSkeletonComponent,
-    LuxToggleAcComponent,
+    LuxToggleComponent,
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,
     ExampleBaseSimpleOptionsComponent

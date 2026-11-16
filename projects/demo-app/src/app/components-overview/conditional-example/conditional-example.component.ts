@@ -2,10 +2,10 @@ import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/c
 import {
   LuxCardComponent,
   LuxCardContentComponent,
-  LuxCheckboxAcComponent,
-  LuxInputAcComponent,
-  LuxRadioAcComponent,
-  LuxSelectAcComponent
+  LuxCheckboxComponent,
+  LuxInputComponent,
+  LuxRadioComponent,
+  LuxSelectComponent
 } from '@ihk-gfi/lux-components';
 import { LuxConditionalDirective } from '@ihk-gfi/lux-components/lux-conditional';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
@@ -19,11 +19,11 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
   imports: [
     LuxCardComponent,
     LuxCardContentComponent,
-    LuxCheckboxAcComponent,
+    LuxCheckboxComponent,
     LuxConditionalDirective,
-    LuxInputAcComponent,
-    LuxRadioAcComponent,
-    LuxSelectAcComponent,
+    LuxInputComponent,
+    LuxRadioComponent,
+    LuxSelectComponent,
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent
   ]

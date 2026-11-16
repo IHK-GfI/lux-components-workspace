@@ -1,4 +1,4 @@
-<div [class]="animDurationCSS" [ngClass]="['lux-progress-' + luxSize(), luxType() === 'Spinner' ? 'spinner-padding' : '']">
+<div [ngClass]="['lux-progress-' + luxSize(), luxType() === 'Spinner' ? 'spinner-padding' : '']">
   <span class="lux-sr-only" role="status" aria-live="polite">
     @if (indeterminateAnnounced()) {
       {{ 'luxc.progress.indeterminate' | transloco }}
@@ -16,8 +16,7 @@
           [attr.aria-describedby]="luxTextVisible() && luxText() ? textId : null"
           [mode]="luxMode()"
           [value]="luxValue()"
-        >
-        </mat-progress-bar>
+        />
         @if (luxTextVisible()) {
           <!-- Ohne luxText wird der Prozentwert angezeigt, der bereits in aria-valuenow steckt. -->
           <span class="lux-progress-text" [id]="textId" [attr.aria-hidden]="luxText() ? null : 'true'">{{
@@ -40,8 +39,7 @@
           [value]="luxValue()"
           [diameter]="luxSpinnerDiameter()"
           [strokeWidth]="luxSpinnerStrokeWidth()"
-        >
-        </mat-progress-spinner>
+        />
         @if (luxTextVisible()) {
           <!-- Der Prozentwert steckt bereits in aria-valuenow des Spinners. -->
           <span class="lux-progress-spinner-text" aria-hidden="true">{{ luxProgressPercent() }}%</span>

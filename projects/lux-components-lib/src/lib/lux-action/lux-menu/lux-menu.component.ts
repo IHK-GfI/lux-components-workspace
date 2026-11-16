@@ -1,13 +1,10 @@
 import { NgClass, NgStyle, NgTemplateOutlet } from '@angular/common';
 import {
   AfterContentInit,
-  AfterViewChecked,
   AfterViewInit,
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   ElementRef,
-  HostListener,
   OnDestroy,
   OnInit,
   OutputRefSubscription,
@@ -17,6 +14,7 @@ import {
   inject,
   input,
   output,
+  signal,
   viewChild
 } from '@angular/core';
 import { MatDivider } from '@angular/material/divider';
@@ -42,6 +40,9 @@ import { LuxMenuTriggerComponent } from './lux-menu-subcomponents/lux-menu-trigg
   selector: 'lux-menu',
   templateUrl: './lux-menu.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    '(window:resize)': 'windowResize()'
+  },
   imports: [
     NgTemplateOutlet,
     LuxButtonComponent,
@@ -62,50 +63,41 @@ import { LuxMenuTriggerComponent } from './lux-menu-subcomponents/lux-menu-trigg
     TranslocoPipe
   ]
 })
-export class LuxMenuComponent implements AfterViewInit, AfterContentInit, AfterViewChecked, OnDestroy, OnInit {
-  private cdr = inject(ChangeDetectorRef);
-  private themeService = inject(LuxThemeService);
-  protected elementRef = inject(ElementRef);
+export class LuxMenuComponent implements AfterViewInit, AfterContentInit, OnDestroy, OnInit {
+  readonly luxMenuLabel = input<string>('');
+  readonly luxMenuIconName = input<string>('lux-interface-setting-menu-1');
+  readonly luxMenuTriggerIconShowRight = input<boolean>(false);
+  readonly luxMenuItemFixWidth = input<number>(0);
+  readonly luxClassName = input<string>('');
+  readonly luxTagId = input<string | undefined>(undefined);
+  readonly luxToggleDisabled = input<boolean>(false);
+  readonly luxAriaMenuTriggerLabel = input<string>('');
+  readonly luxShowSections = input<boolean>(false);
+  readonly luxMenuPanelLarge = input<boolean>(false);
+  readonly luxDisplayExtended = input<boolean>(false);
+  readonly luxDisplayMenuLeft = input<boolean>(true);
+  readonly luxMaximumExtended = input<number>(5);
 
-  // Diese Werte müssen angepasst werden, sollte das Styling dieser Component entsprechend geändert worden sein
-  private readonly PADDING_PX: number;
-  private readonly MARGIN_PX: number;
-  private readonly ICON_PX: number; // 15px breite plus 8px gap zwischen icon - label
-  private readonly FONT_SIZE: number;
-  private readonly FONT_WEIGHT: number;
-  private readonly FONT_FAMILY: string;
-  private readonly BADGE_SIZE: number;
-  private readonly EXTENDED_DIVIDER_WIDTH = 9;
+  luxMenuClosed = output<void>();
+  luxMenuOpened = output<void>();
 
-  // Alle verfügbaren MenuItems als Array
-  private _menuItems: LuxMenuItemComponent[] = [];
-  extendedMenuEntries: (LuxMenuItemComponent | LuxDividerComponent)[] = [];
-  panelMenuEntries: (LuxMenuItemComponent | LuxDividerComponent)[] = [];
-  private _menuItemsNotExtended: (
-    | LuxMenuItemComponent
-    | LuxDividerComponent
-    | LuxMenuPanelHeaderComponent
-    | LuxMenuSectionTitleComponent
-  )[] = [];
-
-  // Das Canvas wird genutzt, um die Breite potenzieller MenuItem-Texte zu berechnen
-  private readonly canvas;
-
-  private menuItemSubscriptions: OutputRefSubscription[] = [];
-  private readonly onTriggerListener = () => this.onTrigger();
-
-  hideToggle = false;
-  triggerButtonDivEl?: HTMLElement;
-  customTriggerEl?: HTMLElement;
-
-  defaultTriggerComponentQuery = viewChild<LuxButtonComponent>('defaultTrigger');
-  menuTriggerElRefQuery = viewChild('menuTrigger');
-  menuExtendedContainerQuery = viewChild.required('menuExtendedContainer');
-  luxMenuItemComponentsQuery = contentChildren(LuxMenuItemComponent);
-  menuNotExtendedPanelQuery = contentChildren<
+  readonly defaultTriggerComponentQuery = viewChild<LuxButtonComponent>('defaultTrigger');
+  readonly menuTriggerElRefQuery = viewChild('menuTrigger');
+  readonly menuExtendedContainerQuery = viewChild.required('menuExtendedContainer');
+  readonly luxMenuItemComponentsQuery = contentChildren(LuxMenuItemComponent);
+  readonly menuNotExtendedPanelQuery = contentChildren<
     LuxMenuItemComponent | LuxDividerComponent | LuxMenuPanelHeaderComponent | LuxMenuSectionTitleComponent
   >('menuSection');
-  luxMenuTriggerComponentQuery = contentChild(LuxMenuTriggerComponent);
+  readonly luxMenuTriggerComponentQuery = contentChild(LuxMenuTriggerComponent);
+
+  protected readonly elementRef = inject(ElementRef);
+
+  hideToggle = signal(false);
+  visibleMenuItems = signal<LuxMenuItemComponent[]>([]);
+  extendedMenuEntries = signal<(LuxMenuItemComponent | LuxDividerComponent)[]>([]);
+  panelMenuEntries = signal<(LuxMenuItemComponent | LuxDividerComponent)[]>([]);
+  triggerButtonDivEl?: HTMLElement;
+  customTriggerEl?: HTMLElement;
 
   get defaultTriggerElRef(): ElementRef | undefined {
     const el = this.elementRef.nativeElement.querySelector('.lux-menu-trigger-default');
@@ -136,32 +128,8 @@ export class LuxMenuComponent implements AfterViewInit, AfterContentInit, AfterV
     return this.luxMenuTriggerComponentQuery();
   }
 
-  luxMenuClosed = output<void>();
-  luxMenuOpened = output<void>();
-
-  readonly luxMenuLabel = input<string>('');
-  readonly luxMenuIconName = input<string>('lux-interface-setting-menu-1');
-  readonly luxMenuTriggerIconShowRight = input<boolean>(false);
-  readonly luxMenuItemFixWidth = input<number>(0);
-  readonly luxClassName = input<string>('');
-  readonly luxTagId = input<string | undefined>(undefined);
-  readonly luxToggleDisabled = input<boolean>(false);
-  readonly luxAriaMenuTriggerLabel = input<string>('');
-  readonly luxShowSections = input<boolean>(false);
-  readonly luxMenuPanelLarge = input<boolean>(false);
-  readonly luxDisplayExtended = input<boolean>(false);
-  readonly luxDisplayMenuLeft = input<boolean>(true);
-  readonly luxMaximumExtended = input<number>(5);
-
-  visibleMenuItems: LuxMenuItemComponent[] = [];
-  tooltipDirective?: LuxTooltipDirective;
-
-  @HostListener('window:resize') windowResize() {
-    this.updateExtendedMenuItems();
-  }
-
   get menuItems(): LuxMenuItemComponent[] {
-    return this._menuItems;
+    return this.menuItemsSignal();
   }
 
   set menuItems(menuItems: LuxMenuItemComponent[]) {
@@ -170,10 +138,10 @@ export class LuxMenuComponent implements AfterViewInit, AfterContentInit, AfterV
     });
     this.menuItemSubscriptions = [];
 
-    this._menuItems = menuItems ? menuItems : [];
-    this._menuItems.sort((a, b) => (a.luxPrio() ? a.luxPrio() : 0) - (b.luxPrio() ? b.luxPrio() : 0));
+    const items = menuItems ? menuItems : [];
+    items.sort((a, b) => (a.luxPrio() ? a.luxPrio() : 0) - (b.luxPrio() ? b.luxPrio() : 0));
 
-    this.menuItems.forEach((item) => {
+    items.forEach((item) => {
       this.menuItemSubscriptions.push(
         item.luxHiddenChange.subscribe(() => {
           this.updateExtendedMenuItems();
@@ -191,25 +159,60 @@ export class LuxMenuComponent implements AfterViewInit, AfterContentInit, AfterV
       );
     });
 
-    this.cdr.detectChanges();
+    this.menuItemsSignal.set(items);
   }
 
   get menuItemsNotExtended(): (LuxMenuItemComponent | LuxDividerComponent | LuxMenuPanelHeaderComponent | LuxMenuSectionTitleComponent)[] {
-    return this._menuItemsNotExtended;
+    return this.menuItemsNotExtendedSignal();
   }
 
   set menuItemsNotExtended(
     menuItems: (LuxMenuItemComponent | LuxDividerComponent | LuxMenuPanelHeaderComponent | LuxMenuSectionTitleComponent)[]
   ) {
-    this._menuItemsNotExtended = menuItems ? menuItems : [];
+    this.menuItemsNotExtendedSignal.set(menuItems ? menuItems : []);
   }
+
+  private themeService = inject(LuxThemeService);
+
+  // Diese Werte müssen angepasst werden, sollte das Styling dieser Component entsprechend geändert worden sein
+  private readonly PADDING_PX: number;
+  private readonly MARGIN_PX: number;
+  private readonly ICON_PX: number; // 15px breite plus 8px gap zwischen icon - label
+  private readonly FONT_SIZE: number;
+  private readonly FONT_WEIGHT: number;
+  private readonly FONT_FAMILY: string;
+  private readonly BADGE_SIZE: number;
+  private readonly EXTENDED_DIVIDER_WIDTH = 9;
+
+  // Alle verfügbaren MenuItems als Array
+  private readonly menuItemsSignal = signal<LuxMenuItemComponent[]>([]);
+  private readonly menuItemsNotExtendedSignal = signal<
+    (LuxMenuItemComponent | LuxDividerComponent | LuxMenuPanelHeaderComponent | LuxMenuSectionTitleComponent)[]
+  >([]);
+
+  // Das Canvas wird genutzt, um die Breite potenzieller MenuItem-Texte zu berechnen
+  private readonly canvas: HTMLCanvasElement;
+
+  private menuItemSubscriptions: OutputRefSubscription[] = [];
+  private readonly onTriggerListener = () => this.onTrigger();
+  private resizeObserver?: ResizeObserver;
 
   constructor() {
     this.canvas = document.createElement('canvas');
 
+    // Ersetzt das frühere ngAfterViewChecked()-Polling (das bei JEDEM Change-Detection-Zyklus unconditional die
+    // Item-Breiten per Canvas neu vermessen und die Extended-Berechnung inkl. Layout-Reads wiederholt hat).
+    // effect() liest hier dieselben Signale wie zuvor calculateMenuItemWidths()/updateExtendedMenuItems() (Content-
+    // Query der MenuItems, pro Item luxIconName/luxLabel/luxHideLabelIfExtended/luxButtonBadge/luxHidden/
+    // luxAlwaysVisible, sowie luxShowSections/luxDisplayExtended/luxMaximumExtended/luxMenuItemFixWidth) und läuft
+    // dadurch nur noch, wenn sich davon tatsächlich etwas ändert. Größenänderungen des Containers (die keine dieser
+    // Signale betreffen) werden separat per ResizeObserver abgedeckt (siehe ngAfterViewInit).
     effect(() => {
-      this.luxDisplayExtended();
-      if (this.menuTriggerElRef) {
+      if (this.luxShowSections()) {
+        this.addMenuElementsToArray();
+      } else {
+        this.menuItems = this.luxMenuItemComponents;
+        this.calculateMenuItemWidths();
         this.updateExtendedMenuItems();
       }
     });
@@ -252,23 +255,11 @@ export class LuxMenuComponent implements AfterViewInit, AfterContentInit, AfterV
     }
   }
 
-  ngAfterViewInit(): void {
-    this.triggerButtonDivEl = this.elementRef.nativeElement.querySelector('div.lux-menu-trigger');
-    this.customTriggerEl = this.elementRef.nativeElement.querySelector('lux-menu-trigger');
-    this.customTriggerEl?.addEventListener('click', this.onTriggerListener);
-  }
-
   ngOnInit() {
     if (this.luxShowSections() && this.luxDisplayExtended()) {
       console.warn(
         'Das Menu mit den Abschnitten (LuxShowSections) kann nur angezeigt werden, wenn keine Buttons außerhalb des Menu angezeigt werden können.'
       );
-    }
-  }
-
-  onTrigger() {
-    if (this.customTriggerEl && this.triggerButtonDivEl) {
-      this.triggerButtonDivEl.click();
     }
   }
 
@@ -282,22 +273,26 @@ export class LuxMenuComponent implements AfterViewInit, AfterContentInit, AfterV
     }
   }
 
-  addMenuElementsToArray() {
-    this.menuItemsNotExtended = this.menuNotExtendedPanel.map((ref) => (ref instanceof ElementRef ? ref.nativeElement : ref));
-    this.cdr.detectChanges();
-  }
+  ngAfterViewInit(): void {
+    this.triggerButtonDivEl = this.elementRef.nativeElement.querySelector('div.lux-menu-trigger');
+    this.customTriggerEl = this.elementRef.nativeElement.querySelector('lux-menu-trigger');
+    this.customTriggerEl?.addEventListener('click', this.onTriggerListener);
 
-  ngAfterViewChecked() {
-    if (this.luxShowSections()) {
-      this.addMenuElementsToArray();
-    } else {
-      this.menuItems = this.luxMenuItemComponents;
-      this.calculateMenuItemWidths();
-      this.updateExtendedMenuItems();
+    // Deckt Größenänderungen ab, die keine der oben per effect() beobachteten Signale betreffen (z.B. Resize des
+    // umgebenden Layouts ohne Fenster-Resize, etwa durch Ein-/Ausklappen einer Sidebar). Fensterweite Änderungen
+    // fängt weiterhin der bestehende (window:resize)-Listener ab.
+    if (typeof ResizeObserver !== 'undefined') {
+      this.resizeObserver = new ResizeObserver(() => this.updateExtendedMenuItems());
+      this.resizeObserver.observe(this.menuExtendedContainer.nativeElement);
+      if (this.menuTriggerElRef) {
+        this.resizeObserver.observe(this.menuTriggerElRef.nativeElement);
+      }
     }
   }
 
   ngOnDestroy(): void {
+    this.resizeObserver?.disconnect();
+
     if (this.customTriggerEl && this.triggerButtonDivEl) {
       this.customTriggerEl?.removeEventListener('click', this.onTriggerListener);
     }
@@ -305,6 +300,20 @@ export class LuxMenuComponent implements AfterViewInit, AfterContentInit, AfterV
     this.menuItemSubscriptions.forEach((menuItemSubscription) => {
       menuItemSubscription.unsubscribe();
     });
+  }
+
+  windowResize() {
+    this.updateExtendedMenuItems();
+  }
+
+  onTrigger() {
+    if (this.customTriggerEl && this.triggerButtonDivEl) {
+      this.triggerButtonDivEl.click();
+    }
+  }
+
+  addMenuElementsToArray() {
+    this.menuItemsNotExtended = this.menuNotExtendedPanel.map((ref) => (ref instanceof ElementRef ? ref.nativeElement : ref));
   }
 
   /**
@@ -355,18 +364,18 @@ export class LuxMenuComponent implements AfterViewInit, AfterContentInit, AfterV
   menuTriggerStopPropagation(event: Event) {
     LuxUtil.stopEventPropagation(event);
   }
+
   /**
    * Berechnet anhand der verfügbaren Breite des Containers (CSS-Class: lux-menu-extended) und der maximalen Anzahl an
    * extended MenuItems die Anzahl an möglichen MenuItems, die außerhalb des eigentlichen Menus dargestellt werden können.
    */
   updateExtendedMenuItems() {
     if (!this.luxDisplayExtended()) {
-      this.hideToggle = false;
+      this.hideToggle.set(false);
       this.menuItems.forEach((menuItem: LuxMenuItemComponent) => {
-        menuItem.extended = false;
+        menuItem.extended.set(false);
       });
       this.updateMenuEntries();
-      this.cdr.detectChanges();
       return;
     }
 
@@ -374,33 +383,30 @@ export class LuxMenuComponent implements AfterViewInit, AfterContentInit, AfterV
     const menuTriggerWidth = Math.max(menuTriggerOffsetWidth ? menuTriggerOffsetWidth : 0, 50);
 
     let availableWidth: number = this.menuExtendedContainer.nativeElement.offsetWidth;
-    let count = 0;
+    const fittingItems = new Set<LuxMenuItemComponent>();
 
     availableWidth -= menuTriggerWidth;
 
     // mit condition sind hier die Zustände luxVisible = true || false gemeint
-    this.visibleMenuItems = []; // die sichtbaren Menüitems werden neu einsortiert
+    const visibleMenuItems: LuxMenuItemComponent[] = []; // die sichtbaren Menüitems werden neu einsortiert
     for (const condition of [true, false]) {
       for (const menuItem of this.menuItems) {
         if (menuItem.luxAlwaysVisible() === condition && !menuItem.luxHidden()) {
-          this.visibleMenuItems.push(menuItem);
+          visibleMenuItems.push(menuItem);
         }
       }
     }
-    for (const menuItem of this.visibleMenuItems) {
+    for (const menuItem of visibleMenuItems) {
       // Wenn es das letzte sichtbare Menüitem ist, wird geprüft, ob es anstelle des
       // Menüitemtriggers dargestellt werden kann.
-      if (menuItem === this.visibleMenuItems[this.visibleMenuItems.length - 1] && availableWidth + menuTriggerWidth >= menuItem.width) {
+      if (menuItem === visibleMenuItems[visibleMenuItems.length - 1] && availableWidth + menuTriggerWidth >= menuItem.width()) {
         availableWidth += menuTriggerWidth;
       }
 
-      availableWidth -= menuItem.width;
+      availableWidth -= menuItem.width();
 
-      if (availableWidth >= 0 && count < this.luxMaximumExtended()) {
-        menuItem.extended = true;
-        count++;
-      } else {
-        menuItem.extended = false;
+      if (availableWidth >= 0 && fittingItems.size < this.luxMaximumExtended()) {
+        fittingItems.add(menuItem);
       }
     }
 
@@ -415,59 +421,118 @@ export class LuxMenuComponent implements AfterViewInit, AfterContentInit, AfterV
     // Bis zu diesem Zeitpunkt wurde bewusst auf die Berücksichtigung der
     // Priorität verzichtet. Nachdem aber jetzt festgelegt wurde, welche Items
     // überhaupt dargestellt werden, kann nach der Priorität sortiert werden.
-    this.visibleMenuItems.sort((a, b) => (a.luxPrio() ? a.luxPrio() : 0) - (b.luxPrio() ? b.luxPrio() : 0));
+    visibleMenuItems.sort((a, b) => (a.luxPrio() ? a.luxPrio() : 0) - (b.luxPrio() ? b.luxPrio() : 0));
 
-    // wenn die Anzahl der extended dargestellten Items der Gesamtzahl entspricht blenden wir den Toggle aus
-    this.updateMenuEntries();
-    if (this.extendedMenuEntries.some((entry) => entry instanceof LuxDividerComponent)) {
-      let extendedItems = this.visibleMenuItems
-        .filter((item) => item.extended)
-        .sort((first, second) => Number(second.luxAlwaysVisible()) - Number(first.luxAlwaysVisible()));
+    this.visibleMenuItems.set(visibleMenuItems);
+
+    // Divider benötigen zusätzlich Platz. Reicht er nicht, wandern weitere Items in das Panel (zuerst die ohne
+    // luxAlwaysVisible). Die Berechnung arbeitet lokal, da diese Methode im effect() läuft und ein Schreiben von
+    // extended nach dem Lesen den effect() endlos neu auslösen würde.
+    let extendedItems = visibleMenuItems.filter((item) => fittingItems.has(item));
+    const orderedEntries = this.getOrderedMenuEntries();
+    if (orderedEntries.some((entry) => entry instanceof LuxDividerComponent)) {
+      extendedItems.sort((first, second) => Number(second.luxAlwaysVisible()) - Number(first.luxAlwaysVisible()));
       const fits = () =>
-        extendedItems.reduce((width, item) => width + item.width, 0) +
-          this.extendedMenuEntries.filter((entry) => entry instanceof LuxDividerComponent).length * this.EXTENDED_DIVIDER_WIDTH <=
-        this.menuExtendedContainer.nativeElement.offsetWidth -
-          (extendedItems.length === this.visibleMenuItems.length ? 0 : menuTriggerWidth);
+        extendedItems.reduce((width, item) => width + item.width(), 0) +
+          this.getVisibleMenuEntries(orderedEntries, (item) => extendedItems.includes(item)).filter(
+            (entry) => entry instanceof LuxDividerComponent
+          ).length *
+            this.EXTENDED_DIVIDER_WIDTH <=
+        this.menuExtendedContainer.nativeElement.offsetWidth - (extendedItems.length === visibleMenuItems.length ? 0 : menuTriggerWidth);
 
       while (extendedItems.length && !fits()) {
-        extendedItems[extendedItems.length - 1].extended = false;
         extendedItems = extendedItems.slice(0, -1);
-        this.updateMenuEntries();
       }
     }
-    this.hideToggle = this.visibleMenuItems.every((item) => item.extended);
-    this.cdr.detectChanges();
+
+    visibleMenuItems.forEach((item) => item.extended.set(extendedItems.includes(item)));
+    this.updateMenuEntries();
+
+    // wenn die Anzahl der extended dargestellten Items der Gesamtzahl entspricht blenden wir den Toggle aus
+    this.hideToggle.set(extendedItems.length === visibleMenuItems.length);
+  }
+
+  hasVisibleMenuItems(): boolean {
+    let hasVisibleMenuItems = false;
+
+    if (!this.luxShowSections()) {
+      for (const element of this.menuItems) {
+        if (!element.luxHidden() && !element.extended()) {
+          hasVisibleMenuItems = true;
+          break;
+        }
+      }
+    } else {
+      for (const element of this.menuItemsNotExtended) {
+        if (this.isItemMenuItem(element) && !element.luxHidden() && !element.extended()) {
+          hasVisibleMenuItems = true;
+          break;
+        }
+      }
+    }
+
+    return hasVisibleMenuItems;
+  }
+
+  isItemDivider(menuItem: any): menuItem is LuxDividerComponent {
+    return menuItem instanceof LuxDividerComponent;
+  }
+
+  isItemMenuItem(menuItem: any): menuItem is LuxMenuItemComponent {
+    return menuItem instanceof LuxMenuItemComponent;
+  }
+
+  isPanelHeader(menuItem: any): menuItem is LuxMenuPanelHeaderComponent {
+    return menuItem instanceof LuxMenuPanelHeaderComponent;
+  }
+
+  isSectionTitle(menuItem: any): menuItem is LuxMenuSectionTitleComponent {
+    return menuItem instanceof LuxMenuSectionTitleComponent;
   }
 
   private updateMenuEntries() {
-    const orderedItems = this.menuNotExtendedPanel.filter(
+    const orderedEntries = this.getOrderedMenuEntries();
+    const hasDivider = orderedEntries.some((entry) => entry instanceof LuxDividerComponent);
+
+    this.panelMenuEntries.set(
+      hasDivider
+        ? this.getVisibleMenuEntries(orderedEntries, (item) => !item.extended())
+        : this.menuItems.filter((item) => !item.extended() && !item.luxHidden())
+    );
+    this.extendedMenuEntries.set(
+      hasDivider ? this.getVisibleMenuEntries(orderedEntries, (item) => item.extended()) : this.visibleMenuItems()
+    );
+  }
+
+  private getOrderedMenuEntries(): (LuxMenuItemComponent | LuxDividerComponent)[] {
+    return this.menuNotExtendedPanel.filter(
       (item): item is LuxMenuItemComponent | LuxDividerComponent =>
         item instanceof LuxMenuItemComponent || item instanceof LuxDividerComponent
     );
-    const visibleEntries = (extended: boolean) => {
-      const result: (LuxMenuItemComponent | LuxDividerComponent)[] = [];
-      for (const [index, item] of orderedItems.entries()) {
-        if (item instanceof LuxMenuItemComponent) {
-          if (!item.luxHidden() && item.extended === extended) result.push(item);
-        } else if (
-          result.length &&
-          result[result.length - 1] instanceof LuxMenuItemComponent &&
-          orderedItems
-            .slice(index + 1)
-            .some((next) => next instanceof LuxMenuItemComponent && !next.luxHidden() && next.extended === extended)
-        ) {
-          result.push(item);
-        }
-      }
-      return result;
-    };
+  }
 
-    this.panelMenuEntries = orderedItems.some((item) => item instanceof LuxDividerComponent)
-      ? visibleEntries(false)
-      : this.menuItems.filter((item) => !item.extended && !item.luxHidden());
-    this.extendedMenuEntries = orderedItems.some((item) => item instanceof LuxDividerComponent)
-      ? visibleEntries(true)
-      : this.visibleMenuItems;
+  /**
+   * Liefert die sichtbaren Items eines Bereichs (extended bzw. Panel) in Template-Reihenfolge. Divider werden nur
+   * übernommen, wenn sie zwischen zwei sichtbaren Items stehen.
+   */
+  private getVisibleMenuEntries(
+    orderedEntries: (LuxMenuItemComponent | LuxDividerComponent)[],
+    isInArea: (item: LuxMenuItemComponent) => boolean
+  ): (LuxMenuItemComponent | LuxDividerComponent)[] {
+    const isVisible = (entry: LuxMenuItemComponent | LuxDividerComponent) =>
+      entry instanceof LuxMenuItemComponent && !entry.luxHidden() && isInArea(entry);
+
+    const result: (LuxMenuItemComponent | LuxDividerComponent)[] = [];
+    for (const [index, entry] of orderedEntries.entries()) {
+      if (entry instanceof LuxMenuItemComponent) {
+        if (isVisible(entry)) {
+          result.push(entry);
+        }
+      } else if (result[result.length - 1] instanceof LuxMenuItemComponent && orderedEntries.slice(index + 1).some(isVisible)) {
+        result.push(entry);
+      }
+    }
+    return result;
   }
 
   /**
@@ -476,8 +541,8 @@ export class LuxMenuComponent implements AfterViewInit, AfterContentInit, AfterV
    */
   private calculateMenuItemWidths() {
     this.menuItems.forEach((menuItem: LuxMenuItemComponent) => {
-      menuItem.extended = false;
-      menuItem.width = this.luxMenuItemFixWidth() > 0 ? this.luxMenuItemFixWidth() : this.getMenuItemWidth(menuItem);
+      menuItem.extended.set(false);
+      menuItem.width.set(this.luxMenuItemFixWidth() > 0 ? this.luxMenuItemFixWidth() : this.getMenuItemWidth(menuItem));
     });
   }
 
@@ -521,43 +586,5 @@ export class LuxMenuComponent implements AfterViewInit, AfterContentInit, AfterV
     // Offset kann weiterhin genutzt werden, falls nötig
     const offset = 0;
     return metrics.width + letterSpacingWidth + offset;
-  }
-
-  hasVisibleMenuItems(): boolean {
-    let hasVisibleMenuItems = false;
-
-    if (!this.luxShowSections()) {
-      for (const element of this.menuItems) {
-        if (!element.luxHidden() && !element.extended) {
-          hasVisibleMenuItems = true;
-          break;
-        }
-      }
-    } else {
-      for (const element of this.menuItemsNotExtended) {
-        if (this.isItemMenuItem(element) && !element.luxHidden() && !element.extended) {
-          hasVisibleMenuItems = true;
-          break;
-        }
-      }
-    }
-
-    return hasVisibleMenuItems;
-  }
-
-  isItemDivider(menuItem: any): menuItem is LuxDividerComponent {
-    return menuItem instanceof LuxDividerComponent;
-  }
-
-  isItemMenuItem(menuItem: any): menuItem is LuxMenuItemComponent {
-    return menuItem instanceof LuxMenuItemComponent;
-  }
-
-  isPanelHeader(menuItem: any): menuItem is LuxMenuPanelHeaderComponent {
-    return menuItem instanceof LuxMenuPanelHeaderComponent;
-  }
-
-  isSectionTitle(menuItem: any): menuItem is LuxMenuSectionTitleComponent {
-    return menuItem instanceof LuxMenuSectionTitleComponent;
   }
 }

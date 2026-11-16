@@ -22,6 +22,4 @@ export class TableExampleDataProviderService {
   salutations: string[] = ['Dr.', 'Prof.', 'Herr', 'Frau'];
 
   companyTypes: ICompanyType[] = [{ value: 'AG' }, { value: 'GmbH' }, { value: 'OHG' }];
-
-  constructor() {}
 }

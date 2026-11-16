@@ -1,12 +1,13 @@
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
-import { LuxDatepickerAcComponent, LuxInputAcComponent } from '@ihk-gfi/lux-components';
+import { LuxDatepickerComponent, LuxInputComponent } from '@ihk-gfi/lux-components';
 import { LuxA11yTestHelper } from '@ihk-gfi/lux-components/test-utils';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { provideLuxTranslocoTesting } from '../../../src/testing/transloco-test.provider';
 import { LuxMinMaxInputComponent } from './lux-min-max-input.component';
 import { LuxMinMaxBounds, LuxMinMaxType, LuxMinMaxValue } from './lux-min-max-input-types';
@@ -77,8 +78,8 @@ describe('LuxMinMaxInputComponent', () => {
       .queryAll(By.css('.lux-form-control-wrapper'))
       .map((el) => (el.nativeElement as HTMLElement).classList.contains('lux-form-control-error-authentic'));
 
-  const pickers = (): LuxDatepickerAcComponent[] =>
-    fixture.debugElement.queryAll(By.directive(LuxDatepickerAcComponent)).map((el) => el.componentInstance as LuxDatepickerAcComponent);
+  const pickers = (): LuxDatepickerComponent[] =>
+    fixture.debugElement.queryAll(By.directive(LuxDatepickerComponent)).map((el) => el.componentInstance as LuxDatepickerComponent);
 
   const fieldType = (luxType: LuxMinMaxType): Promise<void> => setup({ luxType });
 
@@ -383,7 +384,7 @@ describe('LuxMinMaxInputComponent', () => {
     it('Sollte die Einheit als Suffix in beiden Feldern rendern', async () => {
       await setup({ luxUnit: 'kg' });
 
-      expect(fixture.debugElement.queryAll(By.css('lux-input-ac-suffix')).length).toBe(2);
+      expect(fixture.debugElement.queryAll(By.css('lux-input-suffix')).length).toBe(2);
     });
   });
 
@@ -469,8 +470,8 @@ describe('LuxMinMaxInputComponent', () => {
       await setup({ luxType: 'date', luxBounds: YEAR });
 
       expect(pickers().length).toBe(2);
-      expect(pickers().every((p) => p.luxMinDate === YEAR.min)).toBe(true);
-      expect(pickers().every((p) => p.luxMaxDate === YEAR.max)).toBe(true);
+      expect(pickers().every((p) => p.luxMinDate() === YEAR.min)).toBe(true);
+      expect(pickers().every((p) => p.luxMaxDate() === YEAR.max)).toBe(true);
     });
 
     it('Sollte jeden Kalender durch den Nachbarwert vorbegrenzen und die Sperre nach dem Leeren aufheben', async () => {
@@ -478,7 +479,7 @@ describe('LuxMinMaxInputComponent', () => {
       fixture.componentRef.setInput('luxValue', { min: '2026-05-10T00:00:00.000Z', max: '2026-06-01T00:00:00.000Z' });
       await settle();
 
-      expect(pickers().map((p) => [p.luxMinDate, p.luxMaxDate])).toEqual([
+      expect(pickers().map((p) => [p.luxMinDate(), p.luxMaxDate()])).toEqual([
         [YEAR.min, '2026-06-01T00:00:00.000Z'],
         ['2026-05-10T00:00:00.000Z', YEAR.max]
       ]);
@@ -486,7 +487,7 @@ describe('LuxMinMaxInputComponent', () => {
       fixture.componentRef.setInput('luxValue', {});
       await settle();
 
-      expect(pickers().map((p) => [p.luxMinDate, p.luxMaxDate])).toEqual([
+      expect(pickers().map((p) => [p.luxMinDate(), p.luxMaxDate()])).toEqual([
         [YEAR.min, YEAR.max],
         [YEAR.min, YEAR.max]
       ]);
@@ -495,7 +496,7 @@ describe('LuxMinMaxInputComponent', () => {
     it('Sollte ohne Grenze null übergeben', async () => {
       await setup({ luxType: 'date' });
 
-      expect(pickers().map((p) => [p.luxMinDate, p.luxMaxDate])).toEqual([
+      expect(pickers().map((p) => [p.luxMinDate(), p.luxMaxDate()])).toEqual([
         [null, null],
         [null, null]
       ]);
@@ -508,7 +509,7 @@ describe('LuxMinMaxInputComponent', () => {
         luxMaxFieldBounds: { min: '2026-12-28T00:00:00.000Z', max: '2027-01-05T00:00:00.000Z' }
       });
 
-      expect(pickers().map((p) => [p.luxMinDate, p.luxMaxDate])).toEqual([
+      expect(pickers().map((p) => [p.luxMinDate(), p.luxMaxDate()])).toEqual([
         [YEAR.min, YEAR.max],
         ['2026-12-28T00:00:00.000Z', YEAR.max]
       ]);
@@ -525,12 +526,12 @@ describe('LuxMinMaxInputComponent', () => {
 
     it('Sollte die Kalendersperre von Bis aufheben, wenn Von geleert wird', async () => {
       await setup({ luxType: 'date' }, { min: '2026-05-10T00:00:00.000Z' });
-      expect(pickers()[1].luxMinDate).toBe('2026-05-10T00:00:00.000Z');
+      expect(pickers()[1].luxMinDate()).toBe('2026-05-10T00:00:00.000Z');
 
       await typeInto(0, '');
       await blur(0);
 
-      expect(pickers()[1].luxMinDate).toBeNull();
+      expect(pickers()[1].luxMinDate()).toBeNull();
     });
 
     it('Sollte den Bereich in der gemeinsamen Meldung nennen, wenn das Bis-Datum vor dem Von-Datum liegt', async () => {
@@ -574,8 +575,8 @@ describe('LuxMinMaxInputComponent', () => {
     it('Sollte Tag-Ids mit Seiten-Suffix vergeben', async () => {
       await setup({ luxTagId: 'preis' });
       const fields = fixture.debugElement
-        .queryAll(By.directive(LuxInputAcComponent))
-        .map((el) => (el.componentInstance as LuxInputAcComponent).luxTagId);
+        .queryAll(By.directive(LuxInputComponent))
+        .map((el) => (el.componentInstance as LuxInputComponent).luxTagId());
 
       expect(fields).toEqual(['preis-min', 'preis-max']);
     });
@@ -679,7 +680,7 @@ describe('LuxMinMaxInputComponent als ControlValueAccessor', () => {
   });
 
   it('Sollte einen ungültigen Startwert unverändert lassen und das Control weder ändern noch dirty machen', async () => {
-    host.bounds = { max: 0 };
+    host.bounds.set({ max: 0 });
     await settleFixture(fixture);
 
     expect(allInputs(fixture).map((el) => el.value)).toEqual(['1', '']);
@@ -717,14 +718,15 @@ describe('LuxMinMaxInputComponent als ControlValueAccessor', () => {
     <lux-min-max-input
       luxLabel="Anzahl"
       [formControl]="control"
-      [luxBounds]="bounds"
+      [luxBounds]="bounds()"
       (luxValueChange)="changes.push($event)"
     ></lux-min-max-input>
   `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxMinMaxInputComponent, ReactiveFormsModule]
 })
 class MinMaxFormHostComponent {
   readonly control = new FormControl<LuxMinMaxValue<number | string>>({ min: 1 }, { nonNullable: true });
-  bounds: LuxMinMaxBounds<number | string> = {};
+  readonly bounds = signal<LuxMinMaxBounds<number | string>>({});
   readonly changes: LuxMinMaxValue<number | string>[] = [];
 }

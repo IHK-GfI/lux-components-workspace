@@ -1,4 +1,4 @@
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { LuxProgressComponent, LuxProgressModeType } from '../../../../lux-common/lux-progress/lux-progress.component';
 
 /**
@@ -8,12 +8,10 @@ import { LuxProgressComponent, LuxProgressModeType } from '../../../../lux-commo
   selector: 'lux-file-progress',
   templateUrl: './lux-file-progress.component.html',
   styleUrls: ['./lux-file-progress.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxProgressComponent]
 })
 export class LuxFileProgressComponent {
-  @Input() luxProgress = 0;
-  @Input() luxMode: LuxProgressModeType = 'indeterminate';
-
-  constructor() {}
+  readonly luxProgress = input(0);
+  readonly luxMode = input<LuxProgressModeType>('indeterminate');
 }

@@ -1,11 +1,11 @@
 import { Component, OnDestroy, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
-  LuxInputAcComponent,
+  LuxInputComponent,
   LuxStepperLargeClickEvent,
   LuxStepperLargeStepComponent,
   LuxThemePalette,
-  LuxToggleAcComponent,
+  LuxToggleComponent,
   LuxUtil,
   LuxVetoState
 } from '@ihk-gfi/lux-components';
@@ -25,45 +25,42 @@ interface StepperLargeNextButtonDummyForm {
   selector: 'app-stepper-large-example-step-next-button',
   templateUrl: './stepper-large-example-step-next-button.component.html',
   providers: [{ provide: LuxStepperLargeStepComponent, useExisting: StepperLargeExampleStepNextButtonComponent }],
-  changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [LuxToggleAcComponent, LuxInputAcComponent, ReactiveFormsModule, StepperLargeExampleErrorMessageBoxComponent]
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [LuxToggleComponent, LuxInputComponent, ReactiveFormsModule, StepperLargeExampleErrorMessageBoxComponent]
 })
 export class StepperLargeExampleStepNextButtonComponent extends LuxStepperLargeStepComponent implements OnInit, OnDestroy {
-  dataService = inject(StepperLargeExampleDataService);
-
   form: FormGroup<StepperLargeNextButtonDummyForm>;
-  showErrorMessage = false;
-
   subscriptions: Subscription[] = [];
+
+  private dataService = inject(StepperLargeExampleDataService);
 
   constructor() {
     super();
 
+    const nextButtonConfig = this.dataService.nextButtonConfig();
     this.form = new FormGroup<StepperLargeNextButtonDummyForm>({
-      label: new FormControl<string>(this.dataService.nextButtonConfig.label ? this.dataService.nextButtonConfig.label : 'Weiter', { validators: Validators.required, nonNullable: true }),
-      iconName: new FormControl<string | undefined>(this.dataService.nextButtonConfig.iconName, { nonNullable: true }),
-      color: new FormControl<LuxThemePalette | undefined>(this.dataService.nextButtonConfig.color, { nonNullable: true }),
-      iconShowRight: new FormControl<boolean | undefined>(this.dataService.nextButtonConfig.iconShowRight, { nonNullable: true }),
-      alignIconWithLabel: new FormControl<boolean | undefined>(this.dataService.nextButtonConfig.alignIconWithLabel, { nonNullable: true })
+      label: new FormControl<string>(nextButtonConfig.label ? nextButtonConfig.label : 'Weiter', {
+        validators: Validators.required,
+        nonNullable: true
+      }),
+      iconName: new FormControl<string | undefined>(nextButtonConfig.iconName, { nonNullable: true }),
+      color: new FormControl<LuxThemePalette | undefined>(nextButtonConfig.color, { nonNullable: true }),
+      iconShowRight: new FormControl<boolean | undefined>(nextButtonConfig.iconShowRight, { nonNullable: true }),
+      alignIconWithLabel: new FormControl<boolean | undefined>(nextButtonConfig.alignIconWithLabel, { nonNullable: true })
     });
   }
 
   ngOnInit(): void {
-    this.luxTitle = 'Konfiguration: Weiter-Button';
-    this.luxVetoFn = this.createVetoPromise;
+    this.luxTitle.set('Konfiguration: Weiter-Button');
+    this.luxVetoFn.set(this.createVetoPromise.bind(this));
 
     this.form.get('alignIconWithLabel')!.disable();
 
-    this.luxCompleted = this.form.valid;
+    this.luxCompleted.set(this.form.valid);
 
     this.subscriptions.push(
       this.form.statusChanges.subscribe(() => {
-        this.luxCompleted = this.form.valid;
-      })
-    );
-    this.subscriptions.push(
-      this.dataService.showErrorMessage.subscribe((value) => {
-        this.showErrorMessage = value;
+        this.luxCompleted.set(this.form.valid);
       })
     );
   }
@@ -78,21 +75,21 @@ export class StepperLargeExampleStepNextButtonComponent extends LuxStepperLargeS
       // - Die Daten aus dem Step in seine Datenstruktur übertragen.
       // - Über die resolve-Methode zurückmelden, ob zum nächsten Schritt navigiert werden darf.
       setTimeout(() => {
-        if (!event.newStep.luxTouched) {
+        if (!event.newStep.luxTouched()) {
           // Prüfen, ob das Formular valide ist.
           if (this.form.valid) {
             // Hier werden die Daten aus dem Formular in den Datenservice übertragen.
-            this.dataService.nextButtonConfig = this.form.value;
+            this.dataService.nextButtonConfig.set(this.form.value);
 
             // Als Letztes wird der Step als valide gekennzeichnet.
-            this.luxCompleted = true;
+            this.luxCompleted.set(true);
           } else {
             // Das Formular ist noch nicht valide und deswegen wird der Step
             // als noch nicht fertig gekennzeichnet.
-            this.luxCompleted = false;
+            this.luxCompleted.set(false);
           }
           if (this.dataService.luxStepValidationActive) {
-            resolve(this.luxCompleted ? LuxVetoState.navigationAccepted : LuxVetoState.navigationRejected);
+            resolve(this.luxCompleted() ? LuxVetoState.navigationAccepted : LuxVetoState.navigationRejected);
           } else {
             resolve(LuxVetoState.navigationAccepted);
           }

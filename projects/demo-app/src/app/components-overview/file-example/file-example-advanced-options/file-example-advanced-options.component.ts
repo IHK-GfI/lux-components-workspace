@@ -1,36 +1,52 @@
-import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import {
-    LuxAccordionComponent,
-    LuxInputAcComponent,
-    LuxPanelComponent,
-    LuxPanelContentComponent,
-    LuxPanelHeaderTitleComponent,
-    LuxToggleAcComponent,
-    LuxUtil
+  ILuxFileActionConfig,
+  ILuxFileListDeleteActionConfig,
+  LuxAccordionComponent,
+  LuxInputComponent,
+  LuxPanelComponent,
+  LuxPanelContentComponent,
+  LuxPanelHeaderTitleComponent,
+  LuxToggleComponent
 } from '@ihk-gfi/lux-components';
 import { FileExampleComponent } from '../file-example.component';
 
 @Component({
   selector: 'app-file-example-advanced-options',
   templateUrl: './file-example-advanced-options.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxAccordionComponent,
     LuxPanelHeaderTitleComponent,
     LuxPanelContentComponent,
     LuxPanelComponent,
-    LuxToggleAcComponent,
-    LuxInputAcComponent
+    LuxToggleComponent,
+    LuxInputComponent
   ]
 })
-export class FileExampleAdvancedOptionsComponent implements OnInit {
-  @Input() fileExample!: FileExampleComponent<any, any>;
-  @Input() showHeaderConfigProperties!: boolean;
+export class FileExampleAdvancedOptionsComponent {
+  readonly fileExample = input.required<FileExampleComponent<any, any>>();
+  readonly showHeaderConfigProperties = input.required<boolean>();
 
-  constructor() {}
+  // Die Configs werden als neue Objekte zugewiesen, da eine reine Mutation der verschachtelten
+  // Properties von den OnPush-File-Components (anderer Zweig im Komponentenbaum) nicht erkannt wird.
+  updateUploadActionConfig(patch: Record<string, unknown>) {
+    const fileExample = this.fileExample();
+    fileExample.uploadActionConfig = { ...fileExample.uploadActionConfig, ...patch };
+  }
 
-  ngOnInit() {
-    LuxUtil.assertNonNull('fileExample', this.fileExample);
-    LuxUtil.assertNonNull('showHeaderConfigProperties', this.showHeaderConfigProperties);
+  updateDeleteActionConfig(patch: Partial<ILuxFileListDeleteActionConfig>) {
+    const fileExample = this.fileExample();
+    fileExample.deleteActionConfig = { ...fileExample.deleteActionConfig, ...patch };
+  }
+
+  updateViewActionConfig(patch: Partial<ILuxFileActionConfig>) {
+    const fileExample = this.fileExample();
+    fileExample.viewActionConfig = { ...fileExample.viewActionConfig, ...patch };
+  }
+
+  updateDownloadActionConfig(patch: Partial<ILuxFileActionConfig>) {
+    const fileExample = this.fileExample();
+    fileExample.downloadActionConfig = { ...fileExample.downloadActionConfig, ...patch };
   }
 }

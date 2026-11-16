@@ -1,0 +1,50 @@
+<lux-form-control-wrapper
+  [luxFormComponent]="this"
+  [luxNoInputRow]="true"
+  [luxIgnoreDefaultLabel]="true"
+  [luxNoLabels]="luxNoLabels()"
+  [luxNoBottomLabel]="luxNoBottomLabel()"
+  [luxNoTopLabel]="luxNoTopLabel()"
+  luxTagId="luxToggleWrapper"
+  (click)="markAsTouched()"
+>
+  <mat-slide-toggle
+    luxTagIdHandler
+    class="lux-toggle"
+    [luxTagId]="luxTagId()"
+    [disableRipple]="true"
+    [required]="isRequired()"
+    [checked]="checked()"
+    [disabled]="isDisabled()"
+    (change)="onToggleChange($event)"
+    color="primary"
+    (focusin)="onFocusIn($event)"
+    (focusout)="onFocusOut($event)"
+    [id]="uid()"
+    [luxAriaDescribedby]="describedBy()"
+    luxAriaDescribedbySelector="button"
+    [luxAriaRequired]="isRequired()"
+    luxAriaRequiredSelector="button"
+    [luxAriaInvalid]="'' + isInvalid()"
+    luxAriaInvalidSelector="button"
+    [luxAriaLabel]="luxAriaLabel()"
+    luxAriaLabelSelector="button"
+    [luxAriaLabelledby]="luxAriaLabelledby()"
+    luxAriaLabelledbySelector="button"
+    tabIndex="{{ isReadonly() ? -1 : 0 }}"
+    #slidetoggle
+  >
+    @if (formLabelComponent() || luxLabel()) {
+      <span class="lux-form-label">
+        <!-- Texte im ng-container ohne Leerraum drumherum, sonst werden die Zeilenumbrüche als Leerzeichen gerendert. -->
+        @if (luxLabel()) {
+          <ng-container>&nbsp;{{ luxLabel() }}&nbsp;</ng-container>
+        } @else {
+          <!-- Nicht in die nächste Zeile verschieben, sonst bricht das Label an dem Leerzeichen um. -->
+          <ng-container *ngTemplateOutlet="formLabelComponent()?.templateRef() ?? null" />
+        }
+        <ng-container>{{ isRequired() ? '&nbsp;*' : '' }}</ng-container>
+      </span>
+    }
+  </mat-slide-toggle>
+</lux-form-control-wrapper>
