@@ -102,12 +102,14 @@ Klassen für die initiale Größe von flex-items.
 
 Klassen für die Ausrichtung der Hauptachse in einer Flexbox
 
-| Klasse               | CSS-Regel                    | Beschreibung                                                         |
-| :------------------- | :--------------------------- | :------------------------------------------------------------------- |
-| lux-flex-row         | flex-direction: row;         | Richtet die Elemente in einer Reihe aus.                             |
-| lux-flex-row-reverse | flex-direction: row-reverse; | Richtet die Elemente in umgekehrter Reihenfolge in einer Reihe aus.  |
-| lux-flex-col         | flex-direction: column;      | Richtet die Elemente in einer Spalte aus.                            |
+| Klasse               | CSS-Regel                       | Beschreibung                                                         |
+| :------------------- | :------------------------------ | :------------------------------------------------------------------- |
+| lux-flex-row         | flex-direction: row;            | Richtet die Elemente in einer Reihe aus.                             |
+| lux-flex-row-reverse | flex-direction: row-reverse;    | Richtet die Elemente in umgekehrter Reihenfolge in einer Reihe aus.  |
+| lux-flex-col         | flex-direction: column;         | Richtet die Elemente in einer Spalte aus.                            |
 | lux-flex-col-reverse | flex-direction: column-reverse; | Richtet die Elemente in umgekehrter Reihenfolge in einer Spalte aus. |
+
+Mit v22 entfällt die bisher irrtümlich erzeugte Schreibweise `lux-flex-col-revers`, auch mit Breakpoint-Präfix. Stattdessen `lux-flex-col-reverse` verwenden.
 
 ## 4. Flex Wrap
 
@@ -257,13 +259,14 @@ Klassen um Items gleichzeitig entlang der Main- und Cross-Axis ihrer Grid-Cell z
 
 Klassen um ein Item individuell entlang der Main- und Cross-Axis zu positionieren.
 
-| Klasse                 | CSS-Regel            | Beschreibung                                                      |
-| :--------------------- | :------------------- | :---------------------------------------------------------------- |
-| lux-place-self-center  | place-self: center;  | Item wird in der Mitte beider Achsen des Containers positioniert. |
-| lux-place-self-start   | place-self: start;   | Item wird am Anfang beider Achsen des Containers positioniert.    |
-| lux-place-self-end     | place-self: end;     | Item wird in am Ende beider Achsen des Containers positioniert.   |
-| lux-place-self-auto    | place-self: auto;    | Item wird entsprechend der Property des Containers positioniert.  |
-| lux-place-self-stretch | place-self: stretch; | Item füllt die Zelle in beide Richtungen aus.                     |
+| Klasse                  | CSS-Regel             | Beschreibung                                                      |
+| :---------------------- | :-------------------- | :---------------------------------------------------------------- |
+| lux-place-self-center   | place-self: center;   | Item wird in der Mitte beider Achsen des Containers positioniert. |
+| lux-place-self-start    | place-self: start;    | Item wird am Anfang beider Achsen des Containers positioniert.    |
+| lux-place-self-end      | place-self: end;      | Item wird in am Ende beider Achsen des Containers positioniert.   |
+| lux-place-self-auto     | place-self: auto;     | Item wird entsprechend der Property des Containers positioniert.  |
+| lux-place-self-baseline | place-self: baseline; | Richtet das Item an der Grundlinie aus.                           |
+| lux-place-self-stretch  | place-self: stretch;  | Item füllt die Zelle in beide Richtungen aus.                     |
 
 ## 17. Grid Template Columns
 
