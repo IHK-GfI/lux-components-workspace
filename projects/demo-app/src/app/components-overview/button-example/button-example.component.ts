@@ -17,8 +17,6 @@ import {
   LuxThemePalette,
   LuxToggleComponent
 } from '@ihk-gfi/lux-components';
-import { StatusMarkerComponent } from '../../base/status-marker/status-marker.component';
-import { DemoMarkerType } from '../../base/status-marker/status-marker.model';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
 import { ExampleBaseStructureComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-structure/example-base-structure.component';
@@ -45,8 +43,7 @@ type ErrorBoxType = 'default' | 'gradient' | 'loading';
     LuxCardContentComponent,
     LuxCardActionsComponent,
     LuxTextboxComponent,
-    NgTemplateOutlet,
-    StatusMarkerComponent
+    NgTemplateOutlet
   ]
 })
 export class ButtonExampleComponent {
@@ -62,7 +59,6 @@ export class ButtonExampleComponent {
     { value: 'accent', label: 'accent' }
   ];
   readonly spinnerModes = ['determinate', 'indeterminate'];
-  readonly markerTypeUpdated = DemoMarkerType.Updated;
   readonly log = logResult;
 
   readonly config: Signal<LuxComponentsConfigParameters>;

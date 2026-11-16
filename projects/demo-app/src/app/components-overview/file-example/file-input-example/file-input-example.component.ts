@@ -12,8 +12,6 @@ import {
   LuxToggleComponent
 } from '@ihk-gfi/lux-components';
 import { map, take } from 'rxjs/operators';
-import { StatusMarkerComponent } from '../../../base/status-marker/status-marker.component';
-import { DemoMarkerType } from '../../../base/status-marker/status-marker.model';
 import { ExampleBaseContentComponent } from '../../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
@@ -44,7 +42,6 @@ import { FileExampleComponent } from '../file-example.component';
     FileExampleSimpleOptionsComponent,
     ExampleBaseAdvancedOptionsComponent,
     FileExampleAdvancedOptionsComponent,
-    StatusMarkerComponent,
     FormField
   ]
 })
@@ -67,7 +64,6 @@ export class FileInputExampleComponent extends FileExampleComponent implements A
   readonly noTopLabel = signal(false);
   readonly noBottomLabel = signal(false);
   readonly noLabels = signal(false);
-  readonly markerTypeUpdated = DemoMarkerType.Updated;
 
   readonly namePrefixAccept = signal('(OK) ');
   readonly nameSuffixAccept = signal(` (${new Date().toLocaleDateString()})`);

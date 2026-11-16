@@ -29,28 +29,16 @@
         Dabei sind die Eingaben 'small', 'medium' und 'large' erlaubt.
       </lux-form-hint>
     </lux-select>
-    <div class="lux-flex lux-items-center">
-      <lux-toggle
-        luxLabel="Muted (dekorativ)"
-        luxHint="Nur verwenden, wenn der Fortschritt zusätzlich als Text angezeigt wird."
-        [(checked)]="muted"
-        [luxNoTopLabel]="true"
-      />
-      <app-status-marker [markerType]="markerTypeNew" />
-    </div>
-    <div class="lux-flex lux-items-center">
-      <lux-toggle luxLabel="Fortschrittstext anzeigen" [(checked)]="showText" [luxNoTopLabel]="true" />
-      <app-status-marker [markerType]="markerTypeNew" />
-    </div>
+    <lux-toggle
+      luxLabel="Muted (dekorativ)"
+      luxHint="Nur verwenden, wenn der Fortschritt zusätzlich als Text angezeigt wird."
+      [(checked)]="muted"
+      [luxNoTopLabel]="true"
+    />
+    <lux-toggle luxLabel="Fortschrittstext anzeigen" [(checked)]="showText" [luxNoTopLabel]="true" />
     @if (showText()) {
-      <div class="lux-flex lux-items-center">
-        <lux-select [luxOptions]="textPositions" [(value)]="textPosition" luxLabel="luxTextPosition" />
-        <app-status-marker [markerType]="markerTypeNew" />
-      </div>
-      <div class="lux-flex lux-items-center">
-        <lux-input luxName="progress_text" [(value)]="text" luxLabel="luxText" luxHint="Leer lassen, um den Prozentwert anzuzeigen." />
-        <app-status-marker [markerType]="markerTypeNew" />
-      </div>
+      <lux-select [luxOptions]="textPositions" [(value)]="textPosition" luxLabel="luxTextPosition" />
+      <lux-input luxName="progress_text" [(value)]="text" luxLabel="luxText" luxHint="Leer lassen, um den Prozentwert anzuzeigen." />
     }
     <lux-select
       [luxOptions]="modes"

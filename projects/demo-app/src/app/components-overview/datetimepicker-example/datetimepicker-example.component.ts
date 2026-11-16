@@ -10,8 +10,6 @@ import {
   LuxStartView,
   LuxToggleComponent
 } from '@ihk-gfi/lux-components';
-import { StatusMarkerComponent } from '../../base/status-marker/status-marker.component';
-import { DemoMarkerType } from '../../base/status-marker/status-marker.model';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
@@ -45,7 +43,6 @@ interface DatetimeDummyForm {
     ExampleBaseSimpleOptionsComponent,
     ExampleFormDisableComponent,
     ExampleBaseAdvancedOptionsComponent,
-    StatusMarkerComponent,
     ExampleSignalFormValueComponent,
     FormField
   ]
@@ -87,7 +84,6 @@ export class DatetimepickerExampleComponent {
   readonly noTopLabel = signal(false);
   readonly noBottomLabel = signal(false);
   readonly noLabels = signal(false);
-  readonly markerTypeUpdated = DemoMarkerType.Updated;
   readonly placeholder = signal('Placeholder');
   readonly controlValidators = signal<ValidatorFn[]>([]);
   readonly errorMessage = signal('Das Feld enthält keinen gültigen Wert');

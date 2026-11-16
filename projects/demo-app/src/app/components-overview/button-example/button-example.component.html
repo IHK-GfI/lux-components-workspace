@@ -502,16 +502,13 @@
       [luxNoTopLabel]="true"
       (checkedChange)="disabledAria.set(disabled() ? false : disabledAria())"
     />
-    <div class="lux-flex lux-items-center">
-      <lux-toggle
-        [(checked)]="disabledAria"
-        luxLabel="luxDisabledAria"
-        luxHint="Diese Property deaktiviert den Button fachlich."
-        [luxNoTopLabel]="true"
-        (checkedChange)="disabled.set(disabledAria() ? false : disabled())"
-      />
-      <app-status-marker [markerType]="markerTypeUpdated" />
-    </div>
+    <lux-toggle
+      [(checked)]="disabledAria"
+      luxLabel="luxDisabledAria"
+      luxHint="Diese Property deaktiviert den Button fachlich."
+      [luxNoTopLabel]="true"
+      (checkedChange)="disabled.set(disabledAria() ? false : disabled())"
+    />
     <lux-toggle luxLabel="Label Uppercase" [(checked)]="allUpperCase" [luxNoTopLabel]="true">
       <lux-form-hint>
         Über den <i>LuxComponentsConfigService</i> kann für alle LuxButtons applikationsweit eine Uppercase-Darstellung forciert werden.

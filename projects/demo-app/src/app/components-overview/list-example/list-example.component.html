@@ -130,21 +130,18 @@
       [(checked)]="showOutputEvents"
       [luxNoTopLabel]="true"
     />
-    <div class="lux-flex lux-items-center lux-gap-2">
-      <lux-toggle
-        luxLabel="Interaktive Elemente in List-Items anzeigen (Grid-Navigation)"
-        [(checked)]="showInteractiveContent"
-        [luxNoTopLabel]="true"
-        ><lux-form-hint
-          >Bearbeiten-Modus: Wird dieser aktiviert, können interaktive Elemente (Formularelemente, Buttons, etc.) im selektierten List-Item
-          genutzt werden.<br />
-          Enter/F2/Space aktiviert den Bearbeiten-Modus,<br />Escape kehrt zur Liste zurück.<br /><span class="lux-text-highlight-alert"
-            >Vorsicht! Wenn man viele List-Items mit mehreren interaktiven Elementen hat, kann dies die Performance beeinträchtigen.</span
-          ></lux-form-hint
-        ></lux-toggle
-      >
-      <app-status-marker />
-    </div>
+    <lux-toggle
+      luxLabel="Interaktive Elemente in List-Items anzeigen (Grid-Navigation)"
+      [(checked)]="showInteractiveContent"
+      [luxNoTopLabel]="true"
+      ><lux-form-hint
+        >Bearbeiten-Modus: Wird dieser aktiviert, können interaktive Elemente (Formularelemente, Buttons, etc.) im selektierten List-Item
+        genutzt werden.<br />
+        Enter/F2/Space aktiviert den Bearbeiten-Modus,<br />Escape kehrt zur Liste zurück.<br /><span class="lux-text-highlight-alert"
+          >Vorsicht! Wenn man viele List-Items mit mehreren interaktiven Elementen hat, kann dies die Performance beeinträchtigen.</span
+        ></lux-form-hint
+      ></lux-toggle
+    >
     <lux-toggle
       luxLabel="Zeige Zeile 1 (mit Chips)"
       [(checked)]="showRow1"
@@ -163,10 +160,7 @@
       [luxNoLabels]="true"
       [luxDisabled]="!showInteractiveContent()"
     />
-    <div class="lux-flex lux-items-center">
-      <lux-toggle luxLabel="luxListItemCustomHeader anzeigen" [(checked)]="showCustomHeader" [luxNoLabels]="true" />
-      <app-status-marker />
-    </div>
+    <lux-toggle luxLabel="luxListItemCustomHeader anzeigen" [(checked)]="showCustomHeader" [luxNoLabels]="true" />
     <lux-input
       [(value)]="emptyLabel"
       luxName="list_luxEmptyLabel"

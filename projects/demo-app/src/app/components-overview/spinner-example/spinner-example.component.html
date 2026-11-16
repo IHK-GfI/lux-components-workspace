@@ -25,19 +25,13 @@
         Dabei sind die Eingaben 'small', 'medium' und 'large' erlaubt.
       </lux-form-hint>
     </lux-select>
-    <div class="lux-flex lux-items-center">
-      <lux-toggle
-        luxLabel="Muted (dekorativ)"
-        luxHint="Nur verwenden, wenn der Fortschritt zusätzlich als Text angezeigt wird."
-        [(checked)]="muted"
-        [luxNoTopLabel]="true"
-      />
-      <app-status-marker [markerType]="markerTypeNew" />
-    </div>
-    <div class="lux-flex lux-items-center">
-      <lux-toggle luxLabel="Prozentwert anzeigen" [(checked)]="showText" [luxNoTopLabel]="true" />
-      <app-status-marker [markerType]="markerTypeNew" />
-    </div>
+    <lux-toggle
+      luxLabel="Muted (dekorativ)"
+      luxHint="Nur verwenden, wenn der Fortschritt zusätzlich als Text angezeigt wird."
+      [(checked)]="muted"
+      [luxNoTopLabel]="true"
+    />
+    <lux-toggle luxLabel="Prozentwert anzeigen" [(checked)]="showText" [luxNoTopLabel]="true" />
     <lux-select
       [luxOptions]="modes"
       [(value)]="mode"

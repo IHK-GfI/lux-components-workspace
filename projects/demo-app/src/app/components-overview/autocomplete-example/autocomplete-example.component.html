@@ -254,36 +254,24 @@
       luxHint="Diese Property ermöglicht es, den Hint für die Component zu setzen."
       [(value)]="hint"
     />
-    <div class="lux-flex lux-items-center lux-gap-2">
-      <lux-toggle
-        class="lux-flex-auto"
-        luxLabel="luxNoTopLabel"
-        luxHint="Blendet das Label nur visuell aus. Es bleibt im DOM und der zugängliche Name bleibt erhalten."
-        [(checked)]="noTopLabel"
-        [luxNoTopLabel]="true"
-      />
-      <app-status-marker [markerType]="markerTypeUpdated" />
-    </div>
-    <div class="lux-flex lux-items-center lux-gap-2">
-      <lux-toggle
-        class="lux-flex-auto"
-        luxLabel="luxNoBottomLabel"
-        luxHint="Entfernt den unteren Bereich (Hint, Fehlermeldung, Counter) aus dem DOM."
-        [(checked)]="noBottomLabel"
-        [luxNoTopLabel]="true"
-      />
-      <app-status-marker [markerType]="markerTypeUpdated" />
-    </div>
-    <div class="lux-flex lux-items-center lux-gap-2">
-      <lux-toggle
-        class="lux-flex-auto"
-        luxLabel="luxNoLabels"
-        luxHint="Kombination aus luxNoTopLabel und luxNoBottomLabel."
-        [(checked)]="noLabels"
-        [luxNoTopLabel]="true"
-      />
-      <app-status-marker [markerType]="markerTypeUpdated" />
-    </div>
+    <lux-toggle
+      luxLabel="luxNoTopLabel"
+      luxHint="Blendet das Label nur visuell aus. Es bleibt im DOM und der zugängliche Name bleibt erhalten."
+      [(checked)]="noTopLabel"
+      [luxNoTopLabel]="true"
+    />
+    <lux-toggle
+      luxLabel="luxNoBottomLabel"
+      luxHint="Entfernt den unteren Bereich (Hint, Fehlermeldung, Counter) aus dem DOM."
+      [(checked)]="noBottomLabel"
+      [luxNoTopLabel]="true"
+    />
+    <lux-toggle
+      luxLabel="luxNoLabels"
+      luxHint="Kombination aus luxNoTopLabel und luxNoBottomLabel."
+      [(checked)]="noLabels"
+      [luxNoTopLabel]="true"
+    />
     <lux-input
       luxName="autocomplete_luxPlaceholder"
       luxLabel="luxPlaceholder"

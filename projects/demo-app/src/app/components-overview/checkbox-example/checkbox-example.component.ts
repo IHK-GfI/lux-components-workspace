@@ -10,10 +10,9 @@ import {
   LuxTextboxComponent,
   LuxToggleComponent
 } from '@ihk-gfi/lux-components';
-import { StatusMarkerComponent } from '../../base/status-marker/status-marker.component';
-import { DemoMarkerType } from '../../base/status-marker/status-marker.model';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
+import { ExampleBaseOptionsActionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-options-actions.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
 import { ExampleBaseStructureComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-structure/example-base-structure.component';
 import { emptyErrorCallback, exampleErrorCallback } from '../../example-base/example-base-util/example-base-helper';
@@ -54,7 +53,7 @@ interface CheckboxAgbDummyForm {
     ExampleBaseSimpleOptionsComponent,
     ExampleFormDisableComponent,
     ExampleBaseAdvancedOptionsComponent,
-    StatusMarkerComponent,
+    ExampleBaseOptionsActionsComponent,
     FormField
   ]
 })
@@ -87,7 +86,6 @@ export class CheckboxExampleComponent {
   readonly noTopLabel = signal(true);
   readonly noBottomLabel = signal(false);
   readonly noLabels = signal(false);
-  readonly markerTypeUpdated = DemoMarkerType.Updated;
   readonly disabled = signal(false);
   readonly readonly = signal(false);
   readonly required = signal(false);
@@ -105,6 +103,22 @@ export class CheckboxExampleComponent {
       this.form.get(this.controlBinding)!.setValidators(null);
     }
     this.form.get(this.controlBinding)!.updateValueAndValidity();
+  }
+
+  showErrors(...checkboxComponents: LuxCheckboxComponent[]) {
+    this.signalModel.set({ checkboxValue: false });
+    this.plainChecked.set(false);
+    this.value.set(false);
+    this.form.get(this.controlBinding)!.setValue(false);
+
+    this.changeRequired(true);
+
+    // Die Legacy-Brücke (formControl) steuert im Signal-Form-Betrieb nicht den echten Field-State.
+    this.signalForm.checkboxValue().markAsTouched();
+
+    checkboxComponents.forEach((comp: LuxCheckboxComponent) => {
+      comp.formControl.markAsTouched();
+    });
   }
 
   exampleValidator(showError: boolean) {

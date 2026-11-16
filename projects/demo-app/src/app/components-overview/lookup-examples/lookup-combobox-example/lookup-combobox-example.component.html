@@ -214,46 +214,31 @@
       [(value)]="placeholder"
     />
     <example-form-disable [form]="form" [controlBinding]="controlBinding" [(disabled)]="disabled" />
-    <div class="lux-flex lux-items-center lux-gap-2">
-      <lux-toggle
-        [(checked)]="enableFilter"
-        luxLabel="luxEnableFilter"
-        luxHint="Blendet ein Suchfeld im Dropdown ein und filtert clientseitig in den geladenen Optionen."
-        [luxNoTopLabel]="true"
-      />
-      <app-status-marker [markerType]="markerTypeNew" />
-    </div>
+    <lux-toggle
+      [(checked)]="enableFilter"
+      luxLabel="luxEnableFilter"
+      luxHint="Blendet ein Suchfeld im Dropdown ein und filtert clientseitig in den geladenen Optionen."
+      [luxNoTopLabel]="true"
+    />
     @if (enableFilter()) {
-      <div class="lux-flex lux-items-center lux-gap-2">
-        <lux-input
-          class="lux-flex-auto"
-          luxName="lookup-combobox_luxFilterPlaceholder"
-          luxLabel="luxFilterPlaceholder"
-          luxHint="Placeholder/Aria-Label des Filterfelds im Dropdown."
-          [(value)]="filterPlaceholder"
-        />
-        <app-status-marker [markerType]="markerTypeNew" />
-      </div>
-      <div class="lux-flex lux-items-center lux-gap-2">
-        <lux-input
-          class="lux-flex-auto"
-          luxName="lookup-combobox_luxFilterValue"
-          luxLabel="luxFilterValue"
-          luxHint="Initialer Filterwert. Bei aktivem Filter wird der Clear-Button eingeblendet."
-          [(value)]="filterValue"
-        />
-        <app-status-marker [markerType]="markerTypeNew" />
-      </div>
-      <div class="lux-flex lux-items-center lux-gap-2">
-        <lux-input
-          class="lux-flex-auto"
-          luxName="lookup-combobox_luxFilterClearAriaLabel"
-          luxLabel="luxFilterClearAriaLabel"
-          luxHint="Aria-Label/Label für den Clear-Button im Filterfeld."
-          [(value)]="filterClearAriaLabel"
-        />
-        <app-status-marker [markerType]="markerTypeNew" />
-      </div>
+      <lux-input
+        luxName="lookup-combobox_luxFilterPlaceholder"
+        luxLabel="luxFilterPlaceholder"
+        luxHint="Placeholder/Aria-Label des Filterfelds im Dropdown."
+        [(value)]="filterPlaceholder"
+      />
+      <lux-input
+        luxName="lookup-combobox_luxFilterValue"
+        luxLabel="luxFilterValue"
+        luxHint="Initialer Filterwert. Bei aktivem Filter wird der Clear-Button eingeblendet."
+        [(value)]="filterValue"
+      />
+      <lux-input
+        luxName="lookup-combobox_luxFilterClearAriaLabel"
+        luxLabel="luxFilterClearAriaLabel"
+        luxHint="Aria-Label/Label für den Clear-Button im Filterfeld."
+        [(value)]="filterClearAriaLabel"
+      />
     }
     <lux-toggle
       [(checked)]="readonly"
@@ -287,21 +272,16 @@
         Wenn mehr Datensätze vorhanden sind und der User in der Liste scrollt, wird der nächste Block gerendert.
       </lux-form-hint>
     </lux-input>
-    <div class="lux-flex lux-items-center lux-gap-2">
-      <lux-input
-        class="lux-flex-auto"
-        luxName="lookup-combobox_luxVisibleOptionCount"
-        luxLabel="luxVisibleOptionCount"
-        [(value)]="visibleOptionCount"
-        luxType="number"
-      >
-        <lux-form-hint>
-          Begrenzt die sichtbare Panelhöhe auf eine feste Anzahl Optionen. 0 verwendet die Standardhöhe und ändert `luxEntryBlockSize`
-          nicht.
-        </lux-form-hint>
-      </lux-input>
-      <app-status-marker [markerType]="markerTypeNew" />
-    </div>
+    <lux-input
+      luxName="lookup-combobox_luxVisibleOptionCount"
+      luxLabel="luxVisibleOptionCount"
+      [(value)]="visibleOptionCount"
+      luxType="number"
+    >
+      <lux-form-hint>
+        Begrenzt die sichtbare Panelhöhe auf eine feste Anzahl Optionen. 0 verwendet die Standardhöhe und ändert `luxEntryBlockSize` nicht.
+      </lux-form-hint>
+    </lux-input>
     <lux-toggle
       luxLabel="Render-Funktion nutzen"
       luxHint="Wenn 'true' wird für 'luxRenderProp' anstelle einer Render-Property (z.B. 'label') eine Callback-Funktion übergeben."
