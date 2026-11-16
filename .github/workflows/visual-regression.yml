@@ -4,6 +4,7 @@ on:
   pull_request:
     branches:
       - develop
+      - v22
     paths:
       - 'projects/lux-components-lib/**'
       - 'projects/lux-components-theme/**'
