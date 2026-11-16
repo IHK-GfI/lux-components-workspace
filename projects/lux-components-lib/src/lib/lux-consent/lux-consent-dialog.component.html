@@ -8,17 +8,17 @@
 
       <lux-divider></lux-divider>
 
-      @if (activeSection === 'datenschutz' && datenschutzComponentResolved) {
-        <ng-container *ngComponentOutlet="datenschutzComponentResolved; inputs: consentConfig.datenschutzComponentInputs"></ng-container>
+      @if (activeSection() === 'datenschutz' && datenschutzComponentResolved()) {
+        <ng-container *ngComponentOutlet="datenschutzComponentResolved(); inputs: consentConfig.datenschutzComponentInputs"></ng-container>
       }
 
-      @if (activeSection === 'impressum' && impressumComponentResolved) {
-        <ng-container *ngComponentOutlet="impressumComponentResolved; inputs: consentConfig.impressumComponentInputs"></ng-container>
+      @if (activeSection() === 'impressum' && impressumComponentResolved()) {
+        <ng-container *ngComponentOutlet="impressumComponentResolved(); inputs: consentConfig.impressumComponentInputs"></ng-container>
       }
 
-      @if (activeSection === 'consent' && !isExpanded) {
+      @if (activeSection() === 'consent' && !isExpanded()) {
         <div class="lux-flex lux-flex-col lux-gap-4 lux-pb-4">
-          @for (category of cookieCategories; track $index) {
+          @for (category of cookieCategories(); track $index) {
             @if (hasConfiguredEntriesForCategory(category.purpose) || category.purpose === LuxConsentPurpose.Essential) {
               @if (category.purpose === LuxConsentPurpose.Essential) {
                 <p>
@@ -42,13 +42,13 @@
         </div>
       }
 
-      @if (activeSection === 'consent' && isExpanded) {
+      @if (activeSection() === 'consent' && isExpanded()) {
         <div class="cookie-details">
           <div class="details-container lux-mb-3">
             <div class="purposes-sidebar">
               <h3 class="sidebar-title">{{ 'luxc.consent.purposes_title' | transloco }}</h3>
               <div class="purpose-checkboxes">
-                @for (category of cookieCategories; track $index) {
+                @for (category of cookieCategories(); track $index) {
                   @if (hasConfiguredEntriesForCategory(category.purpose) || category.purpose === LuxConsentPurpose.Essential) {
                     @if (category.purpose === LuxConsentPurpose.Essential) {
                       <p>
@@ -59,9 +59,10 @@
                       <lux-toggle-ac
                         [luxNoLabels]="true"
                         [luxLabel]="category.name | transloco"
-                        [(luxChecked)]="category.enabled"
+                        [luxChecked]="category.enabled"
                         [luxDisabled]="category.disabled"
                         [luxTagId]="'cookie-' + category.purpose"
+                        (luxCheckedChange)="toggleCategoryEnabled(category.purpose, $event)"
                       >
                       </lux-toggle-ac>
                     }
@@ -72,7 +73,7 @@
 
             <div class="cookies-content lux-p-4">
               <h3>{{ 'luxc.consent.cookies_used_title' | transloco }}</h3>
-              @for (category of cookieCategories; track $index) {
+              @for (category of cookieCategories(); track $index) {
                 @if (hasConfiguredEntriesForCategory(category.purpose)) {
                   @if ($index !== 0) {
                     <lux-divider class="lux-pt-4"></lux-divider>
@@ -139,17 +140,17 @@
     <lux-divider></lux-divider>
 
     <div class="lux-flex lux-gap-5 lux-mt-3 lux-justify-start lt-sm:lux-flex-col lt-sm:lux-mt-1">
-      @if (activeSection !== 'consent') {
+      @if (activeSection() !== 'consent') {
         <lux-link-plain [luxLabel]="'luxc.consent.link_back' | transloco" (luxClicked)="showSection('consent')"></lux-link-plain>
       }
-      @if (activeSection === 'consent' && isExpanded) {
+      @if (activeSection() === 'consent' && isExpanded()) {
         <lux-link-plain
           [luxLabel]="'luxc.consent.hide_details' | transloco"
           [luxIconShowRight]="false"
           (luxClicked)="toggleDetails()"
         ></lux-link-plain>
       }
-      @if (activeSection === 'consent' && !isExpanded) {
+      @if (activeSection() === 'consent' && !isExpanded()) {
         <lux-link-plain
           [luxLabel]="'luxc.consent.show_details' | transloco"
           [luxIconShowRight]="false"

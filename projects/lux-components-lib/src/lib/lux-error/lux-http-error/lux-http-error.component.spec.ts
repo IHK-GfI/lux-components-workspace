@@ -68,7 +68,7 @@ describe('LuxHttpErrorComponent', () => {
 
     // Hier wird die Anzahl der gleichzeitig angezeigten Meldungen auf 4 erhöht,
     // damit alle Meldungen mit einer queryAll-Abfrage eingesammelt werden können.
-    component.errorComponent.messageComponent.luxMaximumDisplayed = 4;
+    component.errorComponent.messageComponent.luxMaximumDisplayed.set(4);
     LuxTestHelper.wait(fixture);
 
     httpClient.get<any>('abc').subscribe({ next: () => {}, error: () => {} });
@@ -100,7 +100,7 @@ describe('LuxHttpErrorComponent', () => {
 
     // Hier wird die Anzahl der gleichzeitig angezeigten Meldungen auf 4 erhöht,
     // damit alle Meldungen mit einer queryAll-Abfrage eingesammelt werden können.
-    component.errorComponent.messageComponent.luxMaximumDisplayed = 4;
+    component.errorComponent.messageComponent.luxMaximumDisplayed.set(4);
     LuxTestHelper.wait(fixture);
 
     httpClient.get<any>('abc').subscribe({ next: () => {}, error: () => {} });

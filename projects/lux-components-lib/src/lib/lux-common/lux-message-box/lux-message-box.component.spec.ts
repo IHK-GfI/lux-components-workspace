@@ -3,7 +3,7 @@ import { ComponentFixture, fakeAsync, flush, TestBed, waitForAsync } from '@angu
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { LuxPaginatorComponent } from '@ihk-gfi/lux-components/lux-paginator';
@@ -53,7 +53,7 @@ describe('LuxMessageBoxComponent', () => {
     expect(messageIcon).not.toBeNull();
 
     // Änderungen durchführen
-    component.messages = [];
+    component.messages.set([]);
     LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
@@ -76,8 +76,8 @@ describe('LuxMessageBoxComponent', () => {
     expect(singleMessages.length).toBe(1);
 
     // Änderungen durchführen
-    component.maxDisplayed = 2;
-    component.messages = [...component.messages];
+    component.maxDisplayed.set(2);
+    component.messages.set([...component.messages()]);
     LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
@@ -86,12 +86,12 @@ describe('LuxMessageBoxComponent', () => {
     expect(singleMessages.length).toBe(2);
 
     // Änderungen durchführen
-    component.maxDisplayed = 3;
+    component.maxDisplayed.set(3);
     const newMessages: ILuxMessage[] = [
       { text: 'Msg 3', iconName: 'lux-programming-bug', color: 'green' },
       { text: 'Msg 4', iconName: 'lux-programming-bug', color: 'blue' }
     ];
-    component.messages = [...component.messages, ...newMessages];
+    component.messages.set([...component.messages(), ...newMessages]);
     LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
@@ -111,7 +111,7 @@ describe('LuxMessageBoxComponent', () => {
     expect(messageText.nativeElement.textContent).toEqual('Msg 1');
 
     // Änderungen durchführen
-    component.index = 1;
+    component.index.set(1);
     LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
@@ -121,7 +121,7 @@ describe('LuxMessageBoxComponent', () => {
     expect(messageText.nativeElement.textContent).toEqual('Msg 2');
 
     // Änderungen durchführen [Sollte negative Werte abfangen]
-    component.index = -100;
+    component.index.set(-100);
     LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
@@ -131,7 +131,7 @@ describe('LuxMessageBoxComponent', () => {
     expect(messageText.nativeElement.textContent).toEqual('Msg 1');
 
     // Änderungen durchführen [Sollte zu hohe positive Werte abfangen]
-    component.index = 100;
+    component.index.set(100);
     LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
@@ -186,7 +186,7 @@ describe('LuxMessageBoxComponent', () => {
     expect(changeSpy).toHaveBeenCalledTimes(0);
 
     // Änderungen durchführen
-    component.messages = [];
+    component.messages.set([]);
     LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
@@ -203,10 +203,10 @@ describe('LuxMessageBoxComponent', () => {
     const announceSpy = spyOn(liveAnnouncer, 'announce');
 
     // Vorbedingung: Es gibt vorher sichtbare Nachrichten
-    expect(component.messages.length).toBeGreaterThan(0);
+    expect(component.messages().length).toBeGreaterThan(0);
 
     // Änderungen durchführen
-    component.messages = [];
+    component.messages.set([]);
     LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
@@ -217,14 +217,14 @@ describe('LuxMessageBoxComponent', () => {
 
   it('Sollte bei einem Wechsel von leer zu leer keine Ansage auslösen', fakeAsync(() => {
     // Vorbedingungen herstellen: Es gibt keine sichtbaren Nachrichten
-    component.messages = [];
+    component.messages.set([]);
     LuxTestHelper.wait(fixture);
 
     const liveAnnouncer = TestBed.inject(LiveAnnouncer);
     const announceSpy = spyOn(liveAnnouncer, 'announce');
 
     // Änderungen durchführen [erneut ein leeres Array setzen]
-    component.messages = [];
+    component.messages.set([]);
     LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
@@ -239,24 +239,22 @@ describe('LuxMessageBoxComponent', () => {
   template: `<lux-message-box
     (luxMessageBoxClosed)="closed()"
     (luxMessageChanged)="changed($event)"
-    [luxMessages]="messages"
-    [luxIndex]="index"
-    [luxMaximumDisplayed]="maxDisplayed"
+    [luxMessages]="messages()"
+    [luxIndex]="index()"
+    [luxMaximumDisplayed]="maxDisplayed()"
   ></lux-message-box>`,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxMessageBoxComponent]
 })
 class MockMessageBoxComponent {
-  messages: ILuxMessage[] = [
+  messages = signal<ILuxMessage[]>([
     { text: 'Msg 1', iconName: 'lux-programming-bug', color: 'green' },
     { text: 'Msg 2', iconName: 'lux-programming-bug', color: 'blue' }
-  ];
+  ]);
 
   eventObject?: ILuxMessageChangeEvent;
-  index = 0;
-  maxDisplayed = 1;
-
-  constructor() {}
+  index = signal(0);
+  maxDisplayed = signal(1);
 
   closed() {}
 

@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Input, OnDestroy, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, input, signal, untracked } from '@angular/core';
 import { MatProgressBar } from '@angular/material/progress-bar';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { TranslocoPipe } from '@jsverse/transloco';
@@ -23,84 +23,56 @@ let nextProgressId = 0;
 @Component({
   selector: 'lux-progress',
   templateUrl: './lux-progress.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [NgClass, MatProgressBar, LuxTagIdDirective, LuxAriaLabelDirective, LuxCustomTagIdDirective, MatProgressSpinner, TranslocoPipe]
 })
-export class LuxProgressComponent implements OnDestroy {
+export class LuxProgressComponent {
   readonly DEFAULT_PROGRESS_COLOR: LuxProgressColor = 'blue';
 
-  private _luxMode?: LuxProgressModeType;
-  private _luxType?: LuxProgressType;
-  private _luxColor?: LuxProgressColor;
-  private announceTimer?: ReturnType<typeof setTimeout>;
+  animDurationCSS = '';
+
+  readonly luxValue = input(0);
+  readonly luxAriaLabel = input('');
+  readonly luxMuted = input(false);
+  readonly luxShowText = input(false);
+  readonly luxText = input<string | undefined>(undefined);
+  readonly luxTextPosition = input<LuxProgressTextPositionType>('bottom');
+  // Steuert die Höhe der Progressbar und den Durchmesser des Spinners.
+  readonly luxSize = input<LuxProgressSizeType>('medium');
+  readonly luxTagId = input<string | undefined>(undefined);
+
+  // Ohne Binding bleibt die Farbe undefined, damit die Standardfarben des Themes greifen (keine lux-color-*-Klasse).
+  readonly luxColor = input<LuxProgressColor | undefined, LuxProgressColor | undefined>(undefined, {
+    transform: (value) => LuxProgressColors.find((entry) => entry === value) ?? this.DEFAULT_PROGRESS_COLOR
+  });
+
+  readonly luxMode = input<LuxProgressModeType, LuxProgressModeType | undefined>('indeterminate', {
+    transform: (value) => (value === 'determinate' ? 'determinate' : 'indeterminate')
+  });
+
+  readonly luxType = input<LuxProgressType, LuxProgressType | undefined>('Progressbar', {
+    transform: (value) => (value === 'Spinner' ? 'Spinner' : 'Progressbar')
+  });
 
   readonly textId = `lux-progress-text-${nextProgressId++}`;
   readonly indeterminateAnnounced = signal(false);
 
-  animDurationCSS = '';
-  typeCSS = '';
+  readonly typeCSS = computed(() => (this.luxType() === 'Spinner' ? 'lux-progress-spinner' : 'lux-progress-bar'));
 
-  @Input() luxValue = 0;
-  @Input() luxAriaLabel = '';
-  @Input() luxMuted = false;
-  @Input() luxShowText = false;
-  @Input() luxText?: string;
-  @Input() luxTextPosition: LuxProgressTextPositionType = 'bottom';
-  // Steuert die Höhe der Progressbar und den Durchmesser des Spinners.
-  @Input() luxSize: LuxProgressSizeType = 'medium';
-  @Input() luxTagId?: string;
+  readonly luxColorCSS = computed(() => {
+    const color = this.luxColor();
+    return color ? 'lux-color-' + color : '';
+  });
 
-  @Input()
-  set luxColor(value: LuxProgressColor | undefined) {
-    this._luxColor = LuxProgressColors.find((entry) => entry === value) ?? this.DEFAULT_PROGRESS_COLOR;
-  }
+  readonly luxTextVisible = computed(() => this.luxShowText() && this.luxMode() === 'determinate');
 
-  get luxColor(): LuxProgressColor | undefined {
-    return this._luxColor;
-  }
-
-  @Input() set luxMode(mode: LuxProgressModeType) {
-    this._luxMode = mode;
-    this.updateIndeterminateAnnouncement();
-  }
-
-  get luxMode() {
-    if (this._luxMode !== 'determinate' && this._luxMode !== 'indeterminate') {
-      return 'indeterminate';
-    }
-    return this._luxMode;
-  }
-
-  @Input() set luxType(type: LuxProgressType | undefined) {
-    this._luxType = type;
-    if (this._luxType === 'Progressbar') {
-      this.typeCSS = 'lux-progress-bar';
-    } else if (this._luxType === 'Spinner') {
-      this.typeCSS = 'lux-progress-spinner';
-    } else {
-      this.luxType = 'Progressbar';
-    }
-  }
-
-  get luxType(): LuxProgressType | undefined {
-    return this._luxType;
-  }
-
-  get luxColorCSS(): string {
-    return this.luxColor ? 'lux-color-' + this.luxColor : '';
-  }
-
-  get luxTextVisible(): boolean {
-    return this.luxShowText && this.luxMode === 'determinate';
-  }
-
-  get luxProgressPercent(): number {
-    const value = Number(this.luxValue);
+  readonly luxProgressPercent = computed(() => {
+    const value = Number(this.luxValue());
     return Number.isFinite(value) ? Math.min(100, Math.max(0, Math.round(value))) : 0;
-  }
+  });
 
-  get luxSpinnerDiameter(): number {
-    switch (this.luxSize) {
+  readonly luxSpinnerDiameter = computed(() => {
+    switch (this.luxSize()) {
       case 'small':
         return 24;
       case 'large':
@@ -108,10 +80,10 @@ export class LuxProgressComponent implements OnDestroy {
       default:
         return 48;
     }
-  }
+  });
 
-  get luxSpinnerStrokeWidth(): number {
-    switch (this.luxSize) {
+  readonly luxSpinnerStrokeWidth = computed(() => {
+    switch (this.luxSize()) {
       case 'small':
         return 2;
       case 'large':
@@ -119,38 +91,31 @@ export class LuxProgressComponent implements OnDestroy {
       default:
         return 5;
     }
-  }
+  });
 
   /**
    * Abstand des Track-Rings zum Rand des Spinners. MatProgressSpinner skaliert die viewBox
    * ((diameter - 10) + strokeWidth) auf den Durchmesser, dadurch endet der Bogen bei kleinen
    * Spinnern minimal vor dem Rand.
    */
-  get luxSpinnerTrackInset(): number {
-    const diameter = this.luxSpinnerDiameter;
-    const strokeWidth = this.luxSpinnerStrokeWidth;
+  readonly luxSpinnerTrackInset = computed(() => {
+    const diameter = this.luxSpinnerDiameter();
+    const strokeWidth = this.luxSpinnerStrokeWidth();
     const viewBox = diameter - MAT_SPINNER_BASE_STROKE_WIDTH + strokeWidth;
     return (strokeWidth / 2) * (diameter / viewBox - 1);
-  }
+  });
 
   constructor() {
-    this.luxMode = 'indeterminate';
-    this.luxType = 'Progressbar';
-  }
-
-  ngOnDestroy(): void {
-    clearTimeout(this.announceTimer);
-  }
-
-  private updateIndeterminateAnnouncement() {
-    clearTimeout(this.announceTimer);
-
-    if (this.luxMode === 'indeterminate') {
-      if (!this.indeterminateAnnounced()) {
-        this.announceTimer = setTimeout(() => this.indeterminateAnnounced.set(true), ANNOUNCE_DELAY_MS);
+    effect((onCleanup) => {
+      if (this.luxMode() !== 'indeterminate') {
+        this.indeterminateAnnounced.set(false);
+        return;
       }
-    } else {
-      this.indeterminateAnnounced.set(false);
-    }
+
+      if (!untracked(this.indeterminateAnnounced)) {
+        const announceTimer = setTimeout(() => this.indeterminateAnnounced.set(true), ANNOUNCE_DELAY_MS);
+        onCleanup(() => clearTimeout(announceTimer));
+      }
+    });
   }
 }

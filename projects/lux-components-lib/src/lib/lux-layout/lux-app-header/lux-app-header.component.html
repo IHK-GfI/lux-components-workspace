@@ -100,15 +100,15 @@
       >
         @for (menuItem of rightNav.menuItemComponents; track menuItem) {
           <lux-menu-item
-            [luxLabel]="menuItem.luxLabel"
-            [luxIconName]="menuItem.luxIconName"
-            [luxTagId]="menuItem.luxLabel"
-            [luxAlwaysVisible]="menuItem.luxAlwaysVisible"
-            [luxDisabled]="menuItem.luxDisabled"
-            [luxRaised]="menuItem.luxRaised"
-            [luxColor]="menuItem.luxColor"
-            [luxRounded]="menuItem.luxRounded"
-            [luxClass]="menuItem.luxClass"
+            [luxLabel]="menuItem.luxLabel()"
+            [luxIconName]="menuItem.luxIconName()"
+            [luxTagId]="menuItem.luxLabel()"
+            [luxAlwaysVisible]="menuItem.luxAlwaysVisible()"
+            [luxDisabled]="menuItem.luxDisabled()"
+            [luxRaised]="menuItem.luxRaised()"
+            [luxColor]="menuItem.luxColor()"
+            [luxRounded]="menuItem.luxRounded()"
+            [luxClass]="menuItem.luxClass()"
             (luxClicked)="menuItem.luxClicked.emit($event)"
           >
           </lux-menu-item>

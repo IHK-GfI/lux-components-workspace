@@ -1,4 +1,4 @@
-import { Directive, EventEmitter, Input, input, Output } from '@angular/core';
+import { Directive, input, output } from '@angular/core';
 import { LuxThemePalette } from '../../lux-util/lux-colors.enum';
 
 /**
@@ -8,13 +8,13 @@ import { LuxThemePalette } from '../../lux-util/lux-colors.enum';
  */
 @Directive()
 export class LuxActionComponentBaseClass {
-  @Input() luxLabel? = '';
-  @Input() luxColor?: LuxThemePalette;
-  @Input() luxRaised? = false;
-  @Input() luxIconName? = '';
-  @Input() luxIconShowRight? = false;
-  @Input() luxTagId?: string;
-  @Input() luxDisabled? = false;
+  readonly luxLabel = input<string | undefined>('');
+  readonly luxColor = input<LuxThemePalette | undefined>(undefined);
+  readonly luxRaised = input<boolean | undefined>(false);
+  readonly luxIconName = input<string | undefined>('');
+  readonly luxIconShowRight = input<boolean | undefined>(false);
+  readonly luxTagId = input<string | undefined>(undefined);
+  readonly luxDisabled = input<boolean | undefined>(false);
   /**
    * Markiert die Action als wahrnehmbar deaktiviert (aria-disabled): sichtbar und
    * fokussierbar, Screenreader sagen "deaktiviert" an, die Aktion wird aber nicht
@@ -26,9 +26,9 @@ export class LuxActionComponentBaseClass {
    * lux-link und lux-link-plain werten dieses Flag noch nicht aus.
    */
   luxDisabledAria = input<boolean | undefined>(false);
-  @Input() luxRounded? = false;
-  @Input() luxFlat? = false;
-  @Input() luxStroked? = false;
+  readonly luxRounded = input<boolean | undefined>(false);
+  readonly luxFlat = input<boolean | undefined>(false);
+  readonly luxStroked = input<boolean | undefined>(false);
 
-  @Output() luxClicked = new EventEmitter<Event>();
+  luxClicked = output<Event>();
 }

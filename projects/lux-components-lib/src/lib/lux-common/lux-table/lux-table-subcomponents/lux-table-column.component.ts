@@ -1,38 +1,41 @@
-import { Component, ContentChild, Input, OnChanges, OnInit, SimpleChanges, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, contentChild, effect, input } from '@angular/core';
 import { Subject } from 'rxjs';
-import { LuxUtil } from '../../../lux-util/lux-util';
 import { LuxTableColumnContentComponent } from './lux-table-column-content.component';
 import { LuxTableColumnFooterComponent } from './lux-table-column-footer.component';
 import { LuxTableColumnHeaderComponent } from './lux-table-column-header.component';
 
 @Component({
   selector: 'lux-table-column',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `<ng-content select="lux-table-column-header"></ng-content>
     <ng-content select="lux-table-column-content"></ng-content>
     <ng-content select="lux-table-column-footer"></ng-content>`
 })
-export class LuxTableColumnComponent implements OnInit, OnChanges {
+export class LuxTableColumnComponent {
   change$: Subject<void> = new Subject<void>();
 
-  @Input() luxConfigLabel?: string;
-  @Input() luxColumnDef!: string;
-  @Input() luxSortable = false;
-  @Input() luxSticky = false;
-  @Input() luxResponsiveBehaviour = '';
-  @Input() luxResponsiveAt: string | string[] | null = '';
+  readonly luxConfigLabel = input<string>();
+  readonly luxColumnDef = input.required<string>();
+  readonly luxSortable = input(false);
+  readonly luxSticky = input(false);
+  readonly luxResponsiveBehaviour = input('');
+  readonly luxResponsiveAt = input<string | string[] | null>('');
 
-  @ContentChild(LuxTableColumnHeaderComponent) header?: LuxTableColumnHeaderComponent;
-  @ContentChild(LuxTableColumnContentComponent) content?: LuxTableColumnContentComponent;
-  @ContentChild(LuxTableColumnFooterComponent) footer?: LuxTableColumnFooterComponent;
+  readonly header = contentChild(LuxTableColumnHeaderComponent);
+  readonly content = contentChild(LuxTableColumnContentComponent);
+  readonly footer = contentChild(LuxTableColumnFooterComponent);
 
-  constructor() {}
-
-  ngOnInit() {
-    LuxUtil.assertNonNull('luxColumnDef', this.luxColumnDef);
-  }
-
-  ngOnChanges(simpleChanges: SimpleChanges) {
-    this.change$.next();
+  constructor() {
+    effect(() => {
+      // Sämtliche Inputs referenzieren, damit change$ - analog zum vorherigen ngOnChanges -
+      // bei jeder Änderung eines Inputs (inkl. dem initialen Setzen) ausgelöst wird.
+      this.luxConfigLabel();
+      this.luxColumnDef();
+      this.luxSortable();
+      this.luxSticky();
+      this.luxResponsiveBehaviour();
+      this.luxResponsiveAt();
+      this.change$.next();
+    });
   }
 }

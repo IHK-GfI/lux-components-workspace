@@ -6,193 +6,206 @@
   <!-- Top-Bar -->
   <div class="lux-app-header-top-bar-bg">
     @if (!luxHideTopBar) {
-    <div
-      class="lux-app-header-top-bar"
-      [ngClass]="{ 'lux-mobile': mobileView, 'lux-centered': luxCenteredView }"
-      [ngStyle]="{ 'max-width': luxCenteredView ? luxCenteredWidth : '100%' }"
-    >
-      <!-- Brand-Logo -->
-      <!-- Zeige lux-tenant-logo falls vorhanden UND Attribut luxBrandLogoSrc nicht gesetzt ist, also das Attribut hat hier vorrang -->
-      @if (luxBrandLogoSrc) {
-      <lux-image
-        [luxImageSrc]="luxBrandLogoSrc"
-        [luxImageHeight]="mobileView ? '24px' : '40px'"
-        class="lux-brand-logo"
-        [ngClass]="{ 'lux-brand-logo-mobile': mobileView }"
-        luxAlt="{{ luxAriaTitleImageLabel || ('luxc.app-header.aria.title.image.lbl' | transloco) }}"
-        luxAriaLabel="{{ luxAriaTitleImageLabel || ('luxc.app-header.aria.title.image.lbl' | transloco) }}"
-        luxTagId="lux-brand-logo-button"
-        (luxClicked)="onBrandLogoClicked($event)"
-      ></lux-image>
-      } @else { @if (tenantLogo) {
-      <ng-content select="lux-tenant-logo"></ng-content>
-      } @else {
-      <div class="lux-brand-logo-empty"></div>
-      } }
-      <!-- App-Logo -->
-      @if (luxAppLogoSrc && !mobileView) {
-      <lux-image
-        [luxImageSrc]="luxAppLogoSrc"
-        luxImageHeight="40px"
-        class="lux-app-logo"
-        luxAlt="{{ luxAriaTitleIconLabel || ('luxc.app-header.aria.title_icon.lbl' | transloco) }}"
-        luxAriaLabel="{{ luxAriaTitleIconLabel || ('luxc.app-header.aria.title_icon.lbl' | transloco) }}"
-        (luxClicked)="onAppLogoClicked($event)"
-      ></lux-image>
-      } @if (!luxAppLogoSrc && !mobileView) {
-      <div class="lux-app-logo-empty"></div>
-      }
-      <!-- Action-Nav / Lang-Select / User-Menu -->
-      <div class="header-menu-container lux-flex lux-justify-end lux-items-center" luxAriaLabel="{{ luxAriaUserMenuButtonLabel || ('luxc.app-header.aria.usermenu.btn' | transloco) }}">
-        @if (actionNav) {
-        <div class="lux-action-nav-ac-container lux-flex lux-flex-shrink-0">
+      <div
+        class="lux-app-header-top-bar"
+        [ngClass]="{ 'lux-mobile': mobileView, 'lux-centered': luxCenteredView }"
+        [ngStyle]="{ 'max-width': luxCenteredView ? luxCenteredWidth : '100%' }"
+      >
+        <!-- Brand-Logo -->
+        <!-- Zeige lux-tenant-logo falls vorhanden UND Attribut luxBrandLogoSrc nicht gesetzt ist, also das Attribut hat hier vorrang -->
+        @if (luxBrandLogoSrc) {
+          <lux-image
+            [luxImageSrc]="luxBrandLogoSrc"
+            [luxImageHeight]="mobileView ? '24px' : '40px'"
+            class="lux-brand-logo"
+            [ngClass]="{ 'lux-brand-logo-mobile': mobileView }"
+            luxAlt="{{ luxAriaTitleImageLabel || ('luxc.app-header.aria.title.image.lbl' | transloco) }}"
+            luxAriaLabel="{{ luxAriaTitleImageLabel || ('luxc.app-header.aria.title.image.lbl' | transloco) }}"
+            luxTagId="lux-brand-logo-button"
+            (luxClicked)="onBrandLogoClicked($event)"
+          ></lux-image>
+        } @else {
+          @if (tenantLogo) {
+            <ng-content select="lux-tenant-logo"></ng-content>
+          } @else {
+            <div class="lux-brand-logo-empty"></div>
+          }
+        }
+        <!-- App-Logo -->
+        @if (luxAppLogoSrc && !mobileView) {
+          <lux-image
+            [luxImageSrc]="luxAppLogoSrc"
+            luxImageHeight="40px"
+            class="lux-app-logo"
+            luxAlt="{{ luxAriaTitleIconLabel || ('luxc.app-header.aria.title_icon.lbl' | transloco) }}"
+            luxAriaLabel="{{ luxAriaTitleIconLabel || ('luxc.app-header.aria.title_icon.lbl' | transloco) }}"
+            (luxClicked)="onAppLogoClicked($event)"
+          ></lux-image>
+        }
+        @if (!luxAppLogoSrc && !mobileView) {
+          <div class="lux-app-logo-empty"></div>
+        }
+        <!-- Action-Nav / Lang-Select / User-Menu -->
+        <div
+          class="header-menu-container lux-flex lux-justify-end lux-items-center"
+          luxAriaLabel="{{ luxAriaUserMenuButtonLabel || ('luxc.app-header.aria.usermenu.btn' | transloco) }}"
+        >
           @if (actionNav) {
-          <ng-container [ngTemplateOutlet]="actionNav.templateRef"></ng-container>
+            <div class="lux-action-nav-ac-container lux-flex lux-flex-shrink-0">
+              @if (actionNav) {
+                <ng-container [ngTemplateOutlet]="actionNav.templateRef"></ng-container>
+              }
+            </div>
+          }
+          @if (luxLocaleSupported && (luxLocaleSupported?.length ?? 0) > 1) {
+            <lux-lang-select-ac
+              [luxLocaleSupported]="luxLocaleSupported"
+              [luxLocaleBaseHref]="luxLocaleBaseHref"
+              [mobileView]="mobileView"
+              class="lux-lang-select-ac lux-flex lux-flex-shrink-0"
+            ></lux-lang-select-ac>
+          }
+          <!-- User-Menu -->
+          @if (userMenu && !userMenu.luxUseSectionsAndHeaderPanel()) {
+            <lux-menu
+              class="lux-user-menu lux-flex lux-flex-shrink-0"
+              [ngClass]="{ 'lux-user-menu-mobile': mobileView }"
+              [luxDisplayExtended]="false"
+              (luxMenuClosed)="onMenuClosed()"
+              (luxMenuOpened)="onMenuOpened()"
+              luxClassName="lux-header-user-menu"
+              luxTagId="app_header_user_menu"
+            >
+              <!-- Anzeige des Usernames falls dieser vorhanden und eingeloggt ist -->
+              @if (luxUserName) {
+                <lux-menu-item [luxLabel]="luxUserName" [luxDisabled]="true" luxClass="lux-user-name-label"></lux-menu-item>
+              }
+              @for (menuItem of userMenu?.menuItemComponents; track menuItem) {
+                <lux-menu-item
+                  [luxLabel]="menuItem.luxLabel()"
+                  [luxTagId]="menuItem.luxLabel()"
+                  [luxIconName]="menuItem.luxIconName()"
+                  [luxAlwaysVisible]="menuItem.luxAlwaysVisible()"
+                  [luxDisabled]="menuItem.luxDisabled()"
+                  [luxRaised]="menuItem.luxRaised()"
+                  [luxColor]="menuItem.luxColor()"
+                  [luxRounded]="menuItem.luxRounded()"
+                  [luxClass]="menuItem.luxClass()"
+                  (luxClicked)="menuItem.luxClicked.emit($event)"
+                  [luxHidden]="menuItem.luxHidden()"
+                >
+                </lux-menu-item>
+              }
+              <lux-menu-trigger>
+                <lux-button
+                  [luxRounded]="true"
+                  [luxIconName]="luxUserName ? 'lux-interface-user-check' : 'lux-interface-user-single'"
+                  luxColor="primary"
+                  class="user-menu-trigger-ac"
+                  luxAriaLabel="{{ 'luxc.app-header.user.menu.trigger' | transloco }}"
+                  aria-haspopup="true"
+                  luxTagId="user-menu-trigger-ac"
+                  [ngClass]="{ 'menu-opened': menuOpened, 'user-menu-trigger-mobile': mobileView }"
+                  luxTooltip="{{ 'luxc.app-header.user.menu.trigger' | transloco }}"
+                  [luxTooltipShowDelay]="1500"
+                  #customTrigger
+                  luxTagId="lux-user-menu-trigger-btn"
+                >
+                </lux-button>
+              </lux-menu-trigger>
+            </lux-menu>
+          }
+          <!-- Das neue User-Menu mit Usernamen und Email im Header -->
+          @if (userMenu && userMenu.luxUseSectionsAndHeaderPanel()) {
+            <lux-menu
+              class="lux-user-menu lux-flex lux-flex-shrink-0"
+              [ngClass]="{ 'lux-user-menu-mobile': mobileView }"
+              [luxDisplayExtended]="false"
+              (luxMenuClosed)="onMenuClosed()"
+              (luxMenuOpened)="onMenuOpened()"
+              luxClassName="lux-header-user-menu"
+              luxTagId="app_header_user_menu"
+              [luxShowSections]="true"
+            >
+              <!-- Anzeige des Usernames falls dieser vorhanden und eingeloggt ist -->
+              @if (luxUserName) {
+                <lux-menu-panel-header [luxTitle]="luxUserName" [luxSubtitle]="luxUserEmail" #menuSection></lux-menu-panel-header>
+              }
+              @for (menuItem of userMenu?.menuSectionComponents; track menuItem) {
+                @if (isItemMenuItem(menuItem)) {
+                  <lux-menu-item
+                    [luxLabel]="menuItem.luxLabel()"
+                    [luxTagId]="menuItem.luxLabel()"
+                    [luxIconName]="menuItem.luxIconName()"
+                    [luxAlwaysVisible]="menuItem.luxAlwaysVisible()"
+                    [luxDisabled]="menuItem.luxDisabled()"
+                    [luxRaised]="menuItem.luxRaised()"
+                    [luxColor]="menuItem.luxColor()"
+                    [luxRounded]="menuItem.luxRounded()"
+                    [luxClass]="menuItem.luxClass()"
+                    (luxClicked)="menuItem.luxClicked.emit($event)"
+                    [luxHidden]="menuItem.luxHidden()"
+                    #menuSection
+                  >
+                  </lux-menu-item>
+                }
+                @if (isSectionTitle(menuItem)) {
+                  <lux-menu-section-title [luxTitle]="menuItem.luxTitle()" #menuSection></lux-menu-section-title>
+                }
+                @if (isItemDivider(menuItem)) {
+                  <lux-divider #menuSection></lux-divider>
+                }
+              }
+
+              <lux-menu-trigger>
+                <lux-button
+                  [luxRounded]="true"
+                  [luxIconName]="luxUserName ? 'lux-interface-user-check' : 'lux-interface-user-single'"
+                  luxColor="primary"
+                  class="user-menu-trigger-ac"
+                  luxAriaLabel="{{ 'luxc.app-header.user.menu.trigger' | transloco }}"
+                  aria-haspopup="true"
+                  luxTagId="user-menu-trigger-ac"
+                  [ngClass]="{ 'menu-opened': menuOpened, 'user-menu-trigger-mobile': mobileView }"
+                  luxTooltip="{{ 'luxc.app-header.user.menu.trigger' | transloco }}"
+                  [luxTooltipShowDelay]="1500"
+                  #customTrigger
+                  luxTagId="lux-user-menu-trigger-btn"
+                >
+                </lux-button>
+              </lux-menu-trigger>
+            </lux-menu>
           }
         </div>
-        } @if (luxLocaleSupported && (luxLocaleSupported?.length ?? 0) > 1) {
-        <lux-lang-select-ac
-          [luxLocaleSupported]="luxLocaleSupported"
-          [luxLocaleBaseHref]="luxLocaleBaseHref"
-          [mobileView]="mobileView"
-          class="lux-lang-select-ac lux-flex lux-flex-shrink-0"
-        ></lux-lang-select-ac>
-        }
-        <!-- User-Menu -->
-        @if (userMenu && !userMenu.luxUseSectionsAndHeaderPanel()) {
-        <lux-menu
-          class="lux-user-menu lux-flex lux-flex-shrink-0"
-          [ngClass]="{ 'lux-user-menu-mobile': mobileView }"
-          [luxDisplayExtended]="false"
-          (luxMenuClosed)="onMenuClosed()"
-          (luxMenuOpened)="onMenuOpened()"
-          luxClassName="lux-header-user-menu"
-          luxTagId="app_header_user_menu"
-        >
-          <!-- Anzeige des Usernames falls dieser vorhanden und eingeloggt ist -->
-          @if (luxUserName) {
-          <lux-menu-item [luxLabel]="luxUserName" [luxDisabled]="true" luxClass="lux-user-name-label"></lux-menu-item>
-          }@for (menuItem of userMenu?.menuItemComponents; track menuItem) {
-          <lux-menu-item
-            [luxLabel]="menuItem.luxLabel"
-            [luxTagId]="menuItem.luxLabel"
-            [luxIconName]="menuItem.luxIconName"
-            [luxAlwaysVisible]="menuItem.luxAlwaysVisible"
-            [luxDisabled]="menuItem.luxDisabled"
-            [luxRaised]="menuItem.luxRaised"
-            [luxColor]="menuItem.luxColor"
-            [luxRounded]="menuItem.luxRounded"
-            [luxClass]="menuItem.luxClass"
-            (luxClicked)="menuItem.luxClicked.emit($event)"
-            [luxHidden]="menuItem.luxHidden"
-          >
-          </lux-menu-item>
-          }
-          <lux-menu-trigger>
-            <lux-button
-              [luxRounded]="true"
-              [luxIconName]="luxUserName ? 'lux-interface-user-check' : 'lux-interface-user-single'"
-              luxColor="primary"
-              class="user-menu-trigger-ac"
-              luxAriaLabel="{{ 'luxc.app-header.user.menu.trigger' | transloco }}"
-              aria-haspopup="true"
-              luxTagId="user-menu-trigger-ac"
-              [ngClass]="{ 'menu-opened': menuOpened, 'user-menu-trigger-mobile': mobileView }"
-              luxTooltip="{{ 'luxc.app-header.user.menu.trigger' | transloco }}"
-              [luxTooltipShowDelay]="1500"
-              #customTrigger
-              luxTagId="lux-user-menu-trigger-btn"
-            >
-            </lux-button>
-          </lux-menu-trigger>
-        </lux-menu>
-        }
-        <!-- Das neue User-Menu mit Usernamen und Email im Header -->
-        @if (userMenu && userMenu.luxUseSectionsAndHeaderPanel()) {
-        <lux-menu
-          class="lux-user-menu lux-flex lux-flex-shrink-0"
-          [ngClass]="{ 'lux-user-menu-mobile': mobileView }"
-          [luxDisplayExtended]="false"
-          (luxMenuClosed)="onMenuClosed()"
-          (luxMenuOpened)="onMenuOpened()"
-          luxClassName="lux-header-user-menu"
-          luxTagId="app_header_user_menu"
-          [luxShowSections]="true"
-        >
-          <!-- Anzeige des Usernames falls dieser vorhanden und eingeloggt ist -->
-          @if (luxUserName) {
-          <lux-menu-panel-header [luxTitle]="luxUserName" [luxSubtitle]="luxUserEmail" #menuSection></lux-menu-panel-header>
-          } @for (menuItem of userMenu?.menuSectionComponents; track menuItem) { @if (isItemMenuItem(menuItem)){
-          <lux-menu-item
-            [luxLabel]="menuItem.luxLabel"
-            [luxTagId]="menuItem.luxLabel"
-            [luxIconName]="menuItem.luxIconName"
-            [luxAlwaysVisible]="menuItem.luxAlwaysVisible"
-            [luxDisabled]="menuItem.luxDisabled"
-            [luxRaised]="menuItem.luxRaised"
-            [luxColor]="menuItem.luxColor"
-            [luxRounded]="menuItem.luxRounded"
-            [luxClass]="menuItem.luxClass"
-            (luxClicked)="menuItem.luxClicked.emit($event)"
-            [luxHidden]="menuItem.luxHidden"
-            #menuSection
-          >
-          </lux-menu-item>
-          } @if(isSectionTitle(menuItem)){
-          <lux-menu-section-title [luxTitle]="menuItem.luxTitle()" #menuSection></lux-menu-section-title>
-          } @if (isItemDivider(menuItem)) {
-          <lux-divider #menuSection></lux-divider>
-          } }
-
-          <lux-menu-trigger>
-            <lux-button
-              [luxRounded]="true"
-              [luxIconName]="luxUserName ? 'lux-interface-user-check' : 'lux-interface-user-single'"
-              luxColor="primary"
-              class="user-menu-trigger-ac"
-              luxAriaLabel="{{ 'luxc.app-header.user.menu.trigger' | transloco }}"
-              aria-haspopup="true"
-              luxTagId="user-menu-trigger-ac"
-              [ngClass]="{ 'menu-opened': menuOpened, 'user-menu-trigger-mobile': mobileView }"
-              luxTooltip="{{ 'luxc.app-header.user.menu.trigger' | transloco }}"
-              [luxTooltipShowDelay]="1500"
-              #customTrigger
-              luxTagId="lux-user-menu-trigger-btn"
-            >
-            </lux-button>
-          </lux-menu-trigger>
-        </lux-menu>
-        }
       </div>
-    </div>
     }
   </div>
   <!-- Nav-Bar -->
   <div class="lux-app-header-nav-bar-bg">
     @if (!luxHideNavBar) {
-    <div
-      class="lux-app-header-nav-bar"
-      [ngClass]="{ 'lux-mobile': mobileView, 'lux-centered': luxCenteredView }"
-      [ngStyle]="{ 'max-width': luxCenteredView ? luxCenteredWidth : '100%' }"
-    >
-      <div class="lux-app-title-container lux-flex lux-items-center lux-justify-start lux-gap-4">
-        @if (luxAppLogoSrc && mobileView) {
-        <lux-image
-          [luxImageSrc]="luxAppLogoSrc"
-          luxImageHeight="32px"
-          class="lux-app-logo-mobile"
-          luxAlt="Lux-App-Logo"
-          (luxClicked)="onAppLogoClicked($event)"
-        ></lux-image>
-        }
-        <div class="lux-app-title" [ngClass]="{ 'lux-mobile': mobileView }">{{ mobileView ? luxAppTitleShort : luxAppTitle }}</div>
+      <div
+        class="lux-app-header-nav-bar"
+        [ngClass]="{ 'lux-mobile': mobileView, 'lux-centered': luxCenteredView }"
+        [ngStyle]="{ 'max-width': luxCenteredView ? luxCenteredWidth : '100%' }"
+      >
+        <div class="lux-app-title-container lux-flex lux-items-center lux-justify-start lux-gap-4">
+          @if (luxAppLogoSrc && mobileView) {
+            <lux-image
+              [luxImageSrc]="luxAppLogoSrc"
+              luxImageHeight="32px"
+              class="lux-app-logo-mobile"
+              luxAlt="Lux-App-Logo"
+              (luxClicked)="onAppLogoClicked($event)"
+            ></lux-image>
+          }
+          <div class="lux-app-title" [ngClass]="{ 'lux-mobile': mobileView }">{{ mobileView ? luxAppTitleShort : luxAppTitle }}</div>
+        </div>
+        <div class="lux-app-nav-menu">
+          @if (navMenu) {
+            <ng-content select="lux-app-header-ac-nav-menu"></ng-content>
+          }
+        </div>
       </div>
-      <div class="lux-app-nav-menu">
-        @if (navMenu) {
-        <ng-content select="lux-app-header-ac-nav-menu"></ng-content>
-        }
-      </div>
-    </div>
     }
   </div>
 </header>

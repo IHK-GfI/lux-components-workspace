@@ -6,7 +6,7 @@ import { ILuxFileListActionConfig, ILuxFilesListActionConfig } from '../lux-file
 
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component, importProvidersFrom, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { waitForAsync } from '@angular/core/testing';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -14,7 +14,7 @@ import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { of, throwError } from 'rxjs';
 import { LuxOverlayHelper, LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../../testing/transloco-test.provider';
-import { LuxComponentsConfigModule } from '../../../lux-components-config/lux-components-config.module';
+import { provideLuxComponentsConfig } from '../../../lux-components-config/lux-components-config.provider';
 import { LuxConsoleService } from '../../../lux-util/lux-console.service';
 import { LuxStorageService } from '../../../lux-util/lux-storage.service';
 import { LuxFormFileBase } from '../../lux-form-model/lux-form-file-base.class';
@@ -28,14 +28,12 @@ describe('LuxFileListComponent', () => {
     TestBed.configureTestingModule({
       providers: [
         LuxConsoleService,
-        importProvidersFrom([
-          LuxComponentsConfigModule.forRoot({
-            labelConfiguration: {
-              allUppercase: true,
-              notAppliedTo: []
-            }
-          })
-        ]),
+        provideLuxComponentsConfig({
+          labelConfiguration: {
+            allUppercase: true,
+            notAppliedTo: []
+          }
+        }),
         provideNoopAnimations(),
         provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideHttpClientTesting(),

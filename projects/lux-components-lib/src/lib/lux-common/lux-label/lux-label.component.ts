@@ -1,17 +1,15 @@
-import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, input } from '@angular/core';
 
 @Component({
   selector: 'lux-label',
-  changeDetection: ChangeDetectionStrategy.Eager,
-  template: '<span [id]="luxId"><ng-content></ng-content></span>'
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<span [id]="luxId()"><ng-content></ng-content></span>'
 })
 export class LuxLabelComponent implements OnInit {
-  @Input() luxId?: string;
-
-  constructor() {}
+  readonly luxId = input<string | undefined>(undefined);
 
   ngOnInit() {
-    if (!this.luxId) {
+    if (!this.luxId()) {
       console.warn('lux-label -> The property "luxId" is missing.');
     }
   }

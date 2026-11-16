@@ -1,20 +1,20 @@
-@if (luxMessages && luxMessages.length > 0) {
+@if (luxMessages() && luxMessages().length > 0) {
   <div luxAriaLabel="{{ 'luxc.message.container.arialabel' | transloco }}" class="lux-message-box-content" tabindex="0" #messagebox>
     <div role="list">
-      @for (displayedMessage of displayedMessages; track displayedMessage) {
+      @for (displayedMessage of displayedMessages(); track displayedMessage) {
         <lux-message class="lux-message-box" [luxMessage]="displayedMessage" (luxMessageClosed)="messageClosed($event)"> </lux-message>
       }
     </div>
     <div
       class="lux-message-box-footer"
-      [ngClass]="{ 'lux-display-none': luxMessages.length === 1 || luxMaximumDisplayed >= luxMessages.length }"
+      [ngClass]="{ 'lux-display-none': luxMessages().length === 1 || luxMaximumDisplayed() >= luxMessages().length }"
     >
       <lux-paginator
-        [luxLength]="luxMessages.length"
-        [luxPageSize]="luxMaximumDisplayed"
+        [luxLength]="luxMessages().length"
+        [luxPageSize]="luxMaximumDisplayed()"
         [luxShowFirstLastButtons]="false"
         [luxHidePageSize]="true"
-        [luxPageIndex]="luxIndex"
+        [luxPageIndex]="clampedIndex()"
         (luxPageChange)="pageChanged($event)"
       ></lux-paginator>
     </div>

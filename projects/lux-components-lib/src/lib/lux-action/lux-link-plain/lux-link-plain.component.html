@@ -1,26 +1,26 @@
 <a
   class="link-wrapper"
-  [attr.href]="luxDisabled || !luxHref ? null : luxHref"
-  [target]="luxBlank ? '_blank' : '_self'"
-  [attr.rel]="luxBlank ? 'noopener noreferrer' : null"
-  tabindex="{{ luxDisabled ? -1 : 0 }}"
+  [attr.href]="luxDisabled() || !luxHref() ? null : luxHref()"
+  [target]="luxBlank() ? '_blank' : '_self'"
+  [attr.rel]="luxBlank() ? 'noopener noreferrer' : null"
+  tabindex="{{ luxDisabled() ? -1 : 0 }}"
   (focus)="tooltipDirective?.show()"
   (blur)="tooltipDirective?.hide()"
-  luxAriaLabel="{{ luxLabel }}"
-  [attr.disabled]="luxDisabled ? true : null"
-  [attr.aria-disabled]="luxDisabled ? 'true' : null"
-  [ngClass]="[luxDisabled ? 'lux-disabled' : '']"
-  (click)="!luxDisabled ? redirectToHref($event) : null"
-  (keydown.enter)="!luxDisabled ? redirectToHref($event) : null"
-  (auxclick)="!luxDisabled ? auxClicked($event) : null"
+  luxAriaLabel="{{ luxLabel() }}"
+  [attr.disabled]="luxDisabled() ? true : null"
+  [attr.aria-disabled]="luxDisabled() ? 'true' : null"
+  [ngClass]="[luxDisabled() ? 'lux-disabled' : '']"
+  (click)="!luxDisabled() ? redirectToHref($event) : null"
+  (keydown.enter)="!luxDisabled() ? redirectToHref($event) : null"
+  (auxclick)="!luxDisabled() ? auxClicked($event) : null"
 >
-  @if (!luxIconShowRight && luxIconName) {
-  <lux-icon [luxIconName]="luxIconName"></lux-icon>
+  @if (!luxIconShowRight() && luxIconName()) {
+    <lux-icon [luxIconName]="luxIconName()"></lux-icon>
   }
   <span class="lux-link-plain-text">
-    {{ luxLabel }}
+    {{ luxLabel() }}
   </span>
-  @if (luxIconShowRight && luxIconName) {
-  <lux-icon [luxIconName]="luxIconName"></lux-icon>
+  @if (luxIconShowRight() && luxIconName()) {
+    <lux-icon [luxIconName]="luxIconName()"></lux-icon>
   }
 </a>

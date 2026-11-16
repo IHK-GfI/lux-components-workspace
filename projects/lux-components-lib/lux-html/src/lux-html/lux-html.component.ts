@@ -1,21 +1,20 @@
-import { Component, ElementRef, Input, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, input, viewChild } from '@angular/core';
 import { LuxSanitizeConfig } from './lux-sanitize/lux-sanitize-config';
 import { LuxSanitizePipe } from './lux-sanitize/lux-sanitize.pipe';
 
 @Component({
   selector: 'lux-html',
+  standalone: true,
   templateUrl: './lux-html.component.html',
   styleUrls: ['./lux-html.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxSanitizePipe]
 })
 export class LuxHtmlComponent {
-  @Input() luxData = '';
-  @Input() luxSanitizeConfig?: LuxSanitizeConfig;
-  @Input() luxStyle = '';
-  @Input() luxClass = '';
+  luxData = input('');
+  luxSanitizeConfig = input<LuxSanitizeConfig | undefined>(undefined);
+  luxStyle = input('');
+  luxClass = input('');
 
-  @ViewChild('content', { read: ElementRef }) contentRef!: ElementRef;
-
-  constructor() {}
+  contentRef = viewChild.required<ElementRef>('content');
 }
