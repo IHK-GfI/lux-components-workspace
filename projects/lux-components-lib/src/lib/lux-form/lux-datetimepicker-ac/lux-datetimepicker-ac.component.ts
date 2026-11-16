@@ -10,7 +10,8 @@ import {
   SimpleChanges,
   ViewChild,
   inject,
-  signal
+  signal,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule, ReactiveFormsModule, ValidationErrors, ValidatorFn } from '@angular/forms';
@@ -51,6 +52,7 @@ export const APP_DATE_TIME_FORMATS_AC = {
     { provide: DateAdapter, useClass: LuxDateTimePickerAcAdapter, deps: [MAT_DATE_LOCALE, Platform] },
     { provide: MAT_DATE_FORMATS, useValue: APP_DATE_TIME_FORMATS_AC }
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxIconComponent,
     LuxFormControlWrapperComponent,

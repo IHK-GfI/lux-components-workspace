@@ -9,7 +9,8 @@ import {
   QueryList,
   ViewChild,
   ViewChildren,
-  inject
+  inject,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { MatError, MatHint } from '@angular/material/form-field';
 import { TranslocoPipe } from '@jsverse/transloco';
@@ -49,6 +50,7 @@ import { LuxFileReplaceDialogComponent } from '../lux-file-subcomponents/lux-fil
   selector: 'lux-file-list',
   templateUrl: './lux-file-list.component.html',
   styleUrls: ['./lux-file-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     NgClass,
     MatHint,

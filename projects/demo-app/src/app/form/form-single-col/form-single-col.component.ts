@@ -1,5 +1,5 @@
 import { JsonPipe } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
     LuxAutocompleteAcComponent,
@@ -41,6 +41,7 @@ interface FormSingleUserForm {
 @Component({
   selector: 'app-form-single-col',
   templateUrl: './form-single-col.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxIconComponent,
     LuxCardContentComponent,

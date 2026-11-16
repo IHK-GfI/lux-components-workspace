@@ -1,6 +1,6 @@
 import { FocusableOption } from '@angular/cdk/a11y';
 import { NgClass } from '@angular/common';
-import { Component, ContentChild, ElementRef, EventEmitter, HostBinding, Input, Output, inject } from '@angular/core';
+import { Component, ContentChild, ElementRef, EventEmitter, HostBinding, Input, Output, inject, ChangeDetectionStrategy } from '@angular/core';
 import { LuxCardContentComponent } from '../../lux-card/lux-card-subcomponents/lux-card-content.component';
 import { LuxCardCustomHeaderComponent } from '../../lux-card/lux-card-subcomponents/lux-card-custom-header.component';
 import { LuxCardInfoComponent } from '../../lux-card/lux-card-subcomponents/lux-card-info.component';
@@ -10,6 +10,7 @@ import { LuxListItemCustomHeaderComponent } from './lux-list-item-custom-header.
 @Component({
   selector: 'lux-list-item',
   templateUrl: './lux-list-item.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxCardComponent, NgClass, LuxCardInfoComponent, LuxCardContentComponent, LuxCardCustomHeaderComponent]
 })
 export class LuxListItemComponent implements FocusableOption {

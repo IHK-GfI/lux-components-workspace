@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { ElementRef } from '@angular/core';
 import { MatSelect, MatSelectModule } from '@angular/material/select';
@@ -21,6 +21,7 @@ import { LuxSelectFilterUtils } from './lux-select-filter.utils';
     </mat-select>
   `,
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [MatSelectModule, LuxSelectFilterDirective]
 })
 class TestComponent {

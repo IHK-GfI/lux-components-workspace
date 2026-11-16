@@ -15,7 +15,8 @@ import {
   ViewContainerRef,
   effect,
   inject,
-  input
+  input,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { LuxPopupActionsDirective } from './lux-popup-actions.directive';
@@ -28,6 +29,7 @@ let nextPopupId = 0;
   selector: 'lux-popup',
   templateUrl: './lux-popup.component.html',
   exportAs: 'luxPopup',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [NgTemplateOutlet]
 })
 export class LuxPopupComponent implements OnDestroy {

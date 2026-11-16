@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
   LuxAccordionComponent,
@@ -27,6 +27,7 @@ import { logResult, setRequiredValidatorForFormControl } from '../../example-bas
 @Component({
   selector: 'lux-chip-authentic-example',
   templateUrl: './chip-authentic-example.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxAccordionComponent,
     LuxPanelHeaderTitleComponent,

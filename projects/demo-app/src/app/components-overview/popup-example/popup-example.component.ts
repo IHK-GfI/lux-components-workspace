@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import {
   LuxAriaLabelDirective,
   LuxButtonComponent,
@@ -21,6 +21,7 @@ import { PopupExampleInfoPopupComponent } from './popup-example-info-popup.compo
 @Component({
   selector: 'app-popup-example',
   templateUrl: './popup-example.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,

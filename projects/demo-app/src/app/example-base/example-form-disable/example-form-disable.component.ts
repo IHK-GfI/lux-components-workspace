@@ -5,7 +5,7 @@ import { LuxButtonComponent, LuxToggleAcComponent } from '@ihk-gfi/lux-component
 @Component({
   selector: 'example-form-disable',
   templateUrl: './example-form-disable.component.html',
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxButtonComponent, LuxToggleAcComponent]
 })
 export class ExampleFormDisableComponent {

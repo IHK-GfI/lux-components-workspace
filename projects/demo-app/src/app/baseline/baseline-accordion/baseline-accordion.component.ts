@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import {
@@ -50,6 +50,7 @@ interface DummyStateForm {
   selector: 'lux-baseline-accordion',
   templateUrl: './baseline-accordion.component.html',
   styleUrls: ['./baseline-accordion.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxTextboxComponent,
     LuxLinkPlainComponent,

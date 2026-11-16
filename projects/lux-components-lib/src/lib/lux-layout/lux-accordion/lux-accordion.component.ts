@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { AfterViewInit, Component, Input, input, OnDestroy, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, Input, input, OnDestroy, ViewChild } from '@angular/core';
 import { MatAccordion, MatAccordionDisplayMode, MatAccordionTogglePosition } from '@angular/material/expansion';
 import { Subject } from 'rxjs';
 import { LuxAccordionColor, LuxAccordionColors } from '../../lux-util/lux-colors.enum';
@@ -11,6 +11,7 @@ export declare type LuxTogglePosition = MatAccordionTogglePosition | undefined;
 @Component({
   selector: 'lux-accordion',
   templateUrl: './lux-accordion.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [NgClass, MatAccordion]
 })
 export class LuxAccordionComponent implements AfterViewInit, OnDestroy {

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, inject } from '@angular/core';
+import { Component, OnDestroy, inject, ChangeDetectionStrategy } from '@angular/core';
 import {
     ILuxAppFooterButtonInfo,
     LuxAccordionComponent,
@@ -22,6 +22,7 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
 @Component({
   selector: 'app-footer-example',
   templateUrl: './app-footer-example.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxButtonComponent,
     LuxAccordionComponent,

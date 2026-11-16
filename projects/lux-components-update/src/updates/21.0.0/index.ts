@@ -1,5 +1,5 @@
 import { chain, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
-import * as chalk from 'chalk';
+import chalk from 'chalk';
 import { Node } from 'jsonc-parser';
 import { deleteDep } from '../../update-dependencies';
 import { updateDep } from '../../utility/dependencies';
@@ -11,8 +11,6 @@ import type { Options } from '../../utility/types';
 import { addComponentProvider, addImport } from '../../utility/typescript';
 import { applyRuleIf, finish, messageInfoRule, messageSuccessRule, replaceAll } from '../../utility/util';
 import { validateLuxComponentsVersion, validateNodeVersion } from '../../utility/validation';
-
-
 
 export const updateMajorVersion = '21';
 export const updateMinVersion = '19.7.0';
@@ -161,7 +159,11 @@ export function updateStylesScss(options: Options): Rule {
       `"styles.scss" wird aktualisiert...`,
       `"styles.scss" wurde aktualisiert.`,
       filePath,
-      new ReplaceItem('@ihk-gfi/lux-components-theme/src/base/luxfonts', '@ihk-gfi/lux-components-theme/src/base-templates/common/luxfonts', true)
+      new ReplaceItem(
+        '@ihk-gfi/lux-components-theme/src/base/luxfonts',
+        '@ihk-gfi/lux-components-theme/src/base-templates/common/luxfonts',
+        true
+      )
     )
   ]);
 }
@@ -189,10 +191,10 @@ export function updateKarmaConfJs(options: Options): Rule {
       `"karma.conf.js" wird aktualisiert...`,
       `"karma.conf.js" wurde aktualisiert.`,
       filePath,
-      new ReplaceItem('require(\'@angular-devkit/build-angular/plugins/karma\')', '', true),
+      new ReplaceItem("require('@angular-devkit/build-angular/plugins/karma')", '', true),
       new ReplaceItem('require("@angular-devkit/build-angular/plugins/karma")', '', true),
-      new ReplaceItem('require(\'@angular-devkit/build-angular/plugins/karma\'),', '', true),
-      new ReplaceItem('require("@angular-devkit/build-angular/plugins/karma"),', '', true),
+      new ReplaceItem("require('@angular-devkit/build-angular/plugins/karma'),", '', true),
+      new ReplaceItem('require("@angular-devkit/build-angular/plugins/karma"),', '', true)
     )
   ]);
 }

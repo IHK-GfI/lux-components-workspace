@@ -1,5 +1,5 @@
 import { NgClass, NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectorRef, Component, ElementRef, HostBinding, Input, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, HostBinding, Input, inject, ChangeDetectionStrategy } from '@angular/core';
 import { MatError, MatHint } from '@angular/material/form-field';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { LuxAriaLabelDirective } from '../../lux-directives/lux-aria/lux-aria-label.directive';
@@ -11,6 +11,7 @@ export const luxFormControlSelektor = 'lux-form-control-wrapper';
 @Component({
   selector: 'lux-form-control-wrapper',
   templateUrl: './lux-form-control-wrapper.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [NgClass, NgTemplateOutlet, MatError, MatHint, LuxIconComponent, LuxAriaLabelDirective, TranslocoPipe]
 })
 export class LuxFormControlWrapperComponent {

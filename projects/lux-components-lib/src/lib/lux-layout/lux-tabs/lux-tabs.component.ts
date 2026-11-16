@@ -13,7 +13,8 @@ import {
   QueryList,
   SimpleChanges,
   ViewChild,
-  inject
+  inject,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { MatTab, MatTabChangeEvent, MatTabGroup, MatTabLabel } from '@angular/material/tabs';
 import { ReplaySubject, Subscription } from 'rxjs';
@@ -30,6 +31,7 @@ import { LuxTabComponent } from './lux-tabs-subcomponents/lux-tab.component';
 @Component({
   selector: 'lux-tabs',
   templateUrl: './lux-tabs.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     NgClass,
     MatTabGroup,

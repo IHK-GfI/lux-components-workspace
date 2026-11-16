@@ -1,5 +1,5 @@
 import { NgClass, NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectorRef, Component, ElementRef, Input, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Input, inject, ChangeDetectionStrategy } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButton, MatFabButton } from '@angular/material/button';
 import { Router } from '@angular/router';
@@ -14,6 +14,7 @@ import { LuxActionComponentBaseClass } from '../lux-action-model/lux-action-comp
   templateUrl: './lux-link.component.html',
   styleUrls: ['./lux-link.component.scss'],
   imports: [NgClass, LuxTagIdDirective, LuxIconComponent, NgTemplateOutlet, MatButton, MatFabButton],
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: {
     '[class.lux-uppercase]': 'labelUppercase',
     '[class.lux-flat]': 'luxFlat',

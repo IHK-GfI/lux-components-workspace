@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
     ILuxFileObject,
@@ -46,6 +46,7 @@ interface DummyForm {
   selector: 'lux-baseline-card',
   templateUrl: './baseline-card.component.html',
   styleUrls: ['./baseline-card.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxIconComponent,
     LuxTextboxComponent,

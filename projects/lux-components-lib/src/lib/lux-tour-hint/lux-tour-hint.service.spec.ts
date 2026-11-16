@@ -1,13 +1,12 @@
-﻿import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+﻿import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component, inject, OnDestroy } from '@angular/core';
+import { Component, inject, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, waitForAsync } from '@angular/core/testing';
 import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../testing/transloco-test.provider';
 import { LuxConsentService } from '../lux-consent/lux-consent.service';
 import { LuxTourHintRef } from './lux-tour-hint-model/lux-tour-hint-ref.class';
 import { LuxTourHintService } from './lux-tour-hint.service';
-
 
 describe('LuxTourHintService', () => {
   beforeEach(waitForAsync(() => {
@@ -19,9 +18,10 @@ describe('LuxTourHintService', () => {
       providers: [
         LuxTourHintService,
         { provide: LuxConsentService, useValue: consentServiceMock },
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting()
-      , provideLuxTranslocoTesting()],
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+        provideLuxTranslocoTesting()
+      ]
     }).compileComponents();
   }));
 
@@ -370,6 +370,7 @@ describe('LuxTourHintService', () => {
   template: ` <div id="test1">Test Div</div>
     <div id="test2">Another Test Div</div>
     <div id="test3">3rd Test Div</div>`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: []
 })
 class MockTourHintComponent {
@@ -391,6 +392,7 @@ class MockTourHintComponent {
       <button (click)="tourHintRef.next()">Next</button>
     </div>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: []
 })
 class MockCustomTourHintComponent implements OnDestroy {

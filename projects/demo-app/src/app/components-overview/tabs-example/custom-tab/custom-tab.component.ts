@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, TemplateRef, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { LuxTabComponent } from '@ihk-gfi/lux-components';
 import { DotsLoaderComponent } from './dots-loader.component';
 
@@ -7,6 +7,7 @@ import { DotsLoaderComponent } from './dots-loader.component';
   templateUrl: './custom-tab.component.html',
   styleUrls: ['./custom-tab.component.scss'],
   providers: [{ provide: LuxTabComponent, useExisting: CustomTabComponent }],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [DotsLoaderComponent]
 })
 export class CustomTabComponent extends LuxTabComponent implements OnInit, AfterViewInit {

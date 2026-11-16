@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { Subject } from 'rxjs';
@@ -318,6 +318,7 @@ describe('LuxTenantLogoComponent', () => {
   template: `
     <lux-tenant-logo [luxTenantKey]="tenantKey" [luxTenantVariant]="tenantVariant" [luxTenantLogoHeight]="tenantHeight"></lux-tenant-logo>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxTenantLogoComponent]
 })
 class LuxMockTenantLogoComponent {

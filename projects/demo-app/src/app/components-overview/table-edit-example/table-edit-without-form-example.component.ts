@@ -1,5 +1,5 @@
 import { LowerCasePipe } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import {
   LuxAriaLabelDirective,
   LuxButtonComponent,
@@ -27,6 +27,7 @@ import {
     LowerCasePipe
   ],
   templateUrl: './table-edit-without-form-example.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './table-edit-without-form-example.component.scss'
 })
 export class TableEditWithoutFormExampleComponent {

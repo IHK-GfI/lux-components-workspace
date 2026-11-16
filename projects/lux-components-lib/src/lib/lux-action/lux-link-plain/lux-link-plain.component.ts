@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { ChangeDetectorRef, Component, HostBinding, Input, OnInit, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, HostBinding, Input, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import { LuxAriaLabelDirective } from '../../lux-directives/lux-aria/lux-aria-label.directive';
 import { LuxTooltipDirective } from '../../lux-directives/lux-tooltip/lux-tooltip.directive';
@@ -11,6 +11,7 @@ import { LuxActionComponentBaseClass } from '../lux-action-model/lux-action-comp
   templateUrl: './lux-link-plain.component.html',
   styleUrls: ['./lux-link-plain.component.scss'],
   host: { '[class.lux-disabled]': 'luxDisabled' },
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxAriaLabelDirective, NgClass, LuxIconComponent]
 })
 export class LuxLinkPlainComponent extends LuxActionComponentBaseClass implements OnInit {

@@ -1,4 +1,4 @@
-import { Component, ElementRef } from '@angular/core';
+import { Component, ElementRef, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { MatSelect, MatSelectModule } from '@angular/material/select';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -7,6 +7,7 @@ import { LuxSelectVisibleOptionCountDirective } from './lux-select-visible-optio
 @Component({
   template: ` <mat-select [luxSelectVisibleOptionCount]="visibleOptionCount"></mat-select> `,
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [MatSelectModule, LuxSelectVisibleOptionCountDirective]
 })
 class VisibleOptionCountHostComponent {

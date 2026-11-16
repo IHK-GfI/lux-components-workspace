@@ -1,11 +1,11 @@
-import { Component, inject, OnDestroy, ViewChild } from '@angular/core';
+import { Component, inject, OnDestroy, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { Subscription } from 'rxjs';
 import { LuxMediaQueryObserverService } from '../../lux-util/lux-media-query-observer.service';
 import { LuxFilter } from '../lux-filter-base/lux-filter';
 import { LuxFilterItem } from '../lux-filter-base/lux-filter-item';
 
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxAutocompleteAcComponent } from '../../lux-form/lux-autocomplete-ac/lux-autocomplete-ac.component';
@@ -23,7 +23,7 @@ describe('LuxFilterFormComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting(), provideLuxTranslocoTesting()]
+      providers: [provideHttpClient(withXhr(), withInterceptorsFromDi()), provideHttpClientTesting(), provideLuxTranslocoTesting()]
     }).compileComponents();
   }));
 
@@ -222,6 +222,7 @@ describe('LuxFilterFormComponent', () => {
       ></lux-toggle-ac>
     </lux-filter-form>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxFilterFormComponent,
     LuxFilterItemDirective,

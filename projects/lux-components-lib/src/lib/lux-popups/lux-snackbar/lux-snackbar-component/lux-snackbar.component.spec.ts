@@ -1,6 +1,6 @@
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component, Injectable, NgModule } from '@angular/core';
+import { Component, Injectable, NgModule, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, inject, TestBed } from '@angular/core/testing';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { By } from '@angular/platform-browser';
@@ -21,7 +21,12 @@ describe('LuxSnackbarComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [MockSnackbarModule],
-      providers: [provideNoopAnimations(), provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting(), provideLuxTranslocoTesting()],
+      providers: [
+        provideNoopAnimations(),
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+        provideLuxTranslocoTesting()
+      ]
     });
   });
 
@@ -98,6 +103,7 @@ const findToggleElement = (toggleElement: any) => {
     </lux-app-header>
   `,
   providers: [],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxAppHeaderComponent, LuxSideNavComponent, LuxAppHeaderRightNavComponent, LuxMenuItemComponent]
 })
 class MockSnackbarComponent {}

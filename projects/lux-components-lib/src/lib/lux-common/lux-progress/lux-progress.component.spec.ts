@@ -1,6 +1,6 @@
 // noinspection DuplicatedCode
 
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { MatProgressBar } from '@angular/material/progress-bar';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
@@ -339,6 +339,7 @@ describe('LuxProgressComponent', () => {
     [luxText]="text"
     [luxTextPosition]="textPosition"
   ></lux-progress>`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxProgressComponent]
 })
 class LuxMockProgressBarComponent {
@@ -358,6 +359,7 @@ class LuxMockProgressBarComponent {
 @Component({
   selector: 'lux-mock-progress-without-color',
   template: `<lux-progress [luxType]="type" [luxMuted]="muted"></lux-progress>`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxProgressComponent]
 })
 class LuxMockProgressWithoutColorComponent {

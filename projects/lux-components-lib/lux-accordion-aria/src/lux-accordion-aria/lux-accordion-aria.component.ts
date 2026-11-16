@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, DestroyRef, booleanAttribute, computed, contentChildren, inject, input } from '@angular/core';
+import { Component, DestroyRef, booleanAttribute, computed, contentChildren, inject, input, ChangeDetectionStrategy } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { LuxAccordionColor, LuxAccordionColors, LuxModeType } from '@ihk-gfi/lux-components';
 import { LuxPanelAriaHeaderCustomComponent } from '../lux-panel-aria/lux-panel-aria-subcomponents/lux-panel-aria-header-custom.component';
@@ -19,6 +19,7 @@ export type LuxAriaTogglePosition = LuxAccordionAriaTogglePosition;
   standalone: true,
   imports: [NgClass],
   providers: [{ provide: LuxAccordionAriaBase, useExisting: LuxAccordionAriaComponent }],
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: {
     class: 'lux-flex lux-flex-auto',
     '[class.lux-default]': "luxMode() === 'default'",

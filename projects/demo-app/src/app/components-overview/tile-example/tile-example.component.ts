@@ -1,5 +1,5 @@
 import { NgStyle } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import {
   LuxAutofocusDirective,
   LuxFormHintComponent,
@@ -18,6 +18,7 @@ import { logResult } from '../../example-base/example-base-util/example-base-hel
 @Component({
   selector: 'tile-example',
   templateUrl: './tile-example.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxImageComponent,
     LuxIconComponent,

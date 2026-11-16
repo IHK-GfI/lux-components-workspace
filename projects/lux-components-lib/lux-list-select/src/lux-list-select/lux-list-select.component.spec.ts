@@ -1,6 +1,6 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { DOWN_ARROW, END, ESCAPE, HOME, SPACE, UP_ARROW } from '@angular/cdk/keycodes';
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { By } from '@angular/platform-browser';
@@ -1552,9 +1552,8 @@ describe('LuxListSelectComponent', () => {
       // (sonst löschen sich namenlose Standalone-Radios instanzübergreifend die Checked-Optik)
       const nameA = (fixture.debugElement.query(By.css('.lux-list-select-card mat-radio-button input')).nativeElement as HTMLInputElement)
         .name;
-      const nameB = (
-        fixture2.debugElement.query(By.css('.lux-list-select-card mat-radio-button input')).nativeElement as HTMLInputElement
-      ).name;
+      const nameB = (fixture2.debugElement.query(By.css('.lux-list-select-card mat-radio-button input')).nativeElement as HTMLInputElement)
+        .name;
       expect(nameA).toBeTruthy();
       expect(nameB).toBeTruthy();
       expect(nameA).not.toBe(nameB);
@@ -1645,7 +1644,8 @@ describe('LuxListSelectComponent', () => {
 
       // Nachbedingungen prüfen
       const checkbox = fixtureCT.debugElement.query(By.css('lux-list-select-item mat-checkbox input')).nativeElement as HTMLInputElement;
-      const headlineCell = fixtureCT.debugElement.query(By.css('lux-list-select-item .lux-list-select-headlines')).nativeElement as HTMLElement;
+      const headlineCell = fixtureCT.debugElement.query(By.css('lux-list-select-item .lux-list-select-headlines'))
+        .nativeElement as HTMLElement;
       expect(checkbox.getAttribute('aria-label')).toBeFalsy();
       expect(checkbox.getAttribute('aria-labelledby')).toContain(headlineCell.id);
       expect(headlineCell.id).toMatch(/^lux-list-select-item-title-\d+$/);
@@ -1662,7 +1662,6 @@ describe('LuxListSelectComponent', () => {
       const subtitle = fixture.debugElement.query(By.css('lux-list-select-item .lux-list-select-subtitle')).nativeElement as HTMLElement;
       expect(checkbox.getAttribute('aria-describedby')).toContain(subtitle.id);
     });
-
   });
 
   describe('A11y', () => {
@@ -1708,6 +1707,7 @@ describe('LuxListSelectComponent', () => {
 @Component({
   selector: 'lux-mock-host',
   imports: [LuxListSelectComponent, LuxListSelectContentDirective, LuxListSelectActionDirective, LuxButtonComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <lux-list-select
       [luxMode]="mode"
@@ -1772,13 +1772,19 @@ class MockHostComponent {
 @Component({
   selector: 'lux-mock-host-content-template',
   imports: [LuxListSelectComponent, LuxListSelectContentDirective, LuxListSelectActionDirective, LuxButtonComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <lux-list-select [luxMode]="'multi'" [luxItems]="items" [(luxSelected)]="selected">
       <ng-template luxListSelectContent let-item let-selected="selected">
         <a href="#" class="mock-content-link">{{ item.title }} ({{ selected }})</a>
       </ng-template>
       <ng-template luxListSelectAction let-item>
-        <lux-button class="mock-action" [luxIconButton]="true" luxIconName="lux-interface-arrows-expand-5" [luxLabel]="'Details zu ' + item.title"></lux-button>
+        <lux-button
+          class="mock-action"
+          [luxIconButton]="true"
+          luxIconName="lux-interface-arrows-expand-5"
+          [luxLabel]="'Details zu ' + item.title"
+        ></lux-button>
       </ng-template>
     </lux-list-select>
   `

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import {
     LuxBadgeNotificationDirective,
     LuxBadgeNotificationPosition,
@@ -16,6 +16,7 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
 @Component({
   selector: 'app-badge-notification-example',
   templateUrl: './badge-notification-example.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxIconComponent,
     LuxButtonComponent,

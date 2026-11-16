@@ -1,6 +1,6 @@
 // noinspection DuplicatedCode
 
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ChangeDetectionStrategy, Component, provideZonelessChangeDetection } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, waitForAsync } from '@angular/core/testing';
@@ -32,7 +32,7 @@ describe('LuxInputAcComponent', () => {
       providers: [
         LuxConsoleService,
         provideNoopAnimations(),
-        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideHttpClientTesting(),
         provideLuxTranslocoTesting()
       ]
@@ -1434,7 +1434,7 @@ describe('LuxInputAcComponent: bedingtes required ohne Statuswechsel (Issue #318
   const providers = [
     LuxConsoleService,
     provideNoopAnimations(),
-    provideHttpClient(withInterceptorsFromDi()),
+    provideHttpClient(withXhr(), withInterceptorsFromDi()),
     provideHttpClientTesting(),
     provideLuxTranslocoTesting()
   ];
@@ -1492,7 +1492,8 @@ describe('LuxInputAcComponent: bedingtes required ohne Statuswechsel (Issue #318
       <lux-input-ac luxControlBinding="text" [luxClearable]="true" [luxReadonly]="readonly"></lux-input-ac>
     </form>
   `,
-  imports: [ReactiveFormsModule, LuxInputAcComponent]
+  imports: [ReactiveFormsModule, LuxInputAcComponent],
+  changeDetection: ChangeDetectionStrategy.Eager
 })
 class LuxInputClearableInFormComponent {
   readonly = false;
@@ -1504,7 +1505,8 @@ class LuxInputClearableInFormComponent {
 
 @Component({
   template: ` <lux-input-ac luxLabel="Text" [(luxValue)]="value" [luxClearable]="true"></lux-input-ac> `,
-  imports: [LuxInputAcComponent]
+  imports: [LuxInputAcComponent],
+  changeDetection: ChangeDetectionStrategy.Eager
 })
 class LuxInputClearableOutsideFormComponent {
   value: string | null = null;
@@ -1533,6 +1535,7 @@ class LuxInputClearableOutsideFormComponent {
       <lux-input-ac [luxType]="fieldType" luxControlBinding="amount17" id="amount17"></lux-input-ac>
     </form>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ReactiveFormsModule, LuxInputAcComponent]
 })
 class LuxInputWerteInsideFormComponent {
@@ -1571,6 +1574,7 @@ class LuxInputWerteInsideFormComponent {
       <lux-input-ac luxControlBinding="text" id="text"></lux-input-ac>
     </form>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ReactiveFormsModule, LuxInputAcComponent]
 })
 class LuxInputInsideFormComponent {
@@ -1610,7 +1614,8 @@ class LuxInputRequiredReactiveFormComponent {
       <lux-input-ac luxControlBinding="text" id="text"></lux-input-ac>
     </form>
   `,
-  imports: [ReactiveFormsModule, LuxInputAcComponent]
+  imports: [ReactiveFormsModule, LuxInputAcComponent],
+  changeDetection: ChangeDetectionStrategy.Eager
 })
 class LuxInputExternalRequiredToggleComponent {
   formGroup = new FormGroup({
@@ -1625,6 +1630,7 @@ class LuxInputExternalRequiredToggleComponent {
       <lux-input-ac luxLabel="Text B" luxControlBinding="text" id="textB"></lux-input-ac>
     </form>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ReactiveFormsModule, LuxInputAcComponent]
 })
 class LuxInputSharedControlComponent {
@@ -1639,6 +1645,7 @@ class LuxInputSharedControlComponent {
       <lux-input-ac luxLabel="Text" luxControlBinding="text" id="text"></lux-input-ac>
     </form>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ReactiveFormsModule, LuxInputAcComponent]
 })
 class LuxInputInitialRequiredComponent {
@@ -1653,6 +1660,7 @@ class LuxInputInitialRequiredComponent {
       <lux-input-ac luxLabel="Text" luxControlBinding="text" id="text"></lux-input-ac>
     </form>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ReactiveFormsModule, LuxInputAcComponent]
 })
 class LuxInputThrowingValidatorComponent {
@@ -1670,6 +1678,7 @@ class LuxInputThrowingValidatorComponent {
       <lux-input-ac luxLabel="Nachname" luxControlBinding="nachname" id="nachname"></lux-input-ac>
     </form>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ReactiveFormsModule, LuxInputAcComponent]
 })
 class LuxInputComposedRequiredComponent {
@@ -1684,6 +1693,7 @@ class LuxInputComposedRequiredComponent {
       <lux-input-ac luxLabel="Firma" luxControlBinding="firma" id="firma"></lux-input-ac>
     </form>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ReactiveFormsModule, LuxInputAcComponent]
 })
 class LuxInputConditionalRequiredComponent {
@@ -1724,6 +1734,7 @@ class LuxInputConditionalRequiredOnPushComponent {
       <lux-input-ac luxLabel="Passwort bestätigen" luxControlBinding="confirm" id="confirm"></lux-input-ac>
     </form>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ReactiveFormsModule, LuxInputAcComponent]
 })
 class LuxInputSideEffectValidatorComponent {
@@ -1768,6 +1779,7 @@ class LuxInputSideEffectValidatorComponent {
     <!-- Inputs vom Typ 'text' -->
     <lux-input-ac luxLabel="myText" [(luxValue)]="myText" id="text" [luxControlValidators]="validators"></lux-input-ac>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [FormsModule, ReactiveFormsModule, LuxInputAcComponent]
 })
 class LuxInputOutsideFormComponent {
@@ -1791,6 +1803,7 @@ class LuxInputOutsideFormComponent {
       }
     </lux-input-ac>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxInputAcComponent, LuxInputAcSuffixComponent, LuxInputAcPrefixComponent]
 })
 class LuxInputWithPrefixComponent {
@@ -1814,6 +1827,7 @@ class LuxInputWithPrefixComponent {
     >
     </lux-input-ac>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxInputAcComponent]
 })
 class LuxInputAttributesComponent {
@@ -1834,6 +1848,7 @@ class LuxInputAttributesComponent {
   template: `
     <lux-input-ac [luxType]="type" luxLabel="Label" [luxHint]="hint" [luxDisabled]="disabled" [luxMaxLength]="maxLength"> </lux-input-ac>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxInputAcComponent]
 })
 class LuxInputCounterLabelComponent {

@@ -1,5 +1,5 @@
 import { JsonPipe, NgClass } from '@angular/common';
-import { Component, effect, input } from '@angular/core';
+import { Component, effect, input, ChangeDetectionStrategy } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import {
   LuxAriaLabelDirective,
@@ -36,6 +36,7 @@ interface TableForm {
     NgClass
   ],
   templateUrl: './table-edit-with-form-example.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './table-edit-with-form-example.component.scss'
 })
 export class TableEditWithFormExampleComponent {

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, inject } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, inject, ChangeDetectionStrategy } from '@angular/core';
 import { MatCard, MatCardHeader, MatCardSubtitle, MatCardTitle } from '@angular/material/card';
 import { Subscription } from 'rxjs';
 import {
@@ -14,6 +14,7 @@ import { LuxMediaQueryObserverService } from '../../lux-util/lux-media-query-obs
   selector: 'lux-tile-ac',
   templateUrl: './lux-tile-ac.component.html',
   imports: [MatCard, LuxTagIdDirective, LuxBadgeNotificationDirective, MatCardTitle, MatCardSubtitle, LuxTooltipDirective, MatCardHeader],
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: { class: 'lux-flex' }
 })
 export class LuxTileAcComponent implements OnInit, OnChanges, OnDestroy {

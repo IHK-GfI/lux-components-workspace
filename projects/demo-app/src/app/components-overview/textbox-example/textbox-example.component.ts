@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import {
     LuxIconComponent,
     LuxInputAcComponent,
@@ -15,6 +15,7 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
   selector: 'lux-textbox-example',
   templateUrl: './textbox-example.component.html',
   styleUrls: ['./textbox-example.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxIconComponent,
     LuxTextboxComponent,

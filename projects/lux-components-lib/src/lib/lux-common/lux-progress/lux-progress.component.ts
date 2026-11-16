@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, Input, OnDestroy, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnDestroy, signal } from '@angular/core';
 import { MatProgressBar } from '@angular/material/progress-bar';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { TranslocoPipe } from '@jsverse/transloco';
@@ -23,6 +23,7 @@ let nextProgressId = 0;
 @Component({
   selector: 'lux-progress',
   templateUrl: './lux-progress.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [NgClass, MatProgressBar, LuxTagIdDirective, LuxAriaLabelDirective, LuxCustomTagIdDirective, MatProgressSpinner, TranslocoPipe]
 })
 export class LuxProgressComponent implements OnDestroy {

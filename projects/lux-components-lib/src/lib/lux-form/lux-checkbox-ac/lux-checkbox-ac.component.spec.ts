@@ -1,6 +1,6 @@
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -16,7 +16,7 @@ describe('LuxCheckboxAcComponent', () => {
     TestBed.configureTestingModule({
       providers: [
         provideNoopAnimations(),
-        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideHttpClientTesting(),
         provideLuxTranslocoTesting(),
         LuxConsoleService
@@ -460,6 +460,7 @@ describe('LuxCheckboxAcComponent', () => {
 
 @Component({
   template: ` <lux-checkbox-ac luxLabel="Magst du Pommes?" [luxChecked]="true" [luxDisabled]="disabled"></lux-checkbox-ac> `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxCheckboxAcComponent]
 })
 class LuxDisabledAttributeComponent {
@@ -468,6 +469,7 @@ class LuxDisabledAttributeComponent {
 
 @Component({
   template: ` <lux-checkbox-ac luxLabel="Eula gelesen?" (luxCheckedChange)="onCheckedChange($event)"></lux-checkbox-ac> `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxCheckboxAcComponent]
 })
 class LuxCheckedChangeComponent {
@@ -480,6 +482,7 @@ class LuxCheckedChangeComponent {
 
 @Component({
   template: ` <lux-checkbox-ac luxLabel="Eula gelesen?" [(luxChecked)]="eula"></lux-checkbox-ac> `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxCheckboxAcComponent]
 })
 class LuxCheckedAttributeComponent {
@@ -488,6 +491,7 @@ class LuxCheckedAttributeComponent {
 
 @Component({
   template: ` <lux-checkbox-ac [luxLabel]="label" [luxChecked]="false"></lux-checkbox-ac> `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxCheckboxAcComponent]
 })
 class LuxLabelAttributeComponent {
@@ -496,6 +500,7 @@ class LuxLabelAttributeComponent {
 
 @Component({
   template: ` <lux-checkbox-ac [luxLabel]="label" [luxRequired]="true"></lux-checkbox-ac> `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxCheckboxAcComponent]
 })
 class LuxRequiredAttributeComponent {
@@ -508,6 +513,7 @@ class LuxRequiredAttributeComponent {
       <lux-checkbox-ac luxLabel="Eula gelesen?" luxControlBinding="eula" [luxRequired]="required"></lux-checkbox-ac>
     </form>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ReactiveFormsModule, LuxCheckboxAcComponent]
 })
 class LuxCheckboxInFormAttributeComponent {
@@ -527,6 +533,7 @@ class LuxCheckboxInFormAttributeComponent {
       <lux-checkbox-ac luxLabel="Eula gelesen?" luxControlBinding="eula"></lux-checkbox-ac>
     </form>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ReactiveFormsModule, LuxCheckboxAcComponent]
 })
 class LuxCheckboxRequiredInFormAttributeComponent {
@@ -545,6 +552,7 @@ class LuxCheckboxRequiredInFormAttributeComponent {
       <lux-checkbox-ac luxLabel="Eula gelesen?" luxControlBinding="eula"></lux-checkbox-ac>
     </form>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ReactiveFormsModule, LuxCheckboxAcComponent]
 })
 class LuxCheckboxComposedRequiredInFormComponent {
@@ -555,6 +563,7 @@ class LuxCheckboxComposedRequiredInFormComponent {
 
 @Component({
   template: ` <lux-checkbox-ac luxLabel="Eula gelesen?" [(luxChecked)]="eula" [luxControlValidators]="validators"></lux-checkbox-ac> `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxCheckboxAcComponent]
 })
 class LuxValidatorsComponent {

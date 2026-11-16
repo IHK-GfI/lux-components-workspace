@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, OnInit, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
 import { LUX_FILE_PREVIEW_DATA } from './lux-file-preview-config';
 import { LuxFilePreviewData } from './lux-file-preview-data';
 import { LuxFilePreviewImgViewerComponent } from './lux-file-preview-imgviewer/lux-file-preview-imgviewer.component';
@@ -8,6 +8,7 @@ import { LuxFilePreviewPdfViewerComponent } from './lux-file-preview-pdfviewer/l
 @Component({
   selector: 'lux-file-preview',
   templateUrl: './lux-file-preview.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxFilePreviewPdfViewerComponent, LuxFilePreviewImgViewerComponent, LuxFilePreviewNotSupportedViewerComponent]
 })
 export class LuxFilePreviewComponent implements OnInit {

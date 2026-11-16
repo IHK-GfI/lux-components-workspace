@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { LuxPanelAriaComponent } from './lux-panel-aria.component';
@@ -444,6 +444,7 @@ describe('LuxPanelAriaComponent A11y', () => {
     LuxPanelAriaContentComponent,
     LuxPanelAriaActionComponent
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <lux-accordion-aria luxTogglePosition="before">
       <lux-panel-aria
@@ -497,6 +498,7 @@ class LuxPanelAriaTestComponent {
   selector: 'lux-panel-aria-plain-content-test',
   standalone: true,
   imports: [LuxAccordionAriaComponent, LuxPanelAriaComponent, LuxPanelAriaHeaderTitleComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <lux-accordion-aria>
       <lux-panel-aria>
@@ -512,6 +514,7 @@ class LuxPanelAriaPlainContentTestComponent {}
   selector: 'lux-panel-aria-standalone-test',
   standalone: true,
   imports: [LuxPanelAriaComponent, LuxPanelAriaHeaderTitleComponent, LuxPanelAriaContentComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <lux-panel-aria luxColor="warn">
       <lux-panel-aria-header-title>Titel</lux-panel-aria-header-title>
@@ -531,6 +534,7 @@ class LuxPanelAriaStandaloneTestComponent {}
     LuxPanelAriaHeaderCustomComponent,
     LuxPanelAriaContentComponent
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <lux-accordion-aria>
       <lux-panel-aria [luxTogglePosition]="'after'">

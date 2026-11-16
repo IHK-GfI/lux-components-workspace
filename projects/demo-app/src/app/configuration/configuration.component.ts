@@ -1,5 +1,5 @@
 import { JsonPipe } from '@angular/common';
-import { Component, OnDestroy, inject } from '@angular/core';
+import { Component, OnDestroy, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import {
   LuxAppFooterButtonInfo,
@@ -20,6 +20,7 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'lux-configuration',
   templateUrl: './configuration.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxIconComponent,
     LuxCheckboxContainerAcComponent,

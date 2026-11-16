@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, inject } from '@angular/core';
+import { AfterViewInit, Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import {
   LuxAlphabeticallySortedPipe,
   LuxAppFooterButtonService,
@@ -18,6 +18,7 @@ import { ComponentsOverviewNavigationService } from './components-overview-navig
   selector: 'app-components',
   templateUrl: './components-overview.component.html',
   styleUrls: ['./components-overview.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxAlphabeticallySortedPipe,
     LuxImageComponent,

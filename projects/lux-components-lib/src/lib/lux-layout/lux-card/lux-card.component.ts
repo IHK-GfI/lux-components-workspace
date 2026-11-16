@@ -11,7 +11,8 @@ import {
   OnInit,
   Output,
   QueryList,
-  inject
+  inject,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardSubtitle, MatCardTitle } from '@angular/material/card';
 import { TranslocoPipe } from '@jsverse/transloco';
@@ -47,6 +48,7 @@ import { LuxCardInfoComponent } from './lux-card-subcomponents/lux-card-info.com
     MatCardSubtitle,
     LuxCardHeadingComponent
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: {
     class: 'lux-flex'
   }

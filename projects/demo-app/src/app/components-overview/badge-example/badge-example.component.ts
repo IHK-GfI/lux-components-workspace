@@ -1,5 +1,5 @@
 import { NgStyle } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import {
   LuxBadgeColors,
   LuxBadgeComponent,
@@ -17,6 +17,7 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
 @Component({
   selector: 'app-badge-example',
   templateUrl: './badge-example.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxBadgeComponent,
     LuxLabelComponent,

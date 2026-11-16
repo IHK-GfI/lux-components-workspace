@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 import { Clipboard } from '@angular/cdk/clipboard';
@@ -33,6 +33,7 @@ declare interface SearchBinding {
   selector: 'icon-overview',
   templateUrl: './icon-overview.component.html',
   styleUrls: ['./icon-overview.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxIconComponent,
     LuxCardContentComponent,
