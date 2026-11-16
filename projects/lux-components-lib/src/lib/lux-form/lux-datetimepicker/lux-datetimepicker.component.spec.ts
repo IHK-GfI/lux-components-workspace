@@ -147,6 +147,35 @@ describe('LuxDatetimepickerComponent', () => {
       expect(datepickerComponent.value()).toEqual(utcNullifiedDate.toISOString());
     });
 
+    for (const emptyValue of [null, undefined]) {
+      it(`Sollte die Anzeige leeren, wenn der Wert von außen auf ${emptyValue} zurückgesetzt wird`, async () => {
+        const inputEl: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
+        testComponent.formControl.setValue('2015-06-10T01:23:00.000Z');
+        await LuxTestHelper.wait(fixture);
+        expect(LuxUtil.stringWithoutASCIIChars(inputEl.value)).toEqual('10.06.2015, 01:23');
+
+        testComponent.formControl.setValue(emptyValue);
+        await LuxTestHelper.wait(fixture);
+
+        expect(inputEl.value).toEqual('');
+        expect(datepickerComponent.value()).toBeFalsy();
+      });
+    }
+
+    it('Sollte nicht parsbaren Text beim Normalisieren auf null in der Anzeige behalten', async () => {
+      const inputEl: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
+      testComponent.formControl.setValue('2015-06-10T01:23:00.000Z');
+      await LuxTestHelper.wait(fixture);
+
+      LuxTestHelper.typeInElement(inputEl, 'abc', false);
+      LuxTestHelper.dispatchEvent(inputEl, new Event('focusout'));
+      await LuxTestHelper.wait(fixture);
+
+      expect(testComponent.formControl.value).toBeNull();
+      expect(inputEl.value).toEqual('abc');
+      expect(fixture.debugElement.query(By.css('mat-error'))).not.toBeNull();
+    });
+
     it('Sollte den Wert aktualisieren', async () => {
       await LuxTestHelper.wait(fixture);
       // Vorbedingungen testen
@@ -863,6 +892,38 @@ describe('LuxDatetimepickerComponent', () => {
       // Nachbedingungen testen
       expect(datetimepicker.formControl.hasValidator(datetimepicker.dateTimeValidator)).toBe(true);
       expect(datetimepicker.formControl.hasValidator(Validators.required)).toBe(true);
+    });
+  });
+
+  describe('Zurücksetzen von außen', () => {
+    beforeEach(() => {
+      TestBed.configureTestingModule({
+        providers: [
+          { provide: LOCALE_ID, useValue: usedLocale },
+          { provide: MAT_DATE_LOCALE, useValue: usedLocale }
+        ]
+      });
+    });
+
+    it('Sollte die Fehlermeldung des bisherigen Textes entfernen', async () => {
+      const fixture = TestBed.createComponent(LuxNoFormAttributeTestComponent);
+      const testComponent = fixture.componentInstance;
+      testComponent.value.set('2015-06-10T01:23:00.000Z');
+      await LuxTestHelper.wait(fixture);
+      const inputEl: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
+
+      testComponent.maxDate.set('01.01.2015, 00:00');
+      await LuxTestHelper.wait(fixture);
+      LuxTestHelper.typeInElement(inputEl, '10.06.2015, 01:23', false);
+      LuxTestHelper.dispatchEvent(inputEl, new Event('focusout'));
+      await LuxTestHelper.wait(fixture);
+      expect(fixture.debugElement.query(By.css('mat-error'))).not.toBeNull();
+
+      testComponent.value.set(undefined);
+      await LuxTestHelper.wait(fixture);
+
+      expect(inputEl.value).toEqual('');
+      expect(fixture.debugElement.query(By.css('mat-error'))).toBeNull();
     });
   });
 

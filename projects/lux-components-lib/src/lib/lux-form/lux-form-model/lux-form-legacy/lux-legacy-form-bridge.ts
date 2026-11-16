@@ -463,6 +463,19 @@ export class LuxLegacyFormBridge<T> {
     }
   }
 
+  /**
+   * Meldet einen Wert, den der Host selbst still gesetzt hat (setValue mit emitModelToViewChange: false).
+   *
+   * Ein solcher Aufruf läuft weder über den registerOnChange-Beobachter noch über valueChanges. Ohne
+   * diese Meldung hielte observeValue() den Vorgängerwert für aktuell: Würde das Feld danach von außen
+   * wieder auf genau diesen Wert gesetzt (z.B. form.reset() nach einer Eingabe), bliebe die Änderung
+   * unbemerkt und die Anzeige stehen.
+   */
+  noteSilentValue(value: T) {
+    this.observeValue(value);
+    this.notifiedVersion = this.valueVersion;
+  }
+
   /** Den (noch nicht initialisierten) Startwert setzen, ohne ein Change-Event auszulösen. */
   setInitialValue(value: T) {
     this.initialValue = value;

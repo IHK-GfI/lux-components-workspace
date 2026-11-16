@@ -29,13 +29,12 @@
 | luxImageHeight | string  | Bestimmt die Höhe des Bildes, hier können alle (CSS) bekannten Größen eingegeben werden. Beispiel: luxImageHeight="100%", luxImageHeight="10em", luxImageHeight="100px". Default: 'auto'. |
 | luxRawSrc      | boolean | Deaktiviert wenn "true" jegliche Bearbeitung der luxImageSrc durch diese Component. Dadurch sind relativ liegende Image-Links erreichbar (z.B. /fb/test.png).                             |
 | luxAlt         | string  | Eine Bildbeschreibung.                                                                                                                                                                    |
-| luxClickable   | boolean | Bestimmt, ob das Bild klickbar und per Tastatur fokussierbar ist. Nur wenn "true" gesetzt ist, wird luxClicked ausgelöst. Default: false.                                                 |
 
 ### @Output
 
 | Name          | Typ   | Beschreibung                                                                                                                                                |
 | ------------- | ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| luxClicked    | Event | Wird ausgelöst, wenn auf das Bild geklickt wird. Das Original-Event wird durchgereicht.                                                                     |
+| luxClicked    | Event | Wird ausgelöst, wenn auf das Bild geklickt wird. Das Original-Event wird durchgereicht. Nur wenn auf das Event reagiert wird, ist das Bild klickbar und per Tastatur fokussierbar.                                                                    |
 | luxImageError | Event | Wird ausgelöst, wenn das img-Element ein `error`-Event feuert (z.B. bei 404 oder Netzwerkfehlern). Nützlich, um Fallback-Logik oder Platzhalter anzuzeigen. |
 
 ## Beispiele

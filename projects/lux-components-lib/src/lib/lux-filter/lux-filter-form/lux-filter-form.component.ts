@@ -16,7 +16,7 @@ import {
   output,
   signal
 } from '@angular/core';
-import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { Subscription } from 'rxjs';
 import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.component';
@@ -46,6 +46,7 @@ import {
 import { LuxDialogService } from '../../lux-popups/lux-dialog/lux-dialog.service';
 import { LuxThemePalette } from '../../lux-util/lux-colors.enum';
 import { LuxMediaQueryObserverService } from '../../lux-util/lux-media-query-observer.service';
+import { luxOutputObserved } from '../../lux-util/lux-output-observed';
 import { LuxUtil } from '../../lux-util/lux-util';
 import { LuxFilter } from '../lux-filter-base/lux-filter';
 import { LuxFilterItem } from '../lux-filter-base/lux-filter-item';
@@ -112,8 +113,6 @@ export class LuxFilterFormComponent implements OnInit, AfterViewInit, OnDestroy 
   readonly luxShowAsCard = input(false);
   readonly luxExpandedLabelOpen = input('');
   readonly luxExpandedLabelClose = input('');
-  readonly luxShowSaveAction = input(true);
-  readonly luxShowLoadAction = input(true);
 
   readonly luxFilterExpanded = model(false);
   readonly luxFilterValues = input<any>({});
@@ -147,6 +146,9 @@ export class LuxFilterFormComponent implements OnInit, AfterViewInit, OnDestroy 
   private lastAppliedFilterValues: any = undefined;
 
   private readonly filterValuesSnapshot = computed(() => JSON.parse(JSON.stringify(this.luxFilterValues())));
+  // Die Speichern-/Laden-Aktionen werden nur angeboten, wenn auf luxOnSave bzw. luxOnLoad reagiert wird.
+  protected readonly luxOnSaveObserved = luxOutputObserved(this.luxOnSave);
+  protected readonly luxOnLoadObserved = luxOutputObserved(this.luxOnLoad);
 
   constructor() {
     this.filterForm = new FormGroup({});
@@ -351,7 +353,7 @@ export class LuxFilterFormComponent implements OnInit, AfterViewInit, OnDestroy 
     // D.h. initial gibt es keine Filteritems, aber dann werden die Filteritems über ngAfterContentInit hinzugefügt.
     this.registerFilterItemsTimeout = setTimeout(() => {
       filterItemDirectives.forEach((item) => {
-        this.filterForm.addControl(item.filterItem.binding, item.filterItem.component.formControl);
+        this.addFilterControl(item.filterItem);
         this.formElementes.push(item);
       });
 
@@ -375,6 +377,25 @@ export class LuxFilterFormComponent implements OnInit, AfterViewInit, OnDestroy 
         this.updateFilterChips();
       }
     });
+  }
+
+  /**
+   * Teilen sich mehrere Filterelemente ein Binding (z.B. Datepicker und Timepicker), nimmt das Formular
+   * nur das Control des ersten auf. Werte, die das Formular setzt (Laden, Zurücksetzen, luxFilterValues),
+   * werden deshalb an die weiteren Controls weitergereicht.
+   *
+   * Bewusst über registerOnChange und nicht über valueChanges: valueChanges feuert auch bei einer reinen
+   * Revalidierung und würde mit dem Wert des ersten Controls z.B. eine eingetippte Uhrzeit überschreiben.
+   */
+  private addFilterControl(filterItem: LuxFilterItem<any>) {
+    const registeredControl = this.filterForm.get(filterItem.binding);
+    const control = filterItem.component.formControl;
+
+    if (!registeredControl) {
+      this.filterForm.addControl(filterItem.binding, control);
+    } else if (registeredControl !== control) {
+      (registeredControl as FormControl).registerOnChange((value: any) => control.setValue(value));
+    }
   }
 
   private createFilterObject() {

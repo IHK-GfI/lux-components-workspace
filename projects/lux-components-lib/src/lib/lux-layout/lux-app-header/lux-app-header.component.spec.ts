@@ -87,6 +87,16 @@ describe('LuxAppHeaderComponent', () => {
       expect(onClickSpy).toHaveBeenCalled();
       expect(element.classes['lux-cursor-pointer']).toBe(true);
     });
+
+    it('Ohne luxClicked-Listener sollte der App-Header nicht klickbar dargestellt werden', async () => {
+      const fixture = TestBed.createComponent(MockAppHeaderComponent);
+      fixture.componentInstance.title.set('MyTitle');
+      fixture.componentInstance.titleShort.set('My');
+      await LuxTestHelper.wait(fixture);
+
+      expect(fixture.debugElement.query(By.css('.lux-cursor-pointer'))).toBeNull();
+      expect(fixture.debugElement.query(By.css('[role="link"]'))).toBeNull();
+    });
   });
 
   describe('ohne lux-side-nav und lux-app-header-right-nav', () => {
@@ -569,9 +579,7 @@ describe('LuxAppHeaderComponent', () => {
 });
 
 @Component({
-  template: `
-    <lux-app-header [luxClickable]="true" (luxClicked)="onClicked()" luxAppTitle="MyClickTitle" luxAppTitleShort="MyClick"></lux-app-header>
-  `,
+  template: ` <lux-app-header (luxClicked)="onClicked()" luxAppTitle="MyClickTitle" luxAppTitleShort="MyClick"></lux-app-header> `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxAppHeaderComponent]
 })
@@ -582,7 +590,6 @@ class MockLabelClickedAppHeaderComponent {
 @Component({
   template: `
     <lux-app-header
-      [luxClickable]="true"
       (luxClicked)="onClicked()"
       luxImageSrc="assets/png/example.png"
       luxAppTitle="MyClickTitle"
@@ -599,7 +606,6 @@ class MockImageClickedAppHeaderComponent {
 @Component({
   template: `
     <lux-app-header
-      [luxClickable]="true"
       (luxClicked)="onClicked()"
       luxIconName="lux-interface-user-single"
       luxAppTitle="MyClickTitle"

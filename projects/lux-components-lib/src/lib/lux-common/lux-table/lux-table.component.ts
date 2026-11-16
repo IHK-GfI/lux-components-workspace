@@ -5,6 +5,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  computed,
   contentChildren,
   effect,
   ElementRef,
@@ -54,6 +55,7 @@ import { LuxSelectComponent } from '../../lux-form/lux-select/lux-select.compone
 import { LuxIconComponent } from '../../lux-icon/lux-icon/lux-icon.component';
 import { LuxConsoleService } from '../../lux-util/lux-console.service';
 import { LuxMediaQueryObserverService } from '../../lux-util/lux-media-query-observer.service';
+import { luxOutputObserved } from '../../lux-util/lux-output-observed';
 import { LuxUtil } from '../../lux-util/lux-util';
 import { LuxProgressComponent } from '../lux-progress/lux-progress.component';
 import { ILuxTableColumnVisibilityStore, LuxTableLocalColumnVisibilityStore } from './lux-table-column-visibility-store';
@@ -160,16 +162,6 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, OnDest
       return compareFn;
     }
   });
-
-  // Ersetzen die frühere .observed-Abfrage der obigen Outputs (output() hat kein Äquivalent) -
-  // steuern sowohl die Cursor-Pointer-Darstellung der Row (siehe Template) als auch,
-  // im Fall von luxShowDoubleClickedCursor, das Deaktivieren der Klick-Selektion in
-  // changeSelectedEntry(), wenn extern auf Doppelklick reagiert wird.
-  // luxShowSelectedChangeCursor deckt sowohl luxSelectedChange als auch luxSelectedAsArrayChange
-  // ab, da beide Outputs stets gemeinsam bei derselben Selektionsänderung emittiert werden.
-  readonly luxShowSelectedChangeCursor = input(false);
-  readonly luxShowSingleClickedCursor = input(false);
-  readonly luxShowDoubleClickedCursor = input(false);
 
   readonly luxSelectedChange = output<Set<T>>();
   readonly luxSelectedAsArrayChange = output<T[]>();
@@ -343,6 +335,17 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, OnDest
     }
     return false;
   };
+
+  // Steuern sowohl die Cursor-Pointer-Darstellung der Row (siehe Template) als auch,
+  // im Fall von luxDoubleClickedObserved, das Deaktivieren der Klick-Selektion in
+  // changeSelectedEntry(), wenn extern auf Doppelklick reagiert wird.
+  protected readonly luxDoubleClickedObserved = luxOutputObserved(this.luxDoubleClicked);
+  protected readonly luxSingleClickedObserved = luxOutputObserved(this.luxSingleClicked);
+  private readonly luxSelectedChangeOutputObserved = luxOutputObserved(this.luxSelectedChange);
+  private readonly luxSelectedAsArrayChangeObserved = luxOutputObserved(this.luxSelectedAsArrayChange);
+  protected readonly luxSelectedChangeObserved = computed(
+    () => this.luxSelectedChangeOutputObserved() || this.luxSelectedAsArrayChangeObserved()
+  );
 
   constructor() {
     // Datasource um eigene Filter-Funktionalität ergänzen
@@ -566,7 +569,7 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, OnDest
    */
   changeSelectedEntry(entry: any, checkboxEvent = false) {
     const luxMultiSelectDisabledProperty = this.luxMultiSelectDisabledProperty();
-    if ((luxMultiSelectDisabledProperty && entry[luxMultiSelectDisabledProperty] === true) || this.luxShowDoubleClickedCursor()) {
+    if ((luxMultiSelectDisabledProperty && entry[luxMultiSelectDisabledProperty] === true) || this.luxDoubleClickedObserved()) {
       return;
     }
 

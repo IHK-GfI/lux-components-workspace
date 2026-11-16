@@ -21,6 +21,7 @@ import { LuxComponentsConfigParameters } from '../../lux-components-config/lux-c
 import { LuxComponentsConfigService } from '../../lux-components-config/lux-components-config.service';
 import { LuxTagIdDirective } from '../../lux-directives/lux-tag-id/lux-tag-id.directive';
 import { LuxIconComponent } from '../../lux-icon/lux-icon/lux-icon.component';
+import { luxOutputObserved } from '../../lux-util/lux-output-observed';
 import { LuxUtil } from '../../lux-util/lux-util';
 import { expansionAnim } from './lux-card-model/lux-card-animations';
 import { LuxCardActionsComponent } from './lux-card-subcomponents/lux-card-actions.component';
@@ -64,9 +65,6 @@ export class LuxCardComponent implements AfterViewInit {
   readonly luxHeading = input(2);
   readonly luxExpandedLabelOpen = input('');
   readonly luxExpandedLabelClose = input('');
-  // Ersetzt die frühere .observed-Abfrage von luxClicked (output() hat kein Äquivalent) -
-  // steuert die Klickbar-Darstellung der Card (Cursor, Tabindex).
-  readonly luxClickable = input(false);
   readonly luxExpanded = model(false);
 
   readonly luxAfterExpansion = output<void>();
@@ -108,6 +106,8 @@ export class LuxCardComponent implements AfterViewInit {
   private destroyRef = inject(DestroyRef);
 
   readonly effectiveTagId = computed(() => this.luxTagId() || this.luxTitle());
+  // Steuert die Klickbar-Darstellung der Card (Cursor, Tabindex).
+  protected readonly luxClickedObserved = luxOutputObserved(this.luxClicked);
 
   ngAfterViewInit() {
     // Über die Konfiguration abfragen, ob die Animationen für Cards deaktiviert sind.

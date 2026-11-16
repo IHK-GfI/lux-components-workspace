@@ -1,6 +1,6 @@
 import { describe, it, beforeEach, afterEach, expect, vi } from 'vitest';
 // noinspection DuplicatedCode
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal, viewChild } from '@angular/core';
 import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { MockMediaObserverService } from '../../lux-util/testing/mock-media-observer.service';
 import { ICustomCSSConfig } from './lux-table-custom-css-config.interface';
@@ -1775,7 +1775,7 @@ describe('LuxTableComponent', () => {
 
     it('Setzt ohne Multiselect bei beobachtetem luxSelectedChange einen Cursor', async () => {
       component.dataSource.set([{ c1: 1, c2: 'Hydrogen' }]);
-      component.showSelectedChangeCursor.set(true);
+      component.table().luxSelectedChange.subscribe(() => {});
       await LuxTestHelper.wait(fixture);
 
       const row = getFirstRow();
@@ -1784,7 +1784,7 @@ describe('LuxTableComponent', () => {
 
     it('Setzt Cursor bei beobachtetem luxSingleClicked', async () => {
       component.dataSource.set([{ c1: 1, c2: 'Hydrogen' }]);
-      component.showSingleClickedCursor.set(true);
+      component.table().luxSingleClicked.subscribe(() => {});
       await LuxTestHelper.wait(fixture);
 
       const row = getFirstRow();
@@ -1795,7 +1795,7 @@ describe('LuxTableComponent', () => {
       component.dataSource.set([{ c1: 1, c2: 'Hydrogen' }]);
       component.multiSelect.set(true);
       component.multiSelectOnlyCheckboxClick.set(false);
-      component.showSelectedChangeCursor.set(true);
+      component.table().luxSelectedChange.subscribe(() => {});
       await LuxTestHelper.wait(fixture);
 
       let row = getFirstRow();
@@ -1828,11 +1828,46 @@ describe('LuxTableComponent', () => {
       component.dataSource.set([{ c1: 1, c2: 'Hydrogen' }]);
       component.multiSelect.set(true);
       component.multiSelectOnlyCheckboxClick.set(false);
-      component.showDoubleClickedCursor.set(true);
+      component.table().luxDoubleClicked.subscribe(() => {});
       await LuxTestHelper.wait(fixture);
 
       const row = getFirstRow();
       expect(row.classList.contains('lux-cursor-pointer')).toBe(false);
+    });
+
+    it('Entfernt den Cursor wieder, wenn der Listener abgemeldet wird', async () => {
+      component.dataSource.set([{ c1: 1, c2: 'Hydrogen' }]);
+      const subscription = component.table().luxSingleClicked.subscribe(() => {});
+      await LuxTestHelper.wait(fixture);
+      expect(getFirstRow().classList.contains('lux-cursor-pointer')).toBe(true);
+
+      subscription.unsubscribe();
+      await LuxTestHelper.wait(fixture);
+      expect(getFirstRow().classList.contains('lux-cursor-pointer')).toBe(false);
+    });
+
+    it('Selektiert bei beobachtetem luxDoubleClicked keine Zeile per Klick', async () => {
+      component.dataSource.set([{ c1: 1, c2: 'Hydrogen' }]);
+      component.multiSelect.set(true);
+      component.table().luxDoubleClicked.subscribe(() => {});
+      await LuxTestHelper.wait(fixture);
+
+      getFirstRow().click();
+      await LuxTestHelper.wait(fixture);
+
+      expect(component.table().luxSelected.size).toBe(0);
+    });
+
+    it('Setzt Cursor bei per Template gebundenem luxSelectedAsArrayChange', async () => {
+      const boundFixture = TestBed.createComponent(TableCursorBoundComponent);
+      await LuxTestHelper.wait(boundFixture);
+
+      const row = boundFixture.nativeElement.querySelector('.lux-row') as HTMLElement;
+      expect(row.classList.contains('lux-cursor-pointer')).toBe(true);
+
+      row.click();
+      await LuxTestHelper.wait(boundFixture);
+      expect(boundFixture.componentInstance.selected).toEqual([{ c1: 1, c2: 'Hydrogen' }]);
     });
   });
 });
@@ -1958,14 +1993,7 @@ class TableComponent {
 
 @Component({
   template: `
-    <lux-table
-      [luxData]="dataSource()"
-      [luxMultiSelect]="multiSelect()"
-      [luxMultiSelectOnlyCheckboxClick]="multiSelectOnlyCheckboxClick()"
-      [luxShowSelectedChangeCursor]="showSelectedChangeCursor()"
-      [luxShowSingleClickedCursor]="showSingleClickedCursor()"
-      [luxShowDoubleClickedCursor]="showDoubleClickedCursor()"
-    >
+    <lux-table [luxData]="dataSource()" [luxMultiSelect]="multiSelect()" [luxMultiSelectOnlyCheckboxClick]="multiSelectOnlyCheckboxClick()">
       <lux-table-column luxColumnDef="c1">
         <lux-table-column-header>
           <ng-template>C1</ng-template>
@@ -1992,14 +2020,36 @@ class TableComponent {
   imports: [LuxTableComponent, LuxTableColumnComponent, LuxTableColumnHeaderComponent, LuxTableColumnContentComponent]
 })
 class TableCursorComponent {
+  readonly table = viewChild.required(LuxTableComponent);
+
   dataSource = signal<TableItem[]>([]);
   multiSelect = signal(false);
   multiSelectOnlyCheckboxClick = signal(false);
-  showSelectedChangeCursor = signal(false);
-  showSingleClickedCursor = signal(false);
-  showDoubleClickedCursor = signal(false);
 
   constructor() {}
+}
+
+@Component({
+  template: `
+    <lux-table [luxData]="dataSource()" (luxSelectedAsArrayChange)="selected = $event">
+      <lux-table-column luxColumnDef="c1">
+        <lux-table-column-header>
+          <ng-template>C1</ng-template>
+        </lux-table-column-header>
+        <lux-table-column-content>
+          <ng-template let-element>
+            <span>{{ element.c1 }}</span>
+          </ng-template>
+        </lux-table-column-content>
+      </lux-table-column>
+    </lux-table>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [LuxTableComponent, LuxTableColumnComponent, LuxTableColumnHeaderComponent, LuxTableColumnContentComponent]
+})
+class TableCursorBoundComponent {
+  dataSource = signal<TableItem[]>([{ c1: 1, c2: 'Hydrogen' }]);
+  selected: TableItem[] = [];
 }
 
 @Component({

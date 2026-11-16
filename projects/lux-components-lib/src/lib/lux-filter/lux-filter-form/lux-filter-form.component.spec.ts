@@ -120,6 +120,43 @@ describe('LuxFilterFormComponent', () => {
     expect(spy).toHaveBeenCalledTimes(1);
   });
 
+  describe('Filterelemente mit gemeinsamem Binding', () => {
+    const combinedTimepickerInput = (): HTMLInputElement =>
+      [...(fixture.nativeElement.querySelectorAll('lux-timepicker') as NodeListOf<HTMLElement>)].at(-1)!.querySelector('input')!;
+
+    const settle = async () => {
+      await new Promise((resolve) => setTimeout(resolve, 50));
+      fixture.detectChanges();
+    };
+
+    it('Sollte geladene Werte an den Timepicker weitergeben', async () => {
+      component.initFilter.set({ input: 'Not empty', combinedDateTime: '2020-07-21T14:30:00.000Z' });
+      fixture.detectChanges();
+      await settle();
+
+      expect(combinedTimepickerInput().value).toEqual('14:30');
+    });
+
+    it('Sollte eine eingetippte Uhrzeit beim Zurücksetzen und beim Laden leeren', async () => {
+      const filterComponent = component.filterComponent();
+      component.storedFilters.push({ name: 'leer', data: {} });
+
+      for (const clearFilter of [() => filterComponent.onReset(), () => filterComponent.onLoad('leer')]) {
+        const inputEl = combinedTimepickerInput();
+        inputEl.value = '14:30';
+        inputEl.dispatchEvent(new Event('input'));
+        inputEl.dispatchEvent(new Event('blur'));
+        await settle();
+        expect(inputEl.value).toEqual('14:30');
+
+        clearFilter();
+        await settle();
+
+        expect(inputEl.value).toEqual('');
+      }
+    });
+  });
+
   it('Sollte luxFilterDisabled ohne Endlosschleife umschalten', async () => {
     // formControl.disabled ist im Signal-Forms-Betrieb selbst signalgestützt. Ohne untracked() um
     // die disable()/enable()-Aufrufe koppelte deren Read den Effect der Direktive an
@@ -143,7 +180,38 @@ describe('LuxFilterFormComponent', () => {
     expect(disableSpy.mock.calls.length).toBeLessThan(5);
     expect(enableSpy.mock.calls.length).toBeLessThan(5);
   });
+
+  it('Sollte Speichern/Laden anbieten, wenn auf luxOnSave/luxOnLoad reagiert wird', () => {
+    const filterComponent = component.filterComponent();
+
+    expect(filterComponent['luxOnSaveObserved']()).toBe(true);
+    expect(filterComponent['luxOnLoadObserved']()).toBe(true);
+  });
+
+  it('Sollte Speichern/Laden nicht anbieten, wenn nicht auf luxOnSave/luxOnLoad reagiert wird', () => {
+    const plainFixture = TestBed.createComponent(TestFilterFormWithoutSaveLoadComponent);
+    plainFixture.detectChanges();
+    const filterComponent = plainFixture.componentInstance.filterComponent();
+
+    expect(filterComponent['luxOnSaveObserved']()).toBe(false);
+    expect(filterComponent['luxOnLoadObserved']()).toBe(false);
+  });
 });
+
+@Component({
+  template: `
+    <lux-filter-form (luxOnFilter)="onFilter()">
+      <lux-input luxLabel="Input" luxControlBinding="input" luxFilterItem />
+    </lux-filter-form>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [LuxFilterFormComponent, LuxFilterItemDirective, LuxInputComponent]
+})
+class TestFilterFormWithoutSaveLoadComponent {
+  readonly filterComponent = viewChild.required(LuxFilterFormComponent);
+
+  onFilter() {}
+}
 
 @Component({
   template: `
