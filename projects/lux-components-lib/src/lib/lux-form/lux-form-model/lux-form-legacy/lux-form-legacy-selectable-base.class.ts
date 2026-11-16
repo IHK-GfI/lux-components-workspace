@@ -84,6 +84,11 @@ export abstract class LuxFormLegacySelectableBase<O = any, V = any, P = any>
     this.bridge.markAsTouched();
   }
 
+  override reset() {
+    super.reset();
+    this.bridge.resetInteractionState();
+  }
+
   override markAsDirty() {
     super.markAsDirty();
     this.bridge.markAsDirty();
@@ -104,6 +109,11 @@ export abstract class LuxFormLegacySelectableBase<O = any, V = any, P = any>
    */
   emitValueChange(value: V) {
     this.checkSelectedAndUpdate(value);
+  }
+
+  /** Normalisiert einen als Objekt gesetzten Startwert über luxPickValue (Issue #284). */
+  onFormStartValue(value: V) {
+    this.emitValueChange(value);
   }
 
   getRequiredValidator(): ValidatorFn {

@@ -59,6 +59,21 @@ describe('LuxLookupAutocompleteComponent', () => {
       await LuxTestHelper.wait(fixture);
     });
 
+    it('Sollte aria-invalid dem angezeigten Fehler folgen lassen', async () => {
+      const inputEl: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
+      expect(inputEl.getAttribute('aria-invalid')).toEqual('false');
+
+      component.validators.set(() => ({ min: { min: 5, actual: 1 } }));
+      await LuxTestHelper.wait(fixture);
+      autocomplete.formControl.markAsTouched();
+      await LuxTestHelper.wait(fixture);
+      expect(inputEl.getAttribute('aria-invalid')).toEqual('true');
+
+      component.validators.set(() => null);
+      await LuxTestHelper.wait(fixture);
+      expect(inputEl.getAttribute('aria-invalid')).toEqual('false');
+    });
+
     it('Validatoren setzen und korrekte Fehlermeldung anzeigen', async () => {
       // Vorbedingungen testen
       let errorEl = fixture.debugElement.query(By.css('mat-error'));

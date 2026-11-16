@@ -1,9 +1,9 @@
-import { ChangeDetectionStrategy, Component, inject, OnDestroy, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnDestroy, signal, Type, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormField, disabled, form, hidden, required } from '@angular/forms/signals';
 import { Subscription } from 'rxjs';
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { LuxA11yTestHelper } from '@ihk-gfi/lux-components/test-utils';
+import { LuxA11yTestHelper, LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { LuxMediaQueryObserverService } from '../../lux-util/lux-media-query-observer.service';
 import { LuxFilter } from '../lux-filter-base/lux-filter';
 import { LuxFilterItem } from '../lux-filter-base/lux-filter-item';
@@ -108,7 +108,7 @@ describe('LuxFilterFormComponent', () => {
     expect(component.filterComponent().filterForm.get('combinedDateTime')!.value).toBeUndefined();
 
     // Änderungen durchführen
-    component.initFilter.set({ input: 'Not empty', combinedDateTime: '2020-07-21T14:30:00.000Z' });
+    component.initFilter.set({ input: 'Not empty', combinedDateTime: '2020-07-21T14:30' });
     fixture.detectChanges();
     // Datepicker/Timepicker verzögern ihren Value-Change-Emit per setTimeout (siehe
     // notifyFormValueChangedTimeout), um ein ExpressionChangedAfterChecked zu vermeiden. Ohne
@@ -117,8 +117,8 @@ describe('LuxFilterFormComponent', () => {
 
     // Nachbedingungen prüfen
     expect(component.filterComponent().filterForm.valid).toBe(true);
-    expect(component.filterComponent().filterForm.get('combinedDateTime')!.value).toEqual('2020-07-21T14:30:00.000Z');
-    expect(component.currentFilter.combinedDateTime).toEqual('2020-07-21T14:30:00.000Z');
+    expect(component.filterComponent().filterForm.get('combinedDateTime')!.value).toEqual('2020-07-21T14:30');
+    expect(component.currentFilter.combinedDateTime).toEqual('2020-07-21T14:30');
     expect(spy).toHaveBeenCalledTimes(1);
   });
 
@@ -132,7 +132,7 @@ describe('LuxFilterFormComponent', () => {
     };
 
     it('Sollte geladene Werte an den Timepicker weitergeben', async () => {
-      component.initFilter.set({ input: 'Not empty', combinedDateTime: '2020-07-21T14:30:00.000Z' });
+      component.initFilter.set({ input: 'Not empty', combinedDateTime: '2020-07-21T14:30' });
       fixture.detectChanges();
       await settle();
 
@@ -333,7 +333,7 @@ describe('LuxFilterFormComponent with Signal Forms (inaktive Felder)', () => {
   });
 
   it('zeigt im Datum-Chip das neu gesetzte Datum', async () => {
-    component.values.set({ input: 'Test', datum: '2026-10-01T00:00:00.000Z' });
+    component.values.set({ input: 'Test', datum: '2026-10-01' });
     fixture.detectChanges();
     await fixture.whenStable();
 
@@ -343,6 +343,88 @@ describe('LuxFilterFormComponent with Signal Forms (inaktive Felder)', () => {
       .find((item) => item.binding === 'datum');
     expect(chip?.value).toBe('01.10.2026');
   });
+});
+
+describe('LuxFilterFormComponent: Datepicker und Timepicker mit gemeinsamem Binding', () => {
+  // Regressionstest: Mit luxControlBinding kam eine geänderte Uhrzeit nicht im Filterwert an. Gefiltert und gespeichert
+  // wurde mit 00:00 bzw. der geladenen Uhrzeit, obwohl Feld und Chip die neue Uhrzeit zeigten.
+  const hosts: [string, Type<TestDateTimeFilterHost>][] = [
+    ['luxControlBinding', TestDateTimeFilterLegacyComponent],
+    ['Signal Form', TestDateTimeFilterSignalComponent]
+  ];
+
+  beforeEach(async () => {
+    TestBed.configureTestingModule({
+      providers: [provideHttpClient(withXhr(), withInterceptorsFromDi()), provideHttpClientTesting(), provideLuxTranslocoTesting()]
+    }).compileComponents();
+  });
+
+  for (const [name, type] of hosts) {
+    describe(name, () => {
+      let fixture: ComponentFixture<TestDateTimeFilterHost>;
+      let host: TestDateTimeFilterHost;
+
+      const settle = async () => {
+        await new Promise((resolve) => setTimeout(resolve, 50));
+        fixture.detectChanges();
+        await new Promise((resolve) => setTimeout(resolve, 50));
+        fixture.detectChanges();
+      };
+      const inputs = () => [...(fixture.nativeElement.querySelectorAll('input') as NodeListOf<HTMLInputElement>)];
+      const typeIn = async (index: number, text: string) => {
+        LuxTestHelper.typeInElement(inputs()[index], text);
+        inputs()[index].dispatchEvent(new Event('focusout'));
+        inputs()[index].dispatchEvent(new Event('blur'));
+        await settle();
+      };
+      const filter = async () => {
+        host.filterForm().onFilter();
+        await settle();
+        return host.filtered.at(-1)?.termin;
+      };
+
+      beforeEach(async () => {
+        fixture = TestBed.createComponent(type);
+        host = fixture.componentInstance;
+        fixture.detectChanges();
+        await settle();
+      });
+
+      it('Sollte eine eingetippte Uhrzeit filtern und speichern', async () => {
+        await typeIn(0, '18.06.2026');
+
+        expect(inputs()[1].disabled).toBe(false);
+        expect(inputs()[1].value).toEqual('00:00');
+
+        await typeIn(1, '09:30');
+
+        expect(await filter()).toEqual('2026-06-18T09:30');
+        host.filterForm().onSave('Testfilter');
+        expect(host.saved.at(-1)?.data.termin).toEqual('2026-06-18T09:30');
+      });
+
+      it('Sollte eine in der Liste gewählte Uhrzeit filtern', async () => {
+        await typeIn(0, '18.06.2026');
+        host.timeOpened.set(true);
+        await settle();
+        const options = [...document.querySelectorAll('mat-option')] as HTMLElement[];
+        options.find((option) => option.textContent?.trim() === '10:00')!.click();
+        host.timeOpened.set(false);
+        await settle();
+
+        expect(await filter()).toEqual('2026-06-18T10:00');
+      });
+
+      it('Sollte nach dem Laden eine geänderte Uhrzeit filtern', async () => {
+        host.values.set({ termin: '2026-06-18T14:30' });
+        await settle();
+
+        await typeIn(1, '16:00');
+
+        expect(await filter()).toEqual('2026-06-18T16:00');
+      });
+    });
+  }
 });
 
 @Component({
@@ -646,4 +728,68 @@ class TestFilterFormComponent implements OnDestroy {
 
     return JSON.parse(JSON.stringify(luxFilter.data));
   }
+}
+
+abstract class TestDateTimeFilterHost {
+  abstract readonly filterForm: () => LuxFilterFormComponent;
+  readonly values = signal<any>({});
+  readonly filtered: any[] = [];
+  readonly saved: LuxFilter[] = [];
+  readonly expanded = signal(true);
+  readonly timeOpened = signal(false);
+}
+
+@Component({
+  template: `
+    <lux-filter-form
+      [luxFilterValues]="values()"
+      [(luxFilterExpanded)]="expanded"
+      (luxOnFilter)="filtered.push($event)"
+      (luxOnSave)="saved.push($event)"
+    >
+      <lux-datepicker luxLabel="Datum" luxControlBinding="termin" [luxReferenceControl]="timepicker" luxFilterItem #datepicker />
+      <lux-timepicker
+        luxLabel="Uhrzeit"
+        luxControlBinding="termin"
+        [luxReferenceControl]="datepicker"
+        [luxOpened]="timeOpened()"
+        luxFilterItem
+        #timepicker
+      />
+    </lux-filter-form>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [LuxFilterFormComponent, LuxFilterItemDirective, LuxDatepickerComponent, LuxTimepickerComponent]
+})
+class TestDateTimeFilterLegacyComponent extends TestDateTimeFilterHost {
+  readonly filterForm = viewChild.required(LuxFilterFormComponent);
+}
+
+@Component({
+  template: `
+    <lux-filter-form
+      [luxSignalForm]="form"
+      [luxFilterValues]="values()"
+      [(luxFilterExpanded)]="expanded"
+      (luxOnFilter)="filtered.push($event)"
+      (luxOnSave)="saved.push($event)"
+    >
+      <lux-datepicker luxLabel="Datum" [formField]="form.termin" [luxReferenceControl]="timepicker" luxFilterItem #datepicker />
+      <lux-timepicker
+        luxLabel="Uhrzeit"
+        [formField]="form.termin"
+        [luxReferenceControl]="datepicker"
+        [luxOpened]="timeOpened()"
+        luxFilterItem
+        #timepicker
+      />
+    </lux-filter-form>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [LuxFilterFormComponent, LuxFilterItemDirective, LuxDatepickerComponent, LuxTimepickerComponent, FormField]
+})
+class TestDateTimeFilterSignalComponent extends TestDateTimeFilterHost {
+  readonly filterForm = viewChild.required(LuxFilterFormComponent);
+  readonly model = signal<{ termin: string | null }>({ termin: null });
+  readonly form = form(this.model);
 }

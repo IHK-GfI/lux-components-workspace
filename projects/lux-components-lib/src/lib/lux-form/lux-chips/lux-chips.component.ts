@@ -9,6 +9,7 @@ import {
   OnDestroy,
   computed,
   contentChildren,
+  afterRenderEffect,
   effect,
   inject,
   input,
@@ -85,6 +86,8 @@ export class LuxChipsComponent extends LuxFormLegacyValueBase<string[] | null> i
   readonly chipRowElements = viewChildren(MatChipRow, { read: ElementRef });
   readonly chipTooltips = viewChildren(LuxTooltipDirective);
 
+  readonly matChipGrid = viewChild(MatChipGrid);
+  readonly matChipGridElement = viewChild(MatChipGrid, { read: ElementRef });
   readonly matInput = viewChild('input', { read: ElementRef });
   readonly matAutocompleteTrigger = viewChild('input', { read: MatAutocompleteTrigger });
   readonly matAutocomplete = viewChild('auto', { read: MatAutocomplete });
@@ -120,6 +123,32 @@ export class LuxChipsComponent extends LuxFormLegacyValueBase<string[] | null> i
 
   constructor() {
     super();
+
+    // Fehlermeldung bzw. Hinweis verknüpfen. MatChipGrid gibt die IDs an sein Input weiter. Ohne luxInputAllowed ist
+    // das nur ein unsichtbares Ersatz-Input, dort gehören sie ans Grid. Erst nach dem Rendern, weil MatChipGrid das
+    // Attribut am Grid entfernt, sobald sich ein Input registriert.
+    afterRenderEffect(() => {
+      const describedBy = this.describedBy();
+      const inputAllowed = this.luxInputAllowed();
+
+      this.matChipGrid()?.setDescribedByIds(inputAllowed && describedBy ? [describedBy] : []);
+
+      const gridElement: HTMLElement | undefined = this.matChipGridElement()?.nativeElement;
+      if (!inputAllowed && describedBy) {
+        gridElement?.setAttribute('aria-describedby', describedBy);
+      } else if (!inputAllowed) {
+        gridElement?.removeAttribute('aria-describedby');
+      }
+    });
+
+    // Den angezeigten Fehler an Grid und Input melden. Eine Template-Bindung reicht nicht: Beim ersten Rendern
+    // überschreiben die Host-Bindings von MatChipGrid und MatChipInput das Attribut (false bzw. null).
+    afterRenderEffect(() => {
+      const invalid = String(this.showError());
+
+      this.matChipGridElement()?.nativeElement.setAttribute('aria-invalid', invalid);
+      this.matInput()?.nativeElement.setAttribute('aria-invalid', invalid);
+    });
 
     effect(() => {
       const inputLabel = this.luxInputLabel();

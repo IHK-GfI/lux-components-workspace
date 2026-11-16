@@ -54,7 +54,6 @@ Es wird empfohlen, das Layout mit den Komponenten aus dem Abschnitt [Layout](#la
 - [lux-checkbox](lux‐checkbox-v22)
 - [lux-chips](lux‐chips-v22)
 - [lux-datepicker](lux‐datepicker-v22)
-- [lux-datetimepicker](lux‐datetimepicker-v22)
 - [lux-file-input](lux‐file‐input-v22)
 - [lux-file-list](lux‐file‐list-v22)
 - [lux-file-upload](lux‐file‐upload-v22)

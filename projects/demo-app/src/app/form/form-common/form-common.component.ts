@@ -13,7 +13,6 @@ import {
   LuxChipsComponent,
   LuxConsoleService,
   LuxDatepickerComponent,
-  LuxDatetimepickerComponent,
   LuxFileInputComponent,
   LuxIconComponent,
   LuxInputComponent,
@@ -67,7 +66,6 @@ interface FormCommonState extends FormExampleSnapshot<FormCommonModel> {
     LuxIconComponent,
     LuxCardContentComponent,
     LuxCardComponent,
-    LuxDatetimepickerComponent,
     LuxFileInputComponent,
     LuxSliderComponent,
     LuxTimepickerComponent,
@@ -115,7 +113,7 @@ export class FormCommonComponent {
     chipsDeletable: [...this.chipItems],
     chipsFix: [...this.chipItems2],
     radio: this.hobbies[2],
-    datepicker: '2018-12-01T00:00:00.000Z',
+    datepicker: '2018-12-01',
     autocomplete: this.chipItems2[1],
     comment: null
   });

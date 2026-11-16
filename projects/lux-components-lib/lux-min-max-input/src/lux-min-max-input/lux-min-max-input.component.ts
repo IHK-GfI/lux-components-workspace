@@ -84,7 +84,7 @@ export class LuxMinMaxInputComponent<T extends number | string = number | string
 
   /** Feldtyp beider Seiten: Zahlenfeld oder Datepicker. */
   readonly luxType = input<LuxMinMaxType>('number');
-  /** Aktueller Bereich; ein leeres Feld fehlt im Objekt. Ändert sich nur bei gültigem Bereich. Zahl als number, Datum als ISO-String. */
+  /** Aktueller Bereich; ein leeres Feld fehlt im Objekt. Ändert sich nur bei gültigem Bereich. Zahl als number, Datum als "yyyy-MM-dd". */
   readonly luxValue = model<LuxMinMaxValue<T>>(EMPTY_RANGE);
   /** Sichtbare Gruppenlegende; ohne Angabe nur für Screenreader ("Wertebereich"). */
   readonly luxLabel = input<string>('');
@@ -153,7 +153,7 @@ export class LuxMinMaxInputComponent<T extends number | string = number | string
     };
   });
 
-  // Für den Datepicker als ISO-String; null hebt eine Kalendersperre wieder auf.
+  // Für den Datepicker als "yyyy-MM-dd"; null hebt eine Kalendersperre wieder auf.
   protected readonly dateLimits = computed(() => this.limitsFor('date', (bound) => (typeof bound === 'string' ? bound : null)));
 
   // Für das Zahlenfeld als min/max-Attribut; undefined entfernt das Attribut.
@@ -345,7 +345,7 @@ export class LuxMinMaxInputComponent<T extends number | string = number | string
     }
     const lang = this.lang();
     if (this.luxType() === 'date') {
-      // LUX speichert Kalendertage als UTC-Mitternacht.
+      // Ein Tag "yyyy-MM-dd" wird als UTC-Mitternacht gelesen und deshalb auch in UTC formatiert.
       return new Intl.DateTimeFormat(lang, { dateStyle: 'short', timeZone: 'UTC' }).format(new Date(raw as string | number));
     }
     // Ohne Rundung, sonst nennt die Meldung einen anderen Grenzwert als den geprüften.

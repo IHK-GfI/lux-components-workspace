@@ -31,7 +31,7 @@ jobs:
             TZ=$tz npx ng test lux-components-lib --watch=false \
               --include='src/lib/lux-util/**/*.spec.ts' \
               --include='src/lib/lux-form/lux-datepicker/**/*.spec.ts' \
-              --include='src/lib/lux-form/lux-datetimepicker/**/*.spec.ts' \
               --include='src/lib/lux-form/lux-timepicker/**/*.spec.ts' \
+              --include='src/lib/lux-filter/**/*.spec.ts' \
               --include='src/lib/lux-lookup/**/*.spec.ts'
           done

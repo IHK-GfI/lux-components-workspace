@@ -33,9 +33,9 @@ import { LuxNameDirective } from '../lux-form-control/lux-form-directives/lux-na
 import { LuxValidationErrors } from '../lux-form-model/lux-form-component-base.class';
 import { provideLuxFormControl } from '../lux-form-model/lux-form-control-base.class';
 import { LuxFormLegacyValueBase } from '../lux-form-model/lux-form-legacy/lux-form-legacy-value-base.class';
+import { LuxMatInputErrorDirective } from '../lux-form-model/lux-mat-input-error.directive';
 import { LuxInputPrefixComponent } from '../lux-input/lux-input-subcomponents/lux-input-prefix.component';
 import { LuxInputSuffixComponent } from '../lux-input/lux-input-subcomponents/lux-input-suffix.component';
-import { LuxMatInputErrorStateDirective } from '../lux-form-model/lux-mat-input-error-state.directive';
 
 @Component({
   selector: 'lux-autocomplete, lux-autocomplete-ac',
@@ -44,10 +44,10 @@ import { LuxMatInputErrorStateDirective } from '../lux-form-model/lux-mat-input-
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [provideLuxFormControl(() => LuxAutocompleteComponent)],
   imports: [
-    LuxMatInputErrorStateDirective,
     LuxFormControlWrapperComponent,
     MatPrefix,
     MatInput,
+    LuxMatInputErrorDirective,
     MatAutocompleteTrigger,
     LuxNameDirective,
     MatSuffix,

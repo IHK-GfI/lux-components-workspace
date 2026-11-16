@@ -381,6 +381,92 @@ describe('LuxChipComponent-Authentic', () => {
   });
 
   describe('Formular', () => {
+    it('Sollte aria-invalid am Eingabefeld dem angezeigten Fehler folgen lassen', async () => {
+      const localFixture = TestBed.createComponent(LuxFormRequiredValueComponent);
+      const testComponent = localFixture.componentInstance;
+      await LuxTestHelper.wait(localFixture);
+      const inputEl: HTMLInputElement = localFixture.debugElement.query(By.css('input')).nativeElement;
+      expect(inputEl.getAttribute('aria-invalid')).toEqual('false');
+
+      testComponent.form.get('names')!.markAsTouched();
+      await LuxTestHelper.wait(localFixture);
+      expect(inputEl.getAttribute('aria-invalid')).toEqual('true');
+
+      testComponent.form.get('names')!.setValue(['Emma']);
+      await LuxTestHelper.wait(localFixture);
+      expect(inputEl.getAttribute('aria-invalid')).toEqual('false');
+    });
+
+    it('Sollte die Fehlermeldung per aria-describedby mit dem Eingabefeld verknüpfen', async () => {
+      const localFixture = TestBed.createComponent(LuxFormRequiredValueComponent);
+      const testComponent = localFixture.componentInstance;
+      await LuxTestHelper.wait(localFixture);
+      const inputEl: HTMLInputElement = localFixture.debugElement.query(By.css('input')).nativeElement;
+      expect(inputEl.hasAttribute('aria-describedby')).toBe(false);
+
+      testComponent.form.get('names')!.markAsTouched();
+      await LuxTestHelper.wait(localFixture);
+      const errorEl: HTMLElement = localFixture.debugElement.query(By.css('mat-error')).nativeElement;
+      expect(inputEl.getAttribute('aria-describedby')).toEqual(errorEl.id);
+
+      testComponent.form.get('names')!.setValue(['Emma']);
+      await LuxTestHelper.wait(localFixture);
+      expect(inputEl.hasAttribute('aria-describedby')).toBe(false);
+    });
+
+    it('Sollte den Hinweis per aria-describedby mit dem Eingabefeld verknüpfen', async () => {
+      const localFixture = TestBed.createComponent(LuxChipsHintComponent);
+      await LuxTestHelper.wait(localFixture);
+
+      const inputEl: HTMLInputElement = localFixture.debugElement.query(By.css('input')).nativeElement;
+      const hintEl: HTMLElement = localFixture.debugElement.query(By.css('mat-hint')).nativeElement;
+      expect(inputEl.getAttribute('aria-describedby')).toEqual(hintEl.id);
+    });
+
+    it('Sollte aria-invalid ohne Eingabefeld am Grid setzen', async () => {
+      const localFixture = TestBed.createComponent(LuxChipsHintComponent);
+      localFixture.componentInstance.inputAllowed.set(false);
+      localFixture.componentInstance.required.set(true);
+      await LuxTestHelper.wait(localFixture);
+      const gridEl: HTMLElement = localFixture.debugElement.query(By.css('mat-chip-grid')).nativeElement;
+      expect(gridEl.getAttribute('aria-invalid')).toEqual('false');
+
+      const chipsComponent: LuxChipsComponent = localFixture.debugElement.query(By.directive(LuxChipsComponent)).componentInstance;
+      chipsComponent.markAsTouched();
+      await LuxTestHelper.wait(localFixture);
+      expect(chipsComponent.showError()).toBe(true);
+      expect(gridEl.getAttribute('aria-invalid')).toEqual('true');
+    });
+
+    it('Sollte aria-invalid auch bei einem schon berührten FormControl von Anfang an setzen', async () => {
+      // z.B. wenn die Komponente in einem @if oder Tab neu aufgebaut wird
+      const localFixture = TestBed.createComponent(LuxFormRequiredValueComponent);
+      localFixture.componentInstance.form.get('names')!.markAsTouched();
+      await LuxTestHelper.wait(localFixture);
+
+      expect(localFixture.debugElement.query(By.css('input')).nativeElement.getAttribute('aria-invalid')).toEqual('true');
+      expect(localFixture.debugElement.query(By.css('mat-chip-grid')).nativeElement.getAttribute('aria-invalid')).toEqual('true');
+    });
+
+    it('Sollte aria-describedby ohne Eingabefeld am Grid setzen', async () => {
+      const localFixture = TestBed.createComponent(LuxChipsHintComponent);
+      localFixture.componentInstance.inputAllowed.set(false);
+      await LuxTestHelper.wait(localFixture);
+
+      const gridEl: HTMLElement = localFixture.debugElement.query(By.css('mat-chip-grid')).nativeElement;
+      const hintEl: HTMLElement = localFixture.debugElement.query(By.css('mat-hint')).nativeElement;
+      expect(gridEl.getAttribute('aria-describedby')).toEqual(hintEl.id);
+      // Das unsichtbare Ersatz-Input bleibt ohne Verknüpfung
+      expect(localFixture.debugElement.query(By.css('input.lux-display-none')).nativeElement.hasAttribute('aria-describedby')).toBe(false);
+
+      // Wird die Eingabe erlaubt, wandert die Verknüpfung an das sichtbare Eingabefeld
+      localFixture.componentInstance.inputAllowed.set(true);
+      await LuxTestHelper.wait(localFixture);
+
+      expect(gridEl.hasAttribute('aria-describedby')).toBe(false);
+      expect(localFixture.debugElement.query(By.css('input')).nativeElement.getAttribute('aria-describedby')).toEqual(hintEl.id);
+    });
+
     it('Sollte die Werte aus dem initialen Array anzeigen', async () => {
       const localFixture = TestBed.createComponent(LuxFormInitValueComponent);
       const testComponent = localFixture.componentInstance;
@@ -781,6 +867,17 @@ class LuxScrollComponent {
 class LuxStrictNoFormComponent {
   strict = signal(false);
   chips: string[] = [];
+}
+
+@Component({
+  selector: 'lux-chips-hint-component',
+  template: `<lux-chips luxLabel="Label" luxHint="Hinweis" [luxInputAllowed]="inputAllowed()" [luxRequired]="required()"></lux-chips>`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [LuxChipsComponent]
+})
+class LuxChipsHintComponent {
+  readonly inputAllowed = signal(true);
+  readonly required = signal(false);
 }
 
 @Component({

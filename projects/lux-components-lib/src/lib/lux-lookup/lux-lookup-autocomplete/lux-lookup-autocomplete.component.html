@@ -12,7 +12,7 @@
       type="text"
       [placeholder]="luxPlaceholder()"
       matInput
-      [luxMatInputErrorState]="matInputErrorState()"
+      [luxMatInputError]="showError()"
       [matAutocomplete]="auto"
       (click)="onClick($event)"
       autocomplete="off"

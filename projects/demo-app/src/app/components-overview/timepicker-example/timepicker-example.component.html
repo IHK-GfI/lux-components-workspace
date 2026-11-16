@@ -86,7 +86,7 @@
         luxTagId="timepicker-plain-value"
       >
       </lux-timepicker>
-      <example-value [value]="plainValue()" suffix="(ISO-Uhrzeit)"></example-value>
+      <example-value [value]="plainValue()"></example-value>
     </div>
     <div class="lux-flex lux-flex-col">
       <h3 class="deprecated">Freistehend &mdash; <code>[(luxValue)] @deprecated</code></h3>
@@ -116,13 +116,47 @@
         luxTagId="timepicker-plain-lux-value"
       >
       </lux-timepicker>
-      <example-value [value]="value()" suffix="(ISO-Uhrzeit)"></example-value>
+      <example-value [value]="value()"></example-value>
     </div>
     <div class="lux-flex lux-flex-col">
-      <h3>Kombination: Signal Form &mdash; <code>[formField]</code></h3>
+      <h3>Datum und Uhrzeit, getrennte Werte: Signal Form &mdash; <code>[formField]</code></h3>
       <div class="lux-flex lux-gap-4 lt-sm:lux-flex-col lt-sm:lux-gap-0">
         <lux-datepicker
-          class="lux-flex-auto"
+          class="lux-flex-1"
+          [luxDense]="denseFormat()"
+          [luxPlaceholder]="placeholder()"
+          luxLabel="Datum"
+          [luxHint]="hint()"
+          [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
+          [luxShowToggle]="showToggle()"
+          [formField]="separateSignalForm.datum"
+        />
+        <lux-timepicker
+          class="lux-flex-1"
+          [luxOpened]="opened()"
+          [luxMinTime]="minTime()"
+          [luxMaxTime]="maxTime()"
+          [luxInterval]="interval()"
+          [luxDense]="denseFormat()"
+          [luxPlaceholder]="placeholder()"
+          luxLabel="Uhrzeit"
+          [luxHint]="hint()"
+          [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
+          [luxShowToggle]="showToggle()"
+          [formField]="separateSignalForm.uhrzeit"
+          [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
+          [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
+        />
+      </div>
+      <example-value [value]="separateCombined()" suffix="(LuxUtil.combineDateTime)"></example-value>
+    </div>
+    <div class="lux-flex lux-flex-col">
+      <h3>Datum und Uhrzeit, gemeinsamer Wert: Signal Form &mdash; <code>[formField]</code></h3>
+      <div class="lux-flex lux-gap-4 lt-sm:lux-flex-col lt-sm:lux-gap-0">
+        <lux-datepicker
+          class="lux-flex-1"
+          [luxMinDate]="limitMinDate()"
+          [luxMaxDate]="limitMaxDate()"
           [luxDense]="denseFormat()"
           [luxPlaceholder]="placeholder()"
           [luxLabel]="label()"
@@ -135,10 +169,10 @@
         >
         </lux-datepicker>
         <lux-timepicker
-          class="lux-flex-auto"
+          class="lux-flex-1"
           [luxOpened]="opened()"
-          [luxMinTime]="minTime()"
-          [luxMaxTime]="maxTime()"
+          [luxMinTime]="minTimeFor(combinedSignalModel().combinedValue)"
+          [luxMaxTime]="maxTimeFor(combinedSignalModel().combinedValue)"
           [luxInterval]="interval()"
           [luxDense]="denseFormat()"
           [luxPlaceholder]="placeholder()"
@@ -147,8 +181,9 @@
           [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
           [luxShowToggle]="showToggle()"
           [luxReferenceControl]="combinedDatepickerSignalForm"
+          [luxDefaultTime]="defaultTime()"
           [formField]="combinedSignalForm.combinedValue"
-          [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
+          [luxErrorMessage]="combinedErrorMessage()"
           [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
           (luxFocus)="log(showOutputEvents(), 'luxFocus', $event)"
           (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
@@ -161,10 +196,12 @@
       <example-signal-form-value [field]="combinedSignalForm.combinedValue"></example-signal-form-value>
     </div>
     <div class="lux-flex lux-flex-col" [formGroup]="form">
-      <h3 class="deprecated">Kombination: Reactive-Form &mdash; <code>luxControlBinding</code></h3>
+      <h3 class="deprecated">Datum und Uhrzeit, gemeinsamer Wert: Reactive-Form &mdash; <code>luxControlBinding</code></h3>
       <div class="lux-flex lux-gap-4 lt-sm:lux-flex-col lt-sm:lux-gap-0">
         <lux-datepicker
-          class="lux-flex-auto"
+          class="lux-flex-1"
+          [luxMinDate]="limitMinDate()"
+          [luxMaxDate]="limitMaxDate()"
           [(luxDisabled)]="disabled"
           [luxReadonly]="readonly()"
           [luxDense]="denseFormat()"
@@ -179,10 +216,10 @@
         >
         </lux-datepicker>
         <lux-timepicker
-          class="lux-flex-auto"
+          class="lux-flex-1"
           [luxOpened]="opened()"
-          [luxMinTime]="minTime()"
-          [luxMaxTime]="maxTime()"
+          [luxMinTime]="minTimeFor(combinedFormValue())"
+          [luxMaxTime]="maxTimeFor(combinedFormValue())"
           [luxInterval]="interval()"
           [(luxDisabled)]="disabled"
           [luxReadonly]="readonly()"
@@ -193,8 +230,9 @@
           [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
           [luxShowToggle]="showToggle()"
           [luxReferenceControl]="combinedDatepickerInForm"
+          [luxDefaultTime]="defaultTime()"
           [luxControlBinding]="controlBindingCombined"
-          [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
+          [luxErrorMessage]="combinedErrorMessage()"
           [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
           (luxFocus)="log(showOutputEvents(), 'luxFocus', $event)"
           (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
@@ -204,17 +242,15 @@
         >
         </lux-timepicker>
       </div>
-      <p class="lux-text-highlight-alert lux-text-xs lux-p-2">
-        In diesem Beispiel wird der Wert nur direkt aktualisiert, wenn man die Picker verwendet, ansonsten erst, wenn der Fokus verloren
-        geht (updateOn: 'blur').
-      </p>
       <example-form-value [form]="form" [controlBinding]="controlBindingCombined"></example-form-value>
     </div>
     <div class="lux-flex lux-flex-col">
-      <h3>Kombination: Freistehend &mdash; <code>[(value)]</code></h3>
+      <h3>Datum und Uhrzeit, gemeinsamer Wert: Freistehend &mdash; <code>[(value)]</code></h3>
       <div class="lux-flex lux-gap-4 lt-sm:lux-flex-col lt-sm:lux-gap-0">
         <lux-datepicker
-          class="lux-flex-auto"
+          class="lux-flex-1"
+          [luxMinDate]="limitMinDate()"
+          [luxMaxDate]="limitMaxDate()"
           [(luxDisabled)]="disabled"
           [luxReadonly]="readonly()"
           [luxDense]="denseFormat()"
@@ -230,10 +266,10 @@
         >
         </lux-datepicker>
         <lux-timepicker
-          class="lux-flex-auto"
+          class="lux-flex-1"
           [luxOpened]="opened()"
-          [luxMinTime]="minTime()"
-          [luxMaxTime]="maxTime()"
+          [luxMinTime]="minTimeFor(combinedPlainValue())"
+          [luxMaxTime]="maxTimeFor(combinedPlainValue())"
           [luxInterval]="interval()"
           [(luxDisabled)]="disabled"
           [luxReadonly]="readonly()"
@@ -245,8 +281,9 @@
           [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
           [luxShowToggle]="showToggle()"
           [luxReferenceControl]="combinedDatepickerPlainValue"
+          [luxDefaultTime]="defaultTime()"
           [(value)]="combinedPlainValue"
-          [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
+          [luxErrorMessage]="combinedErrorMessage()"
           [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
           (luxFocus)="log(showOutputEvents(), 'luxFocus', $event)"
           (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
@@ -256,13 +293,15 @@
         >
         </lux-timepicker>
       </div>
-      <example-value [value]="combinedPlainValue()" suffix="(kombinierter ISO-Wert)"></example-value>
+      <example-value [value]="combinedPlainValue()"></example-value>
     </div>
     <div class="lux-flex lux-flex-col">
-      <h3 class="deprecated">Kombination: Freistehend &mdash; <code>[(luxValue)] @deprecated</code></h3>
+      <h3 class="deprecated">Datum und Uhrzeit, gemeinsamer Wert: Freistehend &mdash; <code>[(luxValue)] @deprecated</code></h3>
       <div class="lux-flex lux-gap-4 lt-sm:lux-flex-col lt-sm:lux-gap-0">
         <lux-datepicker
-          class="lux-flex-auto"
+          class="lux-flex-1"
+          [luxMinDate]="limitMinDate()"
+          [luxMaxDate]="limitMaxDate()"
           [(luxDisabled)]="disabled"
           [luxReadonly]="readonly()"
           [luxDense]="denseFormat()"
@@ -278,10 +317,10 @@
         >
         </lux-datepicker>
         <lux-timepicker
-          class="lux-flex-auto"
+          class="lux-flex-1"
           [luxOpened]="opened()"
-          [luxMinTime]="minTime()"
-          [luxMaxTime]="maxTime()"
+          [luxMinTime]="minTimeFor(combinedISO())"
+          [luxMaxTime]="maxTimeFor(combinedISO())"
           [luxInterval]="interval()"
           [(luxDisabled)]="disabled"
           [luxReadonly]="readonly()"
@@ -293,8 +332,9 @@
           [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
           [luxShowToggle]="showToggle()"
           [luxReferenceControl]="combinedDatepicker"
+          [luxDefaultTime]="defaultTime()"
           [(luxValue)]="combinedISO"
-          [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
+          [luxErrorMessage]="combinedErrorMessage()"
           [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
           (luxFocus)="log(showOutputEvents(), 'luxFocus', $event)"
           (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
@@ -304,7 +344,7 @@
         >
         </lux-timepicker>
       </div>
-      <example-value [value]="combinedISO()" suffix="(kombinierter ISO-Wert)"></example-value>
+      <example-value [value]="combinedISO()"></example-value>
     </div>
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
@@ -404,6 +444,36 @@
     </lux-input>
     <lux-input luxName="timepicker_maxTime" luxLabel="luxMaxTime" [(value)]="maxTime">
       <lux-form-hint>Maximale Zeit, z.B. 18:00.</lux-form-hint>
+    </lux-input>
+    <lux-input luxName="timepicker_defaultTime" luxLabel="luxDefaultTime" [(value)]="defaultTime">
+      <lux-form-hint>
+        Uhrzeit beim gemeinsamen Wert mit einem Datepicker, die beim ersten Datum bzw. beim Leeren der Uhrzeit gesetzt wird, z.B. 08:00.
+      </lux-form-hint>
+    </lux-input>
+    <lux-toggle
+      luxLabel="Grenzen aus Datum und Uhrzeit"
+      luxHint="Beispiele mit gemeinsamem Wert: Die Uhrzeit-Grenzen gelten nur am ersten und am letzten Tag, auch in der Auswahlliste."
+      [(checked)]="useDateTimeLimits"
+      [luxNoTopLabel]="true"
+    >
+    </lux-toggle>
+    <lux-toggle
+      luxLabel="Eigener Validator"
+      luxHint="Beispiel mit gemeinsamem Wert im Signal Form: nicht vor dem frühesten und nicht nach dem spätesten Termin. Der Fehler erscheint an beiden Feldern."
+      [(checked)]="useCustomValidator"
+      [luxNoTopLabel]="true"
+    >
+    </lux-toggle>
+    <lux-input
+      luxName="timepicker_earliestDateTime"
+      luxLabel="Frühester Termin"
+      [luxDisabled]="!limitsActive()"
+      [(value)]="earliestDateTime"
+    >
+      <lux-form-hint>Untere Grenze für die beiden Schalter darüber, z.B. 2026-06-18T14:30.</lux-form-hint>
+    </lux-input>
+    <lux-input luxName="timepicker_latestDateTime" luxLabel="Spätester Termin" [luxDisabled]="!limitsActive()" [(value)]="latestDateTime">
+      <lux-form-hint>Obere Grenze für die beiden Schalter darüber, z.B. 2026-06-20T10:00.</lux-form-hint>
     </lux-input>
     <lux-toggle
       luxLabel="luxErrorMessage verwenden"

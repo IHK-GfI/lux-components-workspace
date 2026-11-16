@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { LuxInputComponent, LuxSelectComponent, LuxToggleComponent } from '@ihk-gfi/lux-components';
+import { LuxInputComponent, LuxSelectComponent, LuxToggleComponent, LuxUtil } from '@ihk-gfi/lux-components';
 import { LuxMinMaxBounds, LuxMinMaxInputComponent, LuxMinMaxValue } from '@ihk-gfi/lux-components/lux-min-max-input';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
@@ -10,11 +10,6 @@ import { logResult } from '../../example-base/example-base-util/example-base-hel
 import { ExampleFormDisableComponent } from '../../example-base/example-form-disable/example-form-disable.component';
 import { ExampleFormValueComponent } from '../../example-base/example-form-value/example-form-value.component';
 import { ExampleValueComponent } from '../../example-base/example-value/example-value.component';
-
-const DAY_IN_MS = 24 * 60 * 60 * 1000;
-
-/** Verschiebt einen ISO-Kalendertag (UTC-Mitternacht) um die angegebene Anzahl Tage. */
-const addDays = (iso: string, days: number): string => new Date(Date.parse(iso) + days * DAY_IN_MS).toISOString();
 
 @Component({
   selector: 'app-min-max-input-example',
@@ -84,6 +79,6 @@ export class MinMaxInputExampleComponent {
     if (!this.limitToWeek() || !von) {
       return undefined;
     }
-    return { min: von, max: addDays(von, 7) };
+    return { min: von, max: LuxUtil.addDays(von, 7) ?? undefined };
   });
 }

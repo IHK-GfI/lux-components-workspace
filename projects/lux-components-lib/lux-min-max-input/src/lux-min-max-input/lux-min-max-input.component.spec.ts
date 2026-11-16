@@ -455,7 +455,7 @@ describe('LuxMinMaxInputComponent', () => {
     it('Sollte einen zusammen mit dem Typwechsel gesetzten Wert übernehmen', async () => {
       await setup();
       fixture.componentRef.setInput('luxType', 'date');
-      fixture.componentRef.setInput('luxValue', { min: '2026-05-10T00:00:00.000Z' });
+      fixture.componentRef.setInput('luxValue', { min: '2026-05-10' });
       await settle();
 
       expect(inputs()[0].value).not.toBe('');
@@ -464,7 +464,7 @@ describe('LuxMinMaxInputComponent', () => {
   });
 
   describe('date', () => {
-    const YEAR = { min: '2026-01-01T00:00:00.000Z', max: '2026-12-31T00:00:00.000Z' };
+    const YEAR = { min: '2026-01-01', max: '2026-12-31' };
 
     it('Sollte den Datepicker rendern und die Grenzen als luxMinDate und luxMaxDate übergeben', async () => {
       await setup({ luxType: 'date', luxBounds: YEAR });
@@ -476,12 +476,12 @@ describe('LuxMinMaxInputComponent', () => {
 
     it('Sollte jeden Kalender durch den Nachbarwert vorbegrenzen und die Sperre nach dem Leeren aufheben', async () => {
       await setup({ luxType: 'date', luxBounds: YEAR });
-      fixture.componentRef.setInput('luxValue', { min: '2026-05-10T00:00:00.000Z', max: '2026-06-01T00:00:00.000Z' });
+      fixture.componentRef.setInput('luxValue', { min: '2026-05-10', max: '2026-06-01' });
       await settle();
 
       expect(pickers().map((p) => [p.luxMinDate(), p.luxMaxDate()])).toEqual([
-        [YEAR.min, '2026-06-01T00:00:00.000Z'],
-        ['2026-05-10T00:00:00.000Z', YEAR.max]
+        [YEAR.min, '2026-06-01'],
+        ['2026-05-10', YEAR.max]
       ]);
 
       fixture.componentRef.setInput('luxValue', {});
@@ -506,12 +506,12 @@ describe('LuxMinMaxInputComponent', () => {
       await setup({
         luxType: 'date',
         luxBounds: YEAR,
-        luxMaxFieldBounds: { min: '2026-12-28T00:00:00.000Z', max: '2027-01-05T00:00:00.000Z' }
+        luxMaxFieldBounds: { min: '2026-12-28', max: '2027-01-05' }
       });
 
       expect(pickers().map((p) => [p.luxMinDate(), p.luxMaxDate()])).toEqual([
         [YEAR.min, YEAR.max],
-        ['2026-12-28T00:00:00.000Z', YEAR.max]
+        ['2026-12-28', YEAR.max]
       ]);
     });
 
@@ -525,8 +525,8 @@ describe('LuxMinMaxInputComponent', () => {
     });
 
     it('Sollte die Kalendersperre von Bis aufheben, wenn Von geleert wird', async () => {
-      await setup({ luxType: 'date' }, { min: '2026-05-10T00:00:00.000Z' });
-      expect(pickers()[1].luxMinDate()).toBe('2026-05-10T00:00:00.000Z');
+      await setup({ luxType: 'date' }, { min: '2026-05-10' });
+      expect(pickers()[1].luxMinDate()).toBe('2026-05-10');
 
       await typeInto(0, '');
       await blur(0);
@@ -536,14 +536,14 @@ describe('LuxMinMaxInputComponent', () => {
 
     it('Sollte den Bereich in der gemeinsamen Meldung nennen, wenn das Bis-Datum vor dem Von-Datum liegt', async () => {
       await fieldType('date');
-      fixture.componentRef.setInput('luxValue', { min: '2026-05-10T00:00:00.000Z', max: '2026-05-01T00:00:00.000Z' });
+      fixture.componentRef.setInput('luxValue', { min: '2026-05-10', max: '2026-05-01' });
       await settle();
       await blur(1);
 
       expect(messageText()).toBe('Bis: Der Wert darf nicht kleiner als 10.05.26 sein.');
       expect(emitted).toEqual([]);
 
-      fixture.componentRef.setInput('luxValue', { min: '2026-05-10T00:00:00.000Z', max: '2026-06-01T00:00:00.000Z' });
+      fixture.componentRef.setInput('luxValue', { min: '2026-05-10', max: '2026-06-01' });
       await settle();
       expect(messageText()).toBe('');
     });

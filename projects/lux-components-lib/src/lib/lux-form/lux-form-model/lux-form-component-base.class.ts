@@ -149,8 +149,7 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
    * um ein "stilles" internes Nachziehen ohne doppeltes valueChanges-Event umzusetzen), bleibt
    * markForCheck() aus - die Komponente muss dann selbst this.cdr.markForCheck() aufrufen, sonst
    * bleiben touched/invalid/errorMessage bis zur nächsten zufällig ausgelösten Prüfung veraltet.
-   * Siehe lux-chips-ac.component.ts (syncFormControlWithStandaloneChips) sowie
-   * lux-datepicker-ac.component.ts/lux-datetimepicker-ac.component.ts (setISOValue) als Beispiele.
+   * Siehe lux-chips-ac.component.ts (syncFormControlWithStandaloneChips) als Beispiel.
    */
   readonly touched = signal(false);
   readonly invalid = signal(false);
@@ -173,11 +172,11 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
   protected latestErrors: any = null;
   protected _initialValue?: any;
   private a11yNameCheckTimeout?: ReturnType<typeof setTimeout>;
-  // Von Subklassen (z.B. Datepicker/Datetimepicker/Timepicker) genutzt, um den ValueChange-Emit
+  // Von Subklassen genutzt, um den ValueChange-Emit
   // in einen setTimeout auszulagern (vermeidet ExpressionChangedAfterChecked, siehe dortige
   // notifyFormValueChanged-Overrides) und diesen beim Zerstören der Komponente abzubrechen.
   protected notifyFormValueChangedTimeout?: ReturnType<typeof setTimeout>;
-  // Von Time-/Datetimepicker genutzt, um das Öffnen/Schließen des Overlays (abhängig von
+  // Von Subklassen genutzt, um das Öffnen/Schließen des Overlays (abhängig von
   // luxOpened) in einen setTimeout auszulagern, da die Overlay-Komponente zum Zeitpunkt des
   // Effects noch nicht gesetzt sein kann.
   protected triggerOpenCloseTimeout?: ReturnType<typeof setTimeout>;

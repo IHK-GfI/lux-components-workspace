@@ -116,7 +116,6 @@ const typeAndSelect = (text: string, label: string) => async (control: Locator) 
 };
 
 const inputField: FieldFn = (control) => control.locator('input').first();
-const datetimeField: FieldFn = (control) => control.getByRole('textbox');
 const radioField: FieldFn = (control) => control.getByRole('radio', { name: 'Option #2' });
 const textareaField: FieldFn = (control) => control.locator('textarea');
 const comboboxField: FieldFn = (control) => control.getByRole('combobox');
@@ -164,7 +163,7 @@ export const FORM_CONTROLS: FormControlSpec[] = [
     field: inputField,
     leaveEmpty: clearAndBlur(inputField),
     enterValue: fillAndBlur(inputField, '01.02.2026'),
-    enteredValue: '2026-02-01T00:00:00.000Z',
+    enteredValue: '2026-02-01',
     tryChangeAsUser: typeByKeyboard(inputField, '9'),
     requiredMarker: wrapperRequiredMarker
   },
@@ -244,20 +243,6 @@ export const FORM_CONTROLS: FormControlSpec[] = [
     requiredMarker: wrapperRequiredMarker
   },
   {
-    id: 'datetimepicker',
-    route: 'datetimepicker',
-    tag: 'lux-datetimepicker',
-    role: 'textbox',
-    label: 'Label',
-    requiredMessage: () => luxMessage('datetimepicker.error_message.empty'),
-    field: datetimeField,
-    leaveEmpty: clearAndBlur(datetimeField),
-    enterValue: fillAndBlur(datetimeField, '01.02.2026, 13:45'),
-    enteredValue: '2026-02-01T13:45:00.000Z',
-    tryChangeAsUser: typeByKeyboard(datetimeField, '9'),
-    requiredMarker: wrapperRequiredMarker
-  },
-  {
     id: 'timepicker',
     route: 'timepicker',
     tag: 'lux-timepicker',
@@ -266,9 +251,8 @@ export const FORM_CONTROLS: FormControlSpec[] = [
     requiredMessage: () => luxMessage('timepicker.error_message.empty'),
     field: comboboxField,
     leaveEmpty: clearCloseAndBlur(comboboxField),
-    // Beide Beispiele stehen auf dem 18.06.2026, 14:30 UTC – geändert wird nur die Uhrzeit.
     enterValue: fillAndBlur(comboboxField, '09:15'),
-    enteredValue: '2026-06-18T09:15:00.000Z',
+    enteredValue: '09:15',
     tryChangeAsUser: typeByKeyboard(comboboxField, '1'),
     requiredMarker: wrapperRequiredMarker
   },

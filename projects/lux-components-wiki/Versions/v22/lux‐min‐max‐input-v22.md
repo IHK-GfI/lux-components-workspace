@@ -36,7 +36,7 @@
 - Eine gemeinsame Meldung unter beiden Feldern nennt das Feld und den verletzten Grenzwert.
 - Geprüft wird erst beim Verlassen eines Feldes, nicht beim Tippen.
 
-Der Wert ist ein Objekt `{ min?: T; max?: T }`. Bei `luxType="number"` ist `T` eine Zahl, bei `luxType="date"` ein ISO-String (Kalendertag als UTC-Mitternacht, wie bei `lux-datepicker`). Die Komponente ändert ihn nur als Folge einer Benutzereingabe und übernimmt dabei nur gültige Eingaben: Bei einer Eingabe mit Grenz- oder Datumsfehler oder bei Von größer Bis behält die Seite ihren zuletzt übernommenen Wert. Ein von außen gesetzter Wert bleibt auch dann stehen, wenn er die Grenzen verletzt. Die Komponente ist generisch über `T`; der Typ wird aus der Bindung abgeleitet, sodass `[(luxValue)]` auch mit einem `signal<LuxMinMaxValue<string>>()` funktioniert.
+Der Wert ist ein Objekt `{ min?: T; max?: T }`. Bei `luxType="number"` ist `T` eine Zahl, bei `luxType="date"` ein Tag im Format `"yyyy-MM-dd"` ohne Zeitzone (wie bei `lux-datepicker`). Die Komponente ändert ihn nur als Folge einer Benutzereingabe und übernimmt dabei nur gültige Eingaben: Bei einer Eingabe mit Grenz- oder Datumsfehler oder bei Von größer Bis behält die Seite ihren zuletzt übernommenen Wert. Ein von außen gesetzter Wert bleibt auch dann stehen, wenn er die Grenzen verletzt. Die Komponente ist generisch über `T`; der Typ wird aus der Bindung abgeleitet, sodass `[(luxValue)]` auch mit einem `signal<LuxMinMaxValue<string>>()` funktioniert.
 
 ```typescript
 export type LuxMinMaxType = 'number' | 'date';
@@ -164,10 +164,10 @@ Html
 <lux-min-max-input
   luxType="date"
   luxLabel="Zeitraum"
-  [luxBounds]="{ min: '2026-01-01T00:00:00.000Z', max: '2026-12-31T00:00:00.000Z' }"
+  [luxBounds]="{ min: '2026-01-01', max: '2026-12-31' }"
   [luxMaxFieldBounds]="bisGrenzen()"
   [(luxValue)]="zeitraum"
- />
+/>
 ```
 
 Ts
@@ -178,7 +178,7 @@ zeitraum = signal<LuxMinMaxValue<string>>({});
 // Bis liegt höchstens 7 Tage nach Von; ohne Von gilt nur luxBounds.
 bisGrenzen = computed<LuxMinMaxBounds<string> | undefined>(() => {
   const von = this.zeitraum().min;
-  return von ? { min: von, max: new Date(Date.parse(von) + 7 * 24 * 60 * 60 * 1000).toISOString() } : undefined;
+  return von ? { min: von, max: LuxUtil.addDays(von, 7) ?? undefined } : undefined;
 });
 ```
 

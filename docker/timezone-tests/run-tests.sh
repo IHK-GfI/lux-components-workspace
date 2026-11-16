@@ -49,8 +49,8 @@ fi
 if [ "$#" -eq 0 ]; then
   set -- 'src/lib/lux-util/**/*.spec.ts' \
     'src/lib/lux-form/lux-datepicker/**/*.spec.ts' \
-    'src/lib/lux-form/lux-datetimepicker/**/*.spec.ts' \
     'src/lib/lux-form/lux-timepicker/**/*.spec.ts' \
+    'src/lib/lux-filter/**/*.spec.ts' \
     'src/lib/lux-lookup/**/*.spec.ts'
 fi
 INCLUDES=''

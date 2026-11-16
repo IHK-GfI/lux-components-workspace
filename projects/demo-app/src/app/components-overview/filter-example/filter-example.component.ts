@@ -5,7 +5,6 @@ import {
   LuxAutocompleteComponent,
   LuxButtonComponent,
   LuxDatepickerComponent,
-  LuxDatetimepickerComponent,
   LuxFieldValues,
   LuxFilter,
   LuxFilterFormComponent,
@@ -51,7 +50,6 @@ import { CustomFilterItemComponent } from './custom-filter-item.component';
     LuxSelectComponent,
     LuxRadioComponent,
     LuxInputComponent,
-    LuxDatetimepickerComponent,
     LuxDatepickerComponent,
     LuxTimepickerComponent,
     LuxAutocompleteComponent,
@@ -104,7 +102,7 @@ export class FilterExampleComponent implements OnInit, OnDestroy {
   readonly markerTypeNew = DemoMarkerType.New;
   readonly replaceFilterJson = signal(`{
   "input": "Lorem ipsum",
-  "datepicker": "${LuxUtil.newDateWithoutTime().toISOString()}",
+  "datepicker": "${LuxUtil.todayAsLocalDate()}",
   "toggle": true
   }`);
 
@@ -137,9 +135,8 @@ export class FilterExampleComponent implements OnInit, OnDestroy {
           label: 'Auto A',
           value: 'a'
         },
-        datepicker: '2020-07-21T00:00:00.000Z',
-        datetimepicker: '2020-07-21T12:15:00.000Z',
-        combinedDateTime: '2020-07-21T14:30:00.000Z',
+        datepicker: '2020-07-21',
+        combinedDateTime: '2020-07-21T14:30',
         singleSelect: {
           label: 'Single 4711',
           value: '4711'
@@ -179,8 +176,6 @@ export class FilterExampleComponent implements OnInit, OnDestroy {
   readonly autoCompleteLookupHidden = signal(false);
   readonly datepickerDisabled = signal(false);
   readonly datepickerHidden = signal(false);
-  readonly datetimepickerDisabled = signal(false);
-  readonly datetimepickerHidden = signal(false);
   readonly combinedDateTimeDisabled = signal(false);
   readonly combinedDateTimeHidden = signal(false);
   readonly singleSelectDisabled = signal(false);

@@ -11,6 +11,8 @@
       - [1. Beispiel: Ohne Observer](#1-beispiel-ohne-observer)
       - [2. Beispiel: Mit Observer](#2-beispiel-mit-observer)
     - [LuxUtil](#luxutil)
+      - [Datums- und Zeitwerte ohne Zeitzone](#datums--und-zeitwerte-ohne-zeitzone)
+        - [Umrechnung zum Format von Version 21](#umrechnung-zum-format-von-version-21)
       - [Fehlertexte](#fehlertexte)
 
 ## Classes / Interfaces
@@ -181,10 +183,6 @@ Das liegt daran, dass die Templates in Angular immer nur auf Methoden und Attrib
 | getErrorMessageForErrors(tService: TranslocoService, errors: ValidationErrors \| null): string       | Wie getErrorMessage, arbeitet aber direkt auf einem ValidationErrors-Objekt (z.B. aus Signal Forms, siehe toLegacyValidationErrors).                                                                            |
 | toLegacyValidationErrors(errors: readonly ValidationError.WithOptionalFieldTree[]): ValidationErrors \| null | Übersetzt die Fehlerliste aus Signal Forms in das klassische ValidationErrors-Objekt (Schlüssel in der Reactive-Forms-Schreibweise, z.B. `minlength`), damit bestehende luxErrorCallbacks weiter funktionieren. |
 | isDate(value: any): boolean                                                                          | Prüft, ob das mitgegebene Objekt ein gültiges JavaScript-Date ist.                                                                                                                                                |
-| parseTimeToSeconds(value: string \| null \| undefined): number \| null                               | Parst einen "HH:mm"- oder "HH:mm:ss"-String in Sekunden seit Mitternacht (`null`, wenn der Wert nicht geparst werden kann).                                                                                       |
-| newDateWithoutTime(date: Date = new Date()): Date                                                    | Liefert ein Date-Objekt mit dem Datum des übergebenen Datums (Standard: heute) und der Uhrzeit 00:00 (UTC).                                                                                                       |
-| parseISO8601AsUTC(value: string): Date                                                               | Parst einen ISO-8601-String. Enthält der String keine Zeitzoneninfo (kein "Z", kein Offset, z.B. "2027-03-13T00:00:00"), wird er als UTC interpretiert statt als lokale Zeit des Nutzers. Alle anderen Strings werden unverändert an den nativen Date-Konstruktor übergeben. |
-| isISO8601WithoutTimezone(value: any): boolean                                                        | Prüft, ob der Wert ein ISO-8601-String ohne Zeitzoneninfo (kein "Z", kein Offset) ist, z.B. "2027-03-13T00:00:00".                                                                                               |
 | showValidationErrors(formGroup: FormGroup \| UntypedFormGroup): void                                  | Iteriert durch alle Controls der FormGroup und markiert diese als "touched", so dass evtl. aufgetretene Validierungsfehler direkt ersichtlich sind. Nützlich um schnell alle Fehler in einem Formular anzuzeigen. |
 | goTo(id: string): void                                                                               | Diese Methode scrollt zu dem HTML-Element mit der übergebenen Id.                                                                                                                                                 |
 | goToTop(selector: string = 'div.lux-app-content-container'): void                                     | Diese Methode scrollt zum Element mit dem übergebenen Selector (Standard: Anfang des Inhaltsbereichs).                                                                                                            |
@@ -198,6 +196,56 @@ Das liegt daran, dass die Templates in Angular immer nur auf Methoden und Attrib
 | stringWithoutASCIIChars(value: string): string                                                       | Entfernt Sonder- und Steuerzeichen außerhalb des erlaubten ASCII-Zeichensatzes aus dem String.                                                                                                                    |
 | getAcceptTypesAsMessagePart(tService: TranslocoService, acceptTypes: string): string                  | Liefert für die akzeptierten Dateitypen (z.B. '.pdf,.txt,.png') einen übersetzten Nachrichtenteil (z.B. "PDF, TXT oder PNG").                                                                                     |
 | checkIfRequestIsAssetRequest(request: HttpRequest\<any>): boolean                                     | Prüft, ob es sich um einen Asset-Request handelt (URL enthält "/assets/").                                                                                                                                        |
+
+#### Datums- und Zeitwerte ohne Zeitzone
+
+Diese Funktionen arbeiten mit Datums- und Zeitwerten ohne Zeitzone, wie sie `lux-datepicker` und `lux-timepicker` verwenden: `"2029-05-26"`, `"14:30"` bzw. `"2029-05-26T14:30"`.
+Sie rechnen ohne JavaScript-Date und liefern deshalb in jeder Zeitzone dasselbe Ergebnis.
+
+| Funktion                                                                                     | Beschreibung                                                                                                                                         |
+| -------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| isLocalDate(value: unknown): boolean                                                         | Prüft, ob der Wert ein Datum `"yyyy-MM-dd"` ist (kein 31.02.). Mitternacht ohne Zeitzone (`"2029-05-26T00:00:00"`) ist erlaubt, wie beim Datepicker. |
+| isLocalTime(value: unknown): boolean                                                         | Prüft, ob der Wert eine Uhrzeit `"HH:mm"` ist (keine 24:00). Sekunden `:00` sind erlaubt (`"14:30:00"`).                                             |
+| isLocalDateTime(value: unknown): boolean                                                     | Prüft, ob der Wert Datum und Uhrzeit `"yyyy-MM-ddTHH:mm"` sind. Sekunden `:00` sind erlaubt.                                                         |
+| todayAsLocalDate(): string                                                                   | Liefert den heutigen Tag aus Sicht des Nutzers, z.B. `"2029-05-26"`.                                                                                 |
+| toLocalDate(date: Date \| null \| undefined): string \| null                                 | Liefert den lokalen Tag eines Date-Objekts, z.B. `new Date(2029, 4, 26)` ergibt `"2029-05-26"`. Für ein ungültiges Date `null`.                      |
+| toLocalTime(date: Date \| null \| undefined): string \| null                                 | Liefert die lokale Uhrzeit eines Date-Objekts ohne Sekunden, z.B. `new Date(2029, 4, 26, 14, 30)` ergibt `"14:30"`. Für ein ungültiges Date `null`.  |
+| toLocalDateTime(date: Date \| null \| undefined): string \| null                             | Liefert Datum und Uhrzeit aus Sicht des Nutzers ohne Sekunden. In Deutschland wird `new Date("2029-05-26T12:30:00Z")` zu `"2029-05-26T14:30"`.       |
+| addDays(localDate: string \| null \| undefined, days: number): string \| null                | Addiert Tage, auch negativ. `addDays("2029-02-28", 1)` ergibt `"2029-03-01"`.                                                                        |
+| compareLocalDates(first: string, second: string): number                                     | Liefert eine negative Zahl, wenn `first` vor `second` liegt, 0 bei gleichem Tag, sonst eine positive Zahl.                                           |
+| getDayOfWeek(localDate: string \| null \| undefined): number \| null                         | Liefert den Wochentag, 0 = Sonntag bis 6 = Samstag (wie `Date.getDay()`).                                                                            |
+| combineDateTime(localDate, localTime): string \| null                                        | Führt Datum und Uhrzeit zusammen, `"2029-05-26"` und `"14:30"` ergeben `"2029-05-26T14:30"`. Fehlt einer der Werte, `null`.                          |
+| splitDateTime(localDateTime): { date: string; time: string } \| null                         | Trennt Datum und Uhrzeit, `"2029-05-26T14:30"` ergibt `{ date: "2029-05-26", time: "14:30" }`.                                                       |
+
+Alle Funktionen nehmen die erlaubten Varianten an (z.B. `"14:30:00"`) und geben immer die kurze Form aus (`"14:30"`).
+`null` und `undefined` ergeben `null`, nur `compareLocalDates` braucht zwei Werte. Bei einem ungültigen Wert werfen `addDays`, `compareLocalDates`, `getDayOfWeek`, `combineDateTime` und `splitDateTime` einen Fehler.
+
+Beispiel: nur Werktage im Datepicker auswählbar machen.
+
+```ts
+readonly weekdaysOnly = (date: string) => ![0, 6].includes(LuxUtil.getDayOfWeek(date)!);
+```
+
+##### Umrechnung zum Format von Version 21
+
+Bis Version 21 waren die Werte UTC-Zeitpunkte. Kann das Backend noch nicht umgestellt werden, rechnet die Anwendung beim Laden und Speichern mit diesen Funktionen um (siehe [Update-Guide v22](update-guide-v22#datums--und-zeitwerte-ohne-zeitzone)).
+
+| Funktion                               | Beispiel                                                    |
+| -------------------------------------- | ----------------------------------------------------------- |
+| fromV21Date(value): string \| null     | `"2029-05-26T00:00:00.000Z"` ergibt `"2029-05-26"`          |
+| toV21Date(value): string \| null       | `"2029-05-26"` ergibt `"2029-05-26T00:00:00.000Z"`          |
+| fromV21Time(value): string \| null     | `"1970-01-01T14:30:00.000Z"` ergibt `"14:30"`               |
+| toV21Time(value): string \| null       | `"14:30"` ergibt `"1970-01-01T14:30:00.000Z"`               |
+| fromV21DateTime(value): string \| null | `"2029-05-26T14:30:00.000Z"` ergibt `"2029-05-26T14:30"`    |
+| toV21DateTime(value): string \| null   | `"2029-05-26T14:30"` ergibt `"2029-05-26T14:30:00.000Z"`    |
+
+Die Regeln sind streng, es gibt keine Heuristik und keine Zeitzone:
+
+- Ein Datum muss genau auf UTC-Mitternacht liegen, der Tag ist der UTC-Tag. Millisekunden sind optional (`"2029-05-26T00:00:00Z"`), ausgegeben wird immer `.000Z`.
+- Bei Uhrzeiten zählen die UTC-Werte, die Sekunden müssen `00` sein. `fromV21Time()` ignoriert den Datumsteil, `toV21Time()` gibt immer `1970-01-01` aus.
+- Die Funktionen rechnen keine Zeitzone um. `toV21DateTime("2029-05-26T14:30")` ergibt 14:30 Uhr UTC, weil die Komponenten in Version 21 die UTC-Uhrzeit angezeigt haben. Den echten Zeitpunkt liefert `new Date("2029-05-26T14:30").toISOString()`. Ebenso ergibt `fromV21DateTime("2029-05-26T12:30:00.000Z")` den Wert `"2029-05-26T12:30"` und nicht die lokale Uhrzeit. Die liefert `toLocalDateTime(new Date("2029-05-26T12:30:00.000Z"))`. Ein vollständiges Beispiel steht beim [LUX-Timepicker](lux‐timepicker-v22#7-zeitpunkte-aus-dem-backend).
+- `null`, `undefined` und `""` ergeben `null`.
+- Einen Wert, der nicht passt, geben die Funktionen unverändert zurück. Die Komponente zeigt ihn dann als Fehler an, und im Dev-Modus warnt die Konsole.
 
 #### Fehlertexte
 

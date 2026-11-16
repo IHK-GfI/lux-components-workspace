@@ -4,7 +4,8 @@ import {
   LuxDatepickerComponent,
   LuxFormHintComponent,
   LuxInputComponent,
-  LuxRelativeTimestampPipe
+  LuxRelativeTimestampPipe,
+  LuxUtil
 } from '@ihk-gfi/lux-components';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
@@ -27,28 +28,35 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
   ]
 })
 export class TimestampExampleComponent {
-  readonly initialNow = Date.now();
-  readonly now = signal<number | null>(this.initialNow);
-  readonly nowISO = signal(new Date(this.initialNow).toISOString());
+  // Der Datepicker liefert einen Tag ohne Zeitzone ("yyyy-MM-dd"), das Beispiel nimmt Mitternacht dieses Tages.
+  readonly initialDate = LuxUtil.todayAsLocalDate();
+  readonly now = signal<number | null>(toTimestamp(this.initialDate));
+  readonly nowISO = signal<string | null>(this.initialDate);
 
   readonly defaultText = signal('');
   readonly prefix = signal<string | undefined>(undefined);
 
-  updateNow(timestamp: string) {
-    if (timestamp) {
-      const now = new Date(timestamp).getTime();
-      this.now.set(now);
-      this.nowISO.set(new Date(now).toISOString());
+  updateNow(date: string | null) {
+    if (LuxUtil.isLocalDate(date)) {
+      this.now.set(toTimestamp(date));
     }
   }
 
   resetNow() {
-    this.now.set(this.initialNow);
-    this.nowISO.set(new Date(this.initialNow).toISOString());
+    this.now.set(toTimestamp(this.initialDate));
+    this.nowISO.set(this.initialDate);
   }
 
   clearNow() {
     this.now.set(null);
-    this.nowISO.set('');
+    this.nowISO.set(null);
   }
+}
+
+/**
+ * Der Zeitstempel von Mitternacht (lokale Zeit) eines Tages "yyyy-MM-dd".
+ */
+function toTimestamp(date: string): number {
+  const [year, month, day] = date.substring(0, 10).split('-').map(Number);
+  return new Date(year, month - 1, day).getTime();
 }

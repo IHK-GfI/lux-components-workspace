@@ -15,8 +15,8 @@ describe('LuxMinMaxInput: toComparable', () => {
     expect(toComparable(0, 'number')).toBe(0);
   });
 
-  it('Sollte ISO-Daten in Zeitstempel umwandeln', () => {
-    expect(toComparable('2026-05-01T00:00:00.000Z', 'date')).toBe(Date.parse('2026-05-01T00:00:00.000Z'));
+  it('Sollte Kalendertage ("yyyy-MM-dd") in Zeitstempel umwandeln', () => {
+    expect(toComparable('2026-05-01', 'date')).toBe(Date.UTC(2026, 4, 1));
   });
 
   it('Sollte für ungültige Werte null liefern', () => {

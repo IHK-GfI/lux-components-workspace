@@ -19,7 +19,6 @@ import { LuxAutocompleteComponent } from '../lux-autocomplete/lux-autocomplete.c
 import { LuxCheckboxComponent } from '../lux-checkbox/lux-checkbox.component';
 import { LuxChipsComponent } from '../lux-chips/lux-chips.component';
 import { LuxDatepickerComponent } from '../lux-datepicker/lux-datepicker.component';
-import { LuxDatetimepickerComponent } from '../lux-datetimepicker/lux-datetimepicker.component';
 import { LuxFileInputComponent } from '../lux-file/lux-file-input/lux-file-input.component';
 import { LuxFileListComponent } from '../lux-file/lux-file-list/lux-file-list.component';
 import { LuxFileUploadComponent } from '../lux-file/lux-file-upload/lux-file-upload.component';
@@ -39,7 +38,6 @@ type Komponente =
   | 'autocomplete'
   | 'chips'
   | 'datepicker'
-  | 'datetimepicker'
   | 'timepicker'
   | 'slider'
   | 'fileInput'
@@ -59,7 +57,6 @@ const komponenten: { komponente: Komponente; requiredValidator: ValidatorFn }[] 
   { komponente: 'autocomplete', requiredValidator: Validators.required },
   { komponente: 'chips', requiredValidator: Validators.required },
   { komponente: 'datepicker', requiredValidator: Validators.required },
-  { komponente: 'datetimepicker', requiredValidator: Validators.required },
   { komponente: 'timepicker', requiredValidator: Validators.required },
   { komponente: 'slider', requiredValidator: Validators.required },
   { komponente: 'fileInput', requiredValidator: Validators.required },
@@ -194,9 +191,6 @@ describe('LuxFormComponentBase - required-Erkennung in Reactive Forms', () => {
         @case ('datepicker') {
           <lux-datepicker luxLabel="Feld" luxControlBinding="feld" id="feld"></lux-datepicker>
         }
-        @case ('datetimepicker') {
-          <lux-datetimepicker luxLabel="Feld" luxControlBinding="feld" id="feld"></lux-datetimepicker>
-        }
         @case ('timepicker') {
           <lux-timepicker luxLabel="Feld" luxControlBinding="feld" id="feld"></lux-timepicker>
         }
@@ -253,7 +247,6 @@ describe('LuxFormComponentBase - required-Erkennung in Reactive Forms', () => {
     LuxAutocompleteComponent,
     LuxChipsComponent,
     LuxDatepickerComponent,
-    LuxDatetimepickerComponent,
     LuxTimepickerComponent,
     LuxSliderComponent,
     LuxFileInputComponent,

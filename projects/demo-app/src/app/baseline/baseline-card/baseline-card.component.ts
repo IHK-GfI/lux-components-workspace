@@ -11,7 +11,6 @@ import {
   LuxChipGroupComponent,
   LuxChipsComponent,
   LuxDatepickerComponent,
-  LuxDatetimepickerComponent,
   LuxDividerComponent,
   LuxFileInputComponent,
   LuxFileListComponent,
@@ -31,7 +30,6 @@ interface DummyForm {
   input: FormControl<string | null>;
   textarea: FormControl<string>;
   datepicker: FormControl<string>;
-  datetimepicker: FormControl<string>;
   autocomplete: FormControl<string>;
   select: FormControl<string>;
   radio: FormControl<string>;
@@ -61,7 +59,6 @@ interface DummyForm {
     LuxChipsComponent,
     LuxChipGroupComponent,
     LuxDatepickerComponent,
-    LuxDatetimepickerComponent,
     LuxFileInputComponent,
     LuxFileListComponent,
     LuxInputComponent,
@@ -116,7 +113,6 @@ export class BaselineCardComponent {
       input: new FormControl(null, { validators: Validators.required, nonNullable: false }),
       textarea: new FormControl('', { validators: Validators.required, nonNullable: true }),
       datepicker: new FormControl('', { validators: Validators.required, nonNullable: true }),
-      datetimepicker: new FormControl('', { validators: Validators.required, nonNullable: true }),
       autocomplete: new FormControl('', { validators: Validators.required, nonNullable: true }),
       select: new FormControl('', { validators: Validators.required, nonNullable: true }),
       radio: new FormControl('', { validators: Validators.required, nonNullable: true }),

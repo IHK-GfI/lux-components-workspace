@@ -94,6 +94,11 @@ export abstract class LuxFormLegacyValueBase<T> extends LuxFormValueControlBase<
     this.bridge.markAsTouched();
   }
 
+  override reset() {
+    super.reset();
+    this.bridge.resetInteractionState();
+  }
+
   override markAsDirty() {
     super.markAsDirty();
     this.bridge.markAsDirty();

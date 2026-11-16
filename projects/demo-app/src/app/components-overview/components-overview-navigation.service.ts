@@ -116,7 +116,6 @@ export class ComponentsOverviewNavigationService {
     this.create('form', 'Checkbox'),
     this.create('form', 'Chips'),
     this.create('form', 'Datepicker'),
-    this.create('form', 'Datetimepicker'),
     this.create('form', 'Timepicker'),
     this.create('form', 'File-Input'),
     this.create('form', 'File-List'),

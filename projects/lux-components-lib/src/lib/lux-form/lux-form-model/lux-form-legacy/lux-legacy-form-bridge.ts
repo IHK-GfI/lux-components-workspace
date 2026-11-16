@@ -10,9 +10,6 @@ import { LuxControlStateOverride } from '../lux-form-control-base.class';
 
 const DEFAULT_CTRL_NAME = 'control';
 
-/** Stand von notifiedVersion, solange noch keine Wertänderung ausgeliefert wurde. */
-const NOT_NOTIFIED = -1;
-
 /**
  * Die Seite der FormComponent, die die Brücke kennen muss.
  */
@@ -42,6 +39,12 @@ export interface LuxLegacyBridgeHost<T> {
    */
   readonly disabled: Signal<boolean>;
   /**
+   * Die Vertrags-Inputs touched()/dirty(), aus demselben Grund wie required() nötig: Ein am Feld
+   * gesetzter Zustand (z.B. markAllAsTouched() beim Absenden) kommt nie am synthetischen FormControl an.
+   */
+  readonly touched: Signal<boolean>;
+  readonly dirty: Signal<boolean>;
+  /**
    * Die Vertrags-Inputs invalid()/errors(), ebenfalls von der [formField]-Direktive verdrahtet.
    * Aus demselben Grund wie required() nötig: Das synthetische FormControl der Brücke trägt im
    * Signal-Forms-Betrieb nie die schema-seitigen Fehler, syncState() muss sie hier zusätzlich holen.
@@ -61,6 +64,21 @@ export interface LuxLegacyBridgeHost<T> {
    * Optional, Default: keine Behandlung.
    */
   onFormValueChanges?(value: T): void;
+  /**
+   * Wird bei jedem Schreiben in das FormControl aufgerufen (setValue(), patchValue(), reset()), auch wenn sich der
+   * Wert dabei nicht ändert - wie ControlValueAccessor.writeValue(). Nicht bei updateValueAndValidity() und nicht
+   * bei einem setValue() mit emitModelToViewChange: false. Für Logik, die die Anzeige an einen von außen gesetzten
+   * Wert angleicht (z.B. einen ungültig getippten Text bei form.reset() leeren).
+   * Optional, Default: keine Behandlung.
+   */
+  onFormValueWritten?(value: T): void;
+  /**
+   * Wird einmalig beim Start aufgerufen, wenn das FormControl dabei valueChanges auslöst, ohne dass sich der Wert
+   * geändert hat (z.B. updateValidators() mit luxRequired). Das ist keine Wertänderung und löst deshalb kein
+   * emitValueChange() aus. Für Controls, die ihren Startwert aufbereiten (z.B. lux-select mit luxPickValue).
+   * Optional, Default: keine Behandlung.
+   */
+  onFormStartValue?(value: T): void;
   /** Validators.required bzw. Validators.requiredTrue. */
   getRequiredValidator(): ValidatorFn;
   /**
@@ -116,8 +134,10 @@ export class LuxLegacyFormBridge<T> {
   /** Zählt jede beobachtete Wertänderung, auch stille. */
   private valueVersion = 0;
   /** Stand von valueVersion bei der letzten Weitergabe an emitValueChange(). */
-  private notifiedVersion = NOT_NOTIFIED;
-  private initialDeliveryTimeout?: ReturnType<typeof setTimeout>;
+  private notifiedVersion = 0;
+  /** Solange das Laden der Komponente läuft: Noch kann onFormStartValue() ausgelöst werden. */
+  private startPhase = true;
+  private startPhaseTimeout?: ReturnType<typeof setTimeout>;
 
   constructor(private readonly host: LuxLegacyBridgeHost<T>) {
     // Reine Validator-Änderungen dürfen den Required-Validator nicht anfassen, sonst würde ein
@@ -230,11 +250,12 @@ export class LuxLegacyFormBridge<T> {
         this.legacyValueSeen = true;
       }
       this.publishValue(value);
+      this.host.onFormValueWritten?.(value);
     };
     this.formControl.registerOnChange(valueObserver);
 
     this.destroyRef.onDestroy(() => {
-      clearTimeout(this.initialDeliveryTimeout);
+      clearTimeout(this.startPhaseTimeout);
 
       // In Reactive Forms überlebt das FormControl die Komponente. Ohne das Abmelden würde sich
       // bei jedem Neuaufbau (z.B. über @if) ein weiterer Beobachter ansammeln.
@@ -279,8 +300,6 @@ export class LuxLegacyFormBridge<T> {
     // manuelles markForCheck() beim Aufrufer ist damit nicht mehr nötig.
     this.formControl.events.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.syncState());
 
-    this.initialized = true;
-
     if (this.initialValue !== null && this.initialValue !== undefined) {
       this.setValue(this.initialValue);
     }
@@ -289,15 +308,12 @@ export class LuxLegacyFormBridge<T> {
     this.validatorsInitialized = true;
     this.updateValidators(this.host.luxControlValidators(), true);
 
-    // Der Startzustand gilt nach der Initialisierung als ausgeliefert, auch wenn gar nichts
-    // ausgeliefert wurde. Ohne das bliebe der Merker auf NOT_NOTIFIED stehen und die erste spätere
-    // Emission käme durch - auch eine reine Neubewertung, etwa durch ein nachträglich gesetztes
-    // luxRequired.
-    this.initialDeliveryTimeout = setTimeout(() => {
-      if (this.notifiedVersion === NOT_NOTIFIED) {
-        this.notifiedVersion = this.valueVersion;
-      }
-    });
+    // Der Startzustand gilt ab hier als ausgeliefert. Er löst kein emitValueChange() aus, auch nicht,
+    // wenn die Validatoren oben oder im Effect für luxRequired neu ausgewertet werden und valueChanges
+    // feuert (siehe onFormStartValue()). Eine echte Wertänderung erhöht den Zähler und kommt durch.
+    this.notifiedVersion = this.valueVersion;
+    this.initialized = true;
+    this.startPhaseTimeout = setTimeout(() => (this.startPhase = false));
 
     this.syncState();
   }
@@ -331,9 +347,13 @@ export class LuxLegacyFormBridge<T> {
     // registerOnChange() angemeldeten Funktionen, der Beobachter läuft dann nicht.
     this.observeValue(value);
 
-    if (this.valueVersion !== this.notifiedVersion) {
+    if (this.initialized && this.valueVersion !== this.notifiedVersion) {
       this.notifiedVersion = this.valueVersion;
+      this.startPhase = false;
       this.host.emitValueChange(value);
+    } else if (this.startPhase) {
+      this.startPhase = false;
+      this.host.onFormStartValue?.(value);
     }
 
     this.host.onFormValueChanges?.(value);
@@ -416,6 +436,17 @@ export class LuxLegacyFormBridge<T> {
   markAsTouched() {
     if (!this.host.stateOverrideClaimed() && this.formControl && !this.formControl.touched) {
       this.formControl.markAsTouched();
+    }
+  }
+
+  /**
+   * Setzt touched/dirty des synthetischen FormControls zurück, aus reset() der FormComponent aufzurufen
+   * (form().reset() im Signal Form). Ein reales FormControl verwaltet die Anwendung selbst.
+   */
+  resetInteractionState() {
+    if (!this.inForm && !this.host.stateOverrideClaimed() && this.formControl) {
+      this.formControl.markAsPristine();
+      this.formControl.markAsUntouched();
     }
   }
 
@@ -568,8 +599,8 @@ export class LuxLegacyFormBridge<T> {
       // (im Signal-Forms-Betrieb immer falschen) hasRequiredValidator()-Ergebnis - siehe isRequired()
       // in LuxFormControlBase, das stateOverride().required per ?? bevorzugt.
       required: hasRequiredValidator(this.formControl) || this.host.required(),
-      touched: this.formControl.touched,
-      dirty: this.formControl.dirty,
+      touched: this.formControl.touched || this.host.touched(),
+      dirty: this.formControl.dirty || this.host.dirty(),
       // Dieselbe Ergänzung wie bei required oben: Die schema-seitige Ungültigkeit/Fehler
       // (required(), minLength() usw. aus dem Signal-Form) landen nie auf dem synthetischen
       // FormControl - ohne host.invalid()/host.errors() hier bliebe das Feld nach dem ersten

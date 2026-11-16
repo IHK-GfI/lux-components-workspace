@@ -16,43 +16,32 @@ import {
   UP_ARROW
 } from '@angular/cdk/keycodes';
 import { HttpRequest } from '@angular/common/http';
+import { isDevMode } from '@angular/core';
 import { FormArray, FormControl, FormGroup, UntypedFormArray, UntypedFormGroup, ValidationErrors } from '@angular/forms';
 import type { ValidationError } from '@angular/forms/signals';
 import { TranslocoService } from '@jsverse/transloco';
+import {
+  LuxLocalDate,
+  LuxLocalTime,
+  addDaysToLocalDate,
+  compareLocalDate,
+  dayOfWeekOf,
+  formatLocalDate,
+  formatLocalDateTime,
+  formatLocalTime,
+  formatV21,
+  localDateOf,
+  localTimeOf,
+  parseLocalDate,
+  parseLocalDateTime,
+  parseLocalTime,
+  parseV21
+} from './lux-local-date';
+
+const MIDNIGHT: LuxLocalTime = { hour: 0, minute: 0 };
+const V21_TIME_DATE: LuxLocalDate = { year: 1970, month: 1, day: 1 };
 
 export class LuxUtil {
-  public static readonly ISO_8601_FULL = new RegExp('^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(\\.\\d+)?(([+-]\\d\\d:\\d\\d)|Z)?$', 'i');
-
-  // Zeitzoneninfo (Z oder +hh:mm/-hh:mm) am Ende eines ISO-8601-Strings
-  private static readonly ISO_8601_TIMEZONE = new RegExp(/(Z|[+-]\d\d:\d\d)$/i);
-
-  /**
-   * Parst einen ISO-8601-String (siehe ISO_8601_FULL). Enthält der String keine Zeitzoneninfo
-   * (kein "Z", kein Offset), würde der native Date-Konstruktor ihn als lokale Zeit des Nutzers
-   * interpretieren. Damit ein solcher String unabhängig von der Zeitzone des Nutzers immer auf
-   * dieselben Datums-/Zeitbestandteile abgebildet wird, wird er in diesem Fall als UTC interpretiert.
-   * Alle anderen Strings werden unverändert an den nativen Date-Konstruktor übergeben.
-   * @param value ein ISO-8601-String, z.B. "2027-03-13T00:00:00" oder "2027-03-13T00:00:00Z".
-   */
-  public static parseISO8601AsUTC(value: string): Date {
-    if (LuxUtil.isISO8601WithoutTimezone(value)) {
-      // Durch das angehängte "Z" übernimmt der native Parser weiterhin die Validierung
-      // (z.B. Monat 13 => Invalid Date) und die Jahre 0-99 werden nicht auf 1900-1999 abgebildet.
-      return new Date(value + 'Z');
-    }
-
-    return new Date(value);
-  }
-
-  /**
-   * Prüft, ob der Wert ein ISO-8601-String (siehe ISO_8601_FULL) ohne Zeitzoneninfo (kein "Z", kein Offset) ist,
-   * z.B. "2027-03-13T00:00:00".
-   * @param value ein beliebiger Wert.
-   */
-  public static isISO8601WithoutTimezone(value: any): boolean {
-    return typeof value === 'string' && LuxUtil.ISO_8601_FULL.test(value) && !LuxUtil.ISO_8601_TIMEZONE.test(value);
-  }
-
   /**
    * Diese Methode wirft einen Fehler, wenn der Wert nicht gesetzt wurde.
    * @param name Ein Name.
@@ -213,48 +202,239 @@ export class LuxUtil {
   }
 
   /**
-   * Parst einen "HH:mm"- oder "HH:mm:ss"-String (wie luxMinTime/luxMaxTime bei LuxTimepickerComponent)
-   * in Sekunden seit Mitternacht. Dieselbe Grammatik wie LuxTimepickerAdapter.parse() - bewusst nicht
-   * dorthin ausgelagert, da der Adapter ein Date zurückgibt und über Angular Material DI aufgelöst
-   * wird, während diese Methode DI-frei bleiben muss, um auch außerhalb einer Component-Instanz
-   * (z.B. in Signal-Forms-Schema-Validatoren wie luxTimepickerMinMax()) nutzbar zu sein.
-   * @param value Der Zeit-String, oder null/undefined.
-   * @returns Sekunden seit Mitternacht, oder null, wenn der String nicht geparst werden kann.
+   * Prüft, ob der Wert ein Datum ohne Zeitzone ist, wie es lux-datepicker annimmt: "yyyy-MM-dd", z.B. "2029-05-26".
+   * Toleriert wird auch Mitternacht ohne Zeitzone ("2029-05-26T00:00" bzw. "2029-05-26T00:00:00",
+   * z.B. Java LocalDateTime für ein reines Datum).
+   * @param value ein beliebiger Wert.
    */
-  public static parseTimeToSeconds(value: string | null | undefined): number | null {
-    if (!value) {
-      return null;
-    }
-
-    const match = value.trim().match(/^(\d{1,2}):(\d{2})(?::(\d{2}))?$/);
-    if (!match) {
-      return null;
-    }
-
-    const hours = +match[1];
-    const minutes = +match[2];
-    const seconds = match[3] ? +match[3] : 0;
-    if (hours > 23 || minutes > 59 || seconds > 59) {
-      return null;
-    }
-
-    return hours * 3600 + minutes * 60 + seconds;
+  public static isLocalDate(value: unknown): value is string {
+    return parseLocalDate(value) !== null;
   }
 
   /**
-   * Diese Methode liefert ein neues Date-Objekt auf Basis des übergebenen Date-Objekts zurück.
-   * Das zurückgelieferte Date-Objekt hat denselben Tag, Monat und das Jahr wie das übergebene Date-Objekt,
-   * die Stunden, Minuten und Sekunden sind jedoch 0.
-   *
-   * Sollte der Methode kein Date-Objekt übergeben werden, wird ein neues Date-Objekt erzeugt.
-   * @param date oder nichts
-   * @returns date
+   * Prüft, ob der Wert eine Uhrzeit ohne Zeitzone ist, wie sie lux-timepicker annimmt: "HH:mm", z.B. "14:30".
+   * Toleriert werden Sekunden ":00" ("14:30:00").
+   * @param value ein beliebiger Wert.
    */
-  public static newDateWithoutTime(date = new Date()): Date {
-    const result = new Date(0);
-    result.setUTCFullYear(date.getFullYear(), date.getMonth(), date.getDate());
+  public static isLocalTime(value: unknown): value is string {
+    return parseLocalTime(value) !== null;
+  }
 
-    return result;
+  /**
+   * Prüft, ob der Wert Datum und Uhrzeit ohne Zeitzone sind, wie sie lux-datepicker und lux-timepicker mit gemeinsamem
+   * Wert annehmen: "yyyy-MM-ddTHH:mm", z.B. "2029-05-26T14:30". Toleriert werden Sekunden ":00".
+   * @param value ein beliebiger Wert.
+   */
+  public static isLocalDateTime(value: unknown): value is string {
+    return parseLocalDateTime(value) !== null;
+  }
+
+  /**
+   * Liefert den heutigen Tag aus Sicht des Nutzers (lokale Zeitzone) als "yyyy-MM-dd".
+   */
+  public static todayAsLocalDate(): string {
+    return formatLocalDate(localDateOf(new Date()));
+  }
+
+  /**
+   * Liefert den lokalen Tag eines Date-Objekts als "yyyy-MM-dd", z.B. für die Migration von Date-Werten.
+   * Beispiel: new Date(2029, 4, 26) => "2029-05-26" (in jeder Zeitzone).
+   * @param date ein Date-Objekt.
+   * @returns den Tag oder null, wenn date null, undefined oder ein ungültiges Date ist.
+   */
+  public static toLocalDate(date: Date | null | undefined): string | null {
+    return LuxUtil.isDate(date) ? formatLocalDate(localDateOf(date as Date)) : null;
+  }
+
+  /**
+   * Liefert die lokale Uhrzeit eines Date-Objekts als "HH:mm". Sekunden entfallen.
+   * Beispiel: new Date(2029, 4, 26, 14, 30) => "14:30" (in jeder Zeitzone).
+   * @param date ein Date-Objekt.
+   * @returns die Uhrzeit oder null, wenn date null, undefined oder ein ungültiges Date ist.
+   */
+  public static toLocalTime(date: Date | null | undefined): string | null {
+    return LuxUtil.isDate(date) ? formatLocalTime(localTimeOf(date as Date)) : null;
+  }
+
+  /**
+   * Liefert Datum und Uhrzeit eines Date-Objekts aus Sicht des Nutzers als "yyyy-MM-ddTHH:mm". Sekunden entfallen.
+   * Damit wird z.B. ein Zeitpunkt aus dem Backend für Datepicker und Timepicker mit gemeinsamem Wert umgerechnet:
+   * In Deutschland ergibt new Date("2029-05-26T12:30:00Z") den Wert "2029-05-26T14:30".
+   * Anders als fromV21DateTime() rechnet die Funktion in die Zeitzone des Nutzers um.
+   * @param date ein Date-Objekt.
+   * @returns Datum und Uhrzeit oder null, wenn date null, undefined oder ein ungültiges Date ist.
+   */
+  public static toLocalDateTime(date: Date | null | undefined): string | null {
+    return LuxUtil.isDate(date) ? formatLocalDateTime({ date: localDateOf(date as Date), time: localTimeOf(date as Date) }) : null;
+  }
+
+  /**
+   * Addiert Tage zu einem Datum ohne Zeitzone, z.B. addDays("2029-02-28", 1) => "2029-03-01".
+   * @param localDate ein Datum (siehe isLocalDate).
+   * @param days die Anzahl der Tage als ganze Zahl, auch negativ.
+   * @returns das Datum als "yyyy-MM-dd" oder null, wenn localDate null oder undefined ist.
+   * @throws Error, wenn localDate kein Datum ohne Zeitzone oder days keine ganze Zahl ist.
+   */
+  public static addDays(localDate: string | null | undefined, days: number): string | null {
+    if (localDate == null) {
+      return null;
+    }
+
+    if (!Number.isInteger(days)) {
+      throw new Error(`LuxUtil.addDays(): Erwartet eine ganze Zahl, erhalten '${days}'.`);
+    }
+
+    return formatLocalDate(addDaysToLocalDate(LuxUtil.requireLocalDate(localDate, 'addDays'), days));
+  }
+
+  /**
+   * Vergleicht zwei Daten ohne Zeitzone.
+   * @param first ein Datum (siehe isLocalDate).
+   * @param second ein Datum (siehe isLocalDate).
+   * @returns eine negative Zahl, wenn first vor second liegt, 0 bei gleichem Tag, sonst eine positive Zahl.
+   * @throws Error, wenn einer der Werte kein Datum ohne Zeitzone ist (auch bei null).
+   */
+  public static compareLocalDates(first: string, second: string): number {
+    return compareLocalDate(LuxUtil.requireLocalDate(first, 'compareLocalDates'), LuxUtil.requireLocalDate(second, 'compareLocalDates'));
+  }
+
+  /**
+   * Liefert den Wochentag eines Datums ohne Zeitzone, z.B. für einen luxCustomFilter.
+   * @param localDate ein Datum (siehe isLocalDate).
+   * @returns 0 = Sonntag bis 6 = Samstag (wie Date.getDay()) oder null, wenn localDate null oder undefined ist.
+   * @throws Error, wenn localDate kein Datum ohne Zeitzone ist.
+   */
+  public static getDayOfWeek(localDate: string | null | undefined): number | null {
+    return localDate == null ? null : dayOfWeekOf(LuxUtil.requireLocalDate(localDate, 'getDayOfWeek'));
+  }
+
+  /**
+   * Führt Datum und Uhrzeit zusammen, z.B. combineDateTime("2029-05-26", "14:30") => "2029-05-26T14:30".
+   * @param localDate ein Datum (siehe isLocalDate).
+   * @param localTime eine Uhrzeit (siehe isLocalTime).
+   * @returns "yyyy-MM-ddTHH:mm" oder null, wenn einer der Werte null oder undefined ist.
+   * @throws Error, wenn ein Wert kein Datum bzw. keine Uhrzeit ohne Zeitzone ist.
+   */
+  public static combineDateTime(localDate: string | null | undefined, localTime: string | null | undefined): string | null {
+    if (localDate == null || localTime == null) {
+      return null;
+    }
+
+    return formatLocalDateTime({
+      date: LuxUtil.requireLocalDate(localDate, 'combineDateTime'),
+      time: LuxUtil.requireLocalTime(localTime, 'combineDateTime')
+    });
+  }
+
+  /**
+   * Trennt Datum und Uhrzeit, z.B. splitDateTime("2029-05-26T14:30") => { date: "2029-05-26", time: "14:30" }.
+   * @param localDateTime Datum und Uhrzeit (siehe isLocalDateTime).
+   * @returns Datum und Uhrzeit oder null, wenn localDateTime null oder undefined ist.
+   * @throws Error, wenn localDateTime nicht Datum und Uhrzeit ohne Zeitzone sind.
+   */
+  public static splitDateTime(localDateTime: string | null | undefined): { date: string; time: string } | null {
+    if (localDateTime == null) {
+      return null;
+    }
+
+    const dateTime = parseLocalDateTime(localDateTime);
+    if (!dateTime) {
+      throw new Error(`LuxUtil.splitDateTime(): Erwartet 'yyyy-MM-ddTHH:mm', erhalten '${localDateTime}'.`);
+    }
+
+    return { date: formatLocalDate(dateTime.date), time: formatLocalTime(dateTime.time) };
+  }
+
+  /**
+   * Nur für das Format von Version 21, rechnet keine Zeitzone um.
+   * Liest ein Datum im v21-Format (UTC-Mitternacht), z.B. "2029-05-26T00:00:00.000Z" => "2029-05-26".
+   * Für Anwendungen, deren Backend noch das v21-Format liefert (siehe Update-Guide v22).
+   *
+   * Angenommen wird nur genau UTC-Mitternacht, Millisekunden optional ("2029-05-26T00:00:00Z").
+   * Der Tag ist der UTC-Tag. Es gibt keine Heuristik.
+   * @param value ein Datum im v21-Format.
+   * @returns "yyyy-MM-dd", null bei null, undefined oder "". Jeder andere Wert wird unverändert zurückgegeben
+   * (im Dev-Modus mit Warnung in der Konsole), damit die Komponente ihn sichtbar als Fehler anzeigt.
+   */
+  public static fromV21Date(value: string | null | undefined): string | null {
+    return LuxUtil.convertDateValue(value, 'fromV21Date', "'yyyy-MM-ddT00:00:00.000Z'", (v) => {
+      const dateTime = parseV21(v);
+      return dateTime && dateTime.time.hour === 0 && dateTime.time.minute === 0 ? formatLocalDate(dateTime.date) : null;
+    });
+  }
+
+  /**
+   * Nur für das Format von Version 21, rechnet keine Zeitzone um.
+   * Schreibt ein Datum im v21-Format (UTC-Mitternacht), z.B. "2029-05-26" => "2029-05-26T00:00:00.000Z".
+   * @param value ein Datum (siehe isLocalDate).
+   * @returns "yyyy-MM-ddT00:00:00.000Z", null bei null, undefined oder "". Jeder andere Wert wird unverändert
+   * zurückgegeben (im Dev-Modus mit Warnung in der Konsole).
+   */
+  public static toV21Date(value: string | null | undefined): string | null {
+    return LuxUtil.convertDateValue(value, 'toV21Date', "'yyyy-MM-dd'", (v) => {
+      const date = parseLocalDate(v);
+      return date && formatV21({ date, time: MIDNIGHT });
+    });
+  }
+
+  /**
+   * Nur für das Format von Version 21, rechnet keine Zeitzone um.
+   * Liest eine Uhrzeit im v21-Format, z.B. "1970-01-01T14:30:00.000Z" => "14:30".
+   * Stunden und Minuten sind die UTC-Werte, die Sekunden müssen 00 sein. Der Datumsteil wird ignoriert.
+   * @param value eine Uhrzeit im v21-Format.
+   * @returns "HH:mm", null bei null, undefined oder "". Jeder andere Wert wird unverändert zurückgegeben
+   * (im Dev-Modus mit Warnung in der Konsole).
+   */
+  public static fromV21Time(value: string | null | undefined): string | null {
+    return LuxUtil.convertDateValue(value, 'fromV21Time', "'yyyy-MM-ddTHH:mm:00.000Z'", (v) => {
+      const dateTime = parseV21(v);
+      return dateTime && formatLocalTime(dateTime.time);
+    });
+  }
+
+  /**
+   * Nur für das Format von Version 21, rechnet keine Zeitzone um.
+   * Schreibt eine Uhrzeit im v21-Format, z.B. "14:30" => "1970-01-01T14:30:00.000Z".
+   * @param value eine Uhrzeit (siehe isLocalTime).
+   * @returns "1970-01-01THH:mm:00.000Z", null bei null, undefined oder "". Jeder andere Wert wird unverändert
+   * zurückgegeben (im Dev-Modus mit Warnung in der Konsole).
+   */
+  public static toV21Time(value: string | null | undefined): string | null {
+    return LuxUtil.convertDateValue(value, 'toV21Time', "'HH:mm'", (v) => {
+      const time = parseLocalTime(v);
+      return time && formatV21({ date: V21_TIME_DATE, time });
+    });
+  }
+
+  /**
+   * Nur für das Format von Version 21, rechnet keine Zeitzone um.
+   * Liest Datum und Uhrzeit im v21-Format, z.B. "2029-05-26T14:30:00.000Z" => "2029-05-26T14:30".
+   * Datum und Uhrzeit sind die UTC-Werte, die Sekunden müssen 00 sein. Einen echten Zeitpunkt rechnet
+   * toLocalDateTime(new Date(value)) in die Zeitzone des Nutzers um.
+   * @param value Datum und Uhrzeit im v21-Format.
+   * @returns "yyyy-MM-ddTHH:mm", null bei null, undefined oder "". Jeder andere Wert wird unverändert zurückgegeben
+   * (im Dev-Modus mit Warnung in der Konsole).
+   */
+  public static fromV21DateTime(value: string | null | undefined): string | null {
+    return LuxUtil.convertDateValue(value, 'fromV21DateTime', "'yyyy-MM-ddTHH:mm:00.000Z'", (v) => {
+      const dateTime = parseV21(v);
+      return dateTime && formatLocalDateTime(dateTime);
+    });
+  }
+
+  /**
+   * Nur für das Format von Version 21, rechnet keine Zeitzone um.
+   * Schreibt Datum und Uhrzeit im v21-Format, z.B. "2029-05-26T14:30" => "2029-05-26T14:30:00.000Z".
+   * Einen echten Zeitpunkt liefert new Date(value).toISOString().
+   * @param value Datum und Uhrzeit (siehe isLocalDateTime).
+   * @returns "yyyy-MM-ddTHH:mm:00.000Z", null bei null, undefined oder "". Jeder andere Wert wird unverändert
+   * zurückgegeben (im Dev-Modus mit Warnung in der Konsole).
+   */
+  public static toV21DateTime(value: string | null | undefined): string | null {
+    return LuxUtil.convertDateValue(value, 'toV21DateTime', "'yyyy-MM-ddTHH:mm'", (v) => {
+      const dateTime = parseLocalDateTime(v);
+      return dateTime && formatV21(dateTime);
+    });
   }
 
   /**
@@ -540,5 +720,50 @@ export class LuxUtil {
 
   public static checkIfRequestIsAssetRequest(request: HttpRequest<any>): boolean {
     return request.url.includes('/assets/');
+  }
+
+  private static requireLocalDate(value: string, functionName: string): LuxLocalDate {
+    const date = parseLocalDate(value);
+    if (!date) {
+      throw new Error(`LuxUtil.${functionName}(): Erwartet 'yyyy-MM-dd', erhalten '${value}'.`);
+    }
+    return date;
+  }
+
+  private static requireLocalTime(value: string, functionName: string): LuxLocalTime {
+    const time = parseLocalTime(value);
+    if (!time) {
+      throw new Error(`LuxUtil.${functionName}(): Erwartet 'HH:mm', erhalten '${value}'.`);
+    }
+    return time;
+  }
+
+  /**
+   * Gemeinsamer Rahmen der Umrechnungen zum bzw. vom v21-Format: null, undefined und "" ergeben null. Ein Wert, der
+   * nicht passt, wird unverändert zurückgegeben, damit die Komponente ihn sichtbar als Fehler anzeigt, statt dass
+   * z.B. das Laden einer Seite abbricht.
+   */
+  private static convertDateValue(
+    value: string | null | undefined,
+    functionName: string,
+    expected: string,
+    convert: (value: string) => string | null
+  ): string | null {
+    if (value == null || value === '') {
+      return null;
+    }
+
+    const result = convert(value);
+    if (result === null) {
+      if (isDevMode()) {
+        console.warn(
+          `LuxUtil.${functionName}(): Erwartet ${expected}, erhalten '${value}'. ` +
+            'Der Wert wird unverändert zurückgegeben (siehe Update-Guide v22).'
+        );
+      }
+      return value;
+    }
+
+    return result;
   }
 }

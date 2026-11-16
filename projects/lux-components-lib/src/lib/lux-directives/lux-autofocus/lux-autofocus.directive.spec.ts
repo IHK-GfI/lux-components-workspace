@@ -12,7 +12,6 @@ import { LuxAutocompleteComponent } from '../../lux-form/lux-autocomplete/lux-au
 import { LuxCheckboxComponent } from '../../lux-form/lux-checkbox/lux-checkbox.component';
 import { LuxChipsComponent } from '../../lux-form/lux-chips/lux-chips.component';
 import { LuxDatepickerComponent } from '../../lux-form/lux-datepicker/lux-datepicker.component';
-import { LuxDatetimepickerComponent } from '../../lux-form/lux-datetimepicker/lux-datetimepicker.component';
 import { LuxFileInputComponent } from '../../lux-form/lux-file/lux-file-input/lux-file-input.component';
 import { LuxFileListComponent } from '../../lux-form/lux-file/lux-file-list/lux-file-list.component';
 import { LuxFileUploadComponent } from '../../lux-form/lux-file/lux-file-upload/lux-file-upload.component';
@@ -96,16 +95,6 @@ describe('LuxAutofocusDirective', () => {
 
   it('Sollte mit lux-timepicker funktionieren', async () => {
     const fixture = TestBed.createComponent(LuxAutoFocusTimepickerComponent);
-    fixture.detectChanges();
-    vi.spyOn(fixture.debugElement.query(By.css('input')).nativeElement, 'focus').mockReturnValue(undefined);
-
-    await LuxTestHelper.wait(fixture);
-
-    expect(fixture.debugElement.query(By.css('input')).nativeElement.focus).toHaveBeenCalled();
-  });
-
-  it('Sollte mit lux-dateptimeicker-ac funktionieren', async () => {
-    const fixture = TestBed.createComponent(LuxAutoFocusDateTimePickerComponent);
     fixture.detectChanges();
     vi.spyOn(fixture.debugElement.query(By.css('input')).nativeElement, 'focus').mockReturnValue(undefined);
 
@@ -241,14 +230,6 @@ class LuxAutoFocusDatePickerComponent {}
   imports: [LuxTimepickerComponent, LuxAutofocusDirective]
 })
 class LuxAutoFocusTimepickerComponent {}
-
-@Component({
-  selector: 'lux-autofocus-test-datetimepicker',
-  template: `<lux-datetimepicker luxAutofocus></lux-datetimepicker>`,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [LuxDatetimepickerComponent, LuxAutofocusDirective]
-})
-class LuxAutoFocusDateTimePickerComponent {}
 
 @Component({
   selector: 'lux-autofocus-test-fileinput',
