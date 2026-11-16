@@ -8,10 +8,10 @@
         {{ data.content }}
       }
     </lux-dialog-content>
-    <lux-dialog-actions>
+    <lux-dialog-actions class="lux-dialog-preset-actions lux-dialog-actions-stacked">
       @if (data.confirmAction) {
         <lux-button
-          class="lux-mr-4 lux-dialog-preset-confirm"
+          class="lux-dialog-preset-confirm"
           luxTabIndex="0"
           [luxPotentialChildren]="['button']"
           luxLabel="{{ data.confirmAction.label || ('luxc.dialog-preset.ok' | transloco) }}"

@@ -320,6 +320,11 @@ Ein vollständiges Beispiel und Hinweise zu Sekunden, Zeitumstellung und einer f
 
 Neu sind die Signal-Forms-Validatoren `luxDateValue()`, `luxTimeValue()` und `luxDateTimeValue()`. Sie prüfen Format und Grenzen auch im Signal Form, denn einen Wert im falschen Format oder außerhalb der Grenzen können die Komponenten dort nicht selbst ungültig machen. Eine ungültige Texteingabe melden sie dagegen selbst an das Feld.
 
+##### Dialog-Aktionen
+
+`lux-dialog-actions` ist jetzt ein Flex-Container, der die Schaltflächen zentriert, umbricht und per `gap` einen Abstand von 16px zwischen ihnen setzt. Eigene Margins zwischen den Schaltflächen (z.B. `class="lux-mr-4"`) bitte entfernen, sonst verdoppelt sich der Abstand. Eigene Klassen am Element (z.B. `lux-gap-2`) haben weiterhin Vorrang.
+Mit der neuen Klasse `lux-dialog-actions-stacked` stehen die Schaltflächen auf kleinen Bildschirmen untereinander und nutzen die volle Breite (siehe [lux-dialog](lux‐dialog-v22)).
+
 #### Update
 
 1. Node 24 installieren.

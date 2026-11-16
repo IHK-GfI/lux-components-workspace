@@ -15,13 +15,12 @@
     />
   </lux-dialog-content>
 
-  <lux-dialog-actions class="lux-flex lux-flex-wrap">
+  <lux-dialog-actions class="lux-dialog-actions-stacked">
     <lux-button
       luxLabel="{{ 'luxc.file.rename.dialog.cancel.lbl' | transloco }}"
       luxColor="primary"
       [luxStroked]="true"
       (luxClicked)="luxDialogRef.closeDialog()"
-      class="lux-mr-4"
     />
     <lux-button
       luxLabel="{{ 'luxc.file.rename.dialog.rename.lbl' | transloco }}"
