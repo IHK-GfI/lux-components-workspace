@@ -17,7 +17,7 @@
   Wichtig: Nur das versteckte <select> trägt die uid (Ziel des Wrapper-Labels per for).
   Das mat-select darf keine eigene id="uid" bekommen, sonst entsteht eine doppelte DOM-ID.
   -->
-  <select [id]="uid()" style="display: none"></select>
+  <select [id]="uid()" class="lux-display-none" hidden></select>
   <mat-select
     luxTagIdHandler
     [luxTagId]="luxTagId()"
