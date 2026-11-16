@@ -667,7 +667,7 @@ describe('LuxFileListComponent', () => {
         expect(fixture.debugElement.query(By.css('mat-error'))).toBeNull();
 
         // Änderungen durchführen
-        testComponent.maxSizeMb = 5;
+        testComponent.maxSizeMiB = 5;
         LuxTestHelper.wait(fixture);
 
         files = [LuxTestHelper.createFileBrowserSafe('mockfile2.txt', 'text/txt')];
@@ -684,7 +684,7 @@ describe('LuxFileListComponent', () => {
         expect(fileComponent.luxSelected![0].name).toEqual('mockfile1.txt');
         expect(fixture.debugElement.query(By.css('mat-error'))).not.toBeNull();
         expect(fixture.debugElement.query(By.css('mat-error')).nativeElement.textContent.trim()).toEqual(
-          'Die Datei "mockfile2.txt" überschreitet mit 20MB die erlaubte Dateigröße von 5MB'
+          'Die Datei "mockfile2.txt" überschreitet mit 20 MB die erlaubte Dateigröße von 5 MB'
         );
       }));
 
@@ -1237,7 +1237,7 @@ describe('LuxFileListComponent', () => {
       [luxDisabled]="disabled"
       [luxAccept]="accept"
       [luxCapture]="capture"
-      [luxMaxSizeMB]="maxSizeMb"
+      [luxMaxSizeMiB]="maxSizeMiB"
       [luxUploadUrl]="uploadUrl"
       [luxSelected]="selected"
       [luxShowPreview]="showPreview"
@@ -1263,7 +1263,7 @@ class FileComponent {
   accept?: string;
   capture?: string;
   iconName?: string;
-  maxSizeMb = 10;
+  maxSizeMiB = 10;
   uploadUrl?: string;
   showPreview?: boolean;
   multiple?: boolean;
@@ -1325,7 +1325,7 @@ class FileComponent {
         [luxAccept]="accept"
         [luxCapture]="capture"
         [luxMultiple]="multiple"
-        [luxMaxSizeMB]="maxSizeMb"
+        [luxMaxSizeMiB]="maxSizeMiB"
         [luxUploadUrl]="uploadUrl"
       >
       </lux-file-list>
@@ -1345,7 +1345,7 @@ class FileFormComponent {
   accept?: string;
   capture?: string;
   iconName?: string;
-  maxSizeMb = 10;
+  maxSizeMiB = 10;
   uploadUrl?: string;
   multiple?: boolean;
 
