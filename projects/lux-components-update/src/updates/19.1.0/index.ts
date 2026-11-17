@@ -1,5 +1,5 @@
 import { chain, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
-import chalk from 'chalk';
+import { styleText } from 'node:util';
 import { updateDep } from '../../update-dependencies/index';
 import { finish, messageInfoRule, messageSuccessRule } from '../../utility/util';
 
@@ -10,7 +10,7 @@ export function update190100(_options: any, runNpmInstall = true): Rule {
       messageInfoRule(`Die Datei "package.json" wird angepasst...`),
       updateDep('@ihk-gfi/lux-components', '19.1.0', false),
       messageSuccessRule(`Die LUX-Components wurden auf die Version 19.1.0 aktualisiert.`),
-      finish(runNpmInstall, `${chalk.yellowBright('Fertig!')}`)
+      finish(runNpmInstall, `${styleText('yellowBright', 'Fertig!')}`)
     ]);
   };
 }

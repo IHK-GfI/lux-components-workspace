@@ -6,6 +6,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
+import { LuxTabIndexDirective } from '../../lux-directives/lux-tabindex/lux-tab-index.directive';
 import { LuxThemePalette } from '../../lux-util/lux-colors.enum';
 import { LuxLinkComponent } from './lux-link.component';
 
@@ -261,6 +262,54 @@ describe('LuxLinkComponent', () => {
     expect(link.nativeElement.getAttribute('rel')).toEqual('noopener noreferrer');
   });
 
+  it('Sollte ohne luxHref per Tastatur erreichbar sein', async () => {
+    // Vorbedingungen testen: kein href, deshalb ist ein tabindex nötig
+    let link = fixture.debugElement.query(By.css('a'));
+    expect(link.nativeElement.getAttribute('href')).toBeNull();
+    expect(link.nativeElement.getAttribute('tabindex')).toEqual('0');
+
+    // Änderungen durchführen: andere Variante (eigenes <a> im Template)
+    component.raised.set(true);
+    fixture.detectChanges();
+
+    // Nachbedingungen prüfen
+    link = fixture.debugElement.query(By.css('a'));
+    expect(link.nativeElement.getAttribute('tabindex')).toEqual('0');
+  });
+
+  it('Sollte mit luxHref keinen tabindex setzen', async () => {
+    // Änderungen durchführen
+    component.href.set('/mock-route');
+    fixture.detectChanges();
+
+    // Nachbedingungen prüfen: das href macht den Link fokussierbar
+    const link = fixture.debugElement.query(By.css('a'));
+    expect(link.nativeElement.getAttribute('href')).toEqual('/mock-route');
+    expect(link.nativeElement.getAttribute('tabindex')).toBeNull();
+  });
+
+  it('Sollte deaktiviert ohne luxHref nicht per Tastatur erreichbar sein', async () => {
+    // Änderungen durchführen
+    component.disabled.set(true);
+    fixture.detectChanges();
+
+    // Nachbedingungen prüfen
+    const link = fixture.debugElement.query(By.css('a'));
+    expect(link.nativeElement.getAttribute('href')).toBeNull();
+    expect(link.nativeElement.getAttribute('tabindex')).toBeNull();
+  });
+
+  it('Sollte einen über luxTabIndex gesetzten Tabindex behalten', async () => {
+    // Änderungen durchführen
+    const tabIndexFixture = TestBed.createComponent(MockLinkTabIndexComponent);
+    tabIndexFixture.detectChanges();
+    tabIndexFixture.detectChanges();
+
+    // Nachbedingungen prüfen
+    const link = tabIndexFixture.debugElement.query(By.css('a'));
+    expect(link.nativeElement.getAttribute('tabindex')).toEqual('5');
+  });
+
   it('Sollte die Farbe anpassen', async () => {
     // Vorbedingungen testen
     let color = fixture.debugElement.query(By.css('a.mat-unthemed'));
@@ -318,3 +367,11 @@ class MockLinkComponent {
   href = signal('');
   color = signal<LuxThemePalette | undefined>(undefined);
 }
+
+@Component({
+  selector: 'lux-mock-link-tabindex',
+  imports: [LuxLinkComponent, LuxTabIndexDirective],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `<lux-link luxLabel="Link" luxTabIndex="5" />`
+})
+class MockLinkTabIndexComponent {}

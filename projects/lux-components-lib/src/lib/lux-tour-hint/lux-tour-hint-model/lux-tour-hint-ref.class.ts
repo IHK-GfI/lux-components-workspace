@@ -1,6 +1,6 @@
 import { Injectable, signal } from '@angular/core';
 import { LuxTourHintComponent } from '../lux-tour-hint.component';
-import { InitializedTourHintConfig } from '../lux-tour-hint.service';
+import type { InitializedTourHintConfig } from '../lux-tour-hint.service';
 
 export type OnCloseListener = (dontShowAgain: boolean) => void;
 

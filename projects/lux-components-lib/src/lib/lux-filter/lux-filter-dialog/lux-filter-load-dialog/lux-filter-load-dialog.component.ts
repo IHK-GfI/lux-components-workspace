@@ -10,7 +10,7 @@ import { LuxDialogContentComponent } from '../../../lux-popups/lux-dialog/lux-di
 import { LuxDialogTitleComponent } from '../../../lux-popups/lux-dialog/lux-dialog-structure/lux-dialog-structure-subcomponents/lux-dialog-title.component';
 import { LuxDialogStructureComponent } from '../../../lux-popups/lux-dialog/lux-dialog-structure/lux-dialog-structure.component';
 import { LuxFilter } from '../../lux-filter-base/lux-filter';
-import { LuxFilterFormComponent } from '../../lux-filter-form/lux-filter-form.component';
+import type { LuxFilterFormComponent } from '../../lux-filter-form/lux-filter-form.component';
 
 @Component({
   selector: 'lux-filter-load-dialog',

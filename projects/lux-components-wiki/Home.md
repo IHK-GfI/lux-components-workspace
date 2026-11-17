@@ -41,6 +41,7 @@ Die Demo kann auch lokal ausgeführt werden:
 
 - [Dokumentation](Home-v22)
 - [Update Guide](Update-Guide-v22)
+- [KI-Prompt Update](Update-Prompt-v22)
 
 ### v21
 

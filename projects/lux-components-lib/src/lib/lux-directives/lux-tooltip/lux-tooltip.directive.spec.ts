@@ -3,9 +3,16 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { ChangeDetectionStrategy, Component, DebugElement, signal } from '@angular/core';
 import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
+import { MATERIAL_ANIMATIONS } from '@angular/material/core';
 import { TooltipPosition } from '@angular/material/tooltip';
 import { By } from '@angular/platform-browser';
+import { provideHttpClient, withXhr } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
+import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
+import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.component';
+import { LuxMenuItemComponent } from '../../lux-action/lux-menu/lux-menu-subcomponents/lux-menu-item.component';
+import { LuxMenuComponent } from '../../lux-action/lux-menu/lux-menu.component';
 import { LuxTooltipDirective } from './lux-tooltip.directive';
 
 describe('LuxTooltipDirective', () => {
@@ -39,7 +46,11 @@ describe('LuxTooltipDirective', () => {
 
   beforeEach(async () => {
     vi.useFakeTimers();
-    TestBed.configureTestingModule({}).compileComponents();
+    // Ab jsdom 31 liefert getComputedStyle() die echte Hide-Animation des MatTooltip. Material wartet dann auf
+    // "animationend", das jsdom nie auslöst, und der Tooltip bliebe im Overlay. Daher Animationen abschalten.
+    TestBed.configureTestingModule({
+      providers: [{ provide: MATERIAL_ANIMATIONS, useValue: { animationsDisabled: true } }]
+    }).compileComponents();
   });
 
   beforeEach(async () => {
@@ -231,7 +242,53 @@ describe('LuxTooltipDirective', () => {
   });
 });
 
+describe('LuxTooltipDirective - Anmeldung am Host (LUX_TOOLTIP_HOST)', () => {
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      providers: [
+        provideHttpClient(withXhr()),
+        provideHttpClientTesting(),
+        provideLuxTranslocoTesting(),
+        { provide: MATERIAL_ANIMATIONS, useValue: { animationsDisabled: true } }
+      ]
+    }).compileComponents();
+  });
+
+  it('Sollte sich beim LuxButton auf demselben Element anmelden, nicht bei einem Tooltip im Inhalt', () => {
+    const fixture = TestBed.createComponent(MockButtonHostComponent);
+    fixture.detectChanges();
+
+    const button = fixture.debugElement.query(By.directive(LuxButtonComponent)).componentInstance as LuxButtonComponent;
+    expect(button.tooltipDirective?.luxTooltip()).toEqual('Außen');
+  });
+
+  it('Sollte sich beim LuxMenu am Standard-Trigger anmelden', () => {
+    const fixture = TestBed.createComponent(MockMenuHostComponent);
+    fixture.detectChanges();
+
+    const menu = fixture.debugElement.query(By.directive(LuxMenuComponent)).componentInstance as LuxMenuComponent;
+    expect(menu.defaultTriggerComponent).toBeTruthy();
+    expect(menu.defaultTriggerComponent!.tooltipDirective?.luxTooltip()).toEqual('Menü');
+  });
+});
+
 /* Mock-Klassen */
+
+@Component({
+  selector: 'lux-mock-button-host',
+  template: `<lux-button luxLabel="Button" luxTooltip="Außen"><span luxTooltip="Innen">Inhalt</span></lux-button>`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [LuxButtonComponent, LuxTooltipDirective]
+})
+class MockButtonHostComponent {}
+
+@Component({
+  selector: 'lux-mock-menu-host',
+  template: `<lux-menu luxTooltip="Menü"><lux-menu-item luxLabel="Eintrag" /></lux-menu>`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [LuxMenuComponent, LuxMenuItemComponent, LuxTooltipDirective]
+})
+class MockMenuHostComponent {}
 
 @Component({
   selector: 'lux-mock-component',

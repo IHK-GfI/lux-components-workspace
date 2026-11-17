@@ -1,5 +1,5 @@
-import { LuxStepperLargeComponent } from '../lux-stepper-large.component';
-import { ILuxStepperLargeStep } from './lux-stepper-large-step.interface';
+import type { LuxStepperLargeComponent } from '../lux-stepper-large.component';
+import type { ILuxStepperLargeStep } from './lux-stepper-large-step.interface';
 
 export type LuxStepperLargeClickEventSourceType = 'nav' | 'prev_button' | 'next_button' | 'fin_button';
 

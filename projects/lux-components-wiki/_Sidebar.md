@@ -8,6 +8,7 @@
   - v22
     - [Dokumentation](Home-v22)
     - [Update Guide](update-guide-v22)
+    - [KI-Prompt Update](update-prompt-v22)
   - v21
     - [Dokumentation](Home-v21)
     - [Update Guide](update-guide-v21)

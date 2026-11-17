@@ -4,5 +4,6 @@
   "lib": {
     "entryFile": "src/public_api.ts"
   },
-  "assets": ["./locale/*", "./LICENSE"]
+  "assets": ["./locale/*", "./LICENSE"],
+  "allowedNonPeerDependencies": ["uuid"]
 }

@@ -2,7 +2,7 @@ import { NgClass, NgTemplateOutlet } from '@angular/common';
 import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, inject, OnInit, viewChildren } from '@angular/core';
 import { LuxButtonComponent } from '../../../../lux-action/lux-button/lux-button.component';
 import { LuxUtil } from '../../../../lux-util/lux-util';
-import { LuxStepperLargeComponent } from '../../lux-stepper-large.component';
+import type { LuxStepperLargeComponent } from '../../lux-stepper-large.component';
 import { LUX_STEPPER_LARGE_OVERLAY_DATA, LuxStepperLargeMobileOverlayData } from './lux-stepper-large-mobile-overlay-data';
 import { LuxStepperLargeMobileOverlayRef } from './lux-stepper-large-mobile-overlay-ref';
 

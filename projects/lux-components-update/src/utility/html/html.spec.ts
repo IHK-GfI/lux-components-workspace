@@ -3,6 +3,7 @@ import {
   addAttrFn,
   appendAttrFn,
   removeAttrFn,
+  removeAttrInStartTagFn,
   removeElementFn,
   renameAttrFn,
   renameElementFn,
@@ -256,6 +257,50 @@ describe('html', () => {
       expect(result).toContain('#filelistexamplewithoutform\n');
       expect(result).not.toContain('#filelistexamplewithoutform=""');
       expect(result).toContain('[luxHint]=""');
+    });
+  });
+
+  describe('removeAttrInStartTag', () => {
+    it('Sollte das Attribut nur im Start-Tag entfernen', () => {
+      const content = [
+        '<lux-card luxTitle="Titel" luxIconName="lux-cogs" [luxDisabled]="a > b">',
+        '  <lux-card-content>',
+        '    <lux-icon luxIconName="lux-save"></lux-icon>',
+        '  </lux-card-content>',
+        '</lux-card>'
+      ].join('\n');
+
+      const result = Html.transform(content, 'lux-card', removeAttrInStartTagFn('luxIconName'));
+
+      expect(result).toEqual(content.replace(' luxIconName="lux-cogs"', ''));
+    });
+
+    it('Sollte Property-Binding, einfache Anführungszeichen und Attribute ohne Wert entfernen', () => {
+      const content = [
+        `<lux-card [luxIconName]="icon" luxTitle="A"></lux-card>`,
+        `<lux-card luxIconName='lux-cogs' luxTitle="B"></lux-card>`,
+        `<lux-card\n  luxTitle="C"\n  luxIconName\n></lux-card>`
+      ].join('\n');
+
+      const result = Html.transform(content, 'lux-card', removeAttrInStartTagFn('luxIconName'));
+
+      expect(result).toEqual(
+        [`<lux-card luxTitle="A"></lux-card>`, `<lux-card luxTitle="B"></lux-card>`, `<lux-card\n  luxTitle="C"\n></lux-card>`].join('\n')
+      );
+    });
+
+    it('Sollte das Attribut auch direkt vor dem Ende des Start-Tags entfernen', () => {
+      const content = '<lux-card luxTitle="A" [luxIconName]="icon"><p>x</p></lux-card>\n<lux-card luxIconName/>';
+
+      expect(Html.transform(content, 'lux-card', removeAttrInStartTagFn('luxIconName'))).toEqual(
+        '<lux-card luxTitle="A"><p>x</p></lux-card>\n<lux-card/>'
+      );
+    });
+
+    it('Sollte Attribute mit gleichem Präfix nicht entfernen', () => {
+      const content = '<lux-card luxIconNameExtra="x" luxTitle="A"></lux-card>';
+
+      expect(Html.transform(content, 'lux-card', removeAttrInStartTagFn('luxIconName'))).toEqual(content);
     });
   });
 });

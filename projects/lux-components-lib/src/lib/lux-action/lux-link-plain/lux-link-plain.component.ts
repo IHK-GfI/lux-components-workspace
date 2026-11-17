@@ -1,7 +1,8 @@
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, forwardRef, inject, input } from '@angular/core';
 import { Router } from '@angular/router';
 import { LuxAriaLabelDirective } from '../../lux-directives/lux-aria/lux-aria-label.directive';
+import { LUX_TOOLTIP_HOST, LuxTooltipHost } from '../../lux-directives/lux-tooltip/lux-tooltip-host';
 import { LuxTooltipDirective } from '../../lux-directives/lux-tooltip/lux-tooltip.directive';
 import { LuxIconComponent } from '../../lux-icon/lux-icon/lux-icon.component';
 import { LuxActionComponentBaseClass } from '../lux-action-model/lux-action-component-base.class';
@@ -12,9 +13,10 @@ import { LuxActionComponentBaseClass } from '../lux-action-model/lux-action-comp
   styleUrls: ['./lux-link-plain.component.scss'],
   host: { '[class.lux-disabled]': 'luxDisabled()', '[class]': 'classes()' },
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [LuxAriaLabelDirective, NgClass, LuxIconComponent]
+  imports: [LuxAriaLabelDirective, NgClass, LuxIconComponent],
+  providers: [{ provide: LUX_TOOLTIP_HOST, useExisting: forwardRef(() => LuxLinkPlainComponent) }]
 })
-export class LuxLinkPlainComponent extends LuxActionComponentBaseClass {
+export class LuxLinkPlainComponent extends LuxActionComponentBaseClass implements LuxTooltipHost {
   readonly luxHref = input('');
   readonly luxBlank = input(false);
   readonly luxCustomClass = input('');
@@ -69,5 +71,9 @@ export class LuxLinkPlainComponent extends LuxActionComponentBaseClass {
         this.router.navigate([href]);
       }
     }
+  }
+
+  registerTooltip(tooltip: LuxTooltipDirective) {
+    this.tooltipDirective = tooltip;
   }
 }

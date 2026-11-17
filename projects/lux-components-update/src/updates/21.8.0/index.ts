@@ -1,5 +1,5 @@
 import { chain, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
-import chalk from 'chalk';
+import { styleText } from 'node:util';
 import { updateDep } from '../../update-dependencies/index';
 import { iterateFilesAndModifyContent } from '../../utility/files';
 import { logInfo } from '../../utility/logging';
@@ -17,7 +17,7 @@ export function update210800(options: Options, runNpmInstall = true): Rule {
       messageInfoRule(`Die Imports von "LuxTestHelper" und "LuxOverlayHelper" werden auf den neuen Entry Point "test-utils" umgestellt...`),
       updateTestUtilsImports(options),
       messageSuccessRule(`Die LUX-Components wurden auf die Version 21.8.0 aktualisiert.`),
-      finish(runNpmInstall, `${chalk.yellowBright('Fertig!')}`)
+      finish(runNpmInstall, `${styleText('yellowBright', 'Fertig!')}`)
     ]);
   };
 }

@@ -11,6 +11,7 @@ import {
   contentChild,
   contentChildren,
   effect,
+  forwardRef,
   inject,
   input,
   output,
@@ -24,6 +25,7 @@ import { LuxAriaDisabledDirective } from '../../lux-directives/lux-aria/lux-aria
 import { LuxAriaLabelDirective } from '../../lux-directives/lux-aria/lux-aria-label.directive';
 import { LuxTabIndexDirective } from '../../lux-directives/lux-tabindex/lux-tab-index.directive';
 import { LuxTagIdDirective } from '../../lux-directives/lux-tag-id/lux-tag-id.directive';
+import { LUX_TOOLTIP_HOST, LuxTooltipHost } from '../../lux-directives/lux-tooltip/lux-tooltip-host';
 import { LuxTooltipDirective } from '../../lux-directives/lux-tooltip/lux-tooltip.directive';
 import { LuxIconComponent } from '../../lux-icon/lux-icon/lux-icon.component';
 import { LuxProgressComponent } from '../../lux-common/lux-progress/lux-progress.component';
@@ -61,9 +63,10 @@ import { LuxMenuTriggerComponent } from './lux-menu-subcomponents/lux-menu-trigg
     LuxDividerComponent,
     MatDivider,
     TranslocoPipe
-  ]
+  ],
+  providers: [{ provide: LUX_TOOLTIP_HOST, useExisting: forwardRef(() => LuxMenuComponent) }]
 })
-export class LuxMenuComponent implements AfterViewInit, AfterContentInit, OnDestroy, OnInit {
+export class LuxMenuComponent implements AfterViewInit, AfterContentInit, OnDestroy, OnInit, LuxTooltipHost {
   readonly luxMenuLabel = input<string>('');
   readonly luxMenuIconName = input<string>('lux-interface-setting-menu-1');
   readonly luxMenuTriggerIconShowRight = input<boolean>(false);
@@ -488,6 +491,13 @@ export class LuxMenuComponent implements AfterViewInit, AfterContentInit, OnDest
 
   isSectionTitle(menuItem: any): menuItem is LuxMenuSectionTitleComponent {
     return menuItem instanceof LuxMenuSectionTitleComponent;
+  }
+
+  registerTooltip(tooltip: LuxTooltipDirective) {
+    const trigger = this.defaultTriggerComponent;
+    if (trigger) {
+      trigger.tooltipDirective = tooltip;
+    }
   }
 
   private updateMenuEntries() {

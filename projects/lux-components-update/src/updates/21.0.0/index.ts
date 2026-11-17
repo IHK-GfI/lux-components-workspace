@@ -1,5 +1,5 @@
 import { chain, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
-import chalk from 'chalk';
+import { styleText } from 'node:util';
 import { Node } from 'jsonc-parser';
 import { deleteDep } from '../../update-dependencies';
 import { updateDep } from '../../utility/dependencies';
@@ -19,7 +19,11 @@ export const addOrUpdate = false;
 
 export function update210000(options: Options): Rule {
   return (_tree: Tree, _context: SchematicContext) => {
-    return chain([check(options), applyRuleIf(updateMinVersion, updateProject(options)), finish(false, `${chalk.greenBright('Fertig!')}`)]);
+    return chain([
+      check(options),
+      applyRuleIf(updateMinVersion, updateProject(options)),
+      finish(false, `${styleText('greenBright', 'Fertig!')}`)
+    ]);
   };
 }
 

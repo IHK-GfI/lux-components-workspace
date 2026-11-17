@@ -1,4 +1,4 @@
-import { LuxStepperLargeMobileOverlayData } from './lux-stepper-large-mobile-overlay-data';
+import type { LuxStepperLargeMobileOverlayData } from './lux-stepper-large-mobile-overlay-data';
 
 export const LUX_STEPPER_LARGE_OVERLAY_DEFAULT_CONFIG: LuxStepperLargeMobileOverlayConfig = {
   hasBackdrop: true,

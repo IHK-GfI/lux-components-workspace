@@ -1,5 +1,5 @@
 import { SchematicsException } from '@angular-devkit/schematics';
-import chalk from 'chalk';
+import { styleText } from 'node:util';
 
 export const TAB = '\t   ';
 
@@ -9,7 +9,7 @@ export const TAB = '\t   ';
  */
 export const logInfoWithDescriptor = (...messages: string[]) => {
   const message = generateLogMessage(...messages);
-  console.log(chalk.blueBright(`[INFO]${TAB}${message}`));
+  console.log(styleText('blueBright', `[INFO]${TAB}${message}`));
 };
 
 /**
@@ -18,7 +18,7 @@ export const logInfoWithDescriptor = (...messages: string[]) => {
  */
 export const logDebug = (...messages: string[]) => {
   const message = generateLogMessage(...messages);
-  console.log(chalk.grey(`${TAB}${message}`));
+  console.log(styleText('gray', `${TAB}${message}`));
 };
 
 /**
@@ -27,7 +27,7 @@ export const logDebug = (...messages: string[]) => {
  */
 export const logInfo = (...messages: string[]) => {
   const message = generateLogMessage(...messages);
-  console.log(chalk.whiteBright(`${TAB}${message}`));
+  console.log(styleText('whiteBright', `${TAB}${message}`));
 };
 
 /**
@@ -36,7 +36,7 @@ export const logInfo = (...messages: string[]) => {
  */
 export const logSuccess = (...messages: string[]) => {
   const message = generateLogMessage(...messages);
-  console.log(chalk.yellowBright(`[SUCCESS]  ${message}`));
+  console.log(styleText('yellowBright', `[SUCCESS]  ${message}`));
 };
 
 /**
@@ -45,7 +45,7 @@ export const logSuccess = (...messages: string[]) => {
  */
 export const logWarn = (...messages: string[]) => {
   const message = generateLogMessage(...messages);
-  console.log(chalk.yellowBright(`[WARN]     ${message}`));
+  console.log(styleText('yellowBright', `[WARN]     ${message}`));
 };
 
 /**
@@ -56,7 +56,7 @@ export const logError = (...messages: string[]) => {
   let message = generateLogMessage(...messages);
   // Für den Fall, dass ein weitergereichter Fehler hier ankommt [ERROR] preventiv entfernen
   message = message.replace('[ERROR]    ', '');
-  console.log(chalk.redBright(`[ERROR]    ${message}`));
+  console.log(styleText('redBright', `[ERROR]    ${message}`));
 };
 
 /**

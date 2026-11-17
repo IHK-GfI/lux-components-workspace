@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
-import { LuxStepperComponent } from './lux-stepper.component';
+import type { LuxStepperComponent } from './lux-stepper.component';
 
 @Injectable({
   providedIn: 'root'

@@ -195,7 +195,8 @@ describe('LuxConditionalDirective', () => {
       await layoutFixture.whenStable();
       const panel = layoutFixture.nativeElement.querySelector('.lux-conditional__panel') as HTMLElement;
 
-      expect(getComputedStyle(panel).gridTemplateColumns).toBe('minmax(0, 1fr)');
+      // Ab jsdom 31 wird die 0 im berechneten Stil wie im Browser als "0px" serialisiert.
+      expect(getComputedStyle(panel).gridTemplateColumns).toMatch(/^minmax\(0(px)?, 1fr\)$/);
     });
   });
 });
