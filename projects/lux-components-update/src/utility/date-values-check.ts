@@ -12,13 +12,55 @@ export interface LuxDateValueFinding {
   hint: string;
 }
 
-interface LuxDateValuePattern {
+/**
+ * Ein Suchmuster für Stellen, die beim Update gemeldet werden.
+ */
+export interface LuxUsagePattern {
+  /** Der reguläre Ausdruck, der zeilenweise geprüft wird (ohne g-Flag). */
   regexp: RegExp;
+  /** Die Dateiendungen, in denen gesucht wird (z.B. ".html" oder ".spec.ts"). */
   fileEndings: string[];
+  /** Der Hinweis für die Fundstelle. */
   hint: string;
 }
 
-const PATTERNS: LuxDateValuePattern[] = [
+/**
+ * Eine Fundstelle zu einem {@link LuxUsagePattern}.
+ */
+export interface LuxUsage<P extends LuxUsagePattern> {
+  filePath: string;
+  line: number;
+  pattern: P;
+}
+
+/**
+ * Sucht zeilenweise nach den Mustern in allen passenden Dateien (node_modules, dist usw. werden übersprungen).
+ * @param tree Der Tree der Anwendung.
+ * @param rootPath Der Pfad, ab dem gesucht wird.
+ * @param patterns Die Suchmuster.
+ */
+export function findUsages<P extends LuxUsagePattern>(tree: Tree, rootPath: string, patterns: P[]): LuxUsage<P>[] {
+  const usages: LuxUsage<P>[] = [];
+  const fileEndings = [...new Set(patterns.flatMap((pattern) => pattern.fileEndings))];
+
+  iterateFilesAndModifyContent(
+    tree,
+    rootPath,
+    false,
+    (filePath: string, content: string) => {
+      content.split(/\r?\n/).forEach((text, index) => {
+        patterns
+          .filter((pattern) => pattern.fileEndings.some((ending) => filePath.endsWith(ending)) && pattern.regexp.test(text))
+          .forEach((pattern) => usages.push({ filePath, line: index + 1, pattern }));
+      });
+    },
+    ...fileEndings
+  );
+
+  return usages;
+}
+
+const PATTERNS: LuxUsagePattern[] = [
   {
     regexp: /<lux-datetimepicker(-ac)?\b/,
     fileEndings: ['.html', '.ts'],
@@ -68,24 +110,7 @@ const PATTERNS: LuxDateValuePattern[] = [
  * @param rootPath Der Pfad, ab dem gesucht wird.
  */
 export function findDateValueUsages(tree: Tree, rootPath: string): LuxDateValueFinding[] {
-  const findings: LuxDateValueFinding[] = [];
-
-  iterateFilesAndModifyContent(
-    tree,
-    rootPath,
-    false,
-    (filePath: string, content: string) => {
-      content.split(/\r?\n/).forEach((text, index) => {
-        PATTERNS.filter((pattern) => pattern.fileEndings.some((ending) => filePath.endsWith(ending)) && pattern.regexp.test(text)).forEach(
-          (pattern) => findings.push({ filePath, line: index + 1, hint: pattern.hint })
-        );
-      });
-    },
-    '.html',
-    '.ts'
-  );
-
-  return findings;
+  return findUsages(tree, rootPath, PATTERNS).map((usage) => ({ filePath: usage.filePath, line: usage.line, hint: usage.pattern.hint }));
 }
 
 /**

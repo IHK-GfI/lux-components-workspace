@@ -1,0 +1,9 @@
+{
+  "fileExtensions": ["ts"],
+  "excludeRegExp": ["\\.spec\\.ts$"],
+  "tsConfig": "projects/lux-components-lib/tsconfig.lib.json",
+  "detectiveOptions": {
+    "ts": { "skipTypeImports": true, "skipAsyncImports": true },
+    "es6": { "skipTypeImports": true, "skipAsyncImports": true }
+  }
+}

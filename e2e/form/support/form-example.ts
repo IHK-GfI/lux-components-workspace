@@ -47,7 +47,9 @@ export class FormExamplePage {
 
   static async open(page: Page, route: string) {
     await page.goto(`/components-overview/example/${route}`);
-    await expect(page.locator('.example-base-content > router-outlet + *')).toBeVisible();
+    // Großzügiges Timeout wie in openExample() (visual/vrt-helper.ts): Bei voller Auslastung
+    // (4 Worker im Container) kommt der Lazy-Chunk einer Beispielseite teils erst nach über 5 s an.
+    await expect(page.locator('.example-base-content > router-outlet + *')).toBeVisible({ timeout: 15_000 });
     await page.waitForLoadState('networkidle');
     return new FormExamplePage(page);
   }

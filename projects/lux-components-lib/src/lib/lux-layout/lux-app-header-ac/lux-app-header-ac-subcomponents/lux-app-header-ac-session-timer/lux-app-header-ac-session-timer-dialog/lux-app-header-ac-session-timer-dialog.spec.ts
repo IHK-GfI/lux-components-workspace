@@ -1,7 +1,11 @@
 import { describe, it, beforeEach, afterEach, expect, vi } from 'vitest';
 import type { Mock } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { LuxAppHeaderAcSessionTimerDialogComponent, LuxSessionTimerDialogType } from './lux-app-header-ac-session-timer-dialog';
+import {
+  LuxAppHeaderAcSessionTimerDialogComponent,
+  LuxSessionTimerDialogData,
+  LuxSessionTimerDialogType
+} from './lux-app-header-ac-session-timer-dialog';
 import { LuxAppHeaderAcSessionTimerService } from '../lux-app-header-ac-session-timer-service/lux-app-header-ac-session-timer.service';
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
@@ -15,11 +19,19 @@ describe('LuxAppHeaderAcSessionTimerDialogComponent', () => {
   let timerService: LuxAppHeaderAcSessionTimerService;
   let dialogRefMock: {
     closeDialog: Mock;
+    data: LuxSessionTimerDialogData;
   };
   let httpController: HttpTestingController;
 
   beforeEach(async () => {
-    dialogRefMock = { closeDialog: vi.fn().mockName('closeDialog') };
+    // Die Aktionen rufen den echten Service erst beim Aufruf auf, damit Spies auf dem Service greifen.
+    dialogRefMock = {
+      closeDialog: vi.fn().mockName('closeDialog'),
+      data: {
+        extendSession: () => TestBed.inject(LuxAppHeaderAcSessionTimerService).extendSessionTimer(),
+        logout: () => TestBed.inject(LuxAppHeaderAcSessionTimerService).logoutUser()
+      }
+    };
 
     await TestBed.configureTestingModule({
       imports: [LuxAppHeaderAcSessionTimerDialogComponent],

@@ -1,6 +1,6 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, model, TemplateRef, viewChild } from '@angular/core';
 import { LuxUtil } from '../../../../lux-util/lux-util';
-import { LuxStepperLargeClickEvent } from '../../lux-stepper-large-model/lux-stepper-large-click-event';
+import type { LuxStepperLargeClickEvent } from '../../lux-stepper-large-model/lux-stepper-large-click-event';
 import { ILuxStepperLargeStep, LuxVetoState } from '../../lux-stepper-large-model/lux-stepper-large-step.interface';
 
 @Component({

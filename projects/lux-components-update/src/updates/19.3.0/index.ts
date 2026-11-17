@@ -1,5 +1,5 @@
 import { chain, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
-import chalk from 'chalk';
+import { styleText } from 'node:util';
 import { updateDep } from '../../update-dependencies/index';
 import { AddTransUnitItem } from '../../utility/replace-item';
 import { Options } from '../../utility/types';
@@ -15,7 +15,7 @@ export function update190300(options: Options, runNpmInstall = true): Rule {
       addMessageMaxFileCount(options),
       addMessageHideColumns(options),
       messageSuccessRule(`Die LUX-Components wurden auf die Version 19.3.0 aktualisiert.`),
-      finish(runNpmInstall, `${chalk.yellowBright('Fertig!')}`)
+      finish(runNpmInstall, `${styleText('yellowBright', 'Fertig!')}`)
     ]);
   };
 }

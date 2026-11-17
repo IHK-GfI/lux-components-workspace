@@ -1,6 +1,8 @@
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component, contentChild, input, output, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, contentChild, forwardRef, input, output, viewChild } from '@angular/core';
 import { LuxButtonComponent } from '../../../../../lux-action/lux-button/lux-button.component';
+import { LUX_TOOLTIP_HOST, LuxTooltipHost } from '../../../../../lux-directives/lux-tooltip/lux-tooltip-host';
+import { LuxTooltipDirective } from '../../../../../lux-directives/lux-tooltip/lux-tooltip.directive';
 import { LuxThemePalette } from '../../../../../lux-util/lux-colors.enum';
 import { LuxAppHeaderActionNavItemCustomComponent } from './lux-app-header-action-nav-item-custom.component';
 
@@ -8,9 +10,10 @@ import { LuxAppHeaderActionNavItemCustomComponent } from './lux-app-header-actio
   selector: 'lux-app-header-action-nav-item',
   templateUrl: './lux-app-header-action-nav-item.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgClass, LuxButtonComponent]
+  imports: [NgClass, LuxButtonComponent],
+  providers: [{ provide: LUX_TOOLTIP_HOST, useExisting: forwardRef(() => LuxAppHeaderActionNavItemComponent) }]
 })
-export class LuxAppHeaderActionNavItemComponent {
+export class LuxAppHeaderActionNavItemComponent implements LuxTooltipHost {
   readonly luxLabel = input('');
   readonly luxIconName = input<string | undefined>();
   readonly luxColor = input<LuxThemePalette>();
@@ -21,4 +24,11 @@ export class LuxAppHeaderActionNavItemComponent {
 
   readonly buttonComponent = viewChild(LuxButtonComponent);
   readonly customComponent = contentChild(LuxAppHeaderActionNavItemCustomComponent);
+
+  registerTooltip(tooltip: LuxTooltipDirective) {
+    const button = this.buttonComponent();
+    if (button) {
+      button.tooltipDirective = tooltip;
+    }
+  }
 }

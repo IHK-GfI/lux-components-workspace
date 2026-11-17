@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { take } from 'rxjs';
 import { DIALOG_WIDTH_LARGE_PX, minWidth } from '../lux-popups/lux-dialog/lux-dialog-model/lux-dialog-config.interface';
 import { LuxDialogService } from '../lux-popups/lux-dialog/lux-dialog.service';
-import { ILuxConsentDialogLauncher } from './lux-consent-dialog-launcher';
+import type { ILuxConsentDialogLauncher } from './lux-consent-dialog-launcher';
 
 @Injectable({
   providedIn: 'root'

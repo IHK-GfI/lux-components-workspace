@@ -1,5 +1,16 @@
 import { NgClass, NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, OnInit, inject, input, output, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  ElementRef,
+  OnInit,
+  forwardRef,
+  inject,
+  input,
+  output,
+  signal
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButton, MatFabButton, MatIconButton } from '@angular/material/button';
 import { Subject } from 'rxjs';
@@ -8,6 +19,7 @@ import { LuxProgressComponent, LuxProgressModeType } from '../../lux-common/lux-
 import { LuxComponentsConfigService } from '../../lux-components-config/lux-components-config.service';
 import { LuxAriaDisabledDirective } from '../../lux-directives/lux-aria/lux-aria-disabled.directive';
 import { LuxTagIdDirective } from '../../lux-directives/lux-tag-id/lux-tag-id.directive';
+import { LUX_TOOLTIP_HOST, LuxTooltipHost } from '../../lux-directives/lux-tooltip/lux-tooltip-host';
 import { LuxTooltipDirective } from '../../lux-directives/lux-tooltip/lux-tooltip.directive';
 import { LuxIconComponent } from '../../lux-icon/lux-icon/lux-icon.component';
 import { LuxThemePalette } from '../../lux-util/lux-colors.enum';
@@ -28,6 +40,7 @@ import { LuxActionComponentBaseClass } from '../lux-action-model/lux-action-comp
     LuxIconComponent,
     LuxProgressComponent
   ],
+  providers: [{ provide: LUX_TOOLTIP_HOST, useExisting: forwardRef(() => LuxButtonComponent) }],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '[class.lux-flat]': 'luxFlat()',
@@ -38,7 +51,7 @@ import { LuxActionComponentBaseClass } from '../lux-action-model/lux-action-comp
     '[class.lux-uppercase]': 'labelUppercase()'
   }
 })
-export class LuxButtonComponent extends LuxActionComponentBaseClass implements OnInit {
+export class LuxButtonComponent extends LuxActionComponentBaseClass implements OnInit, LuxTooltipHost {
   readonly luxType = input<'button' | 'reset' | 'submit'>('button');
   readonly luxThrottleTime = input<number | undefined>(undefined);
   readonly luxButtonBadge = input<string | undefined>(undefined);
@@ -120,6 +133,10 @@ export class LuxButtonComponent extends LuxActionComponentBaseClass implements O
     }
 
     this.auxClickSubject.next(event);
+  }
+
+  registerTooltip(tooltip: LuxTooltipDirective) {
+    this.tooltipDirective = tooltip;
   }
 
   private detectParent() {

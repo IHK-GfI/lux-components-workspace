@@ -9,6 +9,16 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
+// Ab Node 25 gibt es ein eingebautes globales localStorage/sessionStorage, das ohne "--localstorage-file"
+// undefined liefert. Vitest übernimmt bereits vorhandene globale Namen nicht aus jsdom, dadurch bleibt Nodes
+// Variante stehen und z.B. LuxStorageService bricht ab. Dann den Speicher von jsdom einsetzen.
+const luxJsdomWindow = (globalThis as any).jsdom?.window;
+for (const storageName of ['localStorage', 'sessionStorage'] as const) {
+  if ((globalThis as any)[storageName] === undefined && luxJsdomWindow?.[storageName]) {
+    Object.defineProperty(globalThis, storageName, { value: luxJsdomWindow[storageName], configurable: true, writable: true });
+  }
+}
+
 // jsdom implementiert weder scrollIntoView/scrollTo noch die Drag&Drop-DataTransfer-API (wird von
 // LuxTestHelper bzw. Komponenten wie LuxTourHint/LuxList/LuxChat genutzt, unter echtem Chrome via Karma
 // aber real vorhanden). Minimal-Polyfills, damit die betroffenen Tests unter jsdom nicht crashen.
@@ -85,6 +95,14 @@ if (!Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'innerText')) {
     measureText: (text: string) => ({ width: text.length * 7 })
   };
 };
+
+// jsdom implementiert URL.createObjectURL nicht. Vitest leitet den Aufruf an Node weiter und liest dazu
+// ein internes jsdom-Symbol, das es seit jsdom 30.1 nicht mehr gibt ("reading '_buffer'"). Damit brach
+// z.B. der Download in LuxFileInput/LuxFileList ab, bevor der onClick-Callback aufgerufen wurde.
+// Die erzeugte URL wird in den Tests nicht ausgewertet, ein eindeutiger Platzhalter reicht.
+let luxTestObjectUrlCounter = 0;
+URL.createObjectURL = () => `blob:lux-test/${++luxTestObjectUrlCounter}`;
+URL.revokeObjectURL = () => {};
 
 if (typeof (globalThis as any).DragEvent === 'undefined') {
   class LuxTestDragEvent extends MouseEvent {

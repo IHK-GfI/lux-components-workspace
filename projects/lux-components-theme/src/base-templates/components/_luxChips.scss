@@ -106,6 +106,12 @@ lux-chips {
     }
   }
 
+  // Abstand der Chips wie bis Angular Material 22.1. Ab 22.2 setzt Material 8px oben und unten,
+  // dadurch würde das Chips-Feld höher als die übrigen Form-Controls.
+  .mat-mdc-chip-set .mdc-evolution-chip {
+    margin: 4px 0 4px 8px;
+  }
+
   // Vertikale Chips
   .lux-vertical .mdc-evolution-chip-set__chips {
     flex-direction: column;
