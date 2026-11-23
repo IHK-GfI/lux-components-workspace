@@ -1,7 +1,8 @@
 name: notify - tester
 
-# Setzt jemand an einem Issue das Label "Testbereit", schreibt der Workflow einen Kommentar mit @-Erwähnung des Testers.
-# GitHub selbst benachrichtigt bei Label-Änderungen nicht, bei einer Erwähnung aber schon (Web und Mail).
+# Setzt jemand an einem Issue das Label "Testbereit", schreibt der Workflow einen Kommentar mit @-Erwähnung des Testers
+# und trägt ihn als Assignee ein. GitHub selbst benachrichtigt bei Label-Änderungen nicht, bei einer Erwähnung aber
+# schon (Web und Mail).
 #
 # Workflows für Issue-Ereignisse laufen immer in der Fassung des Standard-Branches (develop). Änderungen an dieser
 # Datei wirken also erst, wenn sie auf develop liegen.
@@ -34,3 +35,10 @@ jobs:
         run: |
           gh issue comment "$ISSUE" --repo "$GITHUB_REPOSITORY" \
             --body "@$TESTER: Bitte testen (Label \`$LABEL\` gesetzt von @$ACTOR)."
+
+      # Ist der Tester schon Assignee, ändert sich nichts; die API behandelt das Hinzufügen als idempotent.
+      - name: Tester als Assignee eintragen
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE: ${{ github.event.issue.number }}
+        run: gh issue edit "$ISSUE" --repo "$GITHUB_REPOSITORY" --add-assignee "$TESTER"
