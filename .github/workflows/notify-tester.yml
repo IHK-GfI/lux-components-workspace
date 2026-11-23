@@ -1,0 +1,36 @@
+name: notify - tester
+
+# Setzt jemand an einem Issue das Label "Testbereit", schreibt der Workflow einen Kommentar mit @-Erwähnung des Testers.
+# GitHub selbst benachrichtigt bei Label-Änderungen nicht, bei einer Erwähnung aber schon (Web und Mail).
+#
+# Workflows für Issue-Ereignisse laufen immer in der Fassung des Standard-Branches (develop). Änderungen an dieser
+# Datei wirken also erst, wenn sie auf develop liegen.
+on:
+  issues:
+    types: [labeled]
+
+permissions:
+  issues: write
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  LABEL: Testbereit
+  TESTER: dseifer
+
+jobs:
+  notify-tester:
+    # Der env-Kontext steht in jobs.<id>.if nicht zur Verfügung, daher steht der Label-Name hier ein zweites Mal.
+    if: github.event.label.name == 'Testbereit'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Tester benachrichtigen
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE: ${{ github.event.issue.number }}
+          ACTOR: ${{ github.actor }}
+        run: |
+          gh issue comment "$ISSUE" --repo "$GITHUB_REPOSITORY" \
+            --body "@$TESTER: Bitte testen (Label \`$LABEL\` gesetzt von @$ACTOR)."
