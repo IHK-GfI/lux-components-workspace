@@ -7,6 +7,7 @@ import { By } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { LuxTabIndexDirective } from '../../lux-directives/lux-tabindex/lux-tab-index.directive';
+import { LuxTooltipDirective } from '../../lux-directives/lux-tooltip/lux-tooltip.directive';
 import { LuxThemePalette } from '../../lux-util/lux-colors.enum';
 import { LuxLinkComponent } from './lux-link.component';
 
@@ -310,6 +311,29 @@ describe('LuxLinkComponent', () => {
     expect(link.nativeElement.getAttribute('tabindex')).toEqual('5');
   });
 
+  it('Sollte den Tooltip beim Fokussieren per Tastatur ein- und beim Verlassen ausblenden', async () => {
+    // Vorbedingungen testen
+    const tooltipFixture = TestBed.createComponent(MockLinkTooltipComponent);
+    tooltipFixture.detectChanges();
+
+    const tooltip = tooltipFixture.debugElement.query(By.directive(LuxTooltipDirective)).injector.get(LuxTooltipDirective);
+    const showSpy = vi.spyOn(tooltip, 'show');
+    const hideSpy = vi.spyOn(tooltip, 'hide');
+
+    // Änderungen durchführen: Fokus auf den inneren Anker (nicht das Host-Element lux-link)
+    const link = tooltipFixture.debugElement.query(By.css('a'));
+    link.triggerEventHandler('focus', new FocusEvent('focus'));
+
+    // Nachbedingungen prüfen
+    expect(showSpy).toHaveBeenCalledTimes(1);
+
+    // Änderungen durchführen
+    link.triggerEventHandler('blur', new FocusEvent('blur'));
+
+    // Nachbedingungen prüfen
+    expect(hideSpy).toHaveBeenCalledTimes(1);
+  });
+
   it('Sollte die Farbe anpassen', async () => {
     // Vorbedingungen testen
     let color = fixture.debugElement.query(By.css('a.mat-unthemed'));
@@ -375,3 +399,11 @@ class MockLinkComponent {
   template: `<lux-link luxLabel="Link" luxTabIndex="5" />`
 })
 class MockLinkTabIndexComponent {}
+
+@Component({
+  selector: 'lux-mock-link-tooltip',
+  imports: [LuxLinkComponent, LuxTooltipDirective],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `<lux-link luxLabel="Link" luxTooltip="Tooltip-Text" />`
+})
+class MockLinkTooltipComponent {}
