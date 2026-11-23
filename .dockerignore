@@ -1,0 +1,12 @@
+# Abhängigkeiten kommen ausschließlich aus der deps-Stage (npm ci),
+# lokale bzw. plattformfremde Installationen dürfen sie nicht überschreiben.
+node_modules
+**/node_modules
+
+# Caches und VCS werden für den Build nicht benötigt
+.angular
+.git
+
+# Hinweis: dist/ darf NICHT ausgeschlossen werden.
+# Die Demo-App bindet die Lib über tsconfig-Paths aus dist/lux-components-lib ein
+# (in der Pipeline vorher per "npm run pack:all" gebaut).

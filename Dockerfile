@@ -1,7 +1,7 @@
 # Globale ARGs müssen VOR dem ersten FROM stehen, damit sie in allen FROM-Zeilen verfügbar sind
 ARG DEPS_IMAGE=node:24-alpine
 ARG BUILDER_IMAGE=node:24-alpine
-ARG RUNTIME_IMAGE=nginx:stable-alpine3.23-slim
+ARG RUNTIME_IMAGE=nginx:1.30-alpine-slim
 
 #############################
 # Stage 1: Dependencies
@@ -31,6 +31,8 @@ WORKDIR /app
 RUN apk add --no-cache python3 make g++
 
 COPY --from=deps /app/node_modules ./node_modules
+# Workspace-eigene Abhängigkeiten (abweichende Versionen, z. B. htmlparser2/@types/node), sonst scheitert npm sbom
+COPY --from=deps /app/projects/lux-components-update/node_modules ./projects/lux-components-update/node_modules
 COPY . .
 
 # Entferne ggf. prepare-Skript (wie im alten Dockerfile)
