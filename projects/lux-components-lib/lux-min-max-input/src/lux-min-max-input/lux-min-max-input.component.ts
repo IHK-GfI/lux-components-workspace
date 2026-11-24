@@ -16,9 +16,10 @@ import {
   LuxErrorCallbackFnType,
   LuxIconComponent,
   LuxInputComponent,
-  LuxInputSuffixComponent
+  LuxInputSuffixComponent,
+  luxTranslateSignal
 } from '@ihk-gfi/lux-components';
-import { translateSignal, TranslocoPipe, TranslocoService } from '@jsverse/transloco';
+import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { isEmpty, rangeErrors, toComparable } from './lux-min-max-input-range-validation';
 import { LuxMinMaxBounds, LuxMinMaxType, LuxMinMaxValue } from './lux-min-max-input-types';
 
@@ -126,8 +127,8 @@ export class LuxMinMaxInputComponent<T extends number | string = number | string
   private readonly uniqueId = LuxMinMaxInputComponent.nextUniqueId++;
   private readonly translocoService = inject(TranslocoService);
   private readonly lang = toSignal(this.translocoService.langChanges$, { initialValue: this.translocoService.getActiveLang() });
-  private readonly defaultMinLabel = translateSignal<string>('luxc.min-max-input.min_label');
-  private readonly defaultMaxLabel = translateSignal<string>('luxc.min-max-input.max_label');
+  private readonly defaultMinLabel = luxTranslateSignal('luxc.min-max-input.min_label');
+  private readonly defaultMaxLabel = luxTranslateSignal('luxc.min-max-input.max_label');
 
   protected readonly labels = computed<Record<Side, string>>(() => ({
     min: this.luxMinLabel() || this.defaultMinLabel(),
