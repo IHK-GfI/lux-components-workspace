@@ -13,11 +13,11 @@ import {
   LuxModeType,
   LuxRadioComponent,
   LuxSelectComponent,
-  LuxSnackbarService,
   LuxTextareaComponent,
   LuxToggleComponent,
   LuxUtil
 } from '@ihk-gfi/lux-components';
+import { LuxSnackbarService } from '@ihk-gfi/lux-components/lux-snackbar';
 import {
   LuxAccordionAriaComponent,
   LuxAriaTogglePosition,

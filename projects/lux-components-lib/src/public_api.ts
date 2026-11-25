@@ -353,9 +353,7 @@ export * from './lib/lux-popups/lux-popup/lux-popup-actions.directive';
 export * from './lib/lux-popups/lux-popup/lux-popup-trigger.directive';
 export * from './lib/lux-popups/lux-popup/lux-popup.component';
 export * from './lib/lux-popups/lux-popup/lux-popup.types';
-export * from './lib/lux-popups/lux-snackbar/lux-snackbar-component/lux-snackbar.component';
-export * from './lib/lux-popups/lux-snackbar/lux-snackbar-config';
-export * from './lib/lux-popups/lux-snackbar/lux-snackbar.service';
+export * from './lib/lux-popups/lux-snackbar-opener/lux-snackbar-opener';
 
 /**
  * LUX-Tour-Hint

@@ -37,6 +37,26 @@
       luxHint="Hier kann ein Farbwert für die Action eingetragen werden (aus dem entsprechenden Enum)."
       [(value)]="actionColor"
     />
+    <div class="lux-flex lux-items-center lux-gap-2">
+      <lux-select
+        class="lux-flex-auto"
+        luxLabel="type"
+        [luxOptions]="types"
+        luxHint="Der Typ bestimmt Standard-Icon und -Farbe (falls nicht gesetzt) und kann eigene Limits haben."
+        [(value)]="type"
+      />
+      <app-status-marker [markerType]="markerTypeNew" />
+    </div>
+    <div class="lux-flex lux-items-center lux-gap-2">
+      <lux-select
+        class="lux-flex-auto"
+        luxLabel="showCloseButton"
+        [luxOptions]="closeButtonOptions"
+        luxHint="Ok-Button zum Schließen. Automatisch erscheint er bei allen Nachrichten ohne Action."
+        [(value)]="closeButton"
+      />
+      <app-status-marker [markerType]="markerTypeNew" />
+    </div>
     <lux-input
       luxLabel="duration"
       luxHint="Diese Property definiert wie lange die Snackbar angezeigt wird."
@@ -44,13 +64,40 @@
       [luxNumberAlignLeft]="true"
       [(value)]="duration"
     />
+    <div class="lux-flex lux-items-center lux-gap-2">
+      <lux-input
+        class="lux-flex-auto"
+        luxLabel="maxVisible"
+        luxHint="Wie viele Nachrichten gleichzeitig sichtbar sind (setLimits()). Weitere stehen unter 'und X weitere Nachrichten'."
+        luxType="number"
+        [luxNumberAlignLeft]="true"
+        [(value)]="maxVisible"
+      />
+      <app-status-marker [markerType]="markerTypeNew" />
+    </div>
+    <div class="lux-flex lux-items-center lux-gap-2">
+      <lux-toggle
+        class="lux-flex-auto"
+        luxLabel="maxVisiblePerType"
+        luxHint="Limits je Typ statt eines Gesamtlimits. Typen ohne Wert und Nachrichten ohne Typ nutzen maxVisible."
+        [(checked)]="limitsPerType"
+        [luxNoTopLabel]="true"
+      />
+      <app-status-marker [markerType]="markerTypeNew" />
+    </div>
+    @if (limitsPerType()) {
+      <lux-input luxLabel="info" luxType="number" [luxNumberAlignLeft]="true" [(value)]="maxVisibleInfo" />
+      <lux-input luxLabel="warning" luxType="number" [luxNumberAlignLeft]="true" [(value)]="maxVisibleWarning" />
+      <lux-input luxLabel="error" luxType="number" [luxNumberAlignLeft]="true" [(value)]="maxVisibleError" />
+      <lux-input luxLabel="success" luxType="number" [luxNumberAlignLeft]="true" [(value)]="maxVisibleSuccess" />
+    }
   </example-base-simple-options>
   <example-base-options-actions>
     <div class="lux-flex lux-flex-wrap">
       <lux-button
         class="lux-mr-4 lux-mb-3"
         luxLabel="Component-Snackbar"
-        luxTooltip="Dieser Button öffnet eine einfache Snackbar über die Methode openComponent(). Es werden die Eingaben aller Felder von oben verwendet."
+        luxTooltip="Dieser Button öffnet eine Snackbar über die Methode open(). Es werden die Eingaben aller Felder von oben verwendet."
         [luxTooltipShowDelay]="1000"
         luxColor="primary"
         [luxStroked]="true"
@@ -73,6 +120,15 @@
         luxColor="primary"
         [luxStroked]="true"
         (luxClicked)="openSnackbarText()"
+      />
+      <lux-button
+        class="lux-mr-4 lux-mb-3"
+        luxLabel="Mehrere Nachrichten"
+        luxTooltip="Dieser Button öffnet sechs Nachrichten unterschiedlichen Typs. Wie viele sichtbar sind, bestimmen die Limits."
+        [luxTooltipShowDelay]="1000"
+        luxColor="primary"
+        [luxStroked]="true"
+        (luxClicked)="openSnackbarMultiple()"
       />
       <lux-button class="lux-mr-4 lux-mb-3" luxLabel="Ausblenden" luxColor="primary" [luxStroked]="true" (luxClicked)="dismissSnackbar()" />
     </div>

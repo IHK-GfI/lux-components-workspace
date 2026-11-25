@@ -1,14 +1,8 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, OnInit, inject, viewChild } from '@angular/core';
 import { FieldState } from '@angular/forms/signals';
 import { Router } from '@angular/router';
-import {
-  LuxAppFooterButtonInfo,
-  LuxAppFooterButtonService,
-  LuxSnackbarService,
-  LuxTabComponent,
-  LuxTabsComponent,
-  LuxUtil
-} from '@ihk-gfi/lux-components';
+import { LuxAppFooterButtonInfo, LuxAppFooterButtonService, LuxTabComponent, LuxTabsComponent, LuxUtil } from '@ihk-gfi/lux-components';
+import { LuxSnackbarService } from '@ihk-gfi/lux-components/lux-snackbar';
 import { LuxLeaveGuardBase } from '@ihk-gfi/lux-components/lux-leave-guard';
 import { FormCommonComponent } from './form-common/form-common.component';
 import { FormDualColComponent } from './form-dual-col/form-dual-col.component';

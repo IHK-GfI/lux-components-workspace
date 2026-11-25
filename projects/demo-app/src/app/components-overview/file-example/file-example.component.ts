@@ -6,9 +6,9 @@ import {
   ILuxFileActionConfig,
   ILuxFileListDeleteActionConfig,
   ILuxFileObject,
-  LuxFormFileBase,
-  LuxSnackbarService
+  LuxFormFileBase
 } from '@ihk-gfi/lux-components';
+import { LuxSnackbarService } from '@ihk-gfi/lux-components/lux-snackbar';
 import { LuxFilePreviewService } from '@ihk-gfi/lux-components/lux-file-preview';
 import { of } from 'rxjs';
 import { delay } from 'rxjs/operators';

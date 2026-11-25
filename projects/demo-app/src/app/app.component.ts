@@ -55,11 +55,11 @@ import {
   LuxSideNavFooterComponent,
   LuxSideNavHeaderComponent,
   LuxSideNavItemComponent,
-  LuxSnackbarService,
   LuxTenantLogoComponent,
   LuxThemeService,
   LuxTooltipDirective
 } from '@ihk-gfi/lux-components';
+import { LuxSnackbarService } from '@ihk-gfi/lux-components/lux-snackbar';
 import { LuxLoadingService } from '@ihk-gfi/lux-components/lux-loading';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { filter, map, startWith } from 'rxjs';

@@ -17,7 +17,8 @@ import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { Subscription } from 'rxjs';
 import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.component';
 import { LuxAriaLabelDirective } from '../../lux-directives/lux-aria/lux-aria-label.directive';
-import { LuxSnackbarService } from '../../lux-popups/lux-snackbar/lux-snackbar.service';
+import { LUX_SNACKBAR_OPENER, LuxSnackbarOpenerRef } from '../../lux-popups/lux-snackbar-opener/lux-snackbar-opener';
+import { LuxConsoleService } from '../../lux-util/lux-console.service';
 import { LuxMediaQueryObserverService } from '../../lux-util/lux-media-query-observer.service';
 import { LuxUtil } from '../../lux-util/lux-util';
 import {
@@ -67,10 +68,13 @@ export class LuxStepperLargeComponent implements OnInit, AfterContentInit, OnDes
   private mobileOverlayService = inject(LuxStepperLargeMobileOverlayService);
   private queryService = inject(LuxMediaQueryObserverService);
   private liveAnnouncer = inject(LiveAnnouncer);
-  private snackbar = inject(LuxSnackbarService);
+  private snackbar = inject(LUX_SNACKBAR_OPENER, { optional: true });
+  private logger = inject(LuxConsoleService);
   private tService = inject(TranslocoService);
   private readonly _currentStepNumber = signal(0);
   private subscriptions: Subscription[] = [];
+  private stepNotCompletedRef?: LuxSnackbarOpenerRef;
+  private missingSnackbarWarned = false;
 
   constructor() {
     effect(() => {
@@ -219,12 +223,7 @@ export class LuxStepperLargeComponent implements OnInit, AfterContentInit, OnDes
     if (this.luxStepValidationActive() && this._currentStepNumber() <= stepIndex) {
       for (let i = this._currentStepNumber(); i < stepIndex; i++) {
         if (this.steps()[i].luxCompleted() === false) {
-          this.snackbar.open(0, {
-            text: this.tService.translate(`luxc.stepper-large.error_message.steps_not_completed`, { i: i + 1 }),
-            action: 'Ok',
-            iconName: 'lux-interface-alert-warning-triangle',
-            iconColor: 'orange'
-          });
+          this.showStepNotCompleted(i);
           return;
         }
       }
@@ -355,6 +354,26 @@ export class LuxStepperLargeComponent implements OnInit, AfterContentInit, OnDes
       } else {
         LuxUtil.goTo('luxstepperlargecontentanchor');
       }
+    }
+  }
+
+  /**
+   * Meldet einen unvollständigen Schritt über die Snackbar (provideLuxSnackbar() aus
+   * @ihk-gfi/lux-components/lux-snackbar), ohne diese nur per Screenreader-Ansage.
+   */
+  private showStepNotCompleted(stepIndex: number) {
+    const text = this.tService.translate(`luxc.stepper-large.error_message.steps_not_completed`, { i: stepIndex + 1 });
+
+    if (this.snackbar) {
+      // Nur die aktuelle Meldung anzeigen, sonst stapeln sich bei wiederholten Klicks gleiche Warnungen.
+      this.stepNotCompletedRef?.dismiss();
+      this.stepNotCompletedRef = this.snackbar.open(0, { text, action: 'Ok', type: 'warning' });
+    } else {
+      if (!this.missingSnackbarWarned) {
+        this.missingSnackbarWarned = true;
+        this.logger.warn('lux-stepper-large: Für die Meldung "Schritt unvollständig" fehlt provideLuxSnackbar().');
+      }
+      this.liveAnnouncer.announce(text, 'assertive');
     }
   }
 }

@@ -357,6 +357,13 @@
     "side-nav": {
       "ariarolenavigation": "Menu / Navigation"
     },
+    "snackbar": {
+      "close.btn": "OK",
+      "less.btn": "Show less",
+      "more.btn": "and {{count}} more messages",
+      "more.one.btn": "and 1 more message",
+      "region.arialabel": "Notifications"
+    },
     "stepper": {
       "back.btn": "Back",
       "finish.btn": "Finish",

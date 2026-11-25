@@ -357,6 +357,13 @@
     "side-nav": {
       "ariarolenavigation": "Anwendungsmenü / Navigation"
     },
+    "snackbar": {
+      "close.btn": "Ok",
+      "less.btn": "Weniger anzeigen",
+      "more.btn": "und {{count}} weitere Nachrichten",
+      "more.one.btn": "und 1 weitere Nachricht",
+      "region.arialabel": "Benachrichtigungen"
+    },
     "stepper": {
       "back.btn": "Zurück",
       "finish.btn": "Abschließen",

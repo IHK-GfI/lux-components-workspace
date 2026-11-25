@@ -3,13 +3,13 @@ import { Component, inject, signal, viewChild, ChangeDetectionStrategy } from '@
 import { Router } from '@angular/router';
 import {
   LuxSelectComponent,
-  LuxSnackbarService,
   LuxStepperLargeComponent,
   LuxStepperLargeSelectionEvent,
   LuxStepperLargeStepComponent,
   LuxThemeService,
   LuxToggleComponent
 } from '@ihk-gfi/lux-components';
+import { LuxSnackbarService } from '@ihk-gfi/lux-components/lux-snackbar';
 import { StepperLargeExampleDataService } from './stepper-large-example-data.service';
 import { StepperLargeExampleErrorMessageBoxComponent } from './stepper-large-example-error-message-box/stepper-large-example-error-message-box.component';
 import { StepperLargeExampleStepFinButtonComponent } from './steps/stepper-large-example-step-fin-button.component';

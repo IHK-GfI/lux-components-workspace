@@ -1,0 +1,76 @@
+// Aufbau des Snackbar-Stacks. Farben, Schrift und Schatten kommen aus dem Theme (_luxSnackbar.scss).
+// Das Ausblenden läuft per Web Animations API (siehe onLeave() der Komponente).
+$enter-duration: 150ms;
+$enter-easing: cubic-bezier(0, 0, 0.2, 1);
+
+.lux-snackbar-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+// position: relative ist der Bezugsrahmen für ausblendende Nachrichten, die an ihrer Stelle
+// aus dem Layout genommen werden.
+// Die Liste wird scrollbar, sobald sie nicht mehr in das Fenster passt (aufgeklappt oder bei hohen Limits);
+// die maximale Höhe setzt der LuxSnackbarService anhand der Position.
+.lux-snackbar-list {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  overflow-y: auto;
+  // Platz für den Schatten der Nachrichten, sonst schneidet overflow ihn ab.
+  padding: 4px 8px 8px;
+  margin: -4px -8px -8px;
+  // Der Overlay-Pane lässt Klicks durch (siehe LuxSnackbarService); die Liste nimmt sie an, damit ihre
+  // Scrollleiste bedienbar bleibt.
+  pointer-events: auto;
+}
+
+// Leer behält die Liste durch ihr Padding eine Fläche, die sonst Klicks auf die Seite abfangen würde.
+.lux-snackbar-list-empty {
+  pointer-events: none;
+}
+
+.lux-snackbar-more {
+  pointer-events: auto;
+}
+
+// Neue Nachricht: springt leicht vergrößernd herein.
+.lux-snackbar--enter {
+  animation: lux-snackbar-enter $enter-duration $enter-easing;
+}
+
+// Bereits vorhandene Nachricht, die nachrückt (z.B. nach dem Schließen einer anderen): nur einblenden.
+.lux-snackbar--reveal {
+  animation: lux-snackbar-reveal $enter-duration $enter-easing;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lux-snackbar--enter,
+  .lux-snackbar--reveal {
+    animation: none;
+  }
+}
+
+@keyframes lux-snackbar-enter {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes lux-snackbar-reveal {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
