@@ -1,10 +1,10 @@
 import { expect, test as setup } from '@playwright/test';
-import { STORAGE_STATE } from '../playwright.config';
+import { STORAGE_STATE, STORAGE_STATE_GREEN } from '../playwright.config';
 
 /**
  * Bestätigt einmalig den Consent-Dialog der Demo-App (Cookie "lux-app-demo-consent")
- * und setzt das Theme fest auf "authentic". Der Zustand wird als storageState gespeichert,
- * damit alle Screenshot-Tests ohne Dialog starten.
+ * und legt je Theme einen storageState ab, in dem das Theme fest gesetzt ist
+ * ("authentic" bzw. "green"). So starten alle Screenshot-Tests ohne Dialog im richtigen Theme.
  */
 setup('consent bestätigen', async ({ page }) => {
   await page.goto('/home');
@@ -13,7 +13,11 @@ setup('consent bestätigen', async ({ page }) => {
   await dialog.getByRole('button', { name: 'Alle akzeptieren' }).click();
   await expect(dialog).toHaveCount(0);
 
-  await page.evaluate(() => localStorage.setItem('lux.app.theme.name', 'authentic'));
-
-  await page.context().storageState({ path: STORAGE_STATE });
+  for (const [theme, path] of [
+    ['authentic', STORAGE_STATE],
+    ['green', STORAGE_STATE_GREEN]
+  ] as const) {
+    await page.evaluate((name) => localStorage.setItem('lux.app.theme.name', name), theme);
+    await page.context().storageState({ path });
+  }
 });

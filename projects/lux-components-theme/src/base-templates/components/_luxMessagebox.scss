@@ -54,13 +54,11 @@ lux-message-box {
         // da im Theme authentic der Schatten entfernt wurde, muss eine Weiße Messagebox eine Border erhalten.
         border: 1px solid var(--lux-theme-primary-color);
         box-sizing: border-box;
-
-        & lux-button button.lux-button.mat-mdc-fab.lux-fab-rounded-default:not([class*="mat-elevation-z"]) {
-          color: var(--lux-theme-primary-color);
-        }
       }
 
       & lux-button {
+        // Der Schließen-Button hat in allen Varianten (auch weiß) die Inhaltsfarbe der Messagebox,
+        // wie Text und Icon (--lux-theme-messagebox-on-<farbe>).
         button.lux-button.mat-mdc-fab.lux-fab-rounded-default:not([class*="mat-elevation-z"]) {
           color: inherit;
           @include luxelevations.lux-elevation-z0();
