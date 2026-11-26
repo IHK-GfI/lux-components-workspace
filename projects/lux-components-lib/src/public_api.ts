@@ -39,6 +39,7 @@ export * from './lib/lux-directives/lux-tabindex/lux-tab-index.directive';
 export * from './lib/lux-directives/lux-tag-id/lux-custom-tag-id.directive';
 export * from './lib/lux-directives/lux-tag-id/lux-tag-id.directive';
 export * from './lib/lux-directives/lux-tooltip/lux-tooltip.directive';
+export * from './lib/lux-directives/lux-tooltip/lux-tooltip-host';
 
 /**
  * LUX-Common

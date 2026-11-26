@@ -10,7 +10,10 @@ import {
 } from '../../../../../lux-popups/lux-dialog/lux-dialog-model/lux-dialog-config.interface';
 import { LuxDialogService } from '../../../../../lux-popups/lux-dialog/lux-dialog.service';
 import { LuxStorageService } from '../../../../../lux-util/lux-storage.service';
-import { LuxAppHeaderAcSessionTimerDialogComponent } from '../lux-app-header-ac-session-timer-dialog/lux-app-header-ac-session-timer-dialog';
+import {
+  LuxAppHeaderAcSessionTimerDialogComponent,
+  LuxSessionTimerDialogData
+} from '../lux-app-header-ac-session-timer-dialog/lux-app-header-ac-session-timer-dialog';
 
 export enum LuxSessionTimerBroadcastType {
   CONFIRMED = 'confirmed',
@@ -40,6 +43,10 @@ export class LuxAppHeaderAcSessionTimerService {
   private dialogIsOpen = false;
   private dialogWasClosed = false;
   private currentDialogRef: any = null;
+  private readonly dialogData: LuxSessionTimerDialogData = {
+    extendSession: () => this.extendSessionTimer(),
+    logout: () => this.logoutUser()
+  };
   protected readonly startingSeconds = signal<number>(0);
   private endTime = 0;
   private urlValue = '';
@@ -200,7 +207,7 @@ export class LuxAppHeaderAcSessionTimerService {
     }
 
     this.dialogIsOpen = true;
-    this.currentDialogRef = this.dialogService.openComponent(LuxAppHeaderAcSessionTimerDialogComponent, this.dialogConfig);
+    this.currentDialogRef = this.dialogService.openComponent(LuxAppHeaderAcSessionTimerDialogComponent, this.dialogConfig, this.dialogData);
 
     this.currentDialogRef.dialogClosed.subscribe((result: any) => {
       const confirmed = result === LuxSessionTimerBroadcastType.CONFIRMED;
@@ -217,7 +224,7 @@ export class LuxAppHeaderAcSessionTimerService {
 
   openNotExtendableDialog() {
     this.dialogIsOpen = true;
-    this.currentDialogRef = this.dialogService.openComponent(LuxAppHeaderAcSessionTimerDialogComponent, this.dialogConfig);
+    this.currentDialogRef = this.dialogService.openComponent(LuxAppHeaderAcSessionTimerDialogComponent, this.dialogConfig, this.dialogData);
     this.currentDialogRef.componentInstance.setNotExtendableDialog();
 
     this.currentDialogRef.dialogClosed.subscribe((result: any) => {

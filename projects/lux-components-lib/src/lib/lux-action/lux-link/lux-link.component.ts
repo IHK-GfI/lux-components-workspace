@@ -1,11 +1,12 @@
 import { NgClass, NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ElementRef, inject, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, computed, forwardRef, inject, input, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButton, MatFabButton } from '@angular/material/button';
 import { Router } from '@angular/router';
 import { LuxIconComponent } from '../../../lib/lux-icon/lux-icon/lux-icon.component';
 import { LuxComponentsConfigService } from '../../lux-components-config/lux-components-config.service';
 import { LuxTagIdDirective } from '../../lux-directives/lux-tag-id/lux-tag-id.directive';
+import { LUX_TOOLTIP_HOST, LuxTooltipHost } from '../../lux-directives/lux-tooltip/lux-tooltip-host';
 import { LuxTooltipDirective } from '../../lux-directives/lux-tooltip/lux-tooltip.directive';
 import { LuxActionComponentBaseClass } from '../lux-action-model/lux-action-component-base.class';
 
@@ -14,6 +15,7 @@ import { LuxActionComponentBaseClass } from '../lux-action-model/lux-action-comp
   templateUrl: './lux-link.component.html',
   styleUrls: ['./lux-link.component.scss'],
   imports: [NgClass, LuxTagIdDirective, LuxIconComponent, NgTemplateOutlet, MatButton, MatFabButton],
+  providers: [{ provide: LUX_TOOLTIP_HOST, useExisting: forwardRef(() => LuxLinkComponent) }],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '[class.lux-uppercase]': 'labelUppercase()',
@@ -23,7 +25,7 @@ import { LuxActionComponentBaseClass } from '../lux-action-model/lux-action-comp
     '[class.lux-stroked]': 'luxStroked()'
   }
 })
-export class LuxLinkComponent extends LuxActionComponentBaseClass {
+export class LuxLinkComponent extends LuxActionComponentBaseClass implements LuxTooltipHost {
   readonly luxHref = input('');
   readonly luxBlank = input(false);
 
@@ -33,6 +35,11 @@ export class LuxLinkComponent extends LuxActionComponentBaseClass {
   labelUppercase = signal(false);
 
   private readonly router = inject(Router);
+
+  // Ohne href nimmt der Browser das <a> nicht in die Tab-Reihenfolge auf. Der Link löst aber auch ohne
+  // luxHref luxClicked aus und muss deshalb per Tastatur erreichbar sein. Mit href oder deaktiviert
+  // bleibt das Standardverhalten (kein tabindex).
+  readonly anchorTabIndex = computed(() => (!this.luxDisabled() && !this.luxHref() ? 0 : undefined));
 
   constructor() {
     super();
@@ -101,6 +108,10 @@ export class LuxLinkComponent extends LuxActionComponentBaseClass {
     }
 
     return result;
+  }
+
+  registerTooltip(tooltip: LuxTooltipDirective) {
+    this.tooltipDirective = tooltip;
   }
 
   private detectParent() {

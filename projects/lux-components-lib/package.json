@@ -13,17 +13,19 @@
   "peerDependencies": {
     "@angular/common": "^22.0.0",
     "@angular/core": "^22.0.0",
-    "@jsverse/transloco": "^8.3.0"
+    "@jsverse/transloco": "^8.3.0",
+    "ngx-cookie-service": "^22.0.0"
   },
   "optionalDependencies": {
     "axe-core": "^4.12.1",
     "dompurify": "^3.0.0",
-    "marked": "^15.0.0",
+    "marked": "^18.0.0",
     "quill": "^2.0.3",
     "vitest": "^4.1.11"
   },
   "dependencies": {
-    "tslib": "^2.3.0"
+    "tslib": "^2.3.0",
+    "uuid": "^14.0.3"
   },
   "sideEffects": false
 }

@@ -1,5 +1,5 @@
 import { chain, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
-import chalk from 'chalk';
+import { styleText } from 'node:util';
 import { updateDep } from '../../update-dependencies/index';
 import { iterateFilesAndModifyContent } from '../../utility/files';
 import { logInfo } from '../../utility/logging';
@@ -16,7 +16,7 @@ export function update210300(options: Options, runNpmInstall = true): Rule {
       updateDep('@ihk-gfi/lux-components-icons-and-fonts', '1.11.0', false),
       updateIcons(options),
       messageSuccessRule(`Die LUX-Components wurden auf die Version 21.3.0 aktualisiert.`),
-      finish(runNpmInstall, `${chalk.yellowBright('Fertig!')}`)
+      finish(runNpmInstall, `${styleText('yellowBright', 'Fertig!')}`)
     ]);
   };
 }

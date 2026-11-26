@@ -25,10 +25,10 @@ function updateEnMessagesIntern(): Rule {
     const contentAPPEn = readTransUnitFile(tree, filePathAPPEn);
     const contentAPPDe = readTransUnitFile(tree, filePathAPPDe);
 
-    const fnLCEEn = load(contentLCEn, { xmlMode: true, decodeEntities: false });
-    const fnSDEn = load(contentSDEn, { xmlMode: true, decodeEntities: false });
-    const fnAPPEn = load(contentAPPEn, { xmlMode: true, decodeEntities: false });
-    const fnAPPDe = load(contentAPPDe, { xmlMode: true, decodeEntities: false });
+    const fnLCEEn = load(contentLCEn, { xml: { xmlMode: true, decodeEntities: false } });
+    const fnSDEn = load(contentSDEn, { xml: { xmlMode: true, decodeEntities: false } });
+    const fnAPPEn = load(contentAPPEn, { xml: { xmlMode: true, decodeEntities: false } });
+    const fnAPPDe = load(contentAPPDe, { xml: { xmlMode: true, decodeEntities: false } });
 
     let newContent = headerContent;
 

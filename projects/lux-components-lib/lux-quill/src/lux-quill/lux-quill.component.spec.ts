@@ -36,6 +36,16 @@ describe('LuxQuillComponent', () => {
     return quill!;
   }
 
+  /**
+   * Erstes Rendern einer im Test erzeugten Fixture. Der Editor entsteht in afterNextRender(). Seit Angular 22.2
+   * laufen diese Hooks mit zone.js nicht mehr innerhalb von fixture.detectChanges(), sondern erst im nächsten
+   * Application-Tick. TestBed.tick() führt diesen Tick synchron aus.
+   */
+  function renderInitial(fixture: ComponentFixture<unknown>) {
+    fixture.detectChanges();
+    TestBed.tick();
+  }
+
   function quillComponentOf(fixture: ComponentFixture<unknown>): LuxQuillComponent {
     return fixture.debugElement.query(By.directive(LuxQuillComponent)).componentInstance;
   }
@@ -758,7 +768,7 @@ describe('LuxQuillComponent', () => {
       initialFixture.componentInstance.form.controls.text.disable();
 
       // Änderungen durchführen
-      initialFixture.detectChanges();
+      renderInitial(initialFixture);
 
       // Nachbedingungen prüfen
       expect(initialFixture.componentInstance.disabled()).toBe(true);
@@ -772,7 +782,7 @@ describe('LuxQuillComponent', () => {
       initialFixture.componentInstance.disabled.set(true);
 
       // Änderungen durchführen
-      initialFixture.detectChanges();
+      renderInitial(initialFixture);
 
       // Nachbedingungen prüfen
       expect(initialFixture.componentInstance.disabled()).toBe(true);
@@ -955,7 +965,7 @@ describe('LuxQuillComponent', () => {
       const host = fixture.componentInstance;
       host.preset.set('document');
       host.value.set('<h1 class="lux-quill-heading-1">Titel</h1><p>Text</p>');
-      fixture.detectChanges();
+      renderInitial(fixture);
       expect(host.valueChanges).toEqual([]);
 
       // Änderungen durchführen
@@ -979,7 +989,7 @@ describe('LuxQuillComponent', () => {
       const fixture = TestBed.createComponent(StandaloneHostComponent);
       const host = fixture.componentInstance;
       host.value.set('<p><strong>Fett</strong> und <em>kursiv</em></p>');
-      fixture.detectChanges();
+      renderInitial(fixture);
 
       // Änderungen durchführen
       host.config.set({ toolbar: ['italic'] });
@@ -995,7 +1005,7 @@ describe('LuxQuillComponent', () => {
       const host = fixture.componentInstance;
       host.preset.set('document');
       host.form.controls.text.setValue('<h2 class="lux-quill-heading-2">Titel</h2>');
-      fixture.detectChanges();
+      renderInitial(fixture);
 
       // Änderungen durchführen
       host.config.set({ headingMode: 'visual' });
@@ -1010,7 +1020,7 @@ describe('LuxQuillComponent', () => {
       // Vorbedingungen testen
       const fixture = TestBed.createComponent(StandaloneHostComponent);
       const host = fixture.componentInstance;
-      fixture.detectChanges();
+      renderInitial(fixture);
       expect(host.createdEditors.length).toEqual(1);
       host.value.set('<p>Bleibt erhalten</p>');
       fixture.detectChanges();
@@ -1051,7 +1061,7 @@ describe('LuxQuillComponent', () => {
         }
       });
       host.value.set('<p>Hallo Welt</p>');
-      fixture.detectChanges();
+      renderInitial(fixture);
       editorOf(fixture).focus();
       editorOf(fixture).setSelection(0, 5);
 

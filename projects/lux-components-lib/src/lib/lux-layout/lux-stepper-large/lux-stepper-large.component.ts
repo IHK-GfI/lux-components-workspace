@@ -26,8 +26,8 @@ import {
   LUX_STEPPER_LARGE_DEFAULT_PREV_BTN_CONF,
   LuxStepperLargeButtonInfo
 } from './lux-stepper-large-model/lux-stepper-large-button-info';
-import { LuxStepperLargeClickEvent } from './lux-stepper-large-model/lux-stepper-large-click-event';
-import { LuxStepperLargeSelectionEvent } from './lux-stepper-large-model/lux-stepper-large-selection-event';
+import type { LuxStepperLargeClickEvent } from './lux-stepper-large-model/lux-stepper-large-click-event';
+import type { LuxStepperLargeSelectionEvent } from './lux-stepper-large-model/lux-stepper-large-selection-event';
 import { LuxVetoState } from './lux-stepper-large-model/lux-stepper-large-step.interface';
 import { LuxStepperLargeMobileOverlayService } from './lux-stepper-large-subcomponents/lux-stepper-large-mobile-overlay/lux-stepper-large-mobile-overlay.service';
 import { LuxStepperLargeStepComponent } from './lux-stepper-large-subcomponents/lux-stepper-large-step/lux-stepper-large-step.component';

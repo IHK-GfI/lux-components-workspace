@@ -1,5 +1,5 @@
 import { chain, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
-import chalk from 'chalk';
+import { styleText } from 'node:util';
 import { Node } from 'jsonc-parser';
 import { updateDependencies } from '../../update-dependencies/index';
 import { deleteFile, moveFilesToDirectory, replaceRule } from '../../utility/files';
@@ -29,14 +29,14 @@ export function update190000(options: Options): Rule {
       finish(
         false,
         ``,
-        `${chalk.yellowBright('Nur für JAST-Apps')}`,
-        `${chalk.yellowBright('----------------------------------------------------------------------')}`,
-        `${chalk.yellowBright('1. Bitte die Node-Version 22 verwenden.')}`,
-        `${chalk.yellowBright('2. Bitte die pipeline.yaml anpassen:')}`,
-        `${chalk.yellowBright('   a. Den Parameter --no-optional entfernen.')}`,
-        `${chalk.yellowBright('   b. Das Image von "node:18-alpine" auf "node:22-alpine" ändern.')}`,
+        `${styleText('yellowBright', 'Nur für JAST-Apps')}`,
+        `${styleText('yellowBright', '----------------------------------------------------------------------')}`,
+        `${styleText('yellowBright', '1. Bitte die Node-Version 22 verwenden.')}`,
+        `${styleText('yellowBright', '2. Bitte die pipeline.yaml anpassen:')}`,
+        `${styleText('yellowBright', '   a. Den Parameter --no-optional entfernen.')}`,
+        `${styleText('yellowBright', '   b. Das Image von "node:18-alpine" auf "node:22-alpine" ändern.')}`,
         ``,
-        `${chalk.greenBright('Fertig!')}`
+        `${styleText('greenBright', 'Fertig!')}`
       )
     ]);
   };

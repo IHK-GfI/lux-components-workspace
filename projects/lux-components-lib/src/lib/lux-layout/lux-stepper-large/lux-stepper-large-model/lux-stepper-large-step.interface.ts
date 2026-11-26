@@ -1,5 +1,5 @@
 import { Signal, TemplateRef, WritableSignal } from '@angular/core';
-import { LuxStepperLargeClickEvent } from './lux-stepper-large-click-event';
+import type { LuxStepperLargeClickEvent } from './lux-stepper-large-click-event';
 
 export enum LuxVetoState {
   navigationAccepted,

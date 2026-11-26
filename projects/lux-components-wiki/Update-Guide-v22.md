@@ -15,10 +15,22 @@ In diesem Update-Guide wird beschrieben, wie man die LUX-Components aktualisiere
       - [Vor dem Update](#vor-dem-update)
       - [Breaking Changes](#breaking-changes)
         - [Komponenten ohne "-ac"](#komponenten-ohne--ac)
+        - [Konfiguration](#konfiguration)
         - [Signal-Inputs und -Outputs](#signal-inputs-und--outputs)
         - [OnPush-Change-Detection](#onpush-change-detection)
         - [Formulare und Signal Forms](#formulare-und-signal-forms)
         - [Datums- und Zeitwerte ohne Zeitzone](#datums--und-zeitwerte-ohne-zeitzone)
+          - [Weg 1 (empfohlen): Backend umstellen](#weg-1-empfohlen-backend-umstellen)
+          - [Weg 2: Im Frontend umrechnen](#weg-2-im-frontend-umrechnen)
+          - [Was Version 21.9.0 noch angenommen hat und Version 22 ablehnt](#was-version-2190-noch-angenommen-hat-und-version-22-ablehnt)
+          - [Datetimepicker entfällt](#datetimepicker-entfällt)
+          - [Geänderte und entfallene API](#geänderte-und-entfallene-api)
+        - [Dialog-Aktionen](#dialog-aktionen)
+        - [Animationen](#animationen)
+        - [Dateigröße in MiB](#dateigröße-in-mib)
+        - [Entfernte Optionen](#entfernte-optionen)
+        - [Styling](#styling)
+        - [Test-Utilities](#test-utilities)
       - [Update](#update)
       - [Nach dem Update](#nach-dem-update)
       - [Troubleshooting](#troubleshooting)
@@ -96,8 +108,8 @@ Bitte zuerst die vollständige Anleitung lesen und danach mit dem Update beginne
 
 1. **Wichtig!** Bitte alle Änderungen in der [CHANGELOG.md](https://github.com/IHK-GfI/lux-components-workspace/blob/main/projects/lux-components-lib/CHANGELOG.md) und die [Breaking Changes](#breaking-changes) durchlesen.
 1. LUX-Components auf die letzte Version `21.x.x` (siehe [Version 21.x.x](update-guide-v21)) aktualisieren.
-1. Node auf 22 (mindestens 22.22.3) oder 24 (mindestens 24.15.0, empfohlen) aktualisieren. Node 20 wird von Angular 22 nicht mehr unterstützt (siehe auch [Ergänzung für JAST-Projekte](#ergänzung-für-jast-projekte)).
-1. `@jsverse/transloco` mindestens auf die Version `^8.3.0` aktualisieren. Ab dieser Version steht `TranslocoService.activeLang` als Signal zur Verfügung, damit übersetzte Texte der LUX-Components einem Sprachwechsel zur Laufzeit folgen.
+1. Node auf 22 (mindestens 22.22.3), 24 (mindestens 24.15.0, empfohlen) oder 26 aktualisieren. Node 20 wird von Angular 22 nicht mehr unterstützt (siehe auch [Ergänzung für JAST-Projekte](#ergänzung-für-jast-projekte)). Bei Node 26 bitte den Hinweis zu `localStorage` unter [Test-Utilities](#test-utilities) beachten.
+1. `@jsverse/transloco` mindestens auf die Version `^8.3.0` aktualisieren. Ab dieser Version steht `TranslocoService.activeLang` als Signal zur Verfügung, damit übersetzte Texte der LUX-Components einem Sprachwechsel zur Laufzeit folgen. Wer die Sprache nicht über `lux-lang-select` wechselt, muss die Übersetzungen der neuen Sprache vor `setActiveLang()` laden (siehe [Voraussetzungen](Home-v22#voraussetzungen)).
 
 #### Breaking Changes
 
@@ -126,6 +138,18 @@ Betroffen sind:
 
 `lux-app-header-ac` und `lux-tile-ac` behalten ihren Namen, da es mit `lux-app-header` und `lux-tile` bereits eigenständige Komponenten gibt.
 
+##### Konfiguration
+
+Das `LuxComponentsConfigModule` entfällt. Die Konfiguration wird jetzt über die Provider-Funktion `provideLuxComponentsConfig` eingebunden (siehe [Config](config-v22)):
+
+```typescript
+// Bisher
+providers: [importProvidersFrom(LuxComponentsConfigModule.forRoot(myConfiguration))];
+
+// Neu
+providers: [provideLuxComponentsConfig(myConfiguration)];
+```
+
 ##### Signal-Inputs und -Outputs
 
 Die Inputs und Outputs der LUX-Components wurden auf die Signal-APIs von Angular (`input()`, `model()` und `output()`) umgestellt. Für die Verwendung im Template ändert sich nichts.
@@ -144,9 +168,11 @@ Inputs können nicht mehr per Zuweisung aus dem TypeScript-Code gesetzt werden. 
 
 Wer einen Output programmatisch per `subscribe()` abonniert, erhält jetzt ein `OutputRefSubscription` (aus `@angular/core`) statt einer RxJS-`Subscription`.
 
+Auch beim `LuxErrorStoreService` sind `error`, `config` und `lastErrors` jetzt Signals und werden als Funktion gelesen (z.B. `errorStore.error()`). Statt `errorStore.error = ...` wird `errorStore.setError(...)` aufgerufen.
+
 ##### OnPush-Change-Detection
 
-Alle Komponenten verwenden jetzt `ChangeDetectionStrategy.OnPush`. Objekte und Arrays, die an einen Input gebunden sind, sollten deshalb nicht mehr direkt verändert werden (z.B. `this.options.push(...)` oder `this.config.label = ...`), da sich die Anzeige sonst ggf. nicht aktualisiert. Stattdessen immer eine neue Referenz zuweisen:
+Alle LUX-Komponenten verwenden jetzt `ChangeDetectionStrategy.OnPush`. Objekte und Arrays, die an einen Input gebunden sind, sollten deshalb nicht mehr direkt verändert werden (z.B. `this.options.push(...)` oder `this.config.label = ...`), da sich die Anzeige sonst ggf. nicht aktualisiert. Stattdessen immer eine neue Referenz zuweisen:
 
 ```typescript
 // Bisher
@@ -156,12 +182,14 @@ this.options.push(newOption);
 this.options = [...this.options, newOption];
 ```
 
+Die eigenen Komponenten der Anwendung müssen nicht auf OnPush umgestellt werden. Ab Angular 22 ist OnPush zwar der Standard, `ng update` fügt aber allen Komponenten `changeDetection: ChangeDetectionStrategy.Eager` hinzu, damit sie sich wie bisher verhalten. Diese Angabe bitte stehen lassen.
+
 ##### Formulare und Signal Forms
 
 Die Form-Komponenten unterstützen jetzt [Angular Signal Forms](https://angular.dev/guide/forms/signals/overview) (`[formField]`) sowie das Two-Way-Binding über `[(value)]` bzw. bei Checkbox und Toggle über `[(checked)]`.
 Die bisherigen Bindungen (`luxControlBinding`, `[(luxValue)]`, `[(luxChecked)]` und `[(luxSelected)]`) funktionieren weiterhin, sind aber als veraltet markiert und entfallen mit der nächsten Major-Version.
 
-Code, der eine Form-Komponente auf die Basisklasse `LuxFormComponentBase` typisiert, muss angepasst werden, da die Form-Komponenten nicht mehr von dieser Klasse erben.
+Code, der eine Form-Komponente auf die Basisklasse `LuxFormComponentBase` typisiert, muss angepasst werden, da die Form-Komponenten nicht mehr von dieser Klasse erben. Die Basisklasse `LuxFormCheckableBaseClass` entfällt.
 
 ##### Datums- und Zeitwerte ohne Zeitzone
 
@@ -249,17 +277,17 @@ Bei Uhrzeiten ignoriert `fromV21Time()` den Datumsteil, und `toV21Time()` gibt i
 
 ###### Was Version 21.9.0 noch angenommen hat und Version 22 ablehnt
 
-| Wert                                                | Beispiel                                                               | Ersatz                                            |
-| --------------------------------------------------- | ---------------------------------------------------------------------- | ------------------------------------------------- |
-| Format von Version 21                               | `"2029-05-26T00:00:00.000Z"`, `"1970-01-01T14:30:00.000Z"`             | Weg 1 oder 2                                      |
-| Datum mit einer Uhrzeit ungleich 00:00 (Datepicker) | `"2027-03-13T23:30:00"`                                                | reines Datum `"2027-03-13"`                       |
-| Lokale Mitternacht                                  | `"2027-03-12T23:00:00.000Z"` aus `new Date(2027, 2, 13).toISOString()` | reines Datum `"2027-03-13"`                       |
-| Zeitpunkt mit Uhrzeit (Datepicker)                  | `"2020-05-28T14:15:00.000Z"`                                           | reines Datum `"2020-05-28"`                       |
-| ISO-String mit Offset                               | `"2027-03-13T10:00:00+01:00"`                                          | reines Datum `"2027-03-13"`                       |
-| Date-Objekt                                         | `new Date(2027, 2, 13)`                                                | `LuxUtil.toLocalDate(date)`                       |
-| Date-Objekt (Timepicker)                            | `new Date(2027, 2, 13, 14, 30)`                                        | `LuxUtil.toLocalTime(date)`                       |
-| Uhrzeit mit Sekunden ungleich 00                    | `"14:30:15"`                                                           | `"14:30"`                                         |
-| Uhrzeit mit einstelliger Stunde                     | `"8:30"`                                                               | `"08:30"`                                         |
+| Wert                                                | Beispiel                                                               | Ersatz                      |
+| --------------------------------------------------- | ---------------------------------------------------------------------- | --------------------------- |
+| Format von Version 21                               | `"2029-05-26T00:00:00.000Z"`, `"1970-01-01T14:30:00.000Z"`             | Weg 1 oder 2                |
+| Datum mit einer Uhrzeit ungleich 00:00 (Datepicker) | `"2027-03-13T23:30:00"`                                                | reines Datum `"2027-03-13"` |
+| Lokale Mitternacht                                  | `"2027-03-12T23:00:00.000Z"` aus `new Date(2027, 2, 13).toISOString()` | reines Datum `"2027-03-13"` |
+| Zeitpunkt mit Uhrzeit (Datepicker)                  | `"2020-05-28T14:15:00.000Z"`                                           | reines Datum `"2020-05-28"` |
+| ISO-String mit Offset                               | `"2027-03-13T10:00:00+01:00"`                                          | reines Datum `"2027-03-13"` |
+| Date-Objekt                                         | `new Date(2027, 2, 13)`                                                | `LuxUtil.toLocalDate(date)` |
+| Date-Objekt (Timepicker)                            | `new Date(2027, 2, 13, 14, 30)`                                        | `LuxUtil.toLocalTime(date)` |
+| Uhrzeit mit Sekunden ungleich 00                    | `"14:30:15"`                                                           | `"14:30"`                   |
+| Uhrzeit mit einstelliger Stunde                     | `"8:30"`                                                               | `"08:30"`                   |
 
 ###### Datetimepicker entfällt
 
@@ -325,19 +353,94 @@ Neu sind die Signal-Forms-Validatoren `luxDateValue()`, `luxTimeValue()` und `lu
 `lux-dialog-actions` ist jetzt ein Flex-Container, der die Schaltflächen zentriert, umbricht und per `gap` einen Abstand von 16px zwischen ihnen setzt. Eigene Margins zwischen den Schaltflächen (z.B. `class="lux-mr-4"`) bitte entfernen, sonst verdoppelt sich der Abstand. Eigene Klassen am Element (z.B. `lux-gap-2`) haben weiterhin Vorrang.
 Mit der neuen Klasse `lux-dialog-actions-stacked` stehen die Schaltflächen auf kleinen Bildschirmen untereinander und nutzen die volle Breite (siehe [lux-dialog](lux‐dialog-v22)).
 
+##### Animationen
+
+Die LUX-Components verwenden `@angular/animations` nicht mehr, sondern CSS-Transitions und `animate.enter`/`animate.leave`. Betroffen sind das Auf- und Zuklappen von `lux-card`, die `lux-side-nav` und der Lade-Spinner von `lux-master-detail`. Die Animationen berücksichtigen jetzt `prefers-reduced-motion`.
+
+- Die Exporte `sideNavAnimation`, `sideNavOverlayAnimation` und `expansionAnim` entfallen.
+- `provideAnimations()` bzw. `provideNoopAnimations()` werden für die LUX-Components nicht mehr benötigt (siehe [Nach dem Update](#nach-dem-update)).
+- In Unit-Tests ist `provideNoopAnimations()` bzw. `NoopAnimationsModule` für die LUX-Components nicht mehr nötig. Specs, die Material-Overlays öffnen (z.B. über `LuxDialogService`), können die Material-Animationen mit `{ provide: MATERIAL_ANIMATIONS, useValue: { animationsDisabled: true } }` abschalten.
+- `luxAfterExpansion` von `lux-card` wird jetzt wie dokumentiert nach dem Auf- und Zuklappen ausgelöst. Bisher wurde das Event nie ausgelöst.
+
+##### Dateigröße in MiB
+
+Bei `lux-file-input`, `lux-file-list` und `lux-file-upload` heißt der Input `luxMaxSizeMB` jetzt `luxMaxSizeMiB`. Der Wert bleibt gleich, denn er wurde schon bisher in MiB (1 MiB = 1.048.576 Byte) gerechnet.
+
+```html
+<!-- Bisher -->
+<lux-file-input [luxMaxSizeMB]="5" />
+
+<!-- Neu -->
+<lux-file-input [luxMaxSizeMiB]="5" />
+```
+
+Wer die Texte `luxc.file.upload.error_message.max_file_size` oder `luxc.form-file-base.error_message.max_file_size` selbst übersetzt, muss die Platzhalter umbenennen: `{{maxSizeMB}}` in `{{maxSizeMiB}}` und `{{fileSizeInMB}}` in `{{fileSizeInMiB}}`.
+
+##### Entfernte Optionen
+
+Folgende Optionen hatten keine Wirkung und entfallen:
+
+- `luxIconName` von `lux-card`
+- `alignIconWithLabel` in `ILuxStepperButtonConfig` (`lux-stepper`) und `LuxStepperLargeButtonInfo` (`lux-stepper-large`)
+
+Außerdem entfallen bei der `LuxTooltipDirective` (`luxTooltip`) die öffentlichen Felder `luxButton`, `luxLink`, `luxLinkPlain`, `luxMenu`, `luxActionNav` und `luxActionNavAc`. Sie waren nur für die interne Anmeldung des Tooltips an der jeweiligen Komponente gedacht. Der Tooltip meldet sich jetzt nur noch bei der Komponente an, auf der er selbst sitzt (z.B. `<lux-button luxTooltip="...">`), und nicht mehr bei umgebenden Komponenten. Ein Tooltip an einem Menüeintrag ändert dadurch nicht mehr den Tooltip am Auslöser des Menüs.
+
+##### Styling
+
+Das Theme verwendet `!important` nur noch, wo es Inline-Styles übersteuern muss, und bei den Klassen `lux-display-none-important` und `lux-hidden-important`. Eigene Styles der Anwendung setzen sich dadurch meist ohne `!important` durch. Umgekehrt setzen sich die Hilfsklassen `lux-bold`, `lux-uppercase`, `lux-lowercase` und `lux-vertical-align-baseline` nicht mehr gegen spezifischere Regeln durch. Das Gleiche gilt für die Fokus-, Hover- und Auswahl-Styles und die CSS-Variablen `--lux-theme-outline-dark` und `--lux-theme-outline-bright`.
+
+Die irrtümlich erzeugte Klasse `lux-flex-col-revers` entfällt, auch mit Breakpoint-Präfix. Stattdessen `lux-flex-col-reverse` verwenden (siehe [Layout-Klassen](NewLayoutClasses-v22)).
+
+##### Test-Utilities
+
+Die Test-Utilities aus `@ihk-gfi/lux-components/test-utils` setzen jetzt [Vitest](https://angular.dev/guide/testing) voraus. Jasmine und Karma werden nicht mehr unterstützt, die Abhängigkeit `jasmine-axe` entfällt.
+
+- `LuxTestHelper.wait()`, `LuxTestHelper.click()` und `LuxTestHelper.setInputValue()` sind jetzt asynchron und müssen mit `await` aufgerufen werden. `fakeAsync()` und `tick()` werden nicht mehr benötigt. `wait()` erkennt Fake-Timer von Vitest (`vi.useFakeTimers()`) selbst.
+- `LuxA11yTestHelper` verwendet `axe-core` direkt.
+
+```typescript
+// Bisher
+it('sollte klicken', fakeAsync(() => {
+  LuxTestHelper.click(fixture, button);
+  LuxTestHelper.wait(fixture);
+}));
+
+// Neu
+it('sollte klicken', async () => {
+  await LuxTestHelper.click(fixture, button);
+  await LuxTestHelper.wait(fixture);
+});
+```
+
+Ab Node 25 gibt es ein eingebautes globales `localStorage`, das ohne die Option `--localstorage-file` `undefined` liefert. Vitest übernimmt dann den Speicher von jsdom nicht, und Tests mit LUX-Komponenten, die `localStorage` verwenden (z.B. `lux-tour-hint`, `lux-app-header-ac` mit Session-Timer), schlagen mit `Cannot read properties of undefined (reading 'getItem')` fehl. Abhilfe ist eine Datei, die über `setupFiles` in der `test`-Konfiguration der _angular.json_ eingebunden wird:
+
+```typescript
+// Ab Node 25: localStorage/sessionStorage von jsdom verwenden, falls Node sie überdeckt.
+const jsdomWindow = (globalThis as any).jsdom?.window;
+for (const name of ['localStorage', 'sessionStorage'] as const) {
+  if ((globalThis as any)[name] === undefined && jsdomWindow?.[name]) {
+    Object.defineProperty(globalThis, name, { value: jsdomWindow[name], configurable: true, writable: true });
+  }
+}
+```
+
+Alternativ können die Tests mit `NODE_OPTIONS=--no-experimental-webstorage` gestartet werden. Unter Node 22 und 24 ist nichts zu tun.
+
 #### Update
 
-1. Node 24 installieren.
+Die folgenden Schritte kann auch ein KI-Assistent (z.B. Claude Sonnet 5.5. - Stand 11.11.2026) mit Rückfragen ausführen, siehe [KI-Prompt für das Update](Update-Prompt-v22).
+
+1. Node 24 (mindestens 24.15.0) installieren, siehe [Vor dem Update](#vor-dem-update).
 
 1. `npm install -g @angular/cli@22`
 
 1. Die Datei _package-lock.json_ löschen.
 
-1. Die Abhängigkeit _ngx-cookie-service_ in der _package.json_ auf die Version _^22.0.0_ setzen, aber **ohne** ein `npm install` auszuführen.
-
 1. `ng update @angular/cli@22 @angular/core@22 @angular/material@22 angular-eslint@22 --force --allow-dirty`
 
    Bei fehlenden NPM-Paketen siehe [hier](#fehlende-pakete-bei-npm-install).
+
+   Bei der Frage nach den optionalen Migrationen nur `use-application-builder` auswählen (ist vorausgewählt), `migrate-karma-to-vitest` nicht. Wer Karma verwendet, kann die Tests später mit `ng update @angular/cli --name migrate-karma-to-vitest` auf Vitest umstellen. Die [Test-Utilities](#test-utilities) der LUX-Components setzen Vitest voraus.
 
 1. `npm install @ihk-gfi/lux-components-update@22 --save-dev --force`
 
@@ -345,19 +448,33 @@ Mit der neuen Klasse `lux-dialog-actions-stacked` stehen die Schaltflächen auf 
 
 1. `ng g @ihk-gfi/lux-components-update:update-22.0.0`
 
+   Der Updater prüft Node, Angular und die LUX-Version und stellt automatisch um:
+   - die Versionen von `@ihk-gfi/lux-components` und `@ihk-gfi/lux-components-theme` (22.0.0), `@jsverse/transloco` (mindestens `^8.3.0`) und, falls vorhanden, `ngx-cookie-service` (`^22.0.0`) und `marked` (`^18.0.0`)
+   - `luxMaxSizeMB` in `luxMaxSizeMiB` und die Platzhalter in eigenen Übersetzungen (siehe [Dateigröße in MiB](#dateigröße-in-mib))
+   - `lux-flex-col-revers` in `lux-flex-col-reverse`
+   - `importProvidersFrom([LuxComponentsConfigModule.forRoot(...)])` in `provideLuxComponentsConfig(...)` (siehe [Konfiguration](#konfiguration))
+   - `luxIconName` an `lux-card` wird entfernt
+
+   Alle übrigen Stellen schreibt er in die Datei _lux-update-22-bericht.md_ im Projekt, sortiert nach den Abschnitten unter [Breaking Changes](#breaking-changes). Außerdem legt er den KI-Prompt _.github/prompts/lux-update-22.prompt.md_ an.
+
 1. Die Datei _package-lock.json_ und den Ordner _node_modules_ löschen.
 
 1. `npm install`
 
    Bei fehlenden NPM-Paketen siehe [hier](#fehlende-pakete-bei-npm-install).
 
-1. Die [Breaking Changes](#breaking-changes) im eigenen Code umsetzen.
+1. Die Stellen aus _lux-update-22-bericht.md_ und die übrigen [Breaking Changes](#breaking-changes) im eigenen Code umsetzen. Viele Änderungen (z.B. bei [Signal-Inputs](#signal-inputs-und--outputs)) zeigen erst der Build und die Tests.
+
+   Dabei kann ein KI-Assistent helfen: Der Prompt _.github/prompts/lux-update-22.prompt.md_ enthält die Regeln aus diesem Guide und arbeitet den Bericht ab. In VS Code mit GitHub Copilot im Chat `/lux-update-22` eingeben, bei anderen Assistenten die Datei als Anweisung übergeben. Der Prompt fragt vor fachlichen Entscheidungen nach, z.B. welcher Weg für die [Datums- und Zeitwerte](#datums--und-zeitwerte-ohne-zeitzone) gilt. Die Änderungen bitte trotzdem prüfen.
+
+   Den Bericht und den Prompt danach löschen.
 
 1. Fertig!
 
 #### Nach dem Update
 
 - Falls es eigene Abhängigkeiten im Projekt gibt, die nicht über den LUX-Components-Updater aktualisiert wurden, sollten diese jetzt ebenfalls aktualisiert werden.
+- Falls die Anwendung `@angular/animations` selbst nicht verwendet, können `provideAnimations()` bzw. `provideNoopAnimations()` und das Paket entfernt werden (`npm uninstall @angular/animations`). Der LUX-Components-Updater entfernt sie nicht automatisch (siehe [Animationen](#animationen)).
 - Einen Smoketest (build, lint und test) ausführen:
 
   `npm run smoketest`

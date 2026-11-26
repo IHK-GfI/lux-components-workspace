@@ -1,12 +1,7 @@
 import { AfterViewInit, Directive, effect, ElementRef, inject, input, OnDestroy } from '@angular/core';
 import { MatTooltip, TooltipPosition } from '@angular/material/tooltip';
+import { LUX_TOOLTIP_HOST } from './lux-tooltip-host';
 import { LuxTooltipTruncationWatcher } from './lux-tooltip-truncation';
-import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.component';
-import { LuxLinkPlainComponent } from '../../lux-action/lux-link-plain/lux-link-plain.component';
-import { LuxLinkComponent } from '../../lux-action/lux-link/lux-link.component';
-import { LuxMenuComponent } from '../../lux-action/lux-menu/lux-menu.component';
-import { LuxAppHeaderAcActionNavItemComponent } from '../../lux-layout/lux-app-header-ac/lux-app-header-ac-subcomponents/lux-app-header-ac-action-nav/lux-app-header-ac-action-nav-item/lux-app-header-ac-action-nav-item.component';
-import { LuxAppHeaderActionNavItemComponent } from '../../lux-layout/lux-app-header/lux-app-header-subcomponents/lux-app-header-action-nav/lux-app-header-action-nav-item/lux-app-header-action-nav-item.component';
 
 @Directive({
   selector: '[luxTooltip]',
@@ -24,12 +19,9 @@ export class LuxTooltipDirective extends MatTooltip implements AfterViewInit, On
   readonly luxTooltipDisabled = input(false);
   readonly luxTooltipIfTruncated = input(false);
 
-  luxButton = inject(LuxButtonComponent, { optional: true });
-  luxLink = inject(LuxLinkComponent, { optional: true });
-  luxLinkPlain = inject(LuxLinkPlainComponent, { optional: true });
-  luxActionNavAc = inject(LuxAppHeaderAcActionNavItemComponent, { optional: true });
-  luxActionNav = inject(LuxAppHeaderActionNavItemComponent, { optional: true });
-  luxMenu = inject(LuxMenuComponent, { optional: true });
+  // Nur die Komponente auf demselben Element (self), nicht umgebende Komponenten: Ein Tooltip an einem
+  // Menüeintrag darf sich z.B. nicht beim umgebenden LuxMenu anmelden.
+  private readonly tooltipHost = inject(LUX_TOOLTIP_HOST, { optional: true, self: true });
   private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
   private truncationWatcher?: LuxTooltipTruncationWatcher;
@@ -71,24 +63,7 @@ export class LuxTooltipDirective extends MatTooltip implements AfterViewInit, On
   }
 
   override ngAfterViewInit(): void {
-    if (this.luxButton) {
-      this.luxButton.tooltipDirective = this;
-    }
-    if (this.luxLink) {
-      this.luxLink.tooltipDirective = this;
-    }
-    if (this.luxLinkPlain) {
-      this.luxLinkPlain.tooltipDirective = this;
-    }
-    if (this.luxActionNavAc && this.luxActionNavAc.buttonComponent()) {
-      this.luxActionNavAc.buttonComponent()!.tooltipDirective = this;
-    }
-    if (this.luxActionNav && this.luxActionNav.buttonComponent()) {
-      this.luxActionNav.buttonComponent()!.tooltipDirective = this;
-    }
-    if (this.luxMenu && this.luxMenu.defaultTriggerComponent) {
-      this.luxMenu.defaultTriggerComponent.tooltipDirective = this;
-    }
+    this.tooltipHost?.registerTooltip(this);
 
     this.viewInitialized = true;
     this.syncTruncationWatch();

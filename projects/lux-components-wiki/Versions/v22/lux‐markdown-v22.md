@@ -11,7 +11,7 @@
 
 ## Overview / API
 
-Wichtig! Bevor die Komponente verwendet werden kann, muss die Dependency "marked" (Version ^15) in der package.json hinzugefügt
+Wichtig! Bevor die Komponente verwendet werden kann, muss die Dependency "marked" (Version ^18) in der package.json hinzugefügt
 werden (die LUX-Components führen sie nur als optionale Dependency).
 
 ### Allgemein

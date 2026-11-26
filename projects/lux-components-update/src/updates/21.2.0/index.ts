@@ -1,5 +1,5 @@
 import { chain, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
-import chalk from 'chalk';
+import { styleText } from 'node:util';
 import { updateDep } from '../../update-dependencies/index';
 import { Options } from '../../utility/types';
 import { finish, messageInfoRule, messageSuccessRule } from '../../utility/util';
@@ -12,7 +12,7 @@ export function update210200(_options: Options, runNpmInstall = true): Rule {
       updateDep('@ihk-gfi/lux-components', '21.2.0', false),
       updateDep('@ihk-gfi/lux-components-theme', '21.2.0', false),
       messageSuccessRule(`Die LUX-Components wurden auf die Version 21.2.0 aktualisiert.`),
-      finish(runNpmInstall, `${chalk.yellowBright('Fertig!')}`)
+      finish(runNpmInstall, `${styleText('yellowBright', 'Fertig!')}`)
     ]);
   };
 }

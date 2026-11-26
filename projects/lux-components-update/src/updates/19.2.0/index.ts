@@ -1,5 +1,5 @@
 import { chain, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
-import chalk from 'chalk';
+import { styleText } from 'node:util';
 import { updateDep } from '../../update-dependencies/index';
 import { replaceRule } from '../../utility/files';
 import { logWarn } from '../../utility/logging';
@@ -16,7 +16,7 @@ export function update190200(options: any, runNpmInstall = true): Rule {
       updateDep('@ihk-gfi/lux-components-theme', '19.0.1', false),
       addCdkScrollable(options),
       messageSuccessRule(`Die LUX-Components wurden auf die Version 19.2.0 aktualisiert.`),
-      finish(runNpmInstall, `${chalk.yellowBright('Fertig!')}`)
+      finish(runNpmInstall, `${styleText('yellowBright', 'Fertig!')}`)
     ]);
   };
 }

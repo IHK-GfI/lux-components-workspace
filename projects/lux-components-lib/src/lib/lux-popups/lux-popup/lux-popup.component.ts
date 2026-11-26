@@ -19,7 +19,7 @@ import {
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { LuxPopupActionsDirective } from './lux-popup-actions.directive';
-import { LuxPopupTriggerDirective } from './lux-popup-trigger.directive';
+import type { LuxPopupTriggerDirective } from './lux-popup-trigger.directive';
 import { LuxPopupCloseReason, LuxPopupPosition } from './lux-popup.types';
 
 let nextPopupId = 0;

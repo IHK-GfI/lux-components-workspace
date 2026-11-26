@@ -1,5 +1,5 @@
 import { chain, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
-import chalk from 'chalk';
+import { styleText } from 'node:util';
 import { updateDep } from '../../update-dependencies/index';
 import { replaceRule } from '../../utility/files';
 import { AddTransUnitItem, ReplaceItem } from '../../utility/replace-item';
@@ -16,7 +16,7 @@ export function update190400(options: Options, runNpmInstall = true): Rule {
       updateMessages(options),
       fixEmptySchematicArray(options),
       messageSuccessRule(`Die LUX-Components wurden auf die Version 19.4.0 aktualisiert.`),
-      finish(runNpmInstall, `${chalk.yellowBright('Fertig!')}`)
+      finish(runNpmInstall, `${styleText('yellowBright', 'Fertig!')}`)
     ]);
   };
 }

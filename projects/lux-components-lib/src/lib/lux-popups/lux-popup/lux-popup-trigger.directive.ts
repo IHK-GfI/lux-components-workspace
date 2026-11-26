@@ -1,5 +1,5 @@
 import { Directive, ElementRef, OnDestroy, effect, inject, input, signal } from '@angular/core';
-import { LuxPopupComponent } from './lux-popup.component';
+import type { LuxPopupComponent } from './lux-popup.component';
 import { LuxPopupCloseReason, LuxPopupPosition } from './lux-popup.types';
 
 @Directive({

@@ -1,4 +1,4 @@
-import { replaceAll, replaceFirst } from '../util';
+import { escapeRegExp, replaceAll, replaceFirst } from '../util';
 import { Hit } from './hit';
 
 /**
@@ -147,3 +147,53 @@ export const removeAttrFn = (name: string) => {
     hit.elementContent = hit.elementContent.replace(pattern, '');
   };
 };
+
+/**
+ * Diese Funktion entfernt ein Attribut nur im Start-Tag des Elements. Gleichnamige Attribute von Kind-Elementen bleiben erhalten
+ * (im Gegensatz zu {@link removeAttrFn}, das im gesamten Inhalt des Elements sucht).
+ * Entfernt werden die Schreibweisen ohne Wert, mit Wert und als Property-Binding (`[name]`).
+ *
+ * @example Attribut "luxIconName" entfernen
+ * Input:  <lux-card luxTitle="Titel" luxIconName="lux-cogs"><lux-icon luxIconName="lux-save"></lux-icon></lux-card>
+ * Output: <lux-card luxTitle="Titel"><lux-icon luxIconName="lux-save"></lux-icon></lux-card>
+ *
+ * @param name Ein Attributname.
+ */
+export const removeAttrInStartTagFn = (name: string) => {
+  return (hit: Hit) => {
+    const end = findStartTagEnd(hit.elementContent);
+    if (end < 0) {
+      return;
+    }
+
+    const escapedName = escapeRegExp(name);
+    const pattern = new RegExp(`\\s+(?:\\[${escapedName}\\]|${escapedName})(?:\\s*=\\s*(?:"[^"]*"|'[^']*'))?(?=[\\s/>]|$)`, 'g');
+    const startTag = hit.elementContent.slice(0, end).replace(pattern, '');
+
+    hit.elementContent = startTag + hit.elementContent.slice(end);
+  };
+};
+
+/**
+ * Liefert den Index des schließenden ">" des Start-Tags. Ein ">" innerhalb eines Attributwerts (z.B. [luxDisabled]="a > b") zählt nicht.
+ *
+ * @param content Der HTML-Inhalt, der mit dem Start-Tag beginnt.
+ */
+function findStartTagEnd(content: string): number {
+  let quote: string | null = null;
+
+  for (let i = 0; i < content.length; i++) {
+    const char = content[i];
+    if (quote) {
+      if (char === quote) {
+        quote = null;
+      }
+    } else if (char === '"' || char === "'") {
+      quote = char;
+    } else if (char === '>') {
+      return i;
+    }
+  }
+
+  return -1;
+}
