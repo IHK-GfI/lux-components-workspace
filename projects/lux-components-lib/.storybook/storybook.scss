@@ -1,0 +1,3 @@
+@use "../../lux-components-theme/src/base-templates/common/luxfonts" as luxfonts;
+
+@include luxfonts.web-fonts("https://cdn.gfi.ihk.de/lux-components/icons-and-fonts/v1.11.0/");

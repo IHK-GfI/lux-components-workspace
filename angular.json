@@ -44,6 +44,24 @@
             "lintFilePatterns": ["projects/lux-components-lib/**/*.ts", "projects/lux-components-lib/**/*.html"],
             "eslintConfig": "projects/lux-components-lib/eslint.config.js"
           }
+        },
+        "storybook": {
+          "builder": "@storybook/angular-vite:start-storybook",
+          "options": {
+            "port": 6006,
+            "configDir": "projects/lux-components-lib/.storybook",
+            "tsConfig": "projects/lux-components-lib/tsconfig.lib.json",
+            "styles": ["dist/theme/prebuilt-themes/luxtheme-authentic.css", "projects/lux-components-lib/.storybook/storybook.scss"]
+          }
+        },
+        "build-storybook": {
+          "builder": "@storybook/angular-vite:build-storybook",
+          "options": {
+            "outputDir": "dist/storybook/lux-components-lib",
+            "configDir": "projects/lux-components-lib/.storybook",
+            "tsConfig": "projects/lux-components-lib/tsconfig.lib.json",
+            "styles": ["dist/theme/prebuilt-themes/luxtheme-authentic.css", "projects/lux-components-lib/.storybook/storybook.scss"]
+          }
         }
       }
     },
