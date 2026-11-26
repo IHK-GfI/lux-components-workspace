@@ -25,6 +25,10 @@ export async function openStable(page: Page, url: string, ready: Locator, extraS
     await page.addStyleTag({ content: extraStyles });
   }
   await page.evaluate(() => document.fonts.ready);
+  // Komponenten, die ihre Größe einmalig messen und nur bei einem Fenster-Resize neu berechnen
+  // (z. B. lux-textarea mit cdkTextareaAutosize), haben ggf. noch mit der Ersatzschrift gemessen.
+  // Ein Resize-Event lässt sie mit der geladenen Webfont neu messen, bevor die Höhe stabilisiert wird.
+  await page.evaluate(() => window.dispatchEvent(new Event('resize')));
   await page.waitForLoadState('networkidle');
   await fitViewportToContent(page);
 }
@@ -134,6 +138,22 @@ export async function fitViewportToContent(page: Page) {
     return;
   }
   const content = page.locator('lux-app-content');
+  let height = viewport.height;
+  // Der Resize selbst kann das Layout noch einmal ändern (z. B. misst cdkTextareaAutosize nach einem
+  // Fenster-Resize leicht verzögert neu). Deshalb nach jedem Anpassen erneut warten, bis die Höhe stabil ist.
+  for (let attempt = 0; attempt < 3; attempt++) {
+    await waitForStableContentHeight(content);
+    const overflow = await content.evaluate((element) => Math.max(0, element.scrollHeight - element.clientHeight));
+    if (overflow === 0) {
+      return;
+    }
+    height += overflow;
+    await page.setViewportSize({ width: viewport.width, height });
+  }
+  await waitForStableContentHeight(content);
+}
+
+async function waitForStableContentHeight(content: Locator) {
   let previousHeight = -1;
   await expect
     .poll(
@@ -146,8 +166,4 @@ export async function fitViewportToContent(page: Page) {
       { intervals: [100], message: 'Inhaltshöhe von lux-app-content kommt nicht zur Ruhe' }
     )
     .toBe(true);
-  const overflow = await content.evaluate((element) => Math.max(0, element.scrollHeight - element.clientHeight));
-  if (overflow > 0) {
-    await page.setViewportSize({ width: viewport.width, height: viewport.height + overflow });
-  }
 }
