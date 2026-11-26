@@ -1,0 +1,44 @@
+<section
+  class="lux-snackbar-container"
+  [attr.role]="hasMessages() ? 'region' : null"
+  [attr.aria-label]="hasMessages() ? regionLabel() : null"
+  (mouseenter)="stack.setHovered(true)"
+  (mouseleave)="stack.setHovered(false)"
+  (focusin)="stack.setFocused(true)"
+  (focusout)="onFocusOut($event)"
+>
+  <div
+    class="lux-snackbar-list"
+    [id]="listId"
+    [class.lux-snackbar-list-expanded]="stack.expanded()"
+    [class.lux-snackbar-list-empty]="stack.visibleMessages().length === 0"
+    [style.max-height.px]="stack.maxListHeight()"
+  >
+    @for (message of stack.visibleMessages(); track message.id) {
+      <div
+        [ngClass]="message.panelClasses"
+        [attr.data-lux-snackbar-id]="message.id"
+        [animate.enter]="stack.isRevealed(message.id) ? 'lux-snackbar--reveal' : 'lux-snackbar--enter'"
+        (animate.leave)="onLeave($event)"
+      >
+        <ng-container *ngComponentOutlet="message.component; injector: message.injector" />
+      </div>
+    }
+  </div>
+
+  @if (stack.hiddenCount() > 0) {
+    <div class="lux-snackbar-more">
+      <button
+        type="button"
+        class="lux-snackbar-more-button"
+        mat-button
+        [disableRipple]="true"
+        [attr.aria-expanded]="stack.expanded()"
+        [attr.aria-controls]="listId"
+        (click)="stack.toggleExpanded()"
+      >
+        {{ stack.expanded() ? lessLabel() : moreLabel() }}
+      </button>
+    </div>
+  }
+</section>

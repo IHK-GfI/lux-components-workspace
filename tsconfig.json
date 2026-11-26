@@ -22,6 +22,7 @@
       "@ihk-gfi/lux-components/lux-min-max-input": ["./dist/lux-components-lib/lux-min-max-input"],
       "@ihk-gfi/lux-components/lux-paginator": ["./dist/lux-components-lib/lux-paginator"],
       "@ihk-gfi/lux-components/lux-skeleton": ["./dist/lux-components-lib/lux-skeleton"],
+      "@ihk-gfi/lux-components/lux-snackbar": ["./dist/lux-components-lib/lux-snackbar"],
       "@ihk-gfi/lux-components/lux-quill": ["./dist/lux-components-lib/lux-quill"],
       "@ihk-gfi/lux-components/test-utils": ["./dist/lux-components-lib/test-utils"]
     },

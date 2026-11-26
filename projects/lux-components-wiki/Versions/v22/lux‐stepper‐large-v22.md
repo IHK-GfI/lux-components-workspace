@@ -98,6 +98,8 @@ Nach dem erfolgreichen Abschliessen eines Schritts, kann über die Buttons und d
 Geht ein Nutzer zu einem bereits abgeschlossenen (fehlerfreien) Schritt zurück und versetzt diesen wieder in einen Fehlerzustand, z.B. durch Löschen einer Pflichtangabe, wird die Navigation zu nachfolgenden Schritten solange verhindert, bis der Fehler behoben wurde. Ein Klick auf den "Weiter"-Button löst das Event `luxOnNextStepNotComplete` aus und soll mit einer entsprechenden Fehlermeldung behandelt werden (s.o.).
 Der Nutzer kann jedoch zu vorherigen Schritten zurück navigieren. In der Navigations-Liste wird der fehlerhafte Schritt für den Nutzer durch ein Icon hinter dem Textlabel markiert. Auch aus einem vorhergehenden Schritt kann der Nutzer nicht über den fehlerhaften Schritt hinaus navigieren, bei dem Versuch erscheint eine Snackbar mit einer Fehlermeldung und der Nummer des fehlerhaften Schritts.
 
+**Hinweis:** Die Snackbar liegt im Entry Point `@ihk-gfi/lux-components/lux-snackbar`. Damit der Stepper die Meldung als Snackbar anzeigen kann, muss die Anwendung `provideLuxSnackbar()` registrieren (siehe [LUX-Snackbar](lux‐snackbar-v22)). Fehlt der Provider, wird die Meldung nur per Screenreader angesagt und in der Konsole erscheint ein Hinweis.
+
 ### Accessibility
 
 Für die Verbesserung der Zugänglichkeit wurde der luxA11YMode eingeführt. Dieser erfüllt die technischen Bedingungen und gewährleistet die Funktionalität von Assistenztechnologien. Er ist standardmäßig aktiv (`luxA11YMode` Default: true).

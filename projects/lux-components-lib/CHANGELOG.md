@@ -66,6 +66,12 @@
   - Betroffen waren `lux-select`, `lux-error-page` und `lux-app-header` (Titel-Icon und Titel-Bild). Die Optik bleibt unverändert.
   - Die Styles liegen jetzt im Theme. Die LUX-Components 22.0.0 müssen daher zusammen mit dem LUX-Theme 22.0.0 verwendet werden.
   - Ein ESLint-Check verhindert neue statische `style`-Attribute und `[attr.style]`-Bindings in den Templates der Bibliothek.
+- Issue #386: Die Snackbar zeigt mehrere Nachrichten an. Neue Nachrichten ersetzen keine vorhandenen mehr, sondern werden oben eingefügt.
+  - Wie viele Nachrichten gleichzeitig sichtbar sind, legen Limits fest (gesamt oder je Typ `info`, `warning`, `error`, `success`; Default: 1) – über `provideLuxSnackbar(limits)` oder `LuxSnackbarService.setLimits()`. Weitere Nachrichten fasst der Hinweis "und X weitere Nachrichten" zusammen; ein Klick zeigt alle in einer scrollbaren Liste.
+  - Neu: `LuxSnackbarConfig.type` (Standard-Icon und -Farbe je Typ), `LuxSnackbarRef` pro Nachricht, `LUX_SNACKBAR_DATA`. Nachrichten ohne Action erhalten automatisch einen Ok-Button zum Schließen (`LuxSnackbarConfig.showCloseButton` erzwingt bzw. unterdrückt ihn). Die Anzeigedauer pausiert bei Maus/Fokus über der Snackbar und solange die Liste aufgeklappt ist.
+  - **Breaking Change:** Die Snackbar liegt im neuen Entry Point `@ihk-gfi/lux-components/lux-snackbar` (`LuxSnackbarService`, `LuxSnackbarConfig`, `LuxSnackbarComponent`). `provideLuxSnackbar()` muss registriert werden, damit `lux-stepper-large` seine Meldung "Schritt unvollständig" als Snackbar anzeigt.
+  - **Breaking Change:** Die Snackbar basiert nicht mehr auf `MatSnackBar`. `LuxSnackbarService.onAction()` und `afterDismissed()` entfallen; stattdessen liefern `open()`, `openText()` und `openComponent()` eine `LuxSnackbarRef` (`onAction()`, `afterDismissed()`, `dismiss()`). `dismiss()` am Service schließt alle Nachrichten. Komponenten für `openComponent()` injizieren `LUX_SNACKBAR_DATA` und `LuxSnackbarRef` statt `MAT_SNACK_BAR_DATA` und `MatSnackBarRef`; `afterDismissed()` liefert `LuxSnackbarDismiss` statt `MatSnackBarDismiss`.
+  - Das Snackbar-Styling im Theme nutzt keine Material-Snackbar-Selektoren (`.mat-mdc-snack-bar-container`) mehr. Eigene Styles sollten `.lux-snackbar` verwenden.
 
 ## Version 21.11.0
 

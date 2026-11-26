@@ -90,8 +90,14 @@ test('list-select-states/http-dao', async ({ page }) => {
   await expect(list.getByRole('progressbar')).toBeVisible();
   await screenshotSoft(page, list, 'list-select-http-dao-laden.png');
 
+  // Die 1 s der Server-Simulation beginnt erst mit der Change Detection nach dem Klick, und das Ausblenden des
+  // Spinners braucht danach eine weitere. Bei angehaltener Uhr reicht genau 1 s deshalb nicht immer (vor allem
+  // unter Last); in kleinen Schritten weiterspulen, bis der Spinner weg ist.
   await page.clock.runFor(900);
-  await expect(list.getByRole('progressbar')).toBeHidden();
+  await expect(async () => {
+    await page.clock.runFor(50);
+    await expect(list.getByRole('progressbar')).toBeHidden({ timeout: 100 });
+  }).toPass({ timeout: 5000 });
   await expect(list).toContainText('0 von 11 ausgewählt');
   await screenshotSoft(page, list, 'list-select-http-dao-geladen.png');
 });

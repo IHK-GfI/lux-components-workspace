@@ -159,7 +159,7 @@ export class ComponentsOverviewNavigationService {
     this.create('popup', 'Popup'),
     this.create('popup', 'Dialog'),
     this.create('popup', 'Consent'),
-    this.create('popup', 'Snackbar'),
+    this.create('popup', 'Snackbar', DemoMarkerType.Updated),
     this.create('tenant-logo', 'Tenant-Logo'),
     this.create('tour-hint', 'Tour-Hint'),
     this.create('breadcrumb', 'Breadcrumb'),

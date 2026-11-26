@@ -196,6 +196,8 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-snackbar-orange: #ec9c1b;
   --lux-theme-snackbar-yellow: #fbd12c;
   --lux-theme-snackbar-white: #ffffff;
+  --lux-theme-snackbar-border-radius: var(--lux-theme-radius-md);
+  --lux-theme-snackbar-width: 400px;
 
   // Accordion
   --lux-theme-accordion-panel-container-elevation-shadow-width: 1px;

@@ -1,4 +1,4 @@
-@use "@angular/material" as mat;
+@use "../common/luxelevations";
 
 $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "yellow", "pink", "lightblue", "white");
 
@@ -10,33 +10,79 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "yell
     &.lux-snackbar-color-icon-#{$colorName} .lux-snackbar-icon {
       color: var(#{$prefix}-#{$colorName});
     }
-    &.lux-snackbar-color-action-#{$colorName} .lux-snackbar-action {
+    // Der Ok-Button zum Schließen erhält dieselbe Farbe wie die Action.
+    &.lux-snackbar-color-action-#{$colorName} .lux-snackbar-action,
+    &.lux-snackbar-color-action-#{$colorName} .lux-snackbar-close {
       color: var(#{$prefix}-#{$colorName});
     }
   }
 }
 
+// Fläche einer Snackbar-Nachricht.
+@mixin lux-snackbar-surface {
+  box-sizing: border-box;
+  border-radius: var(--lux-theme-snackbar-border-radius);
+  background-color: var(--mat-sys-inverse-surface);
+  color: var(--mat-sys-inverse-on-surface);
+  // Text-Buttons (Action, "und X weitere") brauchen auf der dunklen Fläche die helle Primärfarbe,
+  // die Standardfarbe (primary) erreicht dort nicht den nötigen Kontrast. Über das Token statt über color,
+  // damit die Klassen lux-snackbar-color-action-* weiterhin Vorrang haben.
+  --mat-button-text-label-text-color: var(--mat-sys-inverse-primary);
+  --mat-button-text-state-layer-color: var(--mat-sys-inverse-primary);
+  --mat-button-text-ripple-color: var(--mat-sys-inverse-primary);
+  @include luxelevations.lux-elevation-z6;
+}
+
+.lux-snackbar-container {
+  // Volle Breite auf kleinen Bildschirmen (abzüglich des Abstands zum Rand, siehe LuxSnackbarService).
+  @media (max-width: 599.98px) {
+    width: calc(100vw - 8px);
+    align-items: stretch;
+
+    .lux-snackbar-list {
+      align-items: stretch;
+    }
+  }
+}
+
+// Alle Nachrichten sind gleich breit (ruhige linke Kante im Stapel, Buttons stehen untereinander);
+// längere Texte brechen um.
 .lux-snackbar {
-  @include mat.snack-bar-overrides(
-    (
-      supporting-text-size: 1rem,
-      supporting-text-line-height: 1.5rem,
-      supporting-text-weight: 600
-    )
-  );
+  @include lux-snackbar-surface;
+  width: var(--lux-theme-snackbar-width);
+  max-width: calc(100vw - 8px);
+  padding: 14px 16px;
+  font-family: var(--mat-sys-body-medium-font);
+  font-size: 1rem;
+  line-height: 1.5rem;
+  font-weight: 600;
+
+  @media (max-width: 599.98px) {
+    width: auto;
+    max-width: none;
+  }
 
   .lux-snackbar-text,
   .lux-snackbar-icon,
-  .lux-snackbar-action {
+  .lux-snackbar-action,
+  .lux-snackbar-close {
     background-color: transparent;
   }
 
   @include lux-snackbar-color-mixin("--lux-theme-snackbar");
 }
 
-.cdk-overlay-container .mat-mdc-snack-bar-container.lux-snackbar {
-  // Die Snackbar wird durch die App umpositioniert, bevor sie sichtbar geschaltet wird.
-  // Würde man die Snackbar nicht verstecken, würde sie von der initialen Position zur neuen
-  // springen.
-  visibility: hidden;
+// Hinweis "und X weitere Nachrichten" bzw. "Weniger anzeigen".
+.lux-snackbar-more {
+  @include lux-snackbar-surface;
+  display: flex;
+  justify-content: flex-end;
+  padding: 2px 8px;
+}
+
+@media (forced-colors: active) {
+  .lux-snackbar,
+  .lux-snackbar-more {
+    outline: solid 1px;
+  }
 }
