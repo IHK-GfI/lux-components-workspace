@@ -138,19 +138,15 @@ export async function fitViewportToContent(page: Page) {
     return;
   }
   const content = page.locator('lux-app-content');
-  let height = viewport.height;
-  // Der Resize selbst kann das Layout noch einmal ändern (z. B. misst cdkTextareaAutosize nach einem
-  // Fenster-Resize leicht verzögert neu). Deshalb nach jedem Anpassen erneut warten, bis die Höhe stabil ist.
-  for (let attempt = 0; attempt < 3; attempt++) {
-    await waitForStableContentHeight(content);
-    const overflow = await content.evaluate((element) => Math.max(0, element.scrollHeight - element.clientHeight));
-    if (overflow === 0) {
-      return;
-    }
-    height += overflow;
-    await page.setViewportSize({ width: viewport.width, height });
-  }
   await waitForStableContentHeight(content);
+  const overflow = await content.evaluate((element) => Math.max(0, element.scrollHeight - element.clientHeight));
+  if (overflow > 0) {
+    await page.setViewportSize({ width: viewport.width, height: viewport.height + overflow });
+    // Der Resize selbst kann das Layout noch einmal ändern (z. B. misst cdkTextareaAutosize nach einem
+    // Fenster-Resize leicht verzögert neu). Deshalb danach erneut warten, bis die Höhe stabil ist.
+    // Bewusst nur einmal anpassen: Manche Beispiele (z. B. chat) wachsen mit dem Viewport mit.
+    await waitForStableContentHeight(content);
+  }
 }
 
 async function waitForStableContentHeight(content: Locator) {
