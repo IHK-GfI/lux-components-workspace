@@ -1,0 +1,82 @@
+{
+  "customSyntax": "postcss-scss",
+  "ignoreFiles": ["src/base-templates/tokens/_deprecated-aliases.scss", "src/theme-*/_deprecated-aliases-theme.scss"],
+  "rules": {
+    "custom-property-pattern": [
+      "^(lux-(primitive|base|component)-[a-z0-9]+(-[a-z0-9]+)*|mat-[a-z0-9]+(-[a-z0-9]+)*)$",
+      {
+        "message": "Eigene Tokens heißen --lux-{primitive|base|component}-… (Kleinbuchstaben, Ziffern, Bindestriche), erlaubt sind außerdem Material-Tokens --mat-…. Alte Namen (--lux-theme-* usw.) nur in den Legacy-Dateien unter \"overrides\"."
+      }
+    ]
+  },
+  "overrides": [
+    {
+      "files": [
+        "src/base-templates/common/_luxfocus.scss",
+        "src/base-templates/common/_luxstyles.scss",
+        "src/base-templates/common/_luxutilities.scss",
+        "src/base-templates/components/_luxAccordion.scss",
+        "src/base-templates/components/_luxAccordionAria.scss",
+        "src/base-templates/components/_luxAppContent.scss",
+        "src/base-templates/components/_luxAppFooter.scss",
+        "src/base-templates/components/_luxAppHeader.scss",
+        "src/base-templates/components/_luxAppHeaderAc.scss",
+        "src/base-templates/components/_luxBadgeNotification.scss",
+        "src/base-templates/components/_luxBreadcrumb.scss",
+        "src/base-templates/components/_luxButton.scss",
+        "src/base-templates/components/_luxButtonIcon.scss",
+        "src/base-templates/components/_luxButtonRounded.scss",
+        "src/base-templates/components/_luxButtonRoundedStroked.scss",
+        "src/base-templates/components/_luxButtonToggle.scss",
+        "src/base-templates/components/_luxCard.scss",
+        "src/base-templates/components/_luxChat.scss",
+        "src/base-templates/components/_luxChatPopup.scss",
+        "src/base-templates/components/_luxCheckboxContainer.scss",
+        "src/base-templates/components/_luxChips.scss",
+        "src/base-templates/components/_luxDatepicker.scss",
+        "src/base-templates/components/_luxDialog.scss",
+        "src/base-templates/components/_luxFileinput.scss",
+        "src/base-templates/components/_luxFileList.scss",
+        "src/base-templates/components/_luxFileProgress.scss",
+        "src/base-templates/components/_luxFileUpload.scss",
+        "src/base-templates/components/_luxFilter.scss",
+        "src/base-templates/components/_luxFormControlWrapper.scss",
+        "src/base-templates/components/_luxHtml.scss",
+        "src/base-templates/components/_luxInput.scss",
+        "src/base-templates/components/_luxLinkPlain.scss",
+        "src/base-templates/components/_luxList.scss",
+        "src/base-templates/components/_luxListSelect.scss",
+        "src/base-templates/components/_luxLookupAutocomplete.scss",
+        "src/base-templates/components/_luxLookupCombobox.scss",
+        "src/base-templates/components/_luxMasterDetail.scss",
+        "src/base-templates/components/_luxMenu.scss",
+        "src/base-templates/components/_luxMessagebox.scss",
+        "src/base-templates/components/_luxPopup.scss",
+        "src/base-templates/components/_luxProgressBar.scss",
+        "src/base-templates/components/_luxProgressSpinner.scss",
+        "src/base-templates/components/_luxQuill.scss",
+        "src/base-templates/components/_luxSelect.scss",
+        "src/base-templates/components/_luxSideNav.scss",
+        "src/base-templates/components/_luxSnackbar.scss",
+        "src/base-templates/components/_luxStepper.scss",
+        "src/base-templates/components/_luxStepperLarge.scss",
+        "src/base-templates/components/_luxTable.scss",
+        "src/base-templates/components/_luxTabs.scss",
+        "src/base-templates/components/_luxTenantLogo.scss",
+        "src/base-templates/components/_luxTextarea.scss",
+        "src/base-templates/components/_luxTextbox.scss",
+        "src/base-templates/components/_luxTile.scss",
+        "src/base-templates/components/_luxTileAc.scss",
+        "src/base-templates/components/_luxTimepicker.scss",
+        "src/base-templates/components/_luxTourHint.scss",
+        "src/theme-authentic/_mat3Theme.scss",
+        "src/theme-authentic/_variablesPreferContrast.scss",
+        "src/theme-green/_mat3Theme.scss",
+        "src/theme-green/_variablesPreferContrast.scss"
+      ],
+      "rules": {
+        "custom-property-pattern": null
+      }
+    }
+  ]
+}

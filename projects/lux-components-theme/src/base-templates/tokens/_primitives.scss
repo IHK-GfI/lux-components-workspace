@@ -1,0 +1,202 @@
+@use "sass:list";
+@use "sass:map";
+@use "sass:math";
+@use "sass:string";
+
+// =============================================================================
+// Primitive Tokens (--lux-primitive-*)
+// =============================================================================
+// Rohwerte ohne Modus: Paletten, Markenfarben und Skalen. Sie gelten in allen Themes gleich,
+// ein Theme wählt nur eine andere Stufe (z. B. radius-1 in Authentic, radius-4-5 in Green).
+// Namensregeln: tokens/README.md und die Namenskonvention im Doku-Repository design-system.
+//
+// Die Paletten kommen aus den Sass-Maps des Themes (palettes.$luxPalettes und $luxCustomPalettes),
+// damit sie dieselben Werte wie bisher haben. Stufen und Paletten, die es im Code bisher nicht gab,
+// stehen unten in $figma-only-palettes (Werte aus dem Figma-Branch token-umbenennung, Stand v1.1).
+// =============================================================================
+
+// Alle Palettenstufen in der Reihenfolge, in der sie ausgegeben werden.
+$palette-stops: 0, 5, 10, 15, 20, 25, 30, 35, 40, 50, 60, 70, 80, 90, 95, 98, 99, 100;
+
+// Stufen der Kernpaletten, die es bisher als --lux-theme-{palette}-{stufe} gab.
+$core-palette-stops: 0, 10, 20, 25, 30, 35, 40, 50, 60, 70, 80, 90, 95, 98, 99, 100;
+
+// Name im Token -> Name der Sass-Map im Theme.
+$core-palettes: (
+  "primary": "primary",
+  "tertiary": "tertiary",
+  "neutral": "neutral",
+  "error": "error"
+);
+
+$custom-palettes: "orange", "yellow", "pink", "purple", "lightblue";
+
+// Bisher nur in Figma vorhanden (Figma-Export token-umbenennung-v1.1, Fingerabdruck 7653e165).
+// prettier-ignore
+$figma-only-palettes: (
+  "primary": (5: #001129, 15: #00264e),
+  "secondary": (
+    0: #000000, 5: #0a111c, 10: #151c28, 15: #1f2632, 20: #2a313d, 25: #353c49, 30: #404754, 35: #4c5360, 40: #585f6c,
+    50: #707786, 60: #8a91a0, 70: #a4abbb, 80: #c0c6d7, 90: #dce2f3, 95: #ecf1ff, 98: #f9f9ff, 99: #fdfbff, 100: #ffffff
+  ),
+  "tertiary": (5: #001503, 15: #002d0c),
+  "neutral": (5: #111111, 15: #262625),
+  "neutral-variant": (
+    0: #000000, 5: #0e1116, 10: #191c21, 15: #23262b, 20: #2e3036, 25: #393b41, 30: #44474d, 35: #505258, 40: #5c5e64,
+    50: #75777d, 60: #8f9097, 70: #a9abb2, 80: #c5c6cd, 90: #e1e2e9, 95: #f0f0f8, 98: #f9f9ff, 99: #fdfbff, 100: #ffffff
+  ),
+  "error": (5: #2d0001, 15: #540004)
+);
+
+// Reihenfolge der Paletten in der Ausgabe.
+$palette-order:
+  "primary", "secondary", "tertiary", "neutral", "neutral-variant", "error", "orange", "yellow", "pink", "purple", "lightblue";
+
+// prettier-ignore
+$brand: (
+  "primary-050": #f0f2f5,
+  "primary-100": #e3ebf5,
+  "primary-200": #ccd7e6,
+  "primary-300": #b0c4d6,
+  "primary-400": #335c85,
+  "primary-500": #003366,
+  "primary-600": #002346,
+  "secondary-100": #ebf2eb,
+  "secondary-200": #e4f1e4,
+  "secondary-300": #9ad7a3,
+  "secondary-500": #56bd66,
+  "secondary-700": #247929,
+  "gray-light": #eff3f6,
+  "red-aaa": #ad000f,
+  "warning": #fdc600
+);
+
+// Skalen: Faktor x 4 px (Schriftgrößen in rem, 1 rem = 16 px).
+$spacing-steps: 0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 5, 6, 8, 10, 12, 16, 20, 24;
+$sizing-steps:
+  0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 16, 18, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64, 72, 80, 96;
+$radius-steps: 0, 0.5, 1, 2, 3, 3.5, 4, 4.5, 5, 6;
+$border-width-steps: 0, 0.25, 0.5, 1;
+$font-size-steps: 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 7, 8, 9, 10.5, 16;
+// Laufweite in px, im Code in rem.
+$letter-spacing-steps: 0, 0.25, 0.5, 1, 1.25;
+$font-weights: 200, 300, 400, 500, 600, 700, 900;
+// Deckkraft in Prozent, im Code als Faktor.
+$opacity-steps: 8, 10, 12, 16, 24, 38;
+$duration-steps: 100, 125, 150, 200, 250, 300;
+
+// prettier-ignore
+$sizing-fractions: (
+  "one-quarter": 25%,
+  "one-third": 33.333333%,
+  "half": 50%,
+  "two-thirds": 66.666667%,
+  "three-quarters": 75%,
+  "full": 100%
+);
+
+// prettier-ignore
+$breakpoints: (
+  "xs": 599px,
+  "sm": 959px,
+  "md": 1279px,
+  "lg": 1919px,
+  "xl": 4999px
+);
+
+/// Name einer Skalenstufe: 1.5 -> "1-5", 0.25 -> "0-25".
+@function step-name($factor) {
+  $text: "" + $factor;
+  $dot: string.index($text, ".");
+  @if $dot {
+    @return string.slice($text, 1, $dot - 1) + "-" + string.slice($text, $dot + 1);
+  }
+  @return $text;
+}
+
+/// Wert einer Skalenstufe: 0 bleibt ohne Einheit.
+@function step-value($factor, $unit) {
+  @if $factor == 0 {
+    @return 0;
+  }
+  @return $factor * $unit;
+}
+
+@mixin _scale($name, $steps, $unit) {
+  @each $step in $steps {
+    --lux-primitive-#{$name}-#{step-name($step)}: #{step-value($step, $unit)};
+  }
+}
+
+/// Wert einer Palettenstufe: zuerst der Code-Wert (Sass-Map des Themes), sonst der Figma-Wert.
+@function _palette-value($name, $stop, $luxPalettes, $luxCustomPalettes) {
+  @if map.has-key($core-palettes, $name) and list.index($core-palette-stops, $stop) {
+    @return map.get($luxPalettes, map.get($core-palettes, $name), $stop);
+  }
+  @if list.index($custom-palettes, $name) {
+    // Die Schlüssel der Map sind unquotiert (orange, pink, lightblue ...) und damit für Sass Farbnamen, keine Strings.
+    @each $key, $palette in $luxCustomPalettes {
+      @if "#{$key}" == $name {
+        @return map.get($palette, $stop);
+      }
+    }
+  }
+  @if map.has-key($figma-only-palettes, $name) {
+    @return map.get($figma-only-palettes, $name, $stop);
+  }
+  @return null;
+}
+
+/// Gibt alle Primitive Tokens aus. Aufruf je Theme in :root mit den Paletten des Themes.
+@mixin lux-primitives($luxPalettes, $luxCustomPalettes) {
+  // Paletten
+  @each $name in $palette-order {
+    @each $stop in $palette-stops {
+      $value: _palette-value($name, $stop, $luxPalettes, $luxCustomPalettes);
+      @if $value {
+        --lux-primitive-palette-#{$name}-#{$stop}: #{$value};
+      }
+    }
+  }
+
+  // Markenfarben (IHK24)
+  @each $name, $value in $brand {
+    --lux-primitive-brand-#{$name}: #{$value};
+  }
+
+  // Skalen
+  @include _scale("spacing", $spacing-steps, 4px);
+  @include _scale("sizing", $sizing-steps, 4px);
+  @each $name, $value in $sizing-fractions {
+    --lux-primitive-sizing-#{$name}: #{$value};
+  }
+  @include _scale("radius", $radius-steps, 4px);
+  --lux-primitive-radius-full: 999px;
+  @include _scale("border-width", $border-width-steps, 4px);
+
+  // Schrift
+  @include _scale("font-size", $font-size-steps, 0.25rem);
+  @include _scale("font-letter-spacing", $letter-spacing-steps, math.div(1rem, 16));
+  @each $weight in $font-weights {
+    --lux-primitive-font-weight-#{$weight}: #{$weight};
+  }
+  --lux-primitive-font-family-source-sans-pro: "Source Sans Pro", Helvetica, Arial, sans-serif;
+  --lux-primitive-font-family-blogger-sans: "Blogger Sans", Helvetica, Arial, sans-serif;
+  // Korb nur, wenn die Anwendung die Schrift einbindet (Lizenz), sonst greift Blogger Sans.
+  --lux-primitive-font-family-korb: Korb, "Blogger Sans", Helvetica, Arial, sans-serif;
+
+  // Deckkraft, Dauer, Kurven
+  @each $step in $opacity-steps {
+    --lux-primitive-opacity-#{$step}: #{math.div($step, 100)};
+  }
+  @each $step in $duration-steps {
+    --lux-primitive-duration-#{$step}: #{$step}ms;
+  }
+  --lux-primitive-easing-standard-decelerate: cubic-bezier(0, 0, 0, 1);
+  --lux-primitive-easing-standard-accelerate: cubic-bezier(0.3, 0, 1, 1);
+
+  // Breakpoints
+  @each $name, $value in $breakpoints {
+    --lux-primitive-breakpoint-#{$name}: #{$value};
+  }
+}

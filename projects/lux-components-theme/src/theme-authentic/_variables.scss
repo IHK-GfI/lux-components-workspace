@@ -1,129 +1,200 @@
 @use "sass:map";
-@use "sass:string";
 @use "palettes";
-
-@mixin lux-theme-palette-vars($paletteName, $paletteMap, $sizes) {
-  @each $size in $sizes {
-    --lux-theme-#{string.to-lower-case($paletteName)}-#{string.to-lower-case("" + $size)}: #{map.get($paletteMap, $size)};
-  }
-}
+@use "../base-templates/tokens/primitives";
+@use "../base-templates/tokens/material-roles";
 
 // Custom-Farbnamen (z.B. Badge oder Progress)
 $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "black", "white", "yellow", "pink", "lightblue");
 
 :root {
-  // Farbpaletten
-  @include lux-theme-palette-vars("primary", palettes.$lux-palette_primary, palettes.$sizes);
-  @include lux-theme-palette-vars("accent", palettes.$lux-palette_accent, palettes.$sizes);
-  @include lux-theme-palette-vars("neutral", palettes.$lux-palette_neutral, palettes.$sizes);
-  @include lux-theme-palette-vars("warn", palettes.$lux-palette_warn, palettes.$sizes);
-  @include lux-theme-palette-vars("custom-orange", palettes.$lux-palette_custom_orange, palettes.$customPaletteSizes);
-  @include lux-theme-palette-vars("custom-yellow", palettes.$lux-palette_custom_yellow, palettes.$customPaletteSizes);
-  @include lux-theme-palette-vars("custom-pink", palettes.$lux-palette_custom_pink, palettes.$customPaletteSizes);
-  @include lux-theme-palette-vars("custom-purple", palettes.$lux-palette_custom_purple, palettes.$customPaletteSizes);
-  @include lux-theme-palette-vars("custom-lightblue", palettes.$lux-palette_custom_lightblue, palettes.$customPaletteSizes);
+  // ===========================================================================
+  // Primitive Tokens (modusfrei, gleich in allen Themes)
+  // ===========================================================================
+  @include primitives.lux-primitives(palettes.$luxPalettes, palettes.$luxCustomPalettes);
 
-  // Allgemein
-  --lux-theme-app-font-family: "Source Sans Pro", Helvetica, Arial, sans-serif;
-  --lux-theme-app-headline-font: "Blogger Sans";
+  // ===========================================================================
+  // Base Tokens
+  // ===========================================================================
+  // Material-Rollen (Übergang, lesen --mat-sys-*)
+  @include material-roles.lux-material-roles();
 
-  --lux-theme-dark-primary-text: var(--mat-sys-on-surface);
-  --lux-theme-dark-secondary-text: var(--mat-sys-on-surface-variant);
-  --lux-theme-dark-disabled-text: var(--mat-sys-outline);
+  // Primary
+  --lux-base-primary-color: var(--lux-primitive-palette-primary-20);
+
+  // Surface
+  --lux-base-surface-color: #ffffff;
+  --lux-base-surface-container-lowest-color: #ffffff;
+
+  // Text
+  --lux-base-text-body-font-family: "Source Sans Pro", Helvetica, Arial, sans-serif;
+  --lux-base-text-body-font-size: var(--lux-primitive-font-size-4);
+  --lux-base-text-body-small-font-size: var(--lux-primitive-font-size-3-5);
+  --lux-base-text-body-large-font-size: var(--lux-primitive-font-size-4-5);
+  --lux-base-text-body-letter-spacing: var(--lux-primitive-font-letter-spacing-0-5);
+  --lux-base-text-headline-font-family: "Blogger Sans";
+  --lux-base-text-headline-1-font-size: var(--lux-primitive-font-size-8);
+  --lux-base-text-headline-2-font-size: var(--lux-primitive-font-size-6);
+  --lux-base-text-headline-3-font-size: var(--lux-primitive-font-size-5);
+  --lux-base-text-headline-4-font-size: var(--lux-primitive-font-size-4);
+  --lux-base-text-headline-5-font-size: var(--lux-primitive-font-size-3-5);
+  --lux-base-text-headline-6-font-size: var(--lux-primitive-font-size-3);
+  --lux-base-text-headline-1-font-weight: var(--lux-primitive-font-weight-500);
+  --lux-base-text-headline-2-font-weight: var(--lux-primitive-font-weight-500);
+  --lux-base-text-headline-3-font-weight: var(--lux-primitive-font-weight-500);
+  --lux-base-text-headline-4-font-weight: var(--lux-primitive-font-weight-500);
+  --lux-base-text-headline-5-font-weight: var(--lux-primitive-font-weight-700);
+  --lux-base-text-headline-6-font-weight: var(--lux-primitive-font-weight-700);
+  --lux-base-text-brand-headline-1-font-size: var(--lux-base-text-headline-1-font-size);
+  --lux-base-text-brand-headline-2-font-size: var(--lux-base-text-headline-2-font-size);
+  --lux-base-text-brand-headline-3-font-size: var(--lux-base-text-headline-3-font-size);
+  --lux-base-text-brand-headline-4-font-size: var(--lux-base-text-headline-4-font-size);
+  --lux-base-text-brand-headline-5-font-size: var(--lux-base-text-headline-5-font-size);
+  --lux-base-text-brand-headline-6-font-size: var(--lux-base-text-headline-6-font-size);
+  --lux-base-text-mobile-headline-1-font-size: var(--lux-primitive-font-size-7);
+  --lux-base-text-mobile-headline-2-font-size: var(--lux-primitive-font-size-5-5);
+  --lux-base-text-mobile-headline-3-font-size: var(--lux-primitive-font-size-4-5);
+  --lux-base-text-mobile-headline-4-font-size: var(--lux-primitive-font-size-4);
+  --lux-base-text-mobile-headline-5-font-size: var(--lux-primitive-font-size-3-5);
+  --lux-base-text-mobile-headline-6-font-size: var(--lux-primitive-font-size-3);
+  --lux-base-text-primary-color: var(--lux-base-surface-content-color);
+  --lux-base-text-secondary-color: var(--lux-base-surface-variant-content-color);
+  --lux-base-text-disabled-color: var(--lux-base-border-outline-color);
+  --lux-base-text-inverse-primary-color: white;
+  --lux-base-text-inverse-secondary-color: rgba(255, 255, 255, 0.74);
+  --lux-base-text-inverse-disabled-color: rgba(255, 255, 255, 0.38);
+
+  // Rahmen
+  --lux-base-border-color: var(--lux-base-border-outline-variant-color);
+  --lux-base-border-radius: 4px;
+
+  // Erweiterte Farben (z. B. Badge, Icon, Messagebox)
+  --lux-base-extended-red-color: #ad000f;
+  --lux-base-extended-red-content-color: #ffffff;
+  --lux-base-extended-red-container-color: var(--lux-primitive-palette-error-95);
+  --lux-base-extended-red-container-content-color: var(--lux-primitive-palette-error-30);
+  --lux-base-extended-red-high-contrast-color: var(--lux-primitive-palette-error-35);
+  --lux-base-extended-red-high-contrast-content-color: #ffffff;
+  --lux-base-extended-green-color: var(--lux-primitive-palette-tertiary-70);
+  --lux-base-extended-green-content-color: var(--lux-primitive-palette-neutral-10);
+  --lux-base-extended-green-container-color: var(--lux-primitive-palette-tertiary-95);
+  --lux-base-extended-green-container-content-color: var(--lux-primitive-palette-tertiary-30);
+  --lux-base-extended-green-high-contrast-color: var(--lux-primitive-palette-tertiary-30);
+  --lux-base-extended-green-high-contrast-content-color: #ffffff;
+  --lux-base-extended-purple-color: #715289;
+  --lux-base-extended-purple-content-color: #ffffff;
+  --lux-base-extended-purple-container-color: var(--lux-primitive-palette-purple-95);
+  --lux-base-extended-purple-container-content-color: var(--lux-primitive-palette-purple-30);
+  --lux-base-extended-purple-high-contrast-color: var(--lux-primitive-palette-neutral-10);
+  --lux-base-extended-purple-high-contrast-content-color: #ffffff;
+  --lux-base-extended-blue-color: var(--lux-primitive-palette-primary-20);
+  --lux-base-extended-blue-content-color: #ffffff;
+  --lux-base-extended-blue-container-color: var(--lux-primitive-palette-neutral-100);
+  --lux-base-extended-blue-container-content-color: var(--lux-primitive-palette-primary-20);
+  --lux-base-extended-blue-high-contrast-color: var(--lux-primitive-palette-primary-20);
+  --lux-base-extended-blue-high-contrast-content-color: #ffffff;
+  --lux-base-extended-gray-color: var(--lux-primitive-palette-neutral-40);
+  --lux-base-extended-gray-content-color: #ffffff;
+  --lux-base-extended-gray-container-color: var(--lux-primitive-palette-neutral-95);
+  --lux-base-extended-gray-container-content-color: var(--lux-primitive-palette-neutral-30);
+  --lux-base-extended-gray-high-contrast-color: var(--lux-primitive-palette-neutral-10);
+  --lux-base-extended-gray-high-contrast-content-color: #ffffff;
+  --lux-base-extended-orange-color: #fc791f;
+  --lux-base-extended-orange-content-color: var(--lux-primitive-palette-neutral-10);
+  --lux-base-extended-orange-container-color: var(--lux-primitive-palette-orange-95);
+  --lux-base-extended-orange-container-content-color: var(--lux-primitive-palette-orange-30);
+  --lux-base-extended-orange-high-contrast-color: #fbd12c;
+  --lux-base-extended-orange-high-contrast-content-color: var(--lux-primitive-palette-neutral-10);
+  --lux-base-extended-black-color: var(--lux-primitive-palette-neutral-10);
+  --lux-base-extended-black-content-color: #ffffff;
+  --lux-base-extended-black-container-color: var(--lux-primitive-palette-neutral-100);
+  --lux-base-extended-black-container-content-color: var(--lux-primitive-palette-neutral-10);
+  --lux-base-extended-black-high-contrast-color: var(--lux-primitive-palette-neutral-10);
+  --lux-base-extended-black-high-contrast-content-color: #ffffff;
+  --lux-base-extended-white-color: #ffffff;
+  --lux-base-extended-white-content-color: var(--lux-primitive-palette-neutral-10);
+  --lux-base-extended-white-high-contrast-color: #ffffff;
+  --lux-base-extended-white-high-contrast-content-color: var(--lux-primitive-palette-neutral-10);
+  --lux-base-extended-yellow-color: #fbd12c;
+  --lux-base-extended-yellow-content-color: var(--lux-primitive-palette-neutral-10);
+  --lux-base-extended-yellow-container-color: var(--lux-primitive-palette-yellow-95);
+  --lux-base-extended-yellow-container-content-color: var(--lux-primitive-palette-yellow-30);
+  --lux-base-extended-yellow-high-contrast-color: #fbd12c;
+  --lux-base-extended-yellow-high-contrast-content-color: var(--lux-primitive-palette-neutral-10);
+  --lux-base-extended-pink-color: #fc6b85;
+  --lux-base-extended-pink-content-color: var(--lux-primitive-palette-neutral-10);
+  --lux-base-extended-pink-container-color: var(--lux-primitive-palette-pink-95);
+  --lux-base-extended-pink-container-content-color: var(--lux-primitive-palette-pink-30);
+  --lux-base-extended-pink-high-contrast-color: var(--lux-primitive-palette-neutral-10);
+  --lux-base-extended-pink-high-contrast-content-color: #ffffff;
+  --lux-base-extended-lightblue-color: #4fa8e8;
+  --lux-base-extended-lightblue-content-color: var(--lux-primitive-palette-neutral-10);
+  --lux-base-extended-lightblue-container-color: var(--lux-primitive-palette-lightblue-95);
+  --lux-base-extended-lightblue-container-content-color: var(--lux-primitive-palette-lightblue-30);
+  --lux-base-extended-lightblue-high-contrast-color: var(--lux-primitive-palette-primary-20);
+  --lux-base-extended-lightblue-high-contrast-content-color: #ffffff;
+
+  // Fokus
+  --lux-base-focus-outline-color: var(--lux-base-extended-lightblue-color);
+  --lux-base-focus-outline-inverse-color: #ffffff;
+  --lux-base-focus-outline-style: solid;
+  --lux-base-focus-outline-width: 4px;
+  --lux-base-focus-state-layer-color: color-mix(in srgb, var(--lux-base-secondary-container-color) 12%, transparent);
+  --lux-base-focus-state-layer-opacity: 0.12;
+
+  // Hover
+  --lux-base-hover-state-layer-color: color-mix(in srgb, var(--lux-base-secondary-container-color) 8%, transparent);
+  --lux-base-hover-state-layer-opacity: 0.08;
+  --lux-base-hover-content-color: var(--mat-option-label-text-color);
+
+  // Pressed
+  --lux-base-pressed-state-layer-color: color-mix(in srgb, var(--lux-primitive-palette-primary-40) 16%, transparent);
+  --lux-base-pressed-state-layer-opacity: 0.16;
+
+  // Selektion
+  --lux-base-selected-background-color: var(--mat-option-selected-state-layer-color);
+  --lux-base-selected-border-color: var(--lux-primitive-palette-primary-20);
+  --lux-base-selected-content-color: var(--mat-option-selected-state-label-text-color);
+
+  // Overlay und Scrim
+  --lux-base-overlay-color: rgba(0, 0, 0, 0.12);
+  --lux-base-overlay-inverse-color: rgba(255, 255, 255, 0.12);
+  --lux-base-scrim-color: color-mix(in srgb, var(--lux-primitive-palette-neutral-0) 32%, transparent);
+
+  // Verlauf
+  --lux-base-gradient-background-image: linear-gradient(90deg, #ffffff 0%, var(--lux-base-surface-container-medium-color) 100%);
+  --lux-base-gradient-reverse-background-image: linear-gradient(270deg, #ffffff 0%, var(--lux-base-surface-container-medium-color) 100%);
+  --lux-base-gradient-start-color: var(--lux-primitive-palette-neutral-100);
+  --lux-base-gradient-end-color: var(--lux-base-surface-container-medium-color);
+
+  // Elevation (Schatten)
+  --lux-base-elevation-level-0:
+    0px 0px 0px 0px rgba(0, 0, 0, 0.2), 0px 0px 0px 0px rgba(0, 0, 0, 0.14), 0px 0px 0px 0px rgba(0, 0, 0, 0.12);
+  --lux-base-elevation-level-1:
+    0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+  --lux-base-elevation-level-2:
+    0px 3px 3px -2px rgba(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 1px 8px 0px rgba(0, 0, 0, 0.12);
+  --lux-base-elevation-level-3:
+    0px 3px 5px -1px rgba(0, 0, 0, 0.2), 0px 6px 10px 0px rgba(0, 0, 0, 0.14), 0px 1px 18px 0px rgba(0, 0, 0, 0.12);
+  --lux-base-elevation-level-4:
+    0px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 8px 10px 1px rgba(0, 0, 0, 0.14), 0px 3px 14px 2px rgba(0, 0, 0, 0.12);
+  --lux-base-elevation-level-5:
+    0px 7px 8px -4px rgba(0, 0, 0, 0.2), 0px 12px 17px 2px rgba(0, 0, 0, 0.14), 0px 5px 22px 4px rgba(0, 0, 0, 0.12);
+
+  // ===========================================================================
+  // Component Tokens (bisherige Namen, Umstellung auf --lux-component-* mit Issue #395)
+  // ===========================================================================
+  // stylelint-disable custom-property-pattern -- Legacy-Namen bis Issue #395 (Wellen 1-3) bzw. Wellen 4-6
+
+  // Trennlinien
   --lux-theme-dark-dividers: rgba(0, 51, 102, 0.1);
-  --lux-theme-dark-focused: rgba(0, 0, 0, 0.12); // TODO: wofür?
-
-  --lux-theme-light-primary-text: white;
-  --lux-theme-light-secondary-text: rgba(255, 255, 255, 0.74);
-  --lux-theme-light-disabled-text: rgba(255, 255, 255, 0.38);
   --lux-theme-light-dividers: rgba(255, 255, 255, 0.2);
-  --lux-theme-light-focused: rgba(255, 255, 255, 0.12);
-
-  // Base-Tokens
-  --lux-theme-breakpoint-xs: 599px;
-  --lux-theme-breakpoint-sm: 959px;
-  --lux-theme-breakpoint-md: 1279px;
-  --lux-theme-breakpoint-lg: 1919px;
-  --lux-theme-breakpoint-xl: 4999px;
-
-  --lux-theme-radius-xs: 2px;
-  --lux-theme-radius-sm: 4px;
-  --lux-theme-radius-md: 8px;
-  --lux-theme-radius-lg: 16px;
-  --lux-theme-radius-xl: 24px;
-  --lux-theme-radius-xxl: 999px;
-
-  --lux-theme-spacing-xxs: 2px;
-  --lux-theme-spacing-xs: 4px;
-  --lux-theme-spacing-1-5: 6px;
-  --lux-theme-spacing-sm: 8px;
-  --lux-theme-spacing-3: 12px;
-  --lux-theme-spacing-md: 16px;
-  --lux-theme-spacing-lg: 24px;
-  --lux-theme-spacing-xl: 32px;
-  --lux-theme-spacing-xxl: 48px;
-  --lux-theme-spacing-xxxl: 64px;
-
-  --lux-theme-font-size-xs: 0.75rem;
-  --lux-theme-font-size-sm: 0.875rem;
-  --lux-theme-font-size-md: 1rem;
-  --lux-theme-font-size-lg: 1.125rem;
-  --lux-theme-font-size-xl: 1.25rem;
-  --lux-theme-font-size-2xl: 1.5rem;
 
   // Hauptfarben
-  --lux-theme-primary-color: #{palettes.$lux-primary-color};
-  --lux-theme-accent-color: #{palettes.$lux-accent-color};
-  --lux-theme-warn-color: #{palettes.$lux-warn-color};
-
-  // Sonderfarben
-  --lux-theme-custom-purple: #715289;
-  --lux-theme-custom-on-purple: #ffffff;
-  --lux-theme-custom-pink: #fc6b85;
-  --lux-theme-custom-on-pink: #{map.get(palettes.$lux-palette_neutral, 10)};
-  --lux-theme-custom-yellow: #fbd12c;
-  --lux-theme-custom-on-yellow: #{map.get(palettes.$lux-palette_neutral, 10)};
-  --lux-theme-custom-orange: #fc791f;
-  --lux-theme-custom-on-orange: #{map.get(palettes.$lux-palette_neutral, 10)};
-  --lux-theme-custom-lightblue: #4fa8e8;
-  --lux-theme-custom-on-lightblue: #{map.get(palettes.$lux-palette_neutral, 10)};
-  --lux-theme-custom-blue: #{map.get(palettes.$lux-palette_primary, 20)};
-  --lux-theme-custom-on-blue: #ffffff;
-  --lux-theme-custom-green: #{map.get(palettes.$lux-palette_accent, 70)};
-  --lux-theme-custom-on-green: #{map.get(palettes.$lux-palette_neutral, 10)};
-  --lux-theme-custom-red: #ad000f;
-  --lux-theme-custom-on-red: #ffffff;
-  --lux-theme-custom-gray: #{map.get(palettes.$lux-palette_neutral, 40)};
-  --lux-theme-custom-on-gray: #ffffff;
-  --lux-theme-custom-black: #{map.get(palettes.$lux-palette_neutral, 10)};
-  --lux-theme-custom-on-black: #ffffff;
-  --lux-theme-custom-white: #ffffff;
-  --lux-theme-custom-on-white: #{map.get(palettes.$lux-palette_neutral, 10)};
-
-  --lux-theme-contrast-custom-purple: #{map.get(palettes.$lux-palette_neutral, 10)};
-  --lux-theme-contrast-custom-on-purple: #ffffff;
-  --lux-theme-contrast-custom-pink: #{map.get(palettes.$lux-palette_neutral, 10)};
-  --lux-theme-contrast-custom-on-pink: #ffffff;
-  --lux-theme-contrast-custom-yellow: #fbd12c;
-  --lux-theme-contrast-custom-on-yellow: #{map.get(palettes.$lux-palette_neutral, 10)};
-  --lux-theme-contrast-custom-orange: #fbd12c;
-  --lux-theme-contrast-custom-on-orange: #{map.get(palettes.$lux-palette_neutral, 10)};
-  --lux-theme-contrast-custom-lightblue: #{map.get(palettes.$lux-palette_primary, 20)};
-  --lux-theme-contrast-custom-on-lightblue: #ffffff;
-  --lux-theme-contrast-custom-blue: #{map.get(palettes.$lux-palette_primary, 20)};
-  --lux-theme-contrast-custom-on-blue: #ffffff;
-  --lux-theme-contrast-custom-green: #{map.get(palettes.$lux-palette_accent, 30)};
-  --lux-theme-contrast-custom-on-green: #ffffff;
-  --lux-theme-contrast-custom-red: #{map.get(palettes.$lux-palette_warn, 35)};
-  --lux-theme-contrast-custom-on-red: #ffffff;
-  --lux-theme-contrast-custom-gray: #{map.get(palettes.$lux-palette_neutral, 10)};
-  --lux-theme-contrast-custom-on-gray: #ffffff;
-  --lux-theme-contrast-custom-black: #{map.get(palettes.$lux-palette_neutral, 10)};
-  --lux-theme-contrast-custom-on-black: #ffffff;
-  --lux-theme-contrast-custom-white: #ffffff;
-  --lux-theme-contrast-custom-on-white: #{map.get(palettes.$lux-palette_neutral, 10)};
+  --lux-theme-accent-color: #{palettes.$lux-accent-color}; // @deprecated (#394): entfällt ohne Nachfolger
+  --lux-theme-warn-color: #{palettes.$lux-warn-color}; // @deprecated (#394): entfällt ohne Nachfolger
 
   // Hintergrundfarben (z.B. Badge oder Progress)
+  // @deprecated (#394): entfallen ohne Nachfolger, Kopien von --lux-base-extended-*
   @each $colorName in $componentColorNames {
     --lux-theme-component-bg-#{""+$colorName+""}: var(--lux-theme-custom-#{$colorName});
   }
@@ -135,19 +206,10 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   // App
   --lux-theme-app-header-item-border-radius: 4px;
   --lux-theme-app-header-bg: var(--mat-sys-surface-container-highest);
-  --lux-theme-app-content-bg: #ffffff;
   --lux-theme-app-footer-bg: var(--mat-sys-surface-container-highest);
   --lux-theme-app-footer-border-color: var(--mat-sys-primary);
-  --lux-theme-app-data-bg: #ffffff;
-  --lux-theme-app-gradient: linear-gradient(90deg, #ffffff 0%, var(--mat-sys-surface-container) 100%);
-  --lux-theme-app-gradient-reverse: linear-gradient(270deg, #ffffff 0%, var(--mat-sys-surface-container) 100%);
-  --lux-theme-app-border-color: var(--mat-sys-outline-variant);
-  --lux-theme-app-border-radius: 4px;
   --lux-theme-state-layer-color: var(--lux-theme-primary-40);
-  --lux-theme-app-state-layer-color: #{map.get(palettes.$lux-palette_primary, 40)};
-  --lux-theme-hover-state-layer-opacity: 0.08;
-  --lux-theme-focus-state-layer-opacity: 0.12;
-  --lux-theme-pressed-state-layer-opacity: 0.16;
+  --lux-theme-app-state-layer-color: #{map.get(palettes.$lux-palette_primary, 40)}; // @deprecated (#394): entfällt ohne Nachfolger
 
   // Form
   --lux-theme-form-border-width: 1px;
@@ -164,30 +226,18 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-form-error-border-color: var(--mat-sys-error);
   --lux-theme-form-error-box-shadow: 0 0 0 1px var(--mat-sys-error) inset;
   --lux-theme-form-control-font-size: 1rem;
-  --lux-theme-form-control-buffer: 4px;
+  --lux-theme-form-control-buffer: 4px; // @deprecated (#394): entfällt ohne Nachfolger
   --lux-theme-form-error-msg-background: var(--mat-sys-error-container);
   --lux-theme-form-autofill-background-color: var(--mat-sys-surface-container-high);
   --lux-theme-form-readonly-color: #{map.get(palettes.$lux-palette_neutral, 10)};
   --lux-theme-form-readonly-bg-color: #{map.get(palettes.$lux-palette_neutral, 95)};
 
   // Fokus
-  --lux-theme-outline-dark: 4px solid var(--lux-theme-custom-lightblue);
-  --lux-theme-outline-bright: 4px solid #ffffff;
-  --lux-theme-outline-width: 4px;
-  --lux-theme-outline-style: solid;
-  --lux-theme-outline-color-bright: #ffffff;
-  --lux-theme-outline-color-dark: var(--lux-theme-custom-lightblue);
+  --lux-theme-outline-dark: 4px solid var(--lux-theme-custom-lightblue); // @deprecated (#394): entfällt ohne Nachfolger
+  --lux-theme-outline-bright: 4px solid #ffffff; // @deprecated (#394): entfällt ohne Nachfolger
 
   // Hover
-  --lux-theme-hover-color: var(--mat-option-hover-state-layer-color);
-  --lux-theme-focus-color: var(--mat-option-focus-state-layer-color);
-  --lux-theme-on-hover-color: var(--mat-option-label-text-color);
-  --lux-theme-hover-color-for-dark-background: var(--lux-theme-primary-40);
-
-  // Selektion
-  --lux-theme-selected-border-color: #{palettes.$lux-primary-color};
-  --lux-theme-selected-bg-color: var(--mat-option-selected-state-layer-color);
-  --lux-theme-on-selected-color: var(--mat-option-selected-state-label-text-color);
+  --lux-theme-hover-color-for-dark-background: var(--lux-theme-primary-40); // @deprecated (#394): entfällt ohne Nachfolger
 
   // Snackbar
   --lux-theme-snackbar-red: #f17474;
@@ -248,8 +298,8 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-badge-on-orange: var(--lux-theme-custom-on-orange);
   --lux-theme-badge-black: var(--lux-theme-custom-black);
   --lux-theme-badge-on-black: var(--lux-theme-custom-on-black);
-  --lux-theme-badge-white: var(--lux-theme-custom-white);
-  --lux-theme-badge-on-white: var(--lux-theme-custom-on-white);
+  --lux-theme-badge-white: var(--lux-theme-custom-white); // @deprecated (#394): entfällt ohne Nachfolger
+  --lux-theme-badge-on-white: var(--lux-theme-custom-on-white); // @deprecated (#394): entfällt ohne Nachfolger
   --lux-theme-badge-yellow: var(--lux-theme-custom-yellow);
   --lux-theme-badge-on-yellow: var(--lux-theme-custom-on-yellow);
   --lux-theme-badge-pink: var(--lux-theme-custom-pink);
@@ -658,7 +708,7 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-tile-font-hover-color: var(--mat-sys-on-tertiary-container);
   --lux-theme-tile-icon-color: var(--mat-sys-tertiary);
   --lux-theme-tile-border-radius: var(--lux-theme-app-border-radius);
-  --lux-theme-tile-borderradius: var(--lux-theme-tile-border-radius);
+  --lux-theme-tile-borderradius: var(--lux-theme-tile-border-radius); // @deprecated (#394): entfällt ohne Nachfolger
   --lux-theme-tile-bottom-line-color: var(--mat-sys-tertiary);
 
   // LUX-Tile-Ac
@@ -670,14 +720,13 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-tour-hint-overlay-backdrop-color: rgba(0, 0, 0, 0.12);
 
   // Options in Panels (z.B. Select, AutoComplete und Menu)
-  --lux-theme-panel-option-min-height: 24px;
-  --lux-theme-panel-option-padding: 12px 0;
+  --lux-theme-panel-option-min-height: 24px; // @deprecated (#394): entfällt ohne Nachfolger
+  --lux-theme-panel-option-padding: 12px 0; // @deprecated (#394): entfällt ohne Nachfolger
   --lux-theme-panel-bg-color: var(--mat-sys-surface-container);
   --lux-theme-panel-option-label-text-size: 1rem;
   --lux-theme-panel-option-label-text-color: var(--lux-theme-primary-color);
+  // @deprecated (#394): kein Alias, der Wert weicht von --lux-base-selected-background-color ab
   --lux-theme-panel-option-selected-state-layer-color: color-mix(in srgb, var(--mat-sys-secondary-container) 12%, transparent);
-  --lux-theme-panel-option-hover-state-layer-color: color-mix(in srgb, var(--mat-sys-secondary-container) 8%, transparent);
-  --lux-theme-panel-option-focus-state-layer-color: color-mix(in srgb, var(--mat-sys-secondary-container) 12%, transparent);
   --lux-theme-panel-option-disabled-selected-checkmark-color: var(--lux-theme-dark-disabled-text);
   --lux-theme-panel-option-selected-checkmark-color: var(--lux-theme-primary-color);
 }

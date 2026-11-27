@@ -17,20 +17,23 @@
 // LUX Utility Design Tokens
 // =============================================================================
 // Utilities-spezifische CSS Custom Properties.
-// Theme-agnostische Base-Tokens (Spacing, Font-Size) sind in _variables.scss.
+// Primitive Tokens (Spacing, Font-Size usw.) sind in base-templates/tokens/_primitives.scss,
+// Base Tokens je Theme in theme-*/_variables.scss.
 // =============================================================================
 
 :root {
   // --- Focus State Layer ---
-  // Background tint applied behind focus-visible outlines (12% primary, per Figma "focus-state-layer-color").
-  --lux-focus-state-layer-color: color-mix(in srgb, var(--lux-theme-primary-color) 12%, transparent);
+  // @deprecated (#394): geht in --lux-base-focus-state-layer-color auf. Kein Alias, weil der Wert abweicht
+  // (hier primary mit 12 %, das Base Token nutzt die Option-Schicht). Wird im Theme nicht gelesen.
+  --lux-focus-state-layer-color: color-mix(in srgb, var(--lux-base-primary-color) 12%, transparent);
 
-  // --- Z-Index ---
-  --lux-z-action-bar: 8;
-  --lux-z-header: 100;
-  --lux-z-backdrop: 199;
-  --lux-z-drawer: 200;
-  --lux-z-skip-link: 10000;
+  // --- Ebenen (z-index) ---
+  // Die alten Namen --lux-z-* sind Aliase (siehe tokens/_deprecated-aliases.scss).
+  --lux-base-layer-action-bar-z-index: 8;
+  --lux-base-layer-header-z-index: 100;
+  --lux-base-layer-backdrop-z-index: 199;
+  --lux-base-layer-drawer-z-index: 200;
+  --lux-base-layer-skip-link-z-index: 10000;
 }
 
 // =============================================================================

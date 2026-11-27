@@ -1,0 +1,2560 @@
+{
+  "--lux-focus-state-layer-color": {
+    "A": "color-mix(in srgb, var(--lux-theme-primary-color) 12%, transparent)",
+    "G": "color-mix(in srgb, var(--lux-theme-primary-color) 12%, transparent)",
+    "Ar": "color-mix(in srgb, #003366 12%, transparent)",
+    "Gr": "color-mix(in srgb, #003366 12%, transparent)"
+  },
+  "--lux-theme-accent-0": { "A": "#000000", "G": "#000000", "Ar": "#000000", "Gr": "#000000" },
+  "--lux-theme-accent-10": { "A": "#002107", "G": "#002107", "Ar": "#002107", "Gr": "#002107" },
+  "--lux-theme-accent-100": { "A": "#ffffff", "G": "#ffffff", "Ar": "#ffffff", "Gr": "#ffffff" },
+  "--lux-theme-accent-20": { "A": "#003911", "G": "#003911", "Ar": "#003911", "Gr": "#003911" },
+  "--lux-theme-accent-25": { "A": "#004617", "G": "#004617", "Ar": "#004617", "Gr": "#004617" },
+  "--lux-theme-accent-30": { "A": "#00531d", "G": "#00531d", "Ar": "#00531d", "Gr": "#00531d" },
+  "--lux-theme-accent-35": { "A": "#006022", "G": "#006022", "Ar": "#006022", "Gr": "#006022" },
+  "--lux-theme-accent-40": { "A": "#006e29", "G": "#006e29", "Ar": "#006e29", "Gr": "#006e29" },
+  "--lux-theme-accent-50": { "A": "#198939", "G": "#198939", "Ar": "#198939", "Gr": "#198939" },
+  "--lux-theme-accent-60": { "A": "#3ca450", "G": "#3ca450", "Ar": "#3ca450", "Gr": "#3ca450" },
+  "--lux-theme-accent-70": { "A": "#56bd66", "G": "#56bd66", "Ar": "#56bd66", "Gr": "#56bd66" },
+  "--lux-theme-accent-80": { "A": "#75dc81", "G": "#75dc81", "Ar": "#75dc81", "Gr": "#75dc81" },
+  "--lux-theme-accent-90": { "A": "#90f99b", "G": "#90f99b", "Ar": "#90f99b", "Gr": "#90f99b" },
+  "--lux-theme-accent-95": { "A": "#c6ffc5", "G": "#c6ffc5", "Ar": "#c6ffc5", "Gr": "#c6ffc5" },
+  "--lux-theme-accent-98": { "A": "#ebffe6", "G": "#ebffe6", "Ar": "#ebffe6", "Gr": "#ebffe6" },
+  "--lux-theme-accent-99": { "A": "#f6fff1", "G": "#f6fff1", "Ar": "#f6fff1", "Gr": "#f6fff1" },
+  "--lux-theme-accent-color": { "G": "#003911", "Gr": "#003911" },
+  "--lux-theme-accent-secondary-color": { "G": "#247929", "Gr": "#247929" },
+  "--lux-theme-accordion-aria-panel-border-bottom": {
+    "A": "none",
+    "G": "1px solid var(--lux-theme-app-border-color)",
+    "Ar": "none",
+    "Gr": "1px solid #e5e2e1"
+  },
+  "--lux-theme-accordion-aria-panel-border-radius": { "A": "var(--lux-theme-app-border-radius)", "G": "0", "Ar": "4px", "Gr": "0" },
+  "--lux-theme-accordion-aria-panel-box-shadow": {
+    "A": "0 0 0 var(--lux-theme-accordion-panel-container-elevation-shadow-width) var(--mat-card-outlined-outline-color, var(--mat-sys-outline-variant))",
+    "G": "none",
+    "Ar": "0 0 0 1px #e5e2e1)",
+    "Gr": "none"
+  },
+  "--lux-theme-accordion-aria-panel-first-border-top": {
+    "A": "none",
+    "G": "1px solid var(--lux-theme-app-border-color)",
+    "Ar": "none",
+    "Gr": "1px solid #e5e2e1"
+  },
+  "--lux-theme-accordion-header-color-accent": { "A": "var(--lux-theme-accent-98)", "G": "#ccebd1", "Ar": "#ebffe6", "Gr": "#ccebd1" },
+  "--lux-theme-accordion-header-color-neutral": {
+    "A": "var(--lux-theme-app-content-bg)",
+    "G": "var(--lux-theme-app-content-bg)",
+    "Ar": "#ffffff",
+    "Gr": "#ffffff"
+  },
+  "--lux-theme-accordion-header-color-on-accent": {
+    "A": "var(--lux-theme-dark-primary-text)",
+    "G": "var(--lux-theme-dark-primary-text)",
+    "Ar": "#1c1b1b",
+    "Gr": "#003366"
+  },
+  "--lux-theme-accordion-header-color-on-neutral": {
+    "A": "var(--lux-theme-dark-primary-text)",
+    "G": "var(--lux-theme-dark-primary-text)",
+    "Ar": "#1c1b1b",
+    "Gr": "#003366"
+  },
+  "--lux-theme-accordion-header-color-on-primary": {
+    "A": "var(--lux-theme-dark-primary-text)",
+    "G": "var(--lux-theme-dark-primary-text)",
+    "Ar": "#1c1b1b",
+    "Gr": "#003366"
+  },
+  "--lux-theme-accordion-header-color-on-warn": {
+    "A": "var(--lux-theme-dark-primary-text)",
+    "G": "var(--lux-theme-dark-primary-text)",
+    "Ar": "#1c1b1b",
+    "Gr": "#003366"
+  },
+  "--lux-theme-accordion-header-color-primary": {
+    "A": "var(--mat-sys-surface-container-high)",
+    "G": "var(--lux-theme-app-content-bg)",
+    "Ar": "#ecf1ff",
+    "Gr": "#ffffff"
+  },
+  "--lux-theme-accordion-header-color-warn": { "A": "var(--mat-sys-error-container)", "G": "#ffcacf", "Ar": "#ffdad6", "Gr": "#ffcacf" },
+  "--lux-theme-accordion-header-description-color-accent": {
+    "A": "var(--lux-theme-accordion-header-color-on-accent)",
+    "G": "var(--lux-theme-dark-primary-text)",
+    "Ar": "#1c1b1b",
+    "Gr": "#003366"
+  },
+  "--lux-theme-accordion-header-description-color-neutral": {
+    "A": "var(--lux-theme-accordion-header-color-on-neutral)",
+    "G": "var(--lux-theme-dark-primary-text)",
+    "Ar": "#1c1b1b",
+    "Gr": "#003366"
+  },
+  "--lux-theme-accordion-header-description-color-primary": {
+    "A": "var(--lux-theme-accordion-header-color-on-primary)",
+    "G": "var(--lux-theme-dark-primary-text)",
+    "Ar": "#1c1b1b",
+    "Gr": "#003366"
+  },
+  "--lux-theme-accordion-header-description-color-warn": {
+    "A": "var(--lux-theme-accordion-header-color-on-warn)",
+    "G": "var(--lux-theme-dark-primary-text)",
+    "Ar": "#1c1b1b",
+    "Gr": "#003366"
+  },
+  "--lux-theme-accordion-header-focus-color-on-accent": {
+    "A": "var(--lux-theme-accent-98)",
+    "G": "#ccebd1",
+    "Ar": "#ebffe6",
+    "Gr": "#ccebd1"
+  },
+  "--lux-theme-accordion-header-focus-color-on-neutral": {
+    "A": "var(--lux-theme-app-content-bg)",
+    "G": "var(--lux-theme-app-content-bg)",
+    "Ar": "#ffffff",
+    "Gr": "#ffffff"
+  },
+  "--lux-theme-accordion-header-focus-color-on-primary": {
+    "A": "var(--mat-sys-surface-container-high)",
+    "G": "var(--lux-theme-app-content-bg)",
+    "Ar": "#ecf1ff",
+    "Gr": "#ffffff"
+  },
+  "--lux-theme-accordion-header-focus-color-on-warn": {
+    "A": "var(--mat-sys-error-container)",
+    "G": "#ffcacf",
+    "Ar": "#ffdad6",
+    "Gr": "#ffcacf"
+  },
+  "--lux-theme-accordion-header-hover-color-on-accent": {
+    "A": "var(--lux-theme-accent-98)",
+    "G": "#ccebd1",
+    "Ar": "#ebffe6",
+    "Gr": "#ccebd1"
+  },
+  "--lux-theme-accordion-header-hover-color-on-neutral": {
+    "A": "var(--lux-theme-app-content-bg)",
+    "G": "var(--lux-theme-app-content-bg)",
+    "Ar": "#ffffff",
+    "Gr": "#ffffff"
+  },
+  "--lux-theme-accordion-header-hover-color-on-primary": {
+    "A": "var(--mat-sys-surface-container-high)",
+    "G": "var(--lux-theme-app-content-bg)",
+    "Ar": "#ecf1ff",
+    "Gr": "#ffffff"
+  },
+  "--lux-theme-accordion-header-hover-color-on-warn": {
+    "A": "var(--mat-sys-error-container)",
+    "G": "#ffcacf",
+    "Ar": "#ffdad6",
+    "Gr": "#ffcacf"
+  },
+  "--lux-theme-accordion-header-text-color-accent": {
+    "A": "var(--lux-theme-accordion-header-color-on-accent)",
+    "G": "var(--lux-theme-dark-primary-text)",
+    "Ar": "#1c1b1b",
+    "Gr": "#003366"
+  },
+  "--lux-theme-accordion-header-text-color-neutral": {
+    "A": "var(--lux-theme-accordion-header-color-on-neutral)",
+    "G": "var(--lux-theme-dark-primary-text)",
+    "Ar": "#1c1b1b",
+    "Gr": "#003366"
+  },
+  "--lux-theme-accordion-header-text-color-primary": {
+    "A": "var(--lux-theme-accordion-header-color-on-primary)",
+    "G": "var(--lux-theme-dark-primary-text)",
+    "Ar": "#1c1b1b",
+    "Gr": "#003366"
+  },
+  "--lux-theme-accordion-header-text-color-warn": {
+    "A": "var(--lux-theme-accordion-header-color-on-warn)",
+    "G": "var(--lux-theme-dark-primary-text)",
+    "Ar": "#1c1b1b",
+    "Gr": "#003366"
+  },
+  "--lux-theme-accordion-panel-container-elevation-shadow-width": { "A": "1px", "G": "1px", "Ar": "1px", "Gr": "1px" },
+  "--lux-theme-app-border-color": {
+    "A": "var(--mat-sys-outline-variant)",
+    "G": "var(--mat-sys-outline-variant)",
+    "Ar": "#e5e2e1",
+    "Gr": "#e5e2e1"
+  },
+  "--lux-theme-app-border-radius": { "A": "4px", "G": "14px", "Ar": "4px", "Gr": "14px" },
+  "--lux-theme-app-content-bg": { "A": "#ffffff", "G": "#ffffff", "Ar": "#ffffff", "Gr": "#ffffff" },
+  "--lux-theme-app-data-bg": { "A": "#ffffff", "G": "#ffffff", "Ar": "#ffffff", "Gr": "#ffffff" },
+  "--lux-theme-app-font-family": {
+    "A": "\"Source Sans Pro\", Helvetica, Arial, sans-serif",
+    "G": "\"Source Sans Pro\", Helvetica, Arial, sans-serif",
+    "Ar": "\"Source Sans Pro\", Helvetica, Arial, sans-serif",
+    "Gr": "\"Source Sans Pro\", Helvetica, Arial, sans-serif"
+  },
+  "--lux-theme-app-footer-bg": { "A": "var(--mat-sys-surface-container-highest)", "G": "#e3ebf5", "Ar": "#d5e3ff", "Gr": "#e3ebf5" },
+  "--lux-theme-app-footer-border-color": { "A": "var(--mat-sys-primary)", "G": "#003366", "Ar": "#003366", "Gr": "#003366" },
+  "--lux-theme-app-gradient": {
+    "A": "linear-gradient(90deg, #ffffff 0%, var(--mat-sys-surface-container) 100%)",
+    "G": "none",
+    "Ar": "linear-gradient(90deg, #ffffff 0%, #f9f9ff 100%)",
+    "Gr": "none"
+  },
+  "--lux-theme-app-gradient-reverse": {
+    "A": "linear-gradient(270deg, #ffffff 0%, var(--mat-sys-surface-container) 100%)",
+    "G": "none",
+    "Ar": "linear-gradient(270deg, #ffffff 0%, #f9f9ff 100%)",
+    "Gr": "none"
+  },
+  "--lux-theme-app-header-bg": { "A": "var(--mat-sys-surface-container-highest)", "G": "#ffffff", "Ar": "#d5e3ff", "Gr": "#ffffff" },
+  "--lux-theme-app-header-item-border-radius": { "A": "4px", "G": "18px", "Ar": "4px", "Gr": "18px" },
+  "--lux-theme-app-headline-font": {
+    "A": "\"Blogger Sans\"",
+    "G": "Korb, var(--lux-theme-app-font-family)",
+    "Ar": "\"Blogger Sans\"",
+    "Gr": "Korb, \"Source Sans Pro\", Helvetica, Arial, sans-serif"
+  },
+  "--lux-theme-app-state-layer-color": { "A": "#3a5f94", "G": "#3a5f94", "Ar": "#3a5f94", "Gr": "#3a5f94" },
+  "--lux-theme-badge-black": {
+    "A": "var(--lux-theme-custom-black)",
+    "G": "var(--lux-theme-custom-black)",
+    "Ar": "#1c1b1b",
+    "Gr": "#1c1b1b"
+  },
+  "--lux-theme-badge-blue": { "A": "var(--lux-theme-custom-blue)", "G": "var(--lux-theme-custom-blue)", "Ar": "#003366", "Gr": "#003366" },
+  "--lux-theme-badge-gray": { "A": "var(--lux-theme-custom-gray)", "G": "var(--lux-theme-custom-gray)", "Ar": "#605e5e", "Gr": "#605e5e" },
+  "--lux-theme-badge-green": {
+    "A": "var(--lux-theme-custom-green)",
+    "G": "var(--lux-theme-custom-green)",
+    "Ar": "#56bd66",
+    "Gr": "#56bd66"
+  },
+  "--lux-theme-badge-lightblue": {
+    "A": "var(--lux-theme-custom-lightblue)",
+    "G": "var(--lux-theme-custom-lightblue)",
+    "Ar": "#4fa8e8",
+    "Gr": "#4fa8e8"
+  },
+  "--lux-theme-badge-muted-black": {
+    "A": "var(--lux-theme-neutral-100)",
+    "G": "var(--lux-theme-neutral-100)",
+    "Ar": "#ffffff",
+    "Gr": "#ffffff"
+  },
+  "--lux-theme-badge-muted-blue": {
+    "A": "var(--lux-theme-primary-100)",
+    "G": "var(--lux-theme-primary-100)",
+    "Ar": "#ffffff",
+    "Gr": "#ffffff"
+  },
+  "--lux-theme-badge-muted-gray": {
+    "A": "var(--lux-theme-neutral-95)",
+    "G": "var(--lux-theme-neutral-95)",
+    "Ar": "#f4f0ef",
+    "Gr": "#f4f0ef"
+  },
+  "--lux-theme-badge-muted-green": {
+    "A": "var(--lux-theme-accent-98)",
+    "G": "var(--lux-theme-accent-98)",
+    "Ar": "#ebffe6",
+    "Gr": "#ebffe6"
+  },
+  "--lux-theme-badge-muted-lightblue": {
+    "A": "var(--lux-theme-primary-95)",
+    "G": "var(--lux-theme-primary-95)",
+    "Ar": "#ecf1ff",
+    "Gr": "#ecf1ff"
+  },
+  "--lux-theme-badge-muted-on-black": {
+    "A": "var(--lux-theme-neutral-10)",
+    "G": "var(--lux-theme-neutral-10)",
+    "Ar": "#1c1b1b",
+    "Gr": "#1c1b1b"
+  },
+  "--lux-theme-badge-muted-on-blue": {
+    "A": "var(--lux-theme-primary-20)",
+    "G": "var(--lux-theme-primary-20)",
+    "Ar": "#003366",
+    "Gr": "#003366"
+  },
+  "--lux-theme-badge-muted-on-gray": {
+    "A": "var(--lux-theme-neutral-30)",
+    "G": "var(--lux-theme-neutral-30)",
+    "Ar": "#484646",
+    "Gr": "#484646"
+  },
+  "--lux-theme-badge-muted-on-green": {
+    "A": "var(--lux-theme-accent-30)",
+    "G": "var(--lux-theme-accent-30)",
+    "Ar": "#00531d",
+    "Gr": "#00531d"
+  },
+  "--lux-theme-badge-muted-on-lightblue": {
+    "A": "var(--lux-theme-primary-20)",
+    "G": "var(--lux-theme-primary-20)",
+    "Ar": "#003366",
+    "Gr": "#003366"
+  },
+  "--lux-theme-badge-muted-on-orange": {
+    "A": "var(--lux-theme-custom-orange-30)",
+    "G": "var(--lux-theme-custom-orange-30)",
+    "Ar": "#793100",
+    "Gr": "#793100"
+  },
+  "--lux-theme-badge-muted-on-pink": {
+    "A": "var(--lux-theme-custom-pink-30)",
+    "G": "var(--lux-theme-custom-pink-30)",
+    "Ar": "#8e0051",
+    "Gr": "#8e0051"
+  },
+  "--lux-theme-badge-muted-on-purple": {
+    "A": "var(--lux-theme-custom-purple-30)",
+    "G": "var(--lux-theme-custom-purple-30)",
+    "Ar": "#4a3597",
+    "Gr": "#4a3597"
+  },
+  "--lux-theme-badge-muted-on-red": { "A": "#93000c", "G": "#93000c", "Ar": "#93000c", "Gr": "#93000c" },
+  "--lux-theme-badge-muted-on-yellow": {
+    "A": "var(--lux-theme-custom-yellow-30)",
+    "G": "var(--lux-theme-custom-yellow-30)",
+    "Ar": "#5a4400",
+    "Gr": "#5a4400"
+  },
+  "--lux-theme-badge-muted-orange": {
+    "A": "var(--lux-theme-custom-orange-95)",
+    "G": "var(--lux-theme-custom-orange-95)",
+    "Ar": "#ffede4",
+    "Gr": "#ffede4"
+  },
+  "--lux-theme-badge-muted-pink": {
+    "A": "var(--lux-theme-custom-pink-95)",
+    "G": "var(--lux-theme-custom-pink-95)",
+    "Ar": "#ffecf2",
+    "Gr": "#ffecf2"
+  },
+  "--lux-theme-badge-muted-purple": {
+    "A": "var(--lux-theme-custom-purple-95)",
+    "G": "var(--lux-theme-custom-purple-95)",
+    "Ar": "#f4eeff",
+    "Gr": "#f4eeff"
+  },
+  "--lux-theme-badge-muted-red": { "A": "var(--lux-theme-warn-95)", "G": "var(--lux-theme-warn-95)", "Ar": "#ffedea", "Gr": "#ffedea" },
+  "--lux-theme-badge-muted-stroke-black": {
+    "A": "var(--lux-theme-neutral-40)",
+    "G": "var(--lux-theme-neutral-40)",
+    "Ar": "#605e5e",
+    "Gr": "#605e5e"
+  },
+  "--lux-theme-badge-muted-stroke-blue": {
+    "A": "var(--lux-theme-primary-20)",
+    "G": "var(--lux-theme-primary-20)",
+    "Ar": "#003366",
+    "Gr": "#003366"
+  },
+  "--lux-theme-badge-muted-stroke-gray": {
+    "A": "var(--lux-theme-neutral-80)",
+    "G": "var(--lux-theme-neutral-80)",
+    "Ar": "#c9c6c5",
+    "Gr": "#c9c6c5"
+  },
+  "--lux-theme-badge-muted-stroke-green": {
+    "A": "var(--lux-theme-accent-80)",
+    "G": "var(--lux-theme-accent-80)",
+    "Ar": "#75dc81",
+    "Gr": "#75dc81"
+  },
+  "--lux-theme-badge-muted-stroke-lightblue": {
+    "A": "var(--lux-theme-primary-80)",
+    "G": "var(--lux-theme-primary-80)",
+    "Ar": "#a7c8ff",
+    "Gr": "#a7c8ff"
+  },
+  "--lux-theme-badge-muted-stroke-orange": {
+    "A": "var(--lux-theme-custom-orange-80)",
+    "G": "var(--lux-theme-custom-orange-80)",
+    "Ar": "#ffb68d",
+    "Gr": "#ffb68d"
+  },
+  "--lux-theme-badge-muted-stroke-pink": {
+    "A": "var(--lux-theme-custom-pink-80)",
+    "G": "var(--lux-theme-custom-pink-80)",
+    "Ar": "#ffb0ce",
+    "Gr": "#ffb0ce"
+  },
+  "--lux-theme-badge-muted-stroke-purple": {
+    "A": "var(--lux-theme-custom-purple-80)",
+    "G": "var(--lux-theme-custom-purple-80)",
+    "Ar": "#d2bbff",
+    "Gr": "#d2bbff"
+  },
+  "--lux-theme-badge-muted-stroke-red": {
+    "A": "var(--lux-theme-warn-80)",
+    "G": "var(--lux-theme-warn-80)",
+    "Ar": "#ffb4ab",
+    "Gr": "#ffb4ab"
+  },
+  "--lux-theme-badge-muted-stroke-yellow": {
+    "A": "var(--lux-theme-custom-yellow-80)",
+    "G": "var(--lux-theme-custom-yellow-80)",
+    "Ar": "#f5bf00",
+    "Gr": "#f5bf00"
+  },
+  "--lux-theme-badge-muted-yellow": {
+    "A": "var(--lux-theme-custom-yellow-95)",
+    "G": "var(--lux-theme-custom-yellow-95)",
+    "Ar": "#ffefd3",
+    "Gr": "#ffefd3"
+  },
+  "--lux-theme-badge-on-black": {
+    "A": "var(--lux-theme-custom-on-black)",
+    "G": "var(--lux-theme-custom-on-black)",
+    "Ar": "#ffffff",
+    "Gr": "#ffffff"
+  },
+  "--lux-theme-badge-on-blue": {
+    "A": "var(--lux-theme-custom-on-blue)",
+    "G": "var(--lux-theme-custom-on-blue)",
+    "Ar": "#ffffff",
+    "Gr": "#ffffff"
+  },
+  "--lux-theme-badge-on-gray": {
+    "A": "var(--lux-theme-custom-on-gray)",
+    "G": "var(--lux-theme-custom-on-gray)",
+    "Ar": "#ffffff",
+    "Gr": "#ffffff"
+  },
+  "--lux-theme-badge-on-green": {
+    "A": "var(--lux-theme-custom-on-green)",
+    "G": "var(--lux-theme-custom-on-green)",
+    "Ar": "#1c1b1b",
+    "Gr": "#1c1b1b"
+  },
+  "--lux-theme-badge-on-lightblue": {
+    "A": "var(--lux-theme-custom-on-lightblue)",
+    "G": "var(--lux-theme-custom-on-lightblue)",
+    "Ar": "#1c1b1b",
+    "Gr": "#1c1b1b"
+  },
+  "--lux-theme-badge-on-orange": {
+    "A": "var(--lux-theme-custom-on-orange)",
+    "G": "var(--lux-theme-custom-on-orange)",
+    "Ar": "#1c1b1b",
+    "Gr": "#1c1b1b"
+  },
+  "--lux-theme-badge-on-pink": {
+    "A": "var(--lux-theme-custom-on-pink)",
+    "G": "var(--lux-theme-custom-on-pink)",
+    "Ar": "#1c1b1b",
+    "Gr": "#1c1b1b"
+  },
+  "--lux-theme-badge-on-purple": {
+    "A": "var(--lux-theme-custom-on-purple)",
+    "G": "var(--lux-theme-custom-on-purple)",
+    "Ar": "#ffffff",
+    "Gr": "#ffffff"
+  },
+  "--lux-theme-badge-on-red": {
+    "A": "var(--lux-theme-custom-on-red)",
+    "G": "var(--lux-theme-custom-on-red)",
+    "Ar": "#ffffff",
+    "Gr": "#ffffff"
+  },
+  "--lux-theme-badge-on-white": {
+    "A": "var(--lux-theme-custom-on-white)",
+    "G": "var(--lux-theme-custom-on-white)",
+    "Ar": "#1c1b1b",
+    "Gr": "#1c1b1b"
+  },
+  "--lux-theme-badge-on-yellow": {
+    "A": "var(--lux-theme-custom-on-yellow)",
+    "G": "var(--lux-theme-custom-on-yellow)",
+    "Ar": "#1c1b1b",
+    "Gr": "#1c1b1b"
+  },
+  "--lux-theme-badge-orange": {
+    "A": "var(--lux-theme-custom-orange)",
+    "G": "var(--lux-theme-custom-orange)",
+    "Ar": "#fc791f",
+    "Gr": "#fc791f"
+  },
+  "--lux-theme-badge-pink": { "A": "var(--lux-theme-custom-pink)", "G": "var(--lux-theme-custom-pink)", "Ar": "#fc6b85", "Gr": "#fc6b85" },
+  "--lux-theme-badge-purple": {
+    "A": "var(--lux-theme-custom-purple)",
+    "G": "var(--lux-theme-custom-purple)",
+    "Ar": "#715289",
+    "Gr": "#715289"
+  },
+  "--lux-theme-badge-red": { "A": "#c00013", "G": "#c00013", "Ar": "#c00013", "Gr": "#c00013" },
+  "--lux-theme-badge-white": {
+    "A": "var(--lux-theme-custom-white)",
+    "G": "var(--lux-theme-custom-white)",
+    "Ar": "#ffffff",
+    "Gr": "#ffffff"
+  },
+  "--lux-theme-badge-yellow": {
+    "A": "var(--lux-theme-custom-yellow)",
+    "G": "var(--lux-theme-custom-yellow)",
+    "Ar": "#fbd12c",
+    "Gr": "#fbd12c"
+  },
+  "--lux-theme-breadcrumb-hover-color": {
+    "A": "var(--lux-theme-link-plain-hover-color)",
+    "G": "var(--lux-theme-accent-secondary-color)",
+    "Ar": "#003366",
+    "Gr": "#247929"
+  },
+  "--lux-theme-breakpoint-lg": { "A": "1919px", "G": "1919px", "Ar": "1919px", "Gr": "1919px" },
+  "--lux-theme-breakpoint-md": { "A": "1279px", "G": "1279px", "Ar": "1279px", "Gr": "1279px" },
+  "--lux-theme-breakpoint-sm": { "A": "959px", "G": "959px", "Ar": "959px", "Gr": "959px" },
+  "--lux-theme-breakpoint-xl": { "A": "4999px", "G": "4999px", "Ar": "4999px", "Gr": "4999px" },
+  "--lux-theme-breakpoint-xs": { "A": "599px", "G": "599px", "Ar": "599px", "Gr": "599px" },
+  "--lux-theme-button-flat-accent-container-color": {
+    "A": "var(--mat-sys-tertiary)",
+    "G": "var(--mat-sys-tertiary)",
+    "Ar": "#56bd66",
+    "Gr": "#56bd66"
+  },
+  "--lux-theme-button-flat-accent-text-color": {
+    "A": "var(--mat-sys-on-tertiary)",
+    "G": "var(--mat-sys-on-tertiary)",
+    "Ar": "#1c1b1b",
+    "Gr": "#003366"
+  },
+  "--lux-theme-button-flat-container-height": { "A": "2.25rem", "G": "2.8125rem", "Ar": "2.25rem", "Gr": "2.8125rem" },
+  "--lux-theme-button-flat-container-shape": { "A": "4px", "G": "18px", "Ar": "4px", "Gr": "18px" },
+  "--lux-theme-button-flat-default-container-color": { "A": "#ffffff", "G": "#ffffff", "Ar": "#ffffff", "Gr": "#ffffff" },
+  "--lux-theme-button-flat-default-text-color": {
+    "A": "var(--lux-theme-dark-primary-text)",
+    "G": "var(--lux-theme-dark-primary-text)",
+    "Ar": "#1c1b1b",
+    "Gr": "#003366"
+  },
+  "--lux-theme-button-flat-font": {
+    "A": "var(--lux-theme-app-font-family)",
+    "G": "\"Blogger Sans\"",
+    "Ar": "\"Source Sans Pro\", Helvetica, Arial, sans-serif",
+    "Gr": "\"Blogger Sans\""
+  },
+  "--lux-theme-button-flat-primary-container-color": {
+    "A": "var(--mat-sys-primary)",
+    "G": "var(--mat-sys-primary)",
+    "Ar": "#003366",
+    "Gr": "#003366"
+  },
+  "--lux-theme-button-flat-primary-text-color": {
+    "A": "var(--mat-sys-on-primary)",
+    "G": "var(--mat-sys-on-primary)",
+    "Ar": "#ffffff",
+    "Gr": "#ffffff"
+  },
+  "--lux-theme-button-flat-text-size": { "A": "0.875rem", "G": "1.375rem", "Ar": "0.875rem", "Gr": "1.375rem" },
+  "--lux-theme-button-flat-text-tracking": { "A": "0.078125rem", "G": "normal", "Ar": "0.078125rem", "Gr": "normal" },
+  "--lux-theme-button-flat-text-weight": { "A": "600", "G": "400", "Ar": "600", "Gr": "400" },
+  "--lux-theme-button-flat-warn-container-color": {
+    "A": "var(--mat-sys-error)",
+    "G": "var(--mat-sys-error)",
+    "Ar": "#ba1a1a",
+    "Gr": "#ad000f"
+  },
+  "--lux-theme-button-flat-warn-text-color": {
+    "A": "var(--mat-sys-on-error)",
+    "G": "var(--mat-sys-on-error)",
+    "Ar": "#ffffff",
+    "Gr": "#ffffff"
+  },
+  "--lux-theme-button-icon-accent-text-color": {
+    "A": "var(--mat-sys-on-tertiary-container)",
+    "G": "var(--mat-sys-on-tertiary-container)",
+    "Ar": "#00531d",
+    "Gr": "#00531d"
+  },
+  "--lux-theme-button-icon-container-shape": { "A": "50%", "G": "18px", "Ar": "50%", "Gr": "18px" },
+  "--lux-theme-button-icon-container-size": { "A": "36px", "G": "45px", "Ar": "36px", "Gr": "45px" },
+  "--lux-theme-button-icon-default-text-color": {
+    "A": "var(--lux-theme-dark-primary-text)",
+    "G": "var(--lux-theme-dark-primary-text)",
+    "Ar": "#1c1b1b",
+    "Gr": "#003366"
+  },
+  "--lux-theme-button-icon-primary-text-color": {
+    "A": "var(--lux-theme-primary-color)",
+    "G": "var(--lux-theme-primary-color)",
+    "Ar": "#003366",
+    "Gr": "#003366"
+  },
+  "--lux-theme-button-icon-size": { "A": "18px", "G": "18px", "Ar": "18px", "Gr": "18px" },
+  "--lux-theme-button-icon-warn-text-color": { "A": "var(--mat-sys-error)", "G": "var(--mat-sys-error)", "Ar": "#ba1a1a", "Gr": "#ad000f" },
+  "--lux-theme-button-raised-accent-container-color": {
+    "A": "var(--mat-sys-tertiary)",
+    "G": "var(--mat-sys-tertiary)",
+    "Ar": "#56bd66",
+    "Gr": "#56bd66"
+  },
+  "--lux-theme-button-raised-accent-text-color": {
+    "A": "var(--mat-sys-on-tertiary)",
+    "G": "var(--mat-sys-on-tertiary)",
+    "Ar": "#1c1b1b",
+    "Gr": "#003366"
+  },
+  "--lux-theme-button-raised-container-height": { "A": "2.25rem", "G": "2.8125rem", "Ar": "2.25rem", "Gr": "2.8125rem" },
+  "--lux-theme-button-raised-container-shape": { "A": "4px", "G": "18px", "Ar": "4px", "Gr": "18px" },
+  "--lux-theme-button-raised-default-container-color": { "A": "#ffffff", "G": "#ffffff", "Ar": "#ffffff", "Gr": "#ffffff" },
+  "--lux-theme-button-raised-default-text-color": {
+    "A": "var(--lux-theme-dark-primary-text)",
+    "G": "var(--lux-theme-dark-primary-text)",
+    "Ar": "#1c1b1b",
+    "Gr": "#003366"
+  },
+  "--lux-theme-button-raised-font": {
+    "A": "var(--lux-theme-app-font-family)",
+    "G": "\"Blogger Sans\"",
+    "Ar": "\"Source Sans Pro\", Helvetica, Arial, sans-serif",
+    "Gr": "\"Blogger Sans\""
+  },
+  "--lux-theme-button-raised-primary-container-color": {
+    "A": "var(--mat-sys-primary)",
+    "G": "var(--mat-sys-primary)",
+    "Ar": "#003366",
+    "Gr": "#003366"
+  },
+  "--lux-theme-button-raised-primary-text-color": {
+    "A": "var(--mat-sys-on-primary)",
+    "G": "var(--mat-sys-on-primary)",
+    "Ar": "#ffffff",
+    "Gr": "#ffffff"
+  },
+  "--lux-theme-button-raised-text-size": { "A": "0.875rem", "G": "1.375rem", "Ar": "0.875rem", "Gr": "1.375rem" },
+  "--lux-theme-button-raised-text-tracking": { "A": "0.078125rem", "G": "normal", "Ar": "0.078125rem", "Gr": "normal" },
+  "--lux-theme-button-raised-text-weight": { "A": "600", "G": "400", "Ar": "600", "Gr": "400" },
+  "--lux-theme-button-raised-warn-container-color": {
+    "A": "var(--mat-sys-error)",
+    "G": "var(--mat-sys-error)",
+    "Ar": "#ba1a1a",
+    "Gr": "#ad000f"
+  },
+  "--lux-theme-button-raised-warn-text-color": {
+    "A": "var(--mat-sys-on-error)",
+    "G": "var(--mat-sys-on-error)",
+    "Ar": "#ffffff",
+    "Gr": "#ffffff"
+  },
+  "--lux-theme-button-rounded-accent-container-color": {
+    "A": "var(--mat-sys-tertiary)",
+    "G": "var(--mat-sys-tertiary)",
+    "Ar": "#56bd66",
+    "Gr": "#56bd66"
+  },
+  "--lux-theme-button-rounded-accent-text-color": {
+    "A": "var(--mat-sys-on-tertiary)",
+    "G": "var(--mat-sys-on-tertiary)",
+    "Ar": "#1c1b1b",
+    "Gr": "#003366"
+  },
+  "--lux-theme-button-rounded-container-height": { "A": "2.25rem", "G": "2.8125rem", "Ar": "2.25rem", "Gr": "2.8125rem" },
+  "--lux-theme-button-rounded-container-shape": { "A": "50%", "G": "18px", "Ar": "50%", "Gr": "18px" },
+  "--lux-theme-button-rounded-default-container-color": { "A": "#ffffff", "G": "#ffffff", "Ar": "#ffffff", "Gr": "#ffffff" },
+  "--lux-theme-button-rounded-default-text-color": {
+    "A": "var(--lux-theme-dark-primary-text)",
+    "G": "var(--lux-theme-dark-primary-text)",
+    "Ar": "#1c1b1b",
+    "Gr": "#003366"
+  },
+  "--lux-theme-button-rounded-primary-container-color": {
+    "A": "var(--mat-sys-primary)",
+    "G": "var(--mat-sys-primary)",
+    "Ar": "#003366",
+    "Gr": "#003366"
+  },
+  "--lux-theme-button-rounded-primary-text-color": {
+    "A": "var(--mat-sys-on-primary)",
+    "G": "var(--mat-sys-on-primary)",
+    "Ar": "#ffffff",
+    "Gr": "#ffffff"
+  },
+  "--lux-theme-button-rounded-stroked-accent-text-color": {
+    "A": "var(--mat-sys-on-tertiary-container)",
+    "G": "var(--mat-sys-on-tertiary-container)",
+    "Ar": "#00531d",
+    "Gr": "#00531d"
+  },
+  "--lux-theme-button-rounded-stroked-container-height": { "A": "2.25rem", "G": "2.8125rem", "Ar": "2.25rem", "Gr": "2.8125rem" },
+  "--lux-theme-button-rounded-stroked-container-shape": { "A": "50%", "G": "18px", "Ar": "50%", "Gr": "18px" },
+  "--lux-theme-button-rounded-stroked-default-text-color": {
+    "A": "var(--lux-theme-dark-primary-text)",
+    "G": "var(--lux-theme-dark-primary-text)",
+    "Ar": "#1c1b1b",
+    "Gr": "#003366"
+  },
+  "--lux-theme-button-rounded-stroked-primary-text-color": {
+    "A": "var(--lux-theme-primary-color)",
+    "G": "var(--lux-theme-primary-color)",
+    "Ar": "#003366",
+    "Gr": "#003366"
+  },
+  "--lux-theme-button-rounded-stroked-text-size": { "A": "1.125rem", "G": "1.125rem", "Ar": "1.125rem", "Gr": "1.125rem" },
+  "--lux-theme-button-rounded-stroked-warn-text-color": {
+    "A": "var(--mat-sys-error)",
+    "G": "var(--mat-sys-error)",
+    "Ar": "#ba1a1a",
+    "Gr": "#ad000f"
+  },
+  "--lux-theme-button-rounded-text-size": { "A": "1.125rem", "G": "1.125rem", "Ar": "1.125rem", "Gr": "1.125rem" },
+  "--lux-theme-button-rounded-warn-container-color": {
+    "A": "var(--mat-sys-error)",
+    "G": "var(--mat-sys-error)",
+    "Ar": "#ba1a1a",
+    "Gr": "#ad000f"
+  },
+  "--lux-theme-button-rounded-warn-text-color": {
+    "A": "var(--mat-sys-on-error)",
+    "G": "var(--mat-sys-on-error)",
+    "Ar": "#ffffff",
+    "Gr": "#ffffff"
+  },
+  "--lux-theme-button-stroked-accent-text-color": {
+    "A": "var(--mat-sys-on-tertiary-container)",
+    "G": "var(--mat-sys-on-tertiary-container)",
+    "Ar": "#00531d",
+    "Gr": "#00531d"
+  },
+  "--lux-theme-button-stroked-container-height": { "A": "2.25rem", "G": "2.8125rem", "Ar": "2.25rem", "Gr": "2.8125rem" },
+  "--lux-theme-button-stroked-container-shape": { "A": "4px", "G": "18px", "Ar": "4px", "Gr": "18px" },
+  "--lux-theme-button-stroked-default-text-color": {
+    "A": "var(--lux-theme-dark-primary-text)",
+    "G": "var(--lux-theme-dark-primary-text)",
+    "Ar": "#1c1b1b",
+    "Gr": "#003366"
+  },
+  "--lux-theme-button-stroked-font": {
+    "A": "var(--lux-theme-app-font-family)",
+    "G": "\"Blogger Sans\"",
+    "Ar": "\"Source Sans Pro\", Helvetica, Arial, sans-serif",
+    "Gr": "\"Blogger Sans\""
+  },
+  "--lux-theme-button-stroked-primary-text-color": {
+    "A": "var(--lux-theme-primary-color)",
+    "G": "var(--lux-theme-primary-color)",
+    "Ar": "#003366",
+    "Gr": "#003366"
+  },
+  "--lux-theme-button-stroked-text-size": { "A": "0.875rem", "G": "1.375rem", "Ar": "0.875rem", "Gr": "1.375rem" },
+  "--lux-theme-button-stroked-text-tracking": { "A": "0.078125rem", "G": "normal", "Ar": "0.078125rem", "Gr": "normal" },
+  "--lux-theme-button-stroked-text-weight": { "A": "600", "G": "400", "Ar": "600", "Gr": "400" },
+  "--lux-theme-button-stroked-warn-text-color": {
+    "A": "var(--mat-sys-error)",
+    "G": "var(--mat-sys-error)",
+    "Ar": "#ba1a1a",
+    "Gr": "#ad000f"
+  },
+  "--lux-theme-button-text-accent-text-color": {
+    "A": "var(--mat-sys-on-tertiary-container)",
+    "G": "var(--mat-sys-on-tertiary-container)",
+    "Ar": "#00531d",
+    "Gr": "#00531d"
+  },
+  "--lux-theme-button-text-container-height": { "A": "2.25rem", "G": "2.8125rem", "Ar": "2.25rem", "Gr": "2.8125rem" },
+  "--lux-theme-button-text-container-shape": { "A": "4px", "G": "18px", "Ar": "4px", "Gr": "18px" },
+  "--lux-theme-button-text-default-text-color": {
+    "A": "var(--lux-theme-dark-primary-text)",
+    "G": "var(--lux-theme-dark-primary-text)",
+    "Ar": "#1c1b1b",
+    "Gr": "#003366"
+  },
+  "--lux-theme-button-text-font": {
+    "A": "var(--lux-theme-app-font-family)",
+    "G": "\"Blogger Sans\"",
+    "Ar": "\"Source Sans Pro\", Helvetica, Arial, sans-serif",
+    "Gr": "\"Blogger Sans\""
+  },
+  "--lux-theme-button-text-primary-text-color": {
+    "A": "var(--lux-theme-primary-color)",
+    "G": "var(--lux-theme-primary-color)",
+    "Ar": "#003366",
+    "Gr": "#003366"
+  },
+  "--lux-theme-button-text-text-size": { "A": "0.875rem", "G": "1.375rem", "Ar": "0.875rem", "Gr": "1.375rem" },
+  "--lux-theme-button-text-text-tracking": { "A": "0.078125rem", "G": "normal", "Ar": "0.078125rem", "Gr": "normal" },
+  "--lux-theme-button-text-text-weight": { "A": "600", "G": "400", "Ar": "600", "Gr": "400" },
+  "--lux-theme-button-text-warn-text-color": { "A": "var(--mat-sys-error)", "G": "var(--mat-sys-error)", "Ar": "#ba1a1a", "Gr": "#ad000f" },
+  "--lux-theme-button-toggle-disabled-divider-color": {
+    "A": "var(--lux-theme-app-border-color)",
+    "G": "var(--lux-theme-app-border-color)",
+    "Ar": "#e5e2e1",
+    "Gr": "#e5e2e1"
+  },
+  "--lux-theme-button-toggle-disabled-selected-state-background-color": {
+    "A": "var(--lux-theme-app-border-color)",
+    "G": "var(--lux-theme-app-border-color)",
+    "Ar": "#e5e2e1",
+    "Gr": "#e5e2e1"
+  },
+  "--lux-theme-button-toggle-disabled-selected-state-text-color": {
+    "A": "var(--lux-theme-dark-disabled-text)",
+    "G": "var(--lux-theme-dark-disabled-text)",
+    "Ar": "#929090",
+    "Gr": "#636d76"
+  },
+  "--lux-theme-button-toggle-disabled-state-background-color": {
+    "A": "transparent",
+    "G": "transparent",
+    "Ar": "transparent",
+    "Gr": "transparent"
+  },
+  "--lux-theme-button-toggle-disabled-state-text-color": {
+    "A": "var(--lux-theme-dark-disabled-text)",
+    "G": "var(--lux-theme-dark-disabled-text)",
+    "Ar": "#929090",
+    "Gr": "#636d76"
+  },
+  "--lux-theme-button-toggle-divider-color": {
+    "A": "var(--lux-theme-primary-color)",
+    "G": "var(--lux-theme-primary-color)",
+    "Ar": "#003366",
+    "Gr": "#003366"
+  },
+  "--lux-theme-button-toggle-height": { "A": "2.25rem", "G": "2.25rem", "Ar": "2.25rem", "Gr": "2.25rem" },
+  "--lux-theme-button-toggle-height-dense": { "A": "1.5rem", "G": "1.5rem", "Ar": "1.5rem", "Gr": "1.5rem" },
+  "--lux-theme-button-toggle-hover-state-layer-opacity": { "A": "0.08", "G": "0.08", "Ar": "0.08", "Gr": "0.08" },
+  "--lux-theme-button-toggle-selected-state-background-color": {
+    "A": "var(--mat-sys-surface-container-high)",
+    "G": "var(--mat-sys-surface-container-high)",
+    "Ar": "#ecf1ff",
+    "Gr": "#f9f9ff"
+  },
+  "--lux-theme-button-toggle-selected-state-text-color": {
+    "A": "var(--lux-theme-primary-color)",
+    "G": "var(--lux-theme-primary-color)",
+    "Ar": "#003366",
+    "Gr": "#003366"
+  },
+  "--lux-theme-button-toggle-shape": {
+    "A": "var(--lux-theme-app-border-radius)",
+    "G": "var(--lux-theme-app-border-radius)",
+    "Ar": "4px",
+    "Gr": "14px"
+  },
+  "--lux-theme-button-toggle-text-color": {
+    "A": "var(--lux-theme-primary-color)",
+    "G": "var(--lux-theme-primary-color)",
+    "Ar": "#003366",
+    "Gr": "#003366"
+  },
+  "--lux-theme-card-background-color": {
+    "A": "var(--lux-theme-app-data-bg)",
+    "G": "var(--lux-theme-app-data-bg)",
+    "Ar": "#ffffff",
+    "Gr": "#ffffff"
+  },
+  "--lux-theme-card-outline-color": {
+    "A": "rgba(0, 0, 0, 0.12)",
+    "G": "rgba(0, 51, 102, 0.2)",
+    "Ar": "rgba(0, 0, 0, 0.12)",
+    "Gr": "rgba(0, 51, 102, 0.2)"
+  },
+  "--lux-theme-card-padding": { "A": "20px", "G": "20px", "Ar": "20px", "Gr": "20px" },
+  "--lux-theme-card-shape": { "A": "var(--lux-theme-app-border-radius)", "G": "16px", "Ar": "4px", "Gr": "16px" },
+  "--lux-theme-card-subtitle-text-color": {
+    "A": "var(--lux-theme-dark-secondary-text)",
+    "G": "var(--lux-theme-dark-secondary-text)",
+    "Ar": "#605e5e",
+    "Gr": "#335c85"
+  },
+  "--lux-theme-card-subtitle-text-size": { "A": "1rem", "G": "1rem", "Ar": "1rem", "Gr": "1rem" },
+  "--lux-theme-card-subtitle-text-weight": { "A": "500", "G": "500", "Ar": "500", "Gr": "500" },
+  "--lux-theme-card-title-line-height": { "A": "2rem", "G": "2rem", "Ar": "2rem", "Gr": "2rem" },
+  "--lux-theme-card-title-text-size": { "A": "1.5rem", "G": "1.5rem", "Ar": "1.5rem", "Gr": "1.5rem" },
+  "--lux-theme-card-title-text-weight": { "A": "500", "G": "500", "Ar": "500", "Gr": "500" },
+  "--lux-theme-chat-background-color": {
+    "A": "var(--lux-theme-app-data-bg)",
+    "G": "var(--lux-theme-app-data-bg)",
+    "Ar": "#ffffff",
+    "Gr": "#ffffff"
+  },
+  "--lux-theme-chat-base-padding": { "A": "var(--lux-theme-spacing-md)", "G": "var(--lux-theme-spacing-md)", "Ar": "16px", "Gr": "16px" },
+  "--lux-theme-chat-entry-card-border-radius": {
+    "A": "var(--lux-theme-radius-lg)",
+    "G": "var(--lux-theme-radius-lg)",
+    "Ar": "16px",
+    "Gr": "18px"
+  },
+  "--lux-theme-chat-entry-card-incomming-background-color": { "A": "#f4f0ef", "G": "#e4f1e4", "Ar": "#f4f0ef", "Gr": "#e4f1e4" },
+  "--lux-theme-chat-entry-card-incomming-text-color": { "A": "#1c1b1b", "G": "#003366", "Ar": "#1c1b1b", "Gr": "#003366" },
+  "--lux-theme-chat-entry-card-outgoing-background-color": { "A": "#3a5f94", "G": "#e3ebf5", "Ar": "#3a5f94", "Gr": "#e3ebf5" },
+  "--lux-theme-chat-entry-card-outgoing-text-color": { "A": "#ffffff", "G": "#003366", "Ar": "#ffffff", "Gr": "#003366" },
+  "--lux-theme-chat-entry-card-padding-bottom": {
+    "A": "var(--lux-theme-spacing-md)",
+    "G": "var(--lux-theme-spacing-md)",
+    "Ar": "16px",
+    "Gr": "16px"
+  },
+  "--lux-theme-chat-entry-card-padding-left": {
+    "A": "var(--lux-theme-spacing-lg)",
+    "G": "var(--lux-theme-spacing-lg)",
+    "Ar": "24px",
+    "Gr": "24px"
+  },
+  "--lux-theme-chat-entry-card-padding-right": {
+    "A": "var(--lux-theme-spacing-lg)",
+    "G": "var(--lux-theme-spacing-lg)",
+    "Ar": "24px",
+    "Gr": "24px"
+  },
+  "--lux-theme-chat-entry-card-padding-top": {
+    "A": "var(--lux-theme-spacing-md)",
+    "G": "var(--lux-theme-spacing-md)",
+    "Ar": "16px",
+    "Gr": "16px"
+  },
+  "--lux-theme-chat-entry-container-margin-bottom": {
+    "A": "var(--lux-theme-spacing-sm)",
+    "G": "var(--lux-theme-spacing-sm)",
+    "Ar": "8px",
+    "Gr": "8px"
+  },
+  "--lux-theme-chat-entry-container-min-width": { "A": "20px", "G": "20px", "Ar": "20px", "Gr": "20px" },
+  "--lux-theme-chat-entry-date-margin-bottom": {
+    "A": "var(--lux-theme-spacing-sm)",
+    "G": "var(--lux-theme-spacing-sm)",
+    "Ar": "8px",
+    "Gr": "8px"
+  },
+  "--lux-theme-chat-entry-date-margin-top": {
+    "A": "var(--lux-theme-spacing-md)",
+    "G": "var(--lux-theme-spacing-md)",
+    "Ar": "16px",
+    "Gr": "16px"
+  },
+  "--lux-theme-chat-entry-date-split-text-color": {
+    "A": "var(--lux-theme-dark-secondary-text)",
+    "G": "var(--lux-theme-dark-secondary-text)",
+    "Ar": "#605e5e",
+    "Gr": "#335c85"
+  },
+  "--lux-theme-chat-entry-header-gap": { "A": "var(--lux-theme-spacing-sm)", "G": "var(--lux-theme-spacing-sm)", "Ar": "8px", "Gr": "8px" },
+  "--lux-theme-chat-entry-header-text-color": {
+    "A": "var(--lux-theme-dark-secondary-text)",
+    "G": "var(--lux-theme-dark-secondary-text)",
+    "Ar": "#605e5e",
+    "Gr": "#335c85"
+  },
+  "--lux-theme-chat-header-sub-title-text-color": {
+    "A": "var(--lux-theme-dark-secondary-text)",
+    "G": "var(--lux-theme-dark-secondary-text)",
+    "Ar": "#605e5e",
+    "Gr": "#335c85"
+  },
+  "--lux-theme-chat-header-title-text-color": {
+    "A": "var(--lux-theme-dark-primary-text)",
+    "G": "var(--lux-theme-dark-primary-text)",
+    "Ar": "#1c1b1b",
+    "Gr": "#003366"
+  },
+  "--lux-theme-chat-header-title-text-weight": { "A": "600", "G": "600", "Ar": "600", "Gr": "600" },
+  "--lux-theme-chat-popup-container-border-radius": {
+    "A": "var(--lux-theme-radius-sm)",
+    "G": "var(--lux-theme-radius-sm)",
+    "Ar": "4px",
+    "Gr": "4px"
+  },
+  "--lux-theme-chat-popup-fab-background-color": {
+    "A": "var(--mat-sys-primary)",
+    "G": "var(--mat-sys-primary)",
+    "Ar": "#003366",
+    "Gr": "#003366"
+  },
+  "--lux-theme-chat-popup-fab-icon-color": {
+    "A": "var(--mat-sys-on-primary)",
+    "G": "var(--mat-sys-on-primary)",
+    "Ar": "#ffffff",
+    "Gr": "#ffffff"
+  },
+  "--lux-theme-component-bg-black": {
+    "A": "var(--lux-theme-custom-black)",
+    "G": "var(--lux-theme-custom-black)",
+    "Ar": "#1c1b1b",
+    "Gr": "#1c1b1b"
+  },
+  "--lux-theme-component-bg-blue": {
+    "A": "var(--lux-theme-custom-blue)",
+    "G": "var(--lux-theme-custom-blue)",
+    "Ar": "#003366",
+    "Gr": "#003366"
+  },
+  "--lux-theme-component-bg-gray": {
+    "A": "var(--lux-theme-custom-gray)",
+    "G": "var(--lux-theme-custom-gray)",
+    "Ar": "#605e5e",
+    "Gr": "#605e5e"
+  },
+  "--lux-theme-component-bg-green": {
+    "A": "var(--lux-theme-custom-green)",
+    "G": "var(--lux-theme-custom-green)",
+    "Ar": "#56bd66",
+    "Gr": "#56bd66"
+  },
+  "--lux-theme-component-bg-lightblue": {
+    "A": "var(--lux-theme-custom-lightblue)",
+    "G": "var(--lux-theme-custom-lightblue)",
+    "Ar": "#4fa8e8",
+    "Gr": "#4fa8e8"
+  },
+  "--lux-theme-component-bg-orange": {
+    "A": "var(--lux-theme-custom-orange)",
+    "G": "var(--lux-theme-custom-orange)",
+    "Ar": "#fc791f",
+    "Gr": "#fc791f"
+  },
+  "--lux-theme-component-bg-pink": {
+    "A": "var(--lux-theme-custom-pink)",
+    "G": "var(--lux-theme-custom-pink)",
+    "Ar": "#fc6b85",
+    "Gr": "#fc6b85"
+  },
+  "--lux-theme-component-bg-purple": {
+    "A": "var(--lux-theme-custom-purple)",
+    "G": "var(--lux-theme-custom-purple)",
+    "Ar": "#715289",
+    "Gr": "#715289"
+  },
+  "--lux-theme-component-bg-red": {
+    "A": "var(--lux-theme-custom-red)",
+    "G": "var(--lux-theme-custom-red)",
+    "Ar": "#ad000f",
+    "Gr": "#ad000f"
+  },
+  "--lux-theme-component-bg-white": {
+    "A": "var(--lux-theme-custom-white)",
+    "G": "var(--lux-theme-custom-white)",
+    "Ar": "#ffffff",
+    "Gr": "#ffffff"
+  },
+  "--lux-theme-component-bg-yellow": {
+    "A": "var(--lux-theme-custom-yellow)",
+    "G": "var(--lux-theme-custom-yellow)",
+    "Ar": "#fbd12c",
+    "Gr": "#fbd12c"
+  },
+  "--lux-theme-component-font-color-black": {
+    "A": "var(--lux-theme-custom-on-black)",
+    "G": "var(--lux-theme-custom-on-black)",
+    "Ar": "#ffffff",
+    "Gr": "#ffffff"
+  },
+  "--lux-theme-component-font-color-blue": {
+    "A": "var(--lux-theme-custom-on-blue)",
+    "G": "var(--lux-theme-custom-on-blue)",
+    "Ar": "#ffffff",
+    "Gr": "#ffffff"
+  },
+  "--lux-theme-component-font-color-gray": {
+    "A": "var(--lux-theme-custom-on-gray)",
+    "G": "var(--lux-theme-custom-on-gray)",
+    "Ar": "#ffffff",
+    "Gr": "#ffffff"
+  },
+  "--lux-theme-component-font-color-green": {
+    "A": "var(--lux-theme-custom-on-green)",
+    "G": "var(--lux-theme-custom-on-green)",
+    "Ar": "#1c1b1b",
+    "Gr": "#1c1b1b"
+  },
+  "--lux-theme-component-font-color-lightblue": {
+    "A": "var(--lux-theme-custom-on-lightblue)",
+    "G": "var(--lux-theme-custom-on-lightblue)",
+    "Ar": "#1c1b1b",
+    "Gr": "#1c1b1b"
+  },
+  "--lux-theme-component-font-color-orange": {
+    "A": "var(--lux-theme-custom-on-orange)",
+    "G": "var(--lux-theme-custom-on-orange)",
+    "Ar": "#1c1b1b",
+    "Gr": "#1c1b1b"
+  },
+  "--lux-theme-component-font-color-pink": {
+    "A": "var(--lux-theme-custom-on-pink)",
+    "G": "var(--lux-theme-custom-on-pink)",
+    "Ar": "#1c1b1b",
+    "Gr": "#1c1b1b"
+  },
+  "--lux-theme-component-font-color-purple": {
+    "A": "var(--lux-theme-custom-on-purple)",
+    "G": "var(--lux-theme-custom-on-purple)",
+    "Ar": "#ffffff",
+    "Gr": "#ffffff"
+  },
+  "--lux-theme-component-font-color-red": {
+    "A": "var(--lux-theme-custom-on-red)",
+    "G": "var(--lux-theme-custom-on-red)",
+    "Ar": "#ffffff",
+    "Gr": "#ffffff"
+  },
+  "--lux-theme-component-font-color-white": {
+    "A": "var(--lux-theme-custom-on-white)",
+    "G": "var(--lux-theme-custom-on-white)",
+    "Ar": "#1c1b1b",
+    "Gr": "#1c1b1b"
+  },
+  "--lux-theme-component-font-color-yellow": {
+    "A": "var(--lux-theme-custom-on-yellow)",
+    "G": "var(--lux-theme-custom-on-yellow)",
+    "Ar": "#1c1b1b",
+    "Gr": "#1c1b1b"
+  },
+  "--lux-theme-contrast-custom-black": { "A": "#1c1b1b", "G": "#1c1b1b", "Ar": "#1c1b1b", "Gr": "#1c1b1b" },
+  "--lux-theme-contrast-custom-blue": { "A": "#003366", "G": "#003366", "Ar": "#003366", "Gr": "#003366" },
+  "--lux-theme-contrast-custom-gray": { "A": "#1c1b1b", "G": "#1c1b1b", "Ar": "#1c1b1b", "Gr": "#1c1b1b" },
+  "--lux-theme-contrast-custom-green": { "A": "#00531d", "G": "#00531d", "Ar": "#00531d", "Gr": "#00531d" },
+  "--lux-theme-contrast-custom-lightblue": { "A": "#003366", "G": "#003366", "Ar": "#003366", "Gr": "#003366" },
+  "--lux-theme-contrast-custom-on-black": { "A": "#ffffff", "G": "#ffffff", "Ar": "#ffffff", "Gr": "#ffffff" },
+  "--lux-theme-contrast-custom-on-blue": { "A": "#ffffff", "G": "#ffffff", "Ar": "#ffffff", "Gr": "#ffffff" },
+  "--lux-theme-contrast-custom-on-gray": { "A": "#ffffff", "G": "#ffffff", "Ar": "#ffffff", "Gr": "#ffffff" },
+  "--lux-theme-contrast-custom-on-green": { "A": "#ffffff", "G": "#ffffff", "Ar": "#ffffff", "Gr": "#ffffff" },
+  "--lux-theme-contrast-custom-on-lightblue": { "A": "#ffffff", "G": "#ffffff", "Ar": "#ffffff", "Gr": "#ffffff" },
+  "--lux-theme-contrast-custom-on-orange": { "A": "#1c1b1b", "G": "#1c1b1b", "Ar": "#1c1b1b", "Gr": "#1c1b1b" },
+  "--lux-theme-contrast-custom-on-pink": { "A": "#ffffff", "G": "#ffffff", "Ar": "#ffffff", "Gr": "#ffffff" },
+  "--lux-theme-contrast-custom-on-purple": { "A": "#ffffff", "G": "#ffffff", "Ar": "#ffffff", "Gr": "#ffffff" },
+  "--lux-theme-contrast-custom-on-red": { "A": "#ffffff", "G": "#ffffff", "Ar": "#ffffff", "Gr": "#ffffff" },
+  "--lux-theme-contrast-custom-on-white": { "A": "#1c1b1b", "G": "#1c1b1b", "Ar": "#1c1b1b", "Gr": "#1c1b1b" },
+  "--lux-theme-contrast-custom-on-yellow": { "A": "#1c1b1b", "G": "#1c1b1b", "Ar": "#1c1b1b", "Gr": "#1c1b1b" },
+  "--lux-theme-contrast-custom-orange": { "A": "#fbd12c", "G": "#fbd12c", "Ar": "#fbd12c", "Gr": "#fbd12c" },
+  "--lux-theme-contrast-custom-pink": { "A": "#1c1b1b", "G": "#1c1b1b", "Ar": "#1c1b1b", "Gr": "#1c1b1b" },
+  "--lux-theme-contrast-custom-purple": { "A": "#1c1b1b", "G": "#1c1b1b", "Ar": "#1c1b1b", "Gr": "#1c1b1b" },
+  "--lux-theme-contrast-custom-red": { "A": "#a80710", "G": "#a80710", "Ar": "#a80710", "Gr": "#a80710" },
+  "--lux-theme-contrast-custom-white": { "A": "#ffffff", "G": "#ffffff", "Ar": "#ffffff", "Gr": "#ffffff" },
+  "--lux-theme-contrast-custom-yellow": { "A": "#fbd12c", "G": "#fbd12c", "Ar": "#fbd12c", "Gr": "#fbd12c" },
+  "--lux-theme-custom-black": { "A": "#1c1b1b", "G": "#1c1b1b", "Ar": "#1c1b1b", "Gr": "#1c1b1b" },
+  "--lux-theme-custom-blue": { "A": "#003366", "G": "#003366", "Ar": "#003366", "Gr": "#003366" },
+  "--lux-theme-custom-gray": { "A": "#605e5e", "G": "#605e5e", "Ar": "#605e5e", "Gr": "#605e5e" },
+  "--lux-theme-custom-green": { "A": "#56bd66", "G": "#56bd66", "Ar": "#56bd66", "Gr": "#56bd66" },
+  "--lux-theme-custom-lightblue": { "A": "#4fa8e8", "G": "#4fa8e8", "Ar": "#4fa8e8", "Gr": "#4fa8e8" },
+  "--lux-theme-custom-lightblue-0": { "A": "#000000", "G": "#000000", "Ar": "#000000", "Gr": "#000000" },
+  "--lux-theme-custom-lightblue-10": { "A": "#001e31", "G": "#001e31", "Ar": "#001e31", "Gr": "#001e31" },
+  "--lux-theme-custom-lightblue-100": { "A": "#ffffff", "G": "#ffffff", "Ar": "#ffffff", "Gr": "#ffffff" },
+  "--lux-theme-custom-lightblue-15": { "A": "#002940", "G": "#002940", "Ar": "#002940", "Gr": "#002940" },
+  "--lux-theme-custom-lightblue-20": { "A": "#003450", "G": "#003450", "Ar": "#003450", "Gr": "#003450" },
+  "--lux-theme-custom-lightblue-25": { "A": "#003f60", "G": "#003f60", "Ar": "#003f60", "Gr": "#003f60" },
+  "--lux-theme-custom-lightblue-30": { "A": "#004b70", "G": "#004b70", "Ar": "#004b70", "Gr": "#004b70" },
+  "--lux-theme-custom-lightblue-35": { "A": "#005882", "G": "#005882", "Ar": "#005882", "Gr": "#005882" },
+  "--lux-theme-custom-lightblue-40": { "A": "#006493", "G": "#006493", "Ar": "#006493", "Gr": "#006493" },
+  "--lux-theme-custom-lightblue-5": { "A": "#001321", "G": "#001321", "Ar": "#001321", "Gr": "#001321" },
+  "--lux-theme-custom-lightblue-50": { "A": "#007eb8", "G": "#007eb8", "Ar": "#007eb8", "Gr": "#007eb8" },
+  "--lux-theme-custom-lightblue-60": { "A": "#0099de", "G": "#0099de", "Ar": "#0099de", "Gr": "#0099de" },
+  "--lux-theme-custom-lightblue-70": { "A": "#33b5ff", "G": "#33b5ff", "Ar": "#33b5ff", "Gr": "#33b5ff" },
+  "--lux-theme-custom-lightblue-80": { "A": "#91cdff", "G": "#91cdff", "Ar": "#91cdff", "Gr": "#91cdff" },
+  "--lux-theme-custom-lightblue-90": { "A": "#cce5ff", "G": "#cce5ff", "Ar": "#cce5ff", "Gr": "#cce5ff" },
+  "--lux-theme-custom-lightblue-95": { "A": "#e6f2ff", "G": "#e6f2ff", "Ar": "#e6f2ff", "Gr": "#e6f2ff" },
+  "--lux-theme-custom-lightblue-98": { "A": "#f5faff", "G": "#f5faff", "Ar": "#f5faff", "Gr": "#f5faff" },
+  "--lux-theme-custom-lightblue-99": { "A": "#fafcff", "G": "#fafcff", "Ar": "#fafcff", "Gr": "#fafcff" },
+  "--lux-theme-custom-on-black": { "A": "#ffffff", "G": "#ffffff", "Ar": "#ffffff", "Gr": "#ffffff" },
+  "--lux-theme-custom-on-blue": { "A": "#ffffff", "G": "#ffffff", "Ar": "#ffffff", "Gr": "#ffffff" },
+  "--lux-theme-custom-on-gray": { "A": "#ffffff", "G": "#ffffff", "Ar": "#ffffff", "Gr": "#ffffff" },
+  "--lux-theme-custom-on-green": { "A": "#1c1b1b", "G": "#1c1b1b", "Ar": "#1c1b1b", "Gr": "#1c1b1b" },
+  "--lux-theme-custom-on-lightblue": { "A": "#1c1b1b", "G": "#1c1b1b", "Ar": "#1c1b1b", "Gr": "#1c1b1b" },
+  "--lux-theme-custom-on-orange": { "A": "#1c1b1b", "G": "#1c1b1b", "Ar": "#1c1b1b", "Gr": "#1c1b1b" },
+  "--lux-theme-custom-on-pink": { "A": "#1c1b1b", "G": "#1c1b1b", "Ar": "#1c1b1b", "Gr": "#1c1b1b" },
+  "--lux-theme-custom-on-purple": { "A": "#ffffff", "G": "#ffffff", "Ar": "#ffffff", "Gr": "#ffffff" },
+  "--lux-theme-custom-on-red": { "A": "#ffffff", "G": "#ffffff", "Ar": "#ffffff", "Gr": "#ffffff" },
+  "--lux-theme-custom-on-white": { "A": "#1c1b1b", "G": "#1c1b1b", "Ar": "#1c1b1b", "Gr": "#1c1b1b" },
+  "--lux-theme-custom-on-yellow": { "A": "#1c1b1b", "G": "#1c1b1b", "Ar": "#1c1b1b", "Gr": "#1c1b1b" },
+  "--lux-theme-custom-orange": { "A": "#fc791f", "G": "#fc791f", "Ar": "#fc791f", "Gr": "#fc791f" },
+  "--lux-theme-custom-orange-0": { "A": "#000000", "G": "#000000", "Ar": "#000000", "Gr": "#000000" },
+  "--lux-theme-custom-orange-10": { "A": "#2f1500", "G": "#2f1500", "Ar": "#2f1500", "Gr": "#2f1500" },
+  "--lux-theme-custom-orange-100": { "A": "#ffffff", "G": "#ffffff", "Ar": "#ffffff", "Gr": "#ffffff" },
+  "--lux-theme-custom-orange-15": { "A": "#411b00", "G": "#411b00", "Ar": "#411b00", "Gr": "#411b00" },
+  "--lux-theme-custom-orange-20": { "A": "#532200", "G": "#532200", "Ar": "#532200", "Gr": "#532200" },
+  "--lux-theme-custom-orange-25": { "A": "#662900", "G": "#662900", "Ar": "#662900", "Gr": "#662900" },
+  "--lux-theme-custom-orange-30": { "A": "#793100", "G": "#793100", "Ar": "#793100", "Gr": "#793100" },
+  "--lux-theme-custom-orange-35": { "A": "#8b3900", "G": "#8b3900", "Ar": "#8b3900", "Gr": "#8b3900" },
+  "--lux-theme-custom-orange-40": { "A": "#9e4300", "G": "#9e4300", "Ar": "#9e4300", "Gr": "#9e4300" },
+  "--lux-theme-custom-orange-5": { "A": "#1f0c00", "G": "#1f0c00", "Ar": "#1f0c00", "Gr": "#1f0c00" },
+  "--lux-theme-custom-orange-50": { "A": "#c55500", "G": "#c55500", "Ar": "#c55500", "Gr": "#c55500" },
+  "--lux-theme-custom-orange-60": { "A": "#ed6900", "G": "#ed6900", "Ar": "#ed6900", "Gr": "#ed6900" },
+  "--lux-theme-custom-orange-70": { "A": "#ff8d46", "G": "#ff8d46", "Ar": "#ff8d46", "Gr": "#ff8d46" },
+  "--lux-theme-custom-orange-80": { "A": "#ffb68d", "G": "#ffb68d", "Ar": "#ffb68d", "Gr": "#ffb68d" },
+  "--lux-theme-custom-orange-90": { "A": "#ffdbc8", "G": "#ffdbc8", "Ar": "#ffdbc8", "Gr": "#ffdbc8" },
+  "--lux-theme-custom-orange-95": { "A": "#ffede4", "G": "#ffede4", "Ar": "#ffede4", "Gr": "#ffede4" },
+  "--lux-theme-custom-orange-98": { "A": "#fff8f4", "G": "#fff8f4", "Ar": "#fff8f4", "Gr": "#fff8f4" },
+  "--lux-theme-custom-orange-99": { "A": "#fffbfa", "G": "#fffbfa", "Ar": "#fffbfa", "Gr": "#fffbfa" },
+  "--lux-theme-custom-pink": { "A": "#fc6b85", "G": "#fc6b85", "Ar": "#fc6b85", "Gr": "#fc6b85" },
+  "--lux-theme-custom-pink-0": { "A": "#000000", "G": "#000000", "Ar": "#000000", "Gr": "#000000" },
+  "--lux-theme-custom-pink-10": { "A": "#400021", "G": "#400021", "Ar": "#400021", "Gr": "#400021" },
+  "--lux-theme-custom-pink-100": { "A": "#ffffff", "G": "#ffffff", "Ar": "#ffffff", "Gr": "#ffffff" },
+  "--lux-theme-custom-pink-15": { "A": "#52002c", "G": "#52002c", "Ar": "#52002c", "Gr": "#52002c" },
+  "--lux-theme-custom-pink-20": { "A": "#650038", "G": "#650038", "Ar": "#650038", "Gr": "#650038" },
+  "--lux-theme-custom-pink-25": { "A": "#790044", "G": "#790044", "Ar": "#790044", "Gr": "#790044" },
+  "--lux-theme-custom-pink-30": { "A": "#8e0051", "G": "#8e0051", "Ar": "#8e0051", "Gr": "#8e0051" },
+  "--lux-theme-custom-pink-35": { "A": "#a3005e", "G": "#a3005e", "Ar": "#a3005e", "Gr": "#a3005e" },
+  "--lux-theme-custom-pink-40": { "A": "#b8006c", "G": "#b8006c", "Ar": "#b8006c", "Gr": "#b8006c" },
+  "--lux-theme-custom-pink-5": { "A": "#2d0016", "G": "#2d0016", "Ar": "#2d0016", "Gr": "#2d0016" },
+  "--lux-theme-custom-pink-50": { "A": "#e50087", "G": "#e50087", "Ar": "#e50087", "Gr": "#e50087" },
+  "--lux-theme-custom-pink-60": { "A": "#ff45a0", "G": "#ff45a0", "Ar": "#ff45a0", "Gr": "#ff45a0" },
+  "--lux-theme-custom-pink-70": { "A": "#ff82b7", "G": "#ff82b7", "Ar": "#ff82b7", "Gr": "#ff82b7" },
+  "--lux-theme-custom-pink-80": { "A": "#ffb0ce", "G": "#ffb0ce", "Ar": "#ffb0ce", "Gr": "#ffb0ce" },
+  "--lux-theme-custom-pink-90": { "A": "#ffd8e6", "G": "#ffd8e6", "Ar": "#ffd8e6", "Gr": "#ffd8e6" },
+  "--lux-theme-custom-pink-95": { "A": "#ffecf2", "G": "#ffecf2", "Ar": "#ffecf2", "Gr": "#ffecf2" },
+  "--lux-theme-custom-pink-98": { "A": "#fff7fa", "G": "#fff7fa", "Ar": "#fff7fa", "Gr": "#fff7fa" },
+  "--lux-theme-custom-pink-99": { "A": "#fffbfc", "G": "#fffbfc", "Ar": "#fffbfc", "Gr": "#fffbfc" },
+  "--lux-theme-custom-purple": { "A": "#715289", "G": "#715289", "Ar": "#715289", "Gr": "#715289" },
+  "--lux-theme-custom-purple-0": { "A": "#000000", "G": "#000000", "Ar": "#000000", "Gr": "#000000" },
+  "--lux-theme-custom-purple-10": { "A": "#080863", "G": "#080863", "Ar": "#080863", "Gr": "#080863" },
+  "--lux-theme-custom-purple-100": { "A": "#ffffff", "G": "#ffffff", "Ar": "#ffffff", "Gr": "#ffffff" },
+  "--lux-theme-custom-purple-15": { "A": "#1e136f", "G": "#1e136f", "Ar": "#1e136f", "Gr": "#1e136f" },
+  "--lux-theme-custom-purple-20": { "A": "#2e1e7c", "G": "#2e1e7c", "Ar": "#2e1e7c", "Gr": "#2e1e7c" },
+  "--lux-theme-custom-purple-25": { "A": "#3c2a89", "G": "#3c2a89", "Ar": "#3c2a89", "Gr": "#3c2a89" },
+  "--lux-theme-custom-purple-30": { "A": "#4a3597", "G": "#4a3597", "Ar": "#4a3597", "Gr": "#4a3597" },
+  "--lux-theme-custom-purple-35": { "A": "#5841a4", "G": "#5841a4", "Ar": "#5841a4", "Gr": "#5841a4" },
+  "--lux-theme-custom-purple-40": { "A": "#664db2", "G": "#664db2", "Ar": "#664db2", "Gr": "#664db2" },
+  "--lux-theme-custom-purple-5": { "A": "#000050", "G": "#000050", "Ar": "#000050", "Gr": "#000050" },
+  "--lux-theme-custom-purple-50": { "A": "#8165ce", "G": "#8165ce", "Ar": "#8165ce", "Gr": "#8165ce" },
+  "--lux-theme-custom-purple-60": { "A": "#9d7eea", "G": "#9d7eea", "Ar": "#9d7eea", "Gr": "#9d7eea" },
+  "--lux-theme-custom-purple-70": { "A": "#b99aff", "G": "#b99aff", "Ar": "#b99aff", "Gr": "#b99aff" },
+  "--lux-theme-custom-purple-80": { "A": "#d2bbff", "G": "#d2bbff", "Ar": "#d2bbff", "Gr": "#d2bbff" },
+  "--lux-theme-custom-purple-90": { "A": "#e9ddff", "G": "#e9ddff", "Ar": "#e9ddff", "Gr": "#e9ddff" },
+  "--lux-theme-custom-purple-95": { "A": "#f4eeff", "G": "#f4eeff", "Ar": "#f4eeff", "Gr": "#f4eeff" },
+  "--lux-theme-custom-purple-98": { "A": "#fbf8ff", "G": "#fbf8ff", "Ar": "#fbf8ff", "Gr": "#fbf8ff" },
+  "--lux-theme-custom-purple-99": { "A": "#fdfbff", "G": "#fdfbff", "Ar": "#fdfbff", "Gr": "#fdfbff" },
+  "--lux-theme-custom-red": { "A": "#ad000f", "G": "#ad000f", "Ar": "#ad000f", "Gr": "#ad000f" },
+  "--lux-theme-custom-white": { "A": "#ffffff", "G": "#ffffff", "Ar": "#ffffff", "Gr": "#ffffff" },
+  "--lux-theme-custom-yellow": { "A": "#fbd12c", "G": "#fbd12c", "Ar": "#fbd12c", "Gr": "#fbd12c" },
+  "--lux-theme-custom-yellow-0": { "A": "#000000", "G": "#000000", "Ar": "#000000", "Gr": "#000000" },
+  "--lux-theme-custom-yellow-10": { "A": "#251a00", "G": "#251a00", "Ar": "#251a00", "Gr": "#251a00" },
+  "--lux-theme-custom-yellow-100": { "A": "#ffffff", "G": "#ffffff", "Ar": "#ffffff", "Gr": "#ffffff" },
+  "--lux-theme-custom-yellow-15": { "A": "#312400", "G": "#312400", "Ar": "#312400", "Gr": "#312400" },
+  "--lux-theme-custom-yellow-20": { "A": "#3e2e00", "G": "#3e2e00", "Ar": "#3e2e00", "Gr": "#3e2e00" },
+  "--lux-theme-custom-yellow-25": { "A": "#4c3900", "G": "#4c3900", "Ar": "#4c3900", "Gr": "#4c3900" },
+  "--lux-theme-custom-yellow-30": { "A": "#5a4400", "G": "#5a4400", "Ar": "#5a4400", "Gr": "#5a4400" },
+  "--lux-theme-custom-yellow-35": { "A": "#684f00", "G": "#684f00", "Ar": "#684f00", "Gr": "#684f00" },
+  "--lux-theme-custom-yellow-40": { "A": "#765b00", "G": "#765b00", "Ar": "#765b00", "Gr": "#765b00" },
+  "--lux-theme-custom-yellow-5": { "A": "#181000", "G": "#181000", "Ar": "#181000", "Gr": "#181000" },
+  "--lux-theme-custom-yellow-50": { "A": "#947200", "G": "#947200", "Ar": "#947200", "Gr": "#947200" },
+  "--lux-theme-custom-yellow-60": { "A": "#b48b00", "G": "#b48b00", "Ar": "#b48b00", "Gr": "#b48b00" },
+  "--lux-theme-custom-yellow-70": { "A": "#d4a400", "G": "#d4a400", "Ar": "#d4a400", "Gr": "#d4a400" },
+  "--lux-theme-custom-yellow-80": { "A": "#f5bf00", "G": "#f5bf00", "Ar": "#f5bf00", "Gr": "#f5bf00" },
+  "--lux-theme-custom-yellow-90": { "A": "#ffdf9f", "G": "#ffdf9f", "Ar": "#ffdf9f", "Gr": "#ffdf9f" },
+  "--lux-theme-custom-yellow-95": { "A": "#ffefd3", "G": "#ffefd3", "Ar": "#ffefd3", "Gr": "#ffefd3" },
+  "--lux-theme-custom-yellow-98": { "A": "#fff9ee", "G": "#fff9ee", "Ar": "#fff9ee", "Gr": "#fff9ee" },
+  "--lux-theme-custom-yellow-99": { "A": "#fffcf7", "G": "#fffcf7", "Ar": "#fffcf7", "Gr": "#fffcf7" },
+  "--lux-theme-dark-disabled-text": { "A": "var(--mat-sys-outline)", "G": "#636d76", "Ar": "#929090", "Gr": "#636d76" },
+  "--lux-theme-dark-dividers": {
+    "A": "rgba(0, 51, 102, 0.1)",
+    "G": "rgba(0, 51, 102, 0.1)",
+    "Ar": "rgba(0, 51, 102, 0.1)",
+    "Gr": "rgba(0, 51, 102, 0.1)"
+  },
+  "--lux-theme-dark-focused": {
+    "A": "rgba(0, 0, 0, 0.12)",
+    "G": "rgba(0, 0, 0, 0.12)",
+    "Ar": "rgba(0, 0, 0, 0.12)",
+    "Gr": "rgba(0, 0, 0, 0.12)"
+  },
+  "--lux-theme-dark-primary-text": { "A": "var(--mat-sys-on-surface)", "G": "#003366", "Ar": "#1c1b1b", "Gr": "#003366" },
+  "--lux-theme-dark-secondary-text": { "A": "var(--mat-sys-on-surface-variant)", "G": "#335c85", "Ar": "#605e5e", "Gr": "#335c85" },
+  "--lux-theme-datepicker-icon-color": { "A": "#003366", "G": "#003366", "Ar": "#003366", "Gr": "#003366" },
+  "--lux-theme-datepicker-panel-date-background-color": {
+    "A": "var(--lux-theme-panel-bg-color)",
+    "G": "#e3ebf5",
+    "Ar": "#f9f9ff",
+    "Gr": "#e3ebf5"
+  },
+  "--lux-theme-datepicker-panel-date-border-radius": { "A": "999px", "G": "0", "Ar": "999px", "Gr": "0" },
+  "--lux-theme-datepicker-panel-date-hover-background-color": {
+    "A": "var(--lux-theme-panel-option-hover-state-layer-color)",
+    "G": "var(--lux-theme-panel-option-hover-state-layer-color)",
+    "Ar": "color-mix(in srgb, #3a5f94 8%, transparent)",
+    "Gr": "color-mix(in srgb, #3a5f94 8%, transparent)"
+  },
+  "--lux-theme-datepicker-panel-date-selected-background-color": {
+    "A": "var(--lux-theme-primary-20)",
+    "G": "var(--lux-theme-primary-20)",
+    "Ar": "#003366",
+    "Gr": "#003366"
+  },
+  "--lux-theme-datepicker-panel-date-selected-color": { "A": "#ffffff", "G": "#ffffff", "Ar": "#ffffff", "Gr": "#ffffff" },
+  "--lux-theme-datepicker-panel-font-size": { "A": "1rem", "G": "1.125rem", "Ar": "1rem", "Gr": "1.125rem" },
+  "--lux-theme-datepicker-panel-shape": {
+    "A": "var(--lux-theme-app-border-radius)",
+    "G": "var(--lux-theme-app-border-radius)",
+    "Ar": "4px",
+    "Gr": "14px"
+  },
+  "--lux-theme-datepicker-panel-text-color": {
+    "A": "var(--lux-theme-primary-20)",
+    "G": "var(--lux-theme-primary-20)",
+    "Ar": "#003366",
+    "Gr": "#003366"
+  },
+  "--lux-theme-dialog-close-button-hover-background-color": {
+    "A": "var(--lux-theme-hover-color)",
+    "G": "var(--lux-theme-on-hover-color)",
+    "Ar": "color-mix(in srgb, #3a5f94 8%, transparent)",
+    "Gr": "#003366"
+  },
+  "--lux-theme-dialog-close-button-hover-color": {
+    "A": "var(--lux-theme-on-hover-color)",
+    "G": "var(--lux-theme-on-hover-color)",
+    "Ar": "#003366",
+    "Gr": "#003366"
+  },
+  "--lux-theme-file-input-button-padding": { "A": "2px", "G": "2px", "Ar": "2px", "Gr": "2px" },
+  "--lux-theme-file-input-button-size": { "A": "14px", "G": "14px", "Ar": "14px", "Gr": "14px" },
+  "--lux-theme-file-upload-background-image": {
+    "A": "var(--lux-theme-app-gradient)",
+    "G": "none",
+    "Ar": "linear-gradient(90deg, #ffffff 0%, #f9f9ff 100%)",
+    "Gr": "none"
+  },
+  "--lux-theme-file-upload-item-background-color": {
+    "A": "var(--lux-theme-app-data-bg)",
+    "G": "#e3ebf5",
+    "Ar": "#ffffff",
+    "Gr": "#e3ebf5"
+  },
+  "--lux-theme-file-upload-item-border": { "A": "none", "G": "1px solid #56bd66", "Ar": "none", "Gr": "1px solid #56bd66" },
+  "--lux-theme-file-upload-item-border-bottom": {
+    "A": "1px solid var(--lux-theme-app-border-color)",
+    "G": "1px solid #56bd66",
+    "Ar": "1px solid #e5e2e1",
+    "Gr": "1px solid #56bd66"
+  },
+  "--lux-theme-file-upload-item-border-bottom-left-radius": {
+    "A": "0",
+    "G": "var(--lux-theme-app-border-radius)",
+    "Ar": "0",
+    "Gr": "14px"
+  },
+  "--lux-theme-file-upload-item-border-bottom-right-radius": {
+    "A": "0",
+    "G": "var(--lux-theme-app-border-radius)",
+    "Ar": "0",
+    "Gr": "14px"
+  },
+  "--lux-theme-file-upload-item-container-border": {
+    "A": "1px solid var(--lux-theme-app-border-color)",
+    "G": "none",
+    "Ar": "1px solid #e5e2e1",
+    "Gr": "none"
+  },
+  "--lux-theme-file-upload-item-disabled-border": {
+    "A": "none",
+    "G": "1px solid var(--lux-theme-dark-disabled-text)",
+    "Ar": "none",
+    "Gr": "1px solid #636d76"
+  },
+  "--lux-theme-file-upload-item-disabled-border-bottom": {
+    "A": "1px solid rgba(0, 0, 0, 0.12)",
+    "G": "1px solid var(--lux-theme-dark-disabled-text)",
+    "Ar": "1px solid rgba(0, 0, 0, 0.12)",
+    "Gr": "1px solid #636d76"
+  },
+  "--lux-theme-file-upload-item-disabled-container-border": {
+    "A": "1px solid rgba(0, 0, 0, 0.12)",
+    "G": "none",
+    "Ar": "1px solid rgba(0, 0, 0, 0.12)",
+    "Gr": "none"
+  },
+  "--lux-theme-file-upload-item-margin": { "A": "0", "G": "0 0 12px 0", "Ar": "0", "Gr": "0 0 12px 0" },
+  "--lux-theme-file-upload-item-padding": {
+    "A": "11px 15px 11px 26px",
+    "G": "18px 15px 18px 26px",
+    "Ar": "11px 15px 11px 26px",
+    "Gr": "18px 15px 18px 26px"
+  },
+  "--lux-theme-file-upload-padding": { "A": "16px 48px 12px 48px", "G": "24px 48px", "Ar": "16px 48px 12px 48px", "Gr": "24px 48px" },
+  "--lux-theme-focus-color": {
+    "A": "var(--mat-option-focus-state-layer-color)",
+    "G": "var(--mat-option-focus-state-layer-color)",
+    "Ar": "color-mix(in srgb, #3a5f94 12%, transparent)",
+    "Gr": "color-mix(in srgb, #3a5f94 12%, transparent)"
+  },
+  "--lux-theme-focus-state-layer-opacity": { "A": "0.12", "G": "0.12", "Ar": "0.12", "Gr": "0.12" },
+  "--lux-theme-font-size-2xl": { "A": "1.5rem", "G": "1.5rem", "Ar": "1.5rem", "Gr": "1.5rem" },
+  "--lux-theme-font-size-lg": { "A": "1.125rem", "G": "1.125rem", "Ar": "1.125rem", "Gr": "1.125rem" },
+  "--lux-theme-font-size-md": { "A": "1rem", "G": "1rem", "Ar": "1rem", "Gr": "1rem" },
+  "--lux-theme-font-size-sm": { "A": "0.875rem", "G": "0.875rem", "Ar": "0.875rem", "Gr": "0.875rem" },
+  "--lux-theme-font-size-xl": { "A": "1.25rem", "G": "1.25rem", "Ar": "1.25rem", "Gr": "1.25rem" },
+  "--lux-theme-font-size-xs": { "A": "0.75rem", "G": "0.75rem", "Ar": "0.75rem", "Gr": "0.75rem" },
+  "--lux-theme-form-autofill-background-color": {
+    "A": "var(--mat-sys-surface-container-high)",
+    "G": "#e6e9ee",
+    "Ar": "#ecf1ff",
+    "Gr": "#e6e9ee"
+  },
+  "--lux-theme-form-border-color": {
+    "A": "var(--mat-sys-outline)",
+    "G": "rgba(0, 0, 0, 0.42)",
+    "Ar": "#929090",
+    "Gr": "rgba(0, 0, 0, 0.42)"
+  },
+  "--lux-theme-form-border-width": { "A": "1px", "G": "1px", "Ar": "1px", "Gr": "1px" },
+  "--lux-theme-form-control-buffer": { "A": "4px", "G": "6px", "Ar": "4px", "Gr": "6px" },
+  "--lux-theme-form-control-error-margin": {
+    "A": "0.25rem calc(0.5rem + 1px) 0 calc(0.5rem + 3px)",
+    "G": "0.25rem 0 0 0",
+    "Ar": "0.25rem calc(0.5rem + 1px) 0 calc(0.5rem + 3px)",
+    "Gr": "0.25rem 0 0 0"
+  },
+  "--lux-theme-form-control-font-size": { "A": "1rem", "G": "1.125rem", "Ar": "1rem", "Gr": "1.125rem" },
+  "--lux-theme-form-control-label-margin": {
+    "A": "0 0.5rem 0.25rem 0.5rem",
+    "G": "0 0 0.25rem 0",
+    "Ar": "0 0.5rem 0.25rem 0.5rem",
+    "Gr": "0 0 0.25rem 0"
+  },
+  "--lux-theme-form-control-textarea-dense-padding": { "A": "8px", "G": "6px", "Ar": "8px", "Gr": "6px" },
+  "--lux-theme-form-control-textarea-padding": { "A": "14px", "G": "8px", "Ar": "14px", "Gr": "8px" },
+  "--lux-theme-form-dense-min-height": { "A": "38px", "G": "34px", "Ar": "38px", "Gr": "34px" },
+  "--lux-theme-form-error-border-color": { "A": "var(--mat-sys-error)", "G": "var(--lux-theme-warn-50)", "Ar": "#ba1a1a", "Gr": "#ec2125" },
+  "--lux-theme-form-error-box-shadow": {
+    "A": "0 0 0 1px var(--mat-sys-error) inset",
+    "G": "0 0 0 2px var(--lux-theme-warn-50), 0 0 4px 2px var(--lux-theme-warn-50)",
+    "Ar": "0 0 0 1px #ba1a1a inset",
+    "Gr": "0 0 0 2px #ec2125, 0 0 4px 2px #ec2125"
+  },
+  "--lux-theme-form-error-msg-background": {
+    "A": "var(--mat-sys-error-container)",
+    "G": "rgb(255, 228, 231)",
+    "Ar": "#ffdad6",
+    "Gr": "rgb(255, 228, 231)"
+  },
+  "--lux-theme-form-focus-border-color": {
+    "A": "var(--lux-theme-primary-20)",
+    "G": "var(--lux-theme-primary-20)",
+    "Ar": "#003366",
+    "Gr": "#003366"
+  },
+  "--lux-theme-form-focus-box-shadow": {
+    "A": "0 0 0 1px var(--lux-theme-primary-20) inset",
+    "G": "0 0 0 2px var(--lux-theme-accent-secondary-color), 0 0 4px 2px var(--lux-theme-accent-secondary-color)",
+    "Ar": "0 0 0 1px #003366 inset",
+    "Gr": "0 0 0 2px #247929, 0 0 4px 2px #247929"
+  },
+  "--lux-theme-form-hover-border-color": {
+    "A": "var(--lux-theme-neutral-10)",
+    "G": "var(--lux-theme-neutral-10)",
+    "Ar": "#1c1b1b",
+    "Gr": "#1c1b1b"
+  },
+  "--lux-theme-form-min-height": { "A": "50px", "G": "44px", "Ar": "50px", "Gr": "44px" },
+  "--lux-theme-form-readonly-bg-color": { "A": "#f4f0ef", "G": "#eff3f6", "Ar": "#f4f0ef", "Gr": "#eff3f6" },
+  "--lux-theme-form-readonly-color": { "A": "#1c1b1b", "G": "var(--lux-theme-primary-color)", "Ar": "#1c1b1b", "Gr": "#003366" },
+  "--lux-theme-hover-color": {
+    "A": "var(--mat-option-hover-state-layer-color)",
+    "G": "var(--mat-option-hover-state-layer-color)",
+    "Ar": "color-mix(in srgb, #3a5f94 8%, transparent)",
+    "Gr": "color-mix(in srgb, #3a5f94 8%, transparent)"
+  },
+  "--lux-theme-hover-color-for-dark-background": {
+    "A": "var(--lux-theme-primary-40)",
+    "G": "var(--lux-theme-primary-40)",
+    "Ar": "#3a5f94",
+    "Gr": "#3a5f94"
+  },
+  "--lux-theme-hover-state-layer-opacity": { "A": "0.08", "G": "0.08", "Ar": "0.08", "Gr": "0.08" },
+  "--lux-theme-icon-black": {
+    "A": "var(--lux-theme-custom-black)",
+    "G": "var(--lux-theme-custom-black)",
+    "Ar": "#1c1b1b",
+    "Gr": "#1c1b1b"
+  },
+  "--lux-theme-icon-blue": { "A": "var(--lux-theme-custom-blue)", "G": "var(--lux-theme-custom-blue)", "Ar": "#003366", "Gr": "#003366" },
+  "--lux-theme-icon-gray": { "A": "var(--lux-theme-custom-gray)", "G": "var(--lux-theme-custom-gray)", "Ar": "#605e5e", "Gr": "#605e5e" },
+  "--lux-theme-icon-green": {
+    "A": "var(--lux-theme-custom-green)",
+    "G": "var(--lux-theme-custom-green)",
+    "Ar": "#56bd66",
+    "Gr": "#56bd66"
+  },
+  "--lux-theme-icon-lightblue": {
+    "A": "var(--lux-theme-custom-lightblue)",
+    "G": "var(--lux-theme-custom-lightblue)",
+    "Ar": "#4fa8e8",
+    "Gr": "#4fa8e8"
+  },
+  "--lux-theme-icon-on-black": {
+    "A": "var(--lux-theme-custom-on-black)",
+    "G": "var(--lux-theme-custom-on-black)",
+    "Ar": "#ffffff",
+    "Gr": "#ffffff"
+  },
+  "--lux-theme-icon-on-blue": {
+    "A": "var(--lux-theme-custom-on-blue)",
+    "G": "var(--lux-theme-custom-on-blue)",
+    "Ar": "#ffffff",
+    "Gr": "#ffffff"
+  },
+  "--lux-theme-icon-on-gray": {
+    "A": "var(--lux-theme-custom-on-gray)",
+    "G": "var(--lux-theme-custom-on-gray)",
+    "Ar": "#ffffff",
+    "Gr": "#ffffff"
+  },
+  "--lux-theme-icon-on-green": {
+    "A": "var(--lux-theme-custom-on-green)",
+    "G": "var(--lux-theme-custom-on-green)",
+    "Ar": "#1c1b1b",
+    "Gr": "#1c1b1b"
+  },
+  "--lux-theme-icon-on-lightblue": {
+    "A": "var(--lux-theme-custom-on-lightblue)",
+    "G": "var(--lux-theme-custom-on-lightblue)",
+    "Ar": "#1c1b1b",
+    "Gr": "#1c1b1b"
+  },
+  "--lux-theme-icon-on-orange": {
+    "A": "var(--lux-theme-custom-on-orange)",
+    "G": "var(--lux-theme-custom-on-orange)",
+    "Ar": "#1c1b1b",
+    "Gr": "#1c1b1b"
+  },
+  "--lux-theme-icon-on-pink": {
+    "A": "var(--lux-theme-custom-on-pink)",
+    "G": "var(--lux-theme-custom-on-pink)",
+    "Ar": "#1c1b1b",
+    "Gr": "#1c1b1b"
+  },
+  "--lux-theme-icon-on-purple": {
+    "A": "var(--lux-theme-custom-on-purple)",
+    "G": "var(--lux-theme-custom-on-purple)",
+    "Ar": "#ffffff",
+    "Gr": "#ffffff"
+  },
+  "--lux-theme-icon-on-red": {
+    "A": "var(--lux-theme-custom-on-red)",
+    "G": "var(--lux-theme-custom-on-red)",
+    "Ar": "#ffffff",
+    "Gr": "#ffffff"
+  },
+  "--lux-theme-icon-on-yellow": {
+    "A": "var(--lux-theme-custom-on-yellow)",
+    "G": "var(--lux-theme-custom-on-yellow)",
+    "Ar": "#1c1b1b",
+    "Gr": "#1c1b1b"
+  },
+  "--lux-theme-icon-orange": {
+    "A": "var(--lux-theme-custom-orange)",
+    "G": "var(--lux-theme-custom-orange)",
+    "Ar": "#fc791f",
+    "Gr": "#fc791f"
+  },
+  "--lux-theme-icon-pink": { "A": "var(--lux-theme-custom-pink)", "G": "var(--lux-theme-custom-pink)", "Ar": "#fc6b85", "Gr": "#fc6b85" },
+  "--lux-theme-icon-purple": {
+    "A": "var(--lux-theme-custom-purple)",
+    "G": "var(--lux-theme-custom-purple)",
+    "Ar": "#715289",
+    "Gr": "#715289"
+  },
+  "--lux-theme-icon-red": { "A": "var(--lux-theme-custom-red)", "G": "var(--lux-theme-custom-red)", "Ar": "#ad000f", "Gr": "#ad000f" },
+  "--lux-theme-icon-yellow": {
+    "A": "var(--lux-theme-custom-yellow)",
+    "G": "var(--lux-theme-custom-yellow)",
+    "Ar": "#fbd12c",
+    "Gr": "#fbd12c"
+  },
+  "--lux-theme-light-disabled-text": {
+    "A": "rgba(255, 255, 255, 0.38)",
+    "G": "rgba(255, 255, 255, 0.5)",
+    "Ar": "rgba(255, 255, 255, 0.38)",
+    "Gr": "rgba(255, 255, 255, 0.5)"
+  },
+  "--lux-theme-light-dividers": { "A": "rgba(255, 255, 255, 0.2)", "G": "#e3ebf5", "Ar": "rgba(255, 255, 255, 0.2)", "Gr": "#e3ebf5" },
+  "--lux-theme-light-focused": {
+    "A": "rgba(255, 255, 255, 0.12)",
+    "G": "rgba(255, 255, 255, 0.12)",
+    "Ar": "rgba(255, 255, 255, 0.12)",
+    "Gr": "rgba(255, 255, 255, 0.12)"
+  },
+  "--lux-theme-light-primary-text": { "A": "white", "G": "white", "Ar": "white", "Gr": "white" },
+  "--lux-theme-light-secondary-text": {
+    "A": "rgba(255, 255, 255, 0.74)",
+    "G": "rgba(255, 255, 255, 0.7)",
+    "Ar": "rgba(255, 255, 255, 0.74)",
+    "Gr": "rgba(255, 255, 255, 0.7)"
+  },
+  "--lux-theme-link-plain-background-color": { "A": "transparent", "G": "transparent", "Ar": "transparent", "Gr": "transparent" },
+  "--lux-theme-link-plain-color": {
+    "A": "var(--lux-theme-primary-40)",
+    "G": "var(--lux-theme-primary-color)",
+    "Ar": "#3a5f94",
+    "Gr": "#003366"
+  },
+  "--lux-theme-link-plain-hover-background-color": {
+    "A": "var(--mat-sys-primary-container)",
+    "G": "#e4f1e4",
+    "Ar": "#d5e3ff",
+    "Gr": "#e4f1e4"
+  },
+  "--lux-theme-link-plain-hover-color": {
+    "A": "var(--mat-sys-on-primary-container)",
+    "G": "var(--lux-theme-accent-secondary-color)",
+    "Ar": "#003366",
+    "Gr": "#247929"
+  },
+  "--lux-theme-link-plain-icon-color": {
+    "A": "var(--lux-theme-primary-40)",
+    "G": "var(--lux-theme-accent-secondary-color)",
+    "Ar": "#3a5f94",
+    "Gr": "#247929"
+  },
+  "--lux-theme-link-plain-text-decoration": { "A": "inherit", "G": "underline", "Ar": "inherit", "Gr": "underline" },
+  "--lux-theme-lookup-invalid-option-font-weight": { "A": "300", "G": "300", "Ar": "300", "Gr": "300" },
+  "--lux-theme-lookup-invalid-option-text-color": {
+    "A": "var(--mat-sys-on-error-container)",
+    "G": "var(--mat-sys-error)",
+    "Ar": "#93000a",
+    "Gr": "#ad000f"
+  },
+  "--lux-theme-menu-button-item-font-size": { "A": "0.875rem", "G": "0.875rem", "Ar": "0.875rem", "Gr": "0.875rem" },
+  "--lux-theme-menu-button-text-container-shape": { "A": "4px", "G": "4px", "Ar": "4px", "Gr": "4px" },
+  "--lux-theme-menu-container-height": { "A": "36px", "G": "36px", "Ar": "36px", "Gr": "36px" },
+  "--lux-theme-menu-item-font-color": {
+    "A": "var(--lux-theme-primary-color)",
+    "G": "var(--lux-theme-primary-color)",
+    "Ar": "#003366",
+    "Gr": "#003366"
+  },
+  "--lux-theme-menu-item-font-size": { "A": "1rem", "G": "1rem", "Ar": "1rem", "Gr": "1rem" },
+  "--lux-theme-menu-item-icon-size": { "A": "20px", "G": "20px", "Ar": "20px", "Gr": "20px" },
+  "--lux-theme-menu-item-icon-size-large": { "A": "40px", "G": "40px", "Ar": "40px", "Gr": "40px" },
+  "--lux-theme-menu-item-subtitle-font-color": {
+    "A": "var(--mat-sys-secondary-container)",
+    "G": "var(--lux-theme-dark-secondary-text)",
+    "Ar": "#3a5f94",
+    "Gr": "#335c85"
+  },
+  "--lux-theme-menu-item-subtitle-font-size": { "A": "0.875rem", "G": "0.875rem", "Ar": "0.875rem", "Gr": "0.875rem" },
+  "--lux-theme-menu-panel-header-font-color": {
+    "A": "var(--lux-theme-dark-secondary-text)",
+    "G": "var(--lux-theme-dark-secondary-text)",
+    "Ar": "#605e5e",
+    "Gr": "#335c85"
+  },
+  "--lux-theme-menu-panel-header-font-size": { "A": "1rem", "G": "1rem", "Ar": "1rem", "Gr": "1rem" },
+  "--lux-theme-menu-panel-header-font-weight": { "A": "600", "G": "600", "Ar": "600", "Gr": "600" },
+  "--lux-theme-menu-panel-option-min-height": { "A": "24px", "G": "24px", "Ar": "24px", "Gr": "24px" },
+  "--lux-theme-menu-panel-option-padding": { "A": "12px 0", "G": "12px 0", "Ar": "12px 0", "Gr": "12px 0" },
+  "--lux-theme-messagebox-blue": {
+    "A": "var(--lux-theme-custom-blue)",
+    "G": "var(--lux-theme-custom-blue)",
+    "Ar": "#003366",
+    "Gr": "#003366"
+  },
+  "--lux-theme-messagebox-gray": {
+    "A": "var(--lux-theme-custom-gray)",
+    "G": "var(--lux-theme-custom-gray)",
+    "Ar": "#605e5e",
+    "Gr": "#605e5e"
+  },
+  "--lux-theme-messagebox-green": {
+    "A": "var(--lux-theme-custom-green)",
+    "G": "var(--lux-theme-custom-green)",
+    "Ar": "#56bd66",
+    "Gr": "#56bd66"
+  },
+  "--lux-theme-messagebox-lightblue": {
+    "A": "var(--lux-theme-custom-lightblue)",
+    "G": "var(--lux-theme-custom-lightblue)",
+    "Ar": "#4fa8e8",
+    "Gr": "#4fa8e8"
+  },
+  "--lux-theme-messagebox-on-blue": {
+    "A": "var(--lux-theme-custom-on-blue)",
+    "G": "var(--lux-theme-custom-on-blue)",
+    "Ar": "#ffffff",
+    "Gr": "#ffffff"
+  },
+  "--lux-theme-messagebox-on-gray": {
+    "A": "var(--lux-theme-custom-on-gray)",
+    "G": "var(--lux-theme-custom-on-gray)",
+    "Ar": "#ffffff",
+    "Gr": "#ffffff"
+  },
+  "--lux-theme-messagebox-on-green": {
+    "A": "var(--lux-theme-custom-on-green)",
+    "G": "var(--lux-theme-custom-on-green)",
+    "Ar": "#1c1b1b",
+    "Gr": "#1c1b1b"
+  },
+  "--lux-theme-messagebox-on-lightblue": {
+    "A": "var(--lux-theme-custom-on-lightblue)",
+    "G": "var(--lux-theme-custom-on-lightblue)",
+    "Ar": "#1c1b1b",
+    "Gr": "#1c1b1b"
+  },
+  "--lux-theme-messagebox-on-orange": {
+    "A": "var(--lux-theme-custom-on-orange)",
+    "G": "var(--lux-theme-custom-on-orange)",
+    "Ar": "#1c1b1b",
+    "Gr": "#1c1b1b"
+  },
+  "--lux-theme-messagebox-on-pink": {
+    "A": "var(--lux-theme-custom-on-pink)",
+    "G": "var(--lux-theme-custom-on-pink)",
+    "Ar": "#1c1b1b",
+    "Gr": "#1c1b1b"
+  },
+  "--lux-theme-messagebox-on-purple": {
+    "A": "var(--lux-theme-custom-on-purple)",
+    "G": "var(--lux-theme-custom-on-purple)",
+    "Ar": "#ffffff",
+    "Gr": "#ffffff"
+  },
+  "--lux-theme-messagebox-on-red": {
+    "A": "var(--lux-theme-custom-on-red)",
+    "G": "var(--lux-theme-custom-on-red)",
+    "Ar": "#ffffff",
+    "Gr": "#ffffff"
+  },
+  "--lux-theme-messagebox-on-white": {
+    "A": "var(--lux-theme-custom-on-white)",
+    "G": "var(--lux-theme-custom-on-white)",
+    "Ar": "#1c1b1b",
+    "Gr": "#1c1b1b"
+  },
+  "--lux-theme-messagebox-on-yellow": {
+    "A": "var(--lux-theme-custom-on-yellow)",
+    "G": "var(--lux-theme-custom-on-yellow)",
+    "Ar": "#1c1b1b",
+    "Gr": "#1c1b1b"
+  },
+  "--lux-theme-messagebox-orange": {
+    "A": "var(--lux-theme-custom-orange)",
+    "G": "var(--lux-theme-custom-orange)",
+    "Ar": "#fc791f",
+    "Gr": "#fc791f"
+  },
+  "--lux-theme-messagebox-pink": {
+    "A": "var(--lux-theme-custom-pink)",
+    "G": "var(--lux-theme-custom-pink)",
+    "Ar": "#fc6b85",
+    "Gr": "#fc6b85"
+  },
+  "--lux-theme-messagebox-purple": {
+    "A": "var(--lux-theme-custom-purple)",
+    "G": "var(--lux-theme-custom-purple)",
+    "Ar": "#715289",
+    "Gr": "#715289"
+  },
+  "--lux-theme-messagebox-red": {
+    "A": "var(--lux-theme-custom-red)",
+    "G": "var(--lux-theme-custom-red)",
+    "Ar": "#ad000f",
+    "Gr": "#ad000f"
+  },
+  "--lux-theme-messagebox-white": {
+    "A": "var(--lux-theme-custom-white)",
+    "G": "var(--lux-theme-custom-white)",
+    "Ar": "#ffffff",
+    "Gr": "#ffffff"
+  },
+  "--lux-theme-messagebox-yellow": {
+    "A": "var(--lux-theme-custom-yellow)",
+    "G": "var(--lux-theme-custom-yellow)",
+    "Ar": "#fbd12c",
+    "Gr": "#fbd12c"
+  },
+  "--lux-theme-neutral-0": { "A": "#000000", "G": "#000000", "Ar": "#000000", "Gr": "#000000" },
+  "--lux-theme-neutral-10": { "A": "#1c1b1b", "G": "#1c1b1b", "Ar": "#1c1b1b", "Gr": "#1c1b1b" },
+  "--lux-theme-neutral-100": { "A": "#ffffff", "G": "#ffffff", "Ar": "#ffffff", "Gr": "#ffffff" },
+  "--lux-theme-neutral-20": { "A": "#313030", "G": "#313030", "Ar": "#313030", "Gr": "#313030" },
+  "--lux-theme-neutral-25": { "A": "#3c3b3b", "G": "#3c3b3b", "Ar": "#3c3b3b", "Gr": "#3c3b3b" },
+  "--lux-theme-neutral-30": { "A": "#484646", "G": "#484646", "Ar": "#484646", "Gr": "#484646" },
+  "--lux-theme-neutral-35": { "A": "#535252", "G": "#535252", "Ar": "#535252", "Gr": "#535252" },
+  "--lux-theme-neutral-40": { "A": "#605e5e", "G": "#605e5e", "Ar": "#605e5e", "Gr": "#605e5e" },
+  "--lux-theme-neutral-50": { "A": "#797776", "G": "#797776", "Ar": "#797776", "Gr": "#797776" },
+  "--lux-theme-neutral-60": { "A": "#929090", "G": "#929090", "Ar": "#929090", "Gr": "#929090" },
+  "--lux-theme-neutral-70": { "A": "#adaaaa", "G": "#adaaaa", "Ar": "#adaaaa", "Gr": "#adaaaa" },
+  "--lux-theme-neutral-80": { "A": "#c9c6c5", "G": "#c9c6c5", "Ar": "#c9c6c5", "Gr": "#c9c6c5" },
+  "--lux-theme-neutral-90": { "A": "#e5e2e1", "G": "#e5e2e1", "Ar": "#e5e2e1", "Gr": "#e5e2e1" },
+  "--lux-theme-neutral-95": { "A": "#f4f0ef", "G": "#f4f0ef", "Ar": "#f4f0ef", "Gr": "#f4f0ef" },
+  "--lux-theme-neutral-98": { "A": "#fcf8f8", "G": "#fcf8f8", "Ar": "#fcf8f8", "Gr": "#fcf8f8" },
+  "--lux-theme-neutral-99": { "A": "#f6feff", "G": "#f6feff", "Ar": "#f6feff", "Gr": "#f6feff" },
+  "--lux-theme-on-hover-color": {
+    "A": "var(--mat-option-label-text-color)",
+    "G": "var(--mat-option-label-text-color)",
+    "Ar": "#003366",
+    "Gr": "#003366"
+  },
+  "--lux-theme-on-selected-color": {
+    "A": "var(--mat-option-selected-state-label-text-color)",
+    "G": "var(--lux-theme-dark-primary-text)",
+    "Ar": "#003366",
+    "Gr": "#003366"
+  },
+  "--lux-theme-outline-bright": {
+    "A": "4px solid #ffffff",
+    "G": "4px solid #ffffff",
+    "Ar": "4px solid #ffffff",
+    "Gr": "4px solid #ffffff"
+  },
+  "--lux-theme-outline-color-bright": { "A": "#ffffff", "G": "#ffffff", "Ar": "#ffffff", "Gr": "#ffffff" },
+  "--lux-theme-outline-color-dark": {
+    "A": "var(--lux-theme-custom-lightblue)",
+    "G": "var(--lux-theme-accent-secondary-color)",
+    "Ar": "#4fa8e8",
+    "Gr": "#247929"
+  },
+  "--lux-theme-outline-dark": {
+    "A": "4px solid var(--lux-theme-custom-lightblue)",
+    "G": "4px solid var(--lux-theme-accent-secondary-color)",
+    "Ar": "4px solid #4fa8e8",
+    "Gr": "4px solid #247929"
+  },
+  "--lux-theme-outline-style": { "A": "solid", "G": "solid", "Ar": "solid", "Gr": "solid" },
+  "--lux-theme-outline-width": { "A": "4px", "G": "4px", "Ar": "4px", "Gr": "4px" },
+  "--lux-theme-panel-bg-color": { "A": "var(--mat-sys-surface-container)", "G": "#ffffff", "Ar": "#f9f9ff", "Gr": "#ffffff" },
+  "--lux-theme-panel-option-disabled-selected-checkmark-color": {
+    "A": "var(--lux-theme-dark-disabled-text)",
+    "G": "var(--lux-theme-dark-disabled-text)",
+    "Ar": "#929090",
+    "Gr": "#636d76"
+  },
+  "--lux-theme-panel-option-focus-state-layer-color": {
+    "A": "color-mix(in srgb, var(--mat-sys-secondary-container) 12%, transparent)",
+    "G": "color-mix(in srgb, var(--mat-sys-secondary-container) 12%, transparent)",
+    "Ar": "color-mix(in srgb, #3a5f94 12%, transparent)",
+    "Gr": "color-mix(in srgb, #3a5f94 12%, transparent)"
+  },
+  "--lux-theme-panel-option-hover-state-layer-color": {
+    "A": "color-mix(in srgb, var(--mat-sys-secondary-container) 8%, transparent)",
+    "G": "color-mix(in srgb, var(--mat-sys-secondary-container) 8%, transparent)",
+    "Ar": "color-mix(in srgb, #3a5f94 8%, transparent)",
+    "Gr": "color-mix(in srgb, #3a5f94 8%, transparent)"
+  },
+  "--lux-theme-panel-option-label-text-color": {
+    "A": "var(--lux-theme-primary-color)",
+    "G": "var(--lux-theme-primary-color)",
+    "Ar": "#003366",
+    "Gr": "#003366"
+  },
+  "--lux-theme-panel-option-label-text-size": { "A": "1rem", "G": "1.125rem", "Ar": "1rem", "Gr": "1.125rem" },
+  "--lux-theme-panel-option-min-height": { "A": "24px", "G": "24px", "Ar": "24px", "Gr": "24px" },
+  "--lux-theme-panel-option-padding": { "A": "12px 0", "G": "12px 0", "Ar": "12px 0", "Gr": "12px 0" },
+  "--lux-theme-panel-option-selected-checkmark-color": {
+    "A": "var(--lux-theme-primary-color)",
+    "G": "var(--lux-theme-primary-color)",
+    "Ar": "#003366",
+    "Gr": "#003366"
+  },
+  "--lux-theme-panel-option-selected-state-layer-color": {
+    "A": "color-mix(in srgb, var(--mat-sys-secondary-container) 12%, transparent)",
+    "G": "color-mix(in srgb, var(--mat-sys-secondary-container) 12%, transparent)",
+    "Ar": "color-mix(in srgb, #3a5f94 12%, transparent)",
+    "Gr": "color-mix(in srgb, #3a5f94 12%, transparent)"
+  },
+  "--lux-theme-popup-background-color": { "A": "var(--lux-theme-panel-bg-color)", "G": "#e3ebf5", "Ar": "#f9f9ff", "Gr": "#e3ebf5" },
+  "--lux-theme-popup-fade-in-duration": { "A": "125ms", "G": "125ms", "Ar": "125ms", "Gr": "125ms" },
+  "--lux-theme-popup-font-size": { "A": "0.875rem", "G": "0.875rem", "Ar": "0.875rem", "Gr": "0.875rem" },
+  "--lux-theme-popup-font-weight": { "A": "400", "G": "400", "Ar": "400", "Gr": "400" },
+  "--lux-theme-popup-line-height": { "A": "normal", "G": "normal", "Ar": "normal", "Gr": "normal" },
+  "--lux-theme-popup-panel-padding": { "A": "16px", "G": "16px", "Ar": "16px", "Gr": "16px" },
+  "--lux-theme-popup-title-font-size": { "A": "1rem", "G": "1rem", "Ar": "1rem", "Gr": "1rem" },
+  "--lux-theme-popup-title-font-weight": { "A": "500", "G": "500", "Ar": "500", "Gr": "500" },
+  "--lux-theme-popup-title-line-height": { "A": "normal", "G": "normal", "Ar": "normal", "Gr": "normal" },
+  "--lux-theme-pressed-state-layer-opacity": { "A": "0.16", "G": "0.16", "Ar": "0.16", "Gr": "0.16" },
+  "--lux-theme-primary-0": { "A": "#000000", "G": "#000000", "Ar": "#000000", "Gr": "#000000" },
+  "--lux-theme-primary-10": { "A": "#001b3c", "G": "#001b3c", "Ar": "#001b3c", "Gr": "#001b3c" },
+  "--lux-theme-primary-100": { "A": "#ffffff", "G": "#ffffff", "Ar": "#ffffff", "Gr": "#ffffff" },
+  "--lux-theme-primary-20": { "A": "#003366", "G": "#003366", "Ar": "#003366", "Gr": "#003366" },
+  "--lux-theme-primary-25": { "A": "#0f3b6f", "G": "#0f3b6f", "Ar": "#0f3b6f", "Gr": "#0f3b6f" },
+  "--lux-theme-primary-30": { "A": "#1f477b", "G": "#1f477b", "Ar": "#1f477b", "Gr": "#1f477b" },
+  "--lux-theme-primary-35": { "A": "#2d5387", "G": "#2d5387", "Ar": "#2d5387", "Gr": "#2d5387" },
+  "--lux-theme-primary-40": { "A": "#3a5f94", "G": "#3a5f94", "Ar": "#3a5f94", "Gr": "#3a5f94" },
+  "--lux-theme-primary-50": { "A": "#5478af", "G": "#5478af", "Ar": "#5478af", "Gr": "#5478af" },
+  "--lux-theme-primary-60": { "A": "#6e92ca", "G": "#6e92ca", "Ar": "#6e92ca", "Gr": "#6e92ca" },
+  "--lux-theme-primary-70": { "A": "#89ace7", "G": "#89ace7", "Ar": "#89ace7", "Gr": "#89ace7" },
+  "--lux-theme-primary-80": { "A": "#a7c8ff", "G": "#a7c8ff", "Ar": "#a7c8ff", "Gr": "#a7c8ff" },
+  "--lux-theme-primary-90": { "A": "#d5e3ff", "G": "#d5e3ff", "Ar": "#d5e3ff", "Gr": "#d5e3ff" },
+  "--lux-theme-primary-95": { "A": "#ecf1ff", "G": "#ecf1ff", "Ar": "#ecf1ff", "Gr": "#ecf1ff" },
+  "--lux-theme-primary-98": { "A": "#f9f9ff", "G": "#f9f9ff", "Ar": "#f9f9ff", "Gr": "#f9f9ff" },
+  "--lux-theme-primary-99": { "A": "#fdfbff", "G": "#fdfbff", "Ar": "#fdfbff", "Gr": "#fdfbff" },
+  "--lux-theme-primary-color": { "A": "#003366", "G": "#003366", "Ar": "#003366", "Gr": "#003366" },
+  "--lux-theme-progress-blue": {
+    "A": "var(--lux-theme-custom-blue)",
+    "G": "var(--lux-theme-custom-blue)",
+    "Ar": "#003366",
+    "Gr": "#003366"
+  },
+  "--lux-theme-progress-gray": {
+    "A": "var(--lux-theme-custom-gray)",
+    "G": "var(--lux-theme-custom-gray)",
+    "Ar": "#605e5e",
+    "Gr": "#605e5e"
+  },
+  "--lux-theme-progress-green": { "A": "var(--lux-theme-accent-50)", "G": "var(--lux-theme-accent-50)", "Ar": "#198939", "Gr": "#198939" },
+  "--lux-theme-progress-lightblue": {
+    "A": "var(--lux-theme-custom-lightblue-50)",
+    "G": "var(--lux-theme-custom-lightblue-50)",
+    "Ar": "#007eb8",
+    "Gr": "#007eb8"
+  },
+  "--lux-theme-progress-muted-blue": {
+    "A": "var(--lux-theme-primary-80)",
+    "G": "var(--lux-theme-primary-80)",
+    "Ar": "#a7c8ff",
+    "Gr": "#a7c8ff"
+  },
+  "--lux-theme-progress-muted-default": {
+    "A": "var(--lux-theme-primary-80)",
+    "G": "var(--lux-theme-primary-80)",
+    "Ar": "#a7c8ff",
+    "Gr": "#a7c8ff"
+  },
+  "--lux-theme-progress-muted-gray": {
+    "A": "var(--lux-theme-neutral-80)",
+    "G": "var(--lux-theme-neutral-80)",
+    "Ar": "#c9c6c5",
+    "Gr": "#c9c6c5"
+  },
+  "--lux-theme-progress-muted-green": {
+    "A": "var(--lux-theme-accent-80)",
+    "G": "var(--lux-theme-accent-80)",
+    "Ar": "#75dc81",
+    "Gr": "#75dc81"
+  },
+  "--lux-theme-progress-muted-lightblue": {
+    "A": "var(--lux-theme-custom-lightblue-80)",
+    "G": "var(--lux-theme-custom-lightblue-80)",
+    "Ar": "#91cdff",
+    "Gr": "#91cdff"
+  },
+  "--lux-theme-progress-muted-orange": {
+    "A": "var(--lux-theme-custom-orange-80)",
+    "G": "var(--lux-theme-custom-orange-80)",
+    "Ar": "#ffb68d",
+    "Gr": "#ffb68d"
+  },
+  "--lux-theme-progress-muted-pink": {
+    "A": "var(--lux-theme-custom-pink-80)",
+    "G": "var(--lux-theme-custom-pink-80)",
+    "Ar": "#ffb0ce",
+    "Gr": "#ffb0ce"
+  },
+  "--lux-theme-progress-muted-purple": {
+    "A": "var(--lux-theme-custom-purple-80)",
+    "G": "var(--lux-theme-custom-purple-80)",
+    "Ar": "#d2bbff",
+    "Gr": "#d2bbff"
+  },
+  "--lux-theme-progress-muted-red": { "A": "var(--lux-theme-warn-80)", "G": "var(--lux-theme-warn-80)", "Ar": "#ffb4ab", "Gr": "#ffb4ab" },
+  "--lux-theme-progress-muted-track-blue": {
+    "A": "var(--lux-theme-primary-95)",
+    "G": "var(--lux-theme-primary-95)",
+    "Ar": "#ecf1ff",
+    "Gr": "#ecf1ff"
+  },
+  "--lux-theme-progress-muted-track-default": {
+    "A": "var(--lux-theme-primary-95)",
+    "G": "var(--lux-theme-primary-95)",
+    "Ar": "#ecf1ff",
+    "Gr": "#ecf1ff"
+  },
+  "--lux-theme-progress-muted-track-gray": {
+    "A": "var(--lux-theme-neutral-95)",
+    "G": "var(--lux-theme-neutral-95)",
+    "Ar": "#f4f0ef",
+    "Gr": "#f4f0ef"
+  },
+  "--lux-theme-progress-muted-track-green": {
+    "A": "var(--lux-theme-accent-95)",
+    "G": "var(--lux-theme-accent-95)",
+    "Ar": "#c6ffc5",
+    "Gr": "#c6ffc5"
+  },
+  "--lux-theme-progress-muted-track-lightblue": {
+    "A": "var(--lux-theme-custom-lightblue-95)",
+    "G": "var(--lux-theme-custom-lightblue-95)",
+    "Ar": "#e6f2ff",
+    "Gr": "#e6f2ff"
+  },
+  "--lux-theme-progress-muted-track-orange": {
+    "A": "var(--lux-theme-custom-orange-95)",
+    "G": "var(--lux-theme-custom-orange-95)",
+    "Ar": "#ffede4",
+    "Gr": "#ffede4"
+  },
+  "--lux-theme-progress-muted-track-pink": {
+    "A": "var(--lux-theme-custom-pink-95)",
+    "G": "var(--lux-theme-custom-pink-95)",
+    "Ar": "#ffecf2",
+    "Gr": "#ffecf2"
+  },
+  "--lux-theme-progress-muted-track-purple": {
+    "A": "var(--lux-theme-custom-purple-95)",
+    "G": "var(--lux-theme-custom-purple-95)",
+    "Ar": "#f4eeff",
+    "Gr": "#f4eeff"
+  },
+  "--lux-theme-progress-muted-track-red": {
+    "A": "var(--lux-theme-warn-95)",
+    "G": "var(--lux-theme-warn-95)",
+    "Ar": "#ffedea",
+    "Gr": "#ffedea"
+  },
+  "--lux-theme-progress-muted-track-yellow": {
+    "A": "var(--lux-theme-custom-yellow-95)",
+    "G": "var(--lux-theme-custom-yellow-95)",
+    "Ar": "#ffefd3",
+    "Gr": "#ffefd3"
+  },
+  "--lux-theme-progress-muted-yellow": {
+    "A": "var(--lux-theme-custom-yellow-80)",
+    "G": "var(--lux-theme-custom-yellow-80)",
+    "Ar": "#f5bf00",
+    "Gr": "#f5bf00"
+  },
+  "--lux-theme-progress-orange": {
+    "A": "var(--lux-theme-custom-orange-50)",
+    "G": "var(--lux-theme-custom-orange-50)",
+    "Ar": "#c55500",
+    "Gr": "#c55500"
+  },
+  "--lux-theme-progress-pink": {
+    "A": "var(--lux-theme-custom-pink-50)",
+    "G": "var(--lux-theme-custom-pink-50)",
+    "Ar": "#e50087",
+    "Gr": "#e50087"
+  },
+  "--lux-theme-progress-purple": {
+    "A": "var(--lux-theme-custom-purple)",
+    "G": "var(--lux-theme-custom-purple)",
+    "Ar": "#715289",
+    "Gr": "#715289"
+  },
+  "--lux-theme-progress-red": { "A": "#c00013", "G": "#c00013", "Ar": "#c00013", "Gr": "#c00013" },
+  "--lux-theme-progress-track-blue": {
+    "A": "var(--lux-theme-primary-90)",
+    "G": "var(--lux-theme-primary-90)",
+    "Ar": "#d5e3ff",
+    "Gr": "#d5e3ff"
+  },
+  "--lux-theme-progress-track-default": {
+    "A": "var(--lux-theme-primary-90)",
+    "G": "var(--lux-theme-primary-90)",
+    "Ar": "#d5e3ff",
+    "Gr": "#d5e3ff"
+  },
+  "--lux-theme-progress-track-gray": {
+    "A": "var(--lux-theme-neutral-90)",
+    "G": "var(--lux-theme-neutral-90)",
+    "Ar": "#e5e2e1",
+    "Gr": "#e5e2e1"
+  },
+  "--lux-theme-progress-track-green": {
+    "A": "var(--lux-theme-accent-95)",
+    "G": "var(--lux-theme-accent-95)",
+    "Ar": "#c6ffc5",
+    "Gr": "#c6ffc5"
+  },
+  "--lux-theme-progress-track-lightblue": {
+    "A": "var(--lux-theme-custom-lightblue-90)",
+    "G": "var(--lux-theme-custom-lightblue-90)",
+    "Ar": "#cce5ff",
+    "Gr": "#cce5ff"
+  },
+  "--lux-theme-progress-track-orange": {
+    "A": "var(--lux-theme-custom-orange-95)",
+    "G": "var(--lux-theme-custom-orange-95)",
+    "Ar": "#ffede4",
+    "Gr": "#ffede4"
+  },
+  "--lux-theme-progress-track-pink": {
+    "A": "var(--lux-theme-custom-pink-90)",
+    "G": "var(--lux-theme-custom-pink-90)",
+    "Ar": "#ffd8e6",
+    "Gr": "#ffd8e6"
+  },
+  "--lux-theme-progress-track-purple": {
+    "A": "var(--lux-theme-custom-purple-90)",
+    "G": "var(--lux-theme-custom-purple-90)",
+    "Ar": "#e9ddff",
+    "Gr": "#e9ddff"
+  },
+  "--lux-theme-progress-track-red": { "A": "var(--lux-theme-warn-90)", "G": "var(--lux-theme-warn-90)", "Ar": "#ffdad6", "Gr": "#ffdad6" },
+  "--lux-theme-progress-track-yellow": {
+    "A": "var(--lux-theme-custom-yellow-90)",
+    "G": "var(--lux-theme-custom-yellow-90)",
+    "Ar": "#ffdf9f",
+    "Gr": "#ffdf9f"
+  },
+  "--lux-theme-progress-yellow": {
+    "A": "var(--lux-theme-custom-yellow-50)",
+    "G": "var(--lux-theme-custom-yellow-50)",
+    "Ar": "#947200",
+    "Gr": "#947200"
+  },
+  "--lux-theme-radius-lg": { "A": "16px", "G": "18px", "Ar": "16px", "Gr": "18px" },
+  "--lux-theme-radius-md": { "A": "8px", "G": "8px", "Ar": "8px", "Gr": "8px" },
+  "--lux-theme-radius-sm": { "A": "4px", "G": "4px", "Ar": "4px", "Gr": "4px" },
+  "--lux-theme-radius-xl": { "A": "24px", "G": "20px", "Ar": "24px", "Gr": "20px" },
+  "--lux-theme-radius-xs": { "A": "2px", "G": "2px", "Ar": "2px", "Gr": "2px" },
+  "--lux-theme-radius-xxl": { "A": "999px", "G": "999px", "Ar": "999px", "Gr": "999px" },
+  "--lux-theme-selected-bg-color": {
+    "A": "var(--mat-option-selected-state-layer-color)",
+    "G": "#e3ebf5",
+    "Ar": "color-mix(in srgb, #3a5f94 12%, transparent)",
+    "Gr": "#e3ebf5"
+  },
+  "--lux-theme-selected-border-color": { "A": "#003366", "G": "var(--lux-theme-accent-secondary-color)", "Ar": "#003366", "Gr": "#247929" },
+  "--lux-theme-side-nav-button-color": {
+    "A": "var(--lux-theme-dark-primary-text)",
+    "G": "var(--lux-theme-dark-primary-text)",
+    "Ar": "#1c1b1b",
+    "Gr": "#003366"
+  },
+  "--lux-theme-snackbar-blue": { "A": "#a7c8ff", "G": "#a7c8ff", "Ar": "#a7c8ff", "Gr": "#a7c8ff" },
+  "--lux-theme-snackbar-border-radius": { "A": "var(--lux-theme-radius-md)", "G": "var(--lux-theme-radius-md)", "Ar": "8px", "Gr": "8px" },
+  "--lux-theme-snackbar-green": { "A": "#53b12b", "G": "#53b12b", "Ar": "#53b12b", "Gr": "#53b12b" },
+  "--lux-theme-snackbar-orange": { "A": "#ec9c1b", "G": "#ec9c1b", "Ar": "#ec9c1b", "Gr": "#ec9c1b" },
+  "--lux-theme-snackbar-red": { "A": "#f17474", "G": "#f17474", "Ar": "#f17474", "Gr": "#f17474" },
+  "--lux-theme-snackbar-white": { "A": "#ffffff", "G": "#ffffff", "Ar": "#ffffff", "Gr": "#ffffff" },
+  "--lux-theme-snackbar-width": { "A": "400px", "G": "400px", "Ar": "400px", "Gr": "400px" },
+  "--lux-theme-snackbar-yellow": { "A": "#fbd12c", "G": "#fbd12c", "Ar": "#fbd12c", "Gr": "#fbd12c" },
+  "--lux-theme-spacing-1-5": { "A": "6px", "G": "6px", "Ar": "6px", "Gr": "6px" },
+  "--lux-theme-spacing-3": { "A": "12px", "G": "12px", "Ar": "12px", "Gr": "12px" },
+  "--lux-theme-spacing-lg": { "A": "24px", "G": "24px", "Ar": "24px", "Gr": "24px" },
+  "--lux-theme-spacing-md": { "A": "16px", "G": "16px", "Ar": "16px", "Gr": "16px" },
+  "--lux-theme-spacing-sm": { "A": "8px", "G": "8px", "Ar": "8px", "Gr": "8px" },
+  "--lux-theme-spacing-xl": { "A": "32px", "G": "32px", "Ar": "32px", "Gr": "32px" },
+  "--lux-theme-spacing-xs": { "A": "4px", "G": "4px", "Ar": "4px", "Gr": "4px" },
+  "--lux-theme-spacing-xxl": { "A": "48px", "G": "48px", "Ar": "48px", "Gr": "48px" },
+  "--lux-theme-spacing-xxs": { "A": "2px", "G": "2px", "Ar": "2px", "Gr": "2px" },
+  "--lux-theme-spacing-xxxl": { "A": "64px", "G": "64px", "Ar": "64px", "Gr": "64px" },
+  "--lux-theme-state-layer-color": { "A": "var(--lux-theme-primary-40)", "G": "#e3ebf5", "Ar": "#3a5f94", "Gr": "#e3ebf5" },
+  "--lux-theme-stepper-large-backdrop-bg": { "A": "#636d76", "G": "#636d76", "Ar": "#636d76", "Gr": "#636d76" },
+  "--lux-theme-stepper-large-completed-fc": {
+    "A": "#2e8533",
+    "G": "var(--lux-theme-accent-secondary-color)",
+    "Ar": "#2e8533",
+    "Gr": "#247929"
+  },
+  "--lux-theme-stepper-large-nav-item-active-bg": { "A": "#003366", "G": "#003366", "Ar": "#003366", "Gr": "#003366" },
+  "--lux-theme-stepper-large-nav-item-active-fc": { "A": "#ffffff", "G": "#ffffff", "Ar": "#ffffff", "Gr": "#ffffff" },
+  "--lux-theme-stepper-large-nav-item-completed-bg": {
+    "A": "#ffffff",
+    "G": "var(--lux-theme-accent-secondary-color)",
+    "Ar": "#ffffff",
+    "Gr": "#247929"
+  },
+  "--lux-theme-stepper-large-nav-item-completed-fg": { "A": "#2e8533", "G": "#ffffff", "Ar": "#2e8533", "Gr": "#ffffff" },
+  "--lux-theme-stepper-large-nav-item-completed-font-size": { "A": "1rem", "G": "1.375rem", "Ar": "1rem", "Gr": "1.375rem" },
+  "--lux-theme-stepper-large-nav-item-completed-font-weight": { "A": "400", "G": "400", "Ar": "400", "Gr": "400" },
+  "--lux-theme-stepper-large-nav-item-completed-icon-height": { "A": "1rem", "G": "1.4375rem", "Ar": "1rem", "Gr": "1.4375rem" },
+  "--lux-theme-stepper-large-nav-item-completed-icon-margin": {
+    "A": "2px 10px 0px",
+    "G": "4px 10px 0px",
+    "Ar": "2px 10px 0px",
+    "Gr": "4px 10px 0px"
+  },
+  "--lux-theme-stepper-large-nav-item-completed-icon-width": { "A": "1rem", "G": "1.4375rem", "Ar": "1rem", "Gr": "1.4375rem" },
+  "--lux-theme-stepper-large-nav-item-completed-line-height": { "A": "1.5", "G": "2.0625rem", "Ar": "1.5", "Gr": "2.0625rem" },
+  "--lux-theme-stepper-large-nav-item-disabled-bg": { "A": "#ffffff", "G": "#eff3f6", "Ar": "#ffffff", "Gr": "#eff3f6" },
+  "--lux-theme-stepper-large-nav-item-disabled-fg": {
+    "A": "var(--lux-theme-dark-disabled-text)",
+    "G": "#003366",
+    "Ar": "#929090",
+    "Gr": "#003366"
+  },
+  "--lux-theme-stepper-large-nav-item-font-size": { "A": "1rem", "G": "1.375rem", "Ar": "1rem", "Gr": "1.375rem" },
+  "--lux-theme-stepper-large-nav-item-font-weight": { "A": "600", "G": "400", "Ar": "600", "Gr": "400" },
+  "--lux-theme-stepper-large-nav-item-line-height": { "A": "1.5", "G": "2.0625rem", "Ar": "1.5", "Gr": "2.0625rem" },
+  "--lux-theme-stepper-large-nav-item-not-touched-bg": { "A": "#ffffff", "G": "#eff3f6", "Ar": "#ffffff", "Gr": "#eff3f6" },
+  "--lux-theme-stepper-large-nav-item-not-touched-fg": { "A": "#003366", "G": "#003366", "Ar": "#003366", "Gr": "#003366" },
+  "--lux-theme-stepper-large-nav-item-number-container-background-color": {
+    "A": "var(--lux-theme-app-content-bg)",
+    "G": "#eff3f6",
+    "Ar": "#ffffff",
+    "Gr": "#eff3f6"
+  },
+  "--lux-theme-stepper-large-nav-item-number-container-height": { "A": "2.25rem", "G": "2.8125rem", "Ar": "2.25rem", "Gr": "2.8125rem" },
+  "--lux-theme-stepper-large-nav-item-number-container-padding": { "A": "6px 9px", "G": "6px 11px", "Ar": "6px 9px", "Gr": "6px 11px" },
+  "--lux-theme-stepper-large-nav-item-number-container-radius": { "A": "50%", "G": "1.125rem", "Ar": "50%", "Gr": "1.125rem" },
+  "--lux-theme-stepper-large-nav-item-number-container-width": { "A": "2.25rem", "G": "2.8125rem", "Ar": "2.25rem", "Gr": "2.8125rem" },
+  "--lux-theme-tabble-alternate-row-bg-color": {
+    "A": "var(--mat-sys-surface-container-high)",
+    "G": "#e3ebf5",
+    "Ar": "#ecf1ff",
+    "Gr": "#e3ebf5"
+  },
+  "--lux-theme-tabs-border-radius": { "A": "var(--lux-theme-card-shape)", "G": "var(--lux-theme-card-shape)", "Ar": "4px", "Gr": "16px" },
+  "--lux-theme-tabs-label-text-size": { "A": "1rem", "G": "1rem", "Ar": "1rem", "Gr": "1rem" },
+  "--lux-theme-tabs-label-text-weight": { "A": "600", "G": "600", "Ar": "600", "Gr": "600" },
+  "--lux-theme-tabs-text-font": {
+    "A": "var(--lux-theme-app-font-family)",
+    "G": "var(--lux-theme-app-headline-font)",
+    "Ar": "\"Source Sans Pro\", Helvetica, Arial, sans-serif",
+    "Gr": "Korb, \"Source Sans Pro\", Helvetica, Arial, sans-serif"
+  },
+  "--lux-theme-textbox-blue-border-color": {
+    "A": "var(--lux-theme-primary-20)",
+    "G": "var(--lux-theme-primary-20)",
+    "Ar": "#003366",
+    "Gr": "#003366"
+  },
+  "--lux-theme-textbox-blue-color": {
+    "A": "linear-gradient(90deg, var(--mat-sys-primary-container), #ffffff)",
+    "G": "linear-gradient(90deg, #e0e7ed, #ffffff)",
+    "Ar": "linear-gradient(90deg, #d5e3ff, #ffffff)",
+    "Gr": "linear-gradient(90deg, #e0e7ed, #ffffff)"
+  },
+  "--lux-theme-textbox-blue-icon-color": {
+    "A": "var(--lux-theme-primary-20)",
+    "G": "var(--lux-theme-primary-20)",
+    "Ar": "#003366",
+    "Gr": "#003366"
+  },
+  "--lux-theme-textbox-blue-on-color": {
+    "A": "var(--lux-theme-dark-primary-text)",
+    "G": "var(--lux-theme-dark-primary-text)",
+    "Ar": "#1c1b1b",
+    "Gr": "#003366"
+  },
+  "--lux-theme-textbox-default-border-color": {
+    "A": "var(--lux-theme-primary-20)",
+    "G": "var(--lux-theme-primary-20)",
+    "Ar": "#003366",
+    "Gr": "#003366"
+  },
+  "--lux-theme-textbox-default-color": { "A": "#ffffff", "G": "#ffffff", "Ar": "#ffffff", "Gr": "#ffffff" },
+  "--lux-theme-textbox-default-icon-color": {
+    "A": "var(--lux-theme-dark-primary-text)",
+    "G": "var(--lux-theme-dark-primary-text)",
+    "Ar": "#1c1b1b",
+    "Gr": "#003366"
+  },
+  "--lux-theme-textbox-default-on-color": {
+    "A": "var(--lux-theme-dark-primary-text)",
+    "G": "var(--lux-theme-dark-primary-text)",
+    "Ar": "#1c1b1b",
+    "Gr": "#003366"
+  },
+  "--lux-theme-textbox-green-border-color": { "A": "var(--mat-sys-tertiary)", "G": "#56bd66", "Ar": "#56bd66", "Gr": "#56bd66" },
+  "--lux-theme-textbox-green-color": {
+    "A": "linear-gradient(90deg, var(--mat-sys-tertiary-container), #ffffff)",
+    "G": "linear-gradient(90deg, #ebf7ed, #ffffff)",
+    "Ar": "linear-gradient(90deg, #c6ffc5, #ffffff)",
+    "Gr": "linear-gradient(90deg, #ebf7ed, #ffffff)"
+  },
+  "--lux-theme-textbox-green-icon-color": { "A": "var(--mat-sys-tertiary)", "G": "#56bd66", "Ar": "#56bd66", "Gr": "#56bd66" },
+  "--lux-theme-textbox-green-on-color": {
+    "A": "var(--lux-theme-dark-primary-text)",
+    "G": "var(--lux-theme-dark-primary-text)",
+    "Ar": "#1c1b1b",
+    "Gr": "#003366"
+  },
+  "--lux-theme-textbox-red-border-color": { "A": "var(--mat-sys-error)", "G": "#ec2125", "Ar": "#ba1a1a", "Gr": "#ec2125" },
+  "--lux-theme-textbox-red-color": {
+    "A": "linear-gradient(90deg, var(--mat-sys-error-container), #ffffff)",
+    "G": "linear-gradient(90deg, #ffcacf, #ffffff)",
+    "Ar": "linear-gradient(90deg, #ffdad6, #ffffff)",
+    "Gr": "linear-gradient(90deg, #ffcacf, #ffffff)"
+  },
+  "--lux-theme-textbox-red-icon-color": { "A": "var(--mat-sys-error)", "G": "#ec2125", "Ar": "#ba1a1a", "Gr": "#ec2125" },
+  "--lux-theme-textbox-red-on-color": {
+    "A": "var(--lux-theme-dark-primary-text)",
+    "G": "var(--lux-theme-dark-primary-text)",
+    "Ar": "#1c1b1b",
+    "Gr": "#003366"
+  },
+  "--lux-theme-textbox-yellow-border-color": { "A": "var(--lux-theme-custom-yellow)", "G": "#f4cb25", "Ar": "#fbd12c", "Gr": "#f4cb25" },
+  "--lux-theme-textbox-yellow-color": {
+    "A": "linear-gradient(90deg, color-mix(in srgb, var(--lux-theme-custom-yellow) 30%, #ffffff), #ffffff)",
+    "G": "linear-gradient(90deg, #fdf8e1, #ffffff)",
+    "Ar": "linear-gradient(90deg, color-mix(in srgb, #fbd12c 30%, #ffffff), #ffffff)",
+    "Gr": "linear-gradient(90deg, #fdf8e1, #ffffff)"
+  },
+  "--lux-theme-textbox-yellow-icon-color": { "A": "var(--lux-theme-custom-yellow)", "G": "#f4cb25", "Ar": "#fbd12c", "Gr": "#f4cb25" },
+  "--lux-theme-textbox-yellow-on-color": {
+    "A": "var(--lux-theme-custom-on-yellow)",
+    "G": "var(--lux-theme-dark-primary-text)",
+    "Ar": "#1c1b1b",
+    "Gr": "#003366"
+  },
+  "--lux-theme-tile-ac-hover-bg-color": {
+    "A": "var(--lux-theme-app-gradient-reverse)",
+    "G": "var(--lux-theme-app-gradient-reverse)",
+    "Ar": "linear-gradient(270deg, #ffffff 0%, #f9f9ff 100%)",
+    "Gr": "none"
+  },
+  "--lux-theme-tile-ac-hover-border-color": {
+    "A": "var(--lux-theme-form-hover-border-color)",
+    "G": "var(--lux-theme-form-hover-border-color)",
+    "Ar": "#1c1b1b",
+    "Gr": "#1c1b1b"
+  },
+  "--lux-theme-tile-ac-icon-color": {
+    "A": "var(--lux-theme-primary-color)",
+    "G": "var(--lux-theme-primary-color)",
+    "Ar": "#003366",
+    "Gr": "#003366"
+  },
+  "--lux-theme-tile-border-radius": {
+    "A": "var(--lux-theme-app-border-radius)",
+    "G": "var(--lux-theme-app-border-radius)",
+    "Ar": "4px",
+    "Gr": "14px"
+  },
+  "--lux-theme-tile-borderradius": {
+    "A": "var(--lux-theme-tile-border-radius)",
+    "G": "var(--lux-theme-tile-border-radius)",
+    "Ar": "4px",
+    "Gr": "14px"
+  },
+  "--lux-theme-tile-bottom-line-color": {
+    "A": "var(--mat-sys-tertiary)",
+    "G": "var(--mat-sys-tertiary)",
+    "Ar": "#56bd66",
+    "Gr": "#56bd66"
+  },
+  "--lux-theme-tile-font-hover-color": {
+    "A": "var(--mat-sys-on-tertiary-container)",
+    "G": "var(--mat-sys-on-tertiary-container)",
+    "Ar": "#00531d",
+    "Gr": "#00531d"
+  },
+  "--lux-theme-tile-icon-color": { "A": "var(--mat-sys-tertiary)", "G": "var(--mat-sys-tertiary)", "Ar": "#56bd66", "Gr": "#56bd66" },
+  "--lux-theme-tour-hint-overlay-backdrop-color": {
+    "A": "rgba(0, 0, 0, 0.12)",
+    "G": "rgba(0, 0, 0, 0.12)",
+    "Ar": "rgba(0, 0, 0, 0.12)",
+    "Gr": "rgba(0, 0, 0, 0.12)"
+  },
+  "--lux-theme-warn-0": { "A": "#000000", "G": "#000000", "Ar": "#000000", "Gr": "#000000" },
+  "--lux-theme-warn-10": { "A": "#410002", "G": "#410002", "Ar": "#410002", "Gr": "#410002" },
+  "--lux-theme-warn-100": { "A": "#ffffff", "G": "#ffffff", "Ar": "#ffffff", "Gr": "#ffffff" },
+  "--lux-theme-warn-20": { "A": "#690005", "G": "#690005", "Ar": "#690005", "Gr": "#690005" },
+  "--lux-theme-warn-25": { "A": "#7e0007", "G": "#7e0007", "Ar": "#7e0007", "Gr": "#7e0007" },
+  "--lux-theme-warn-30": { "A": "#93000a", "G": "#93000a", "Ar": "#93000a", "Gr": "#93000a" },
+  "--lux-theme-warn-35": { "A": "#a80710", "G": "#a80710", "Ar": "#a80710", "Gr": "#a80710" },
+  "--lux-theme-warn-40": { "A": "#ba1a1a", "G": "#ba1a1a", "Ar": "#ba1a1a", "Gr": "#ba1a1a" },
+  "--lux-theme-warn-50": { "A": "#ec2125", "G": "#ec2125", "Ar": "#ec2125", "Gr": "#ec2125" },
+  "--lux-theme-warn-60": { "A": "#ff5449", "G": "#ff5449", "Ar": "#ff5449", "Gr": "#ff5449" },
+  "--lux-theme-warn-70": { "A": "#ff897d", "G": "#ff897d", "Ar": "#ff897d", "Gr": "#ff897d" },
+  "--lux-theme-warn-80": { "A": "#ffb4ab", "G": "#ffb4ab", "Ar": "#ffb4ab", "Gr": "#ffb4ab" },
+  "--lux-theme-warn-90": { "A": "#ffdad6", "G": "#ffdad6", "Ar": "#ffdad6", "Gr": "#ffdad6" },
+  "--lux-theme-warn-95": { "A": "#ffedea", "G": "#ffedea", "Ar": "#ffedea", "Gr": "#ffedea" },
+  "--lux-theme-warn-98": { "A": "#fff8f7", "G": "#fff8f7", "Ar": "#fff8f7", "Gr": "#fff8f7" },
+  "--lux-theme-warn-99": { "A": "#fffbff", "G": "#fffbff", "Ar": "#fffbff", "Gr": "#fffbff" },
+  "--lux-theme-warn-color": { "A": "#690005", "G": "#690005", "Ar": "#690005", "Gr": "#690005" },
+  "--lux-z-action-bar": { "A": "8", "G": "8", "Ar": "8", "Gr": "8" },
+  "--lux-z-backdrop": { "A": "199", "G": "199", "Ar": "199", "Gr": "199" },
+  "--lux-z-drawer": { "A": "200", "G": "200", "Ar": "200", "Gr": "200" },
+  "--lux-z-header": { "A": "100", "G": "100", "Ar": "100", "Gr": "100" },
+  "--lux-z-skip-link": { "A": "10000", "G": "10000", "Ar": "10000", "Gr": "10000" },
+  "--mat-sys-background": { "A": "#f9f9ff", "G": "#f9f9ff", "Ar": "#f9f9ff", "Gr": "#f9f9ff" },
+  "--mat-sys-body-large": {
+    "A": "400 1rem / 1.5rem Source Sans Pro",
+    "G": "400 1rem / 1.5rem Source Sans Pro",
+    "Ar": "400 1rem / 1.5rem Source Sans Pro",
+    "Gr": "400 1rem / 1.5rem Source Sans Pro"
+  },
+  "--mat-sys-body-large-font": { "A": "Source Sans Pro", "G": "Source Sans Pro", "Ar": "Source Sans Pro", "Gr": "Source Sans Pro" },
+  "--mat-sys-body-large-line-height": { "A": "1.5rem", "G": "1.5rem", "Ar": "1.5rem", "Gr": "1.5rem" },
+  "--mat-sys-body-large-size": { "A": "1rem", "G": "1rem", "Ar": "1rem", "Gr": "1rem" },
+  "--mat-sys-body-large-tracking": { "A": "0.031rem", "G": "0.031rem", "Ar": "0.031rem", "Gr": "0.031rem" },
+  "--mat-sys-body-large-weight": { "A": "400", "G": "400", "Ar": "400", "Gr": "400" },
+  "--mat-sys-body-medium": {
+    "A": "400 0.875rem / 1.25rem Source Sans Pro",
+    "G": "400 0.875rem / 1.25rem Source Sans Pro",
+    "Ar": "400 0.875rem / 1.25rem Source Sans Pro",
+    "Gr": "400 0.875rem / 1.25rem Source Sans Pro"
+  },
+  "--mat-sys-body-medium-font": { "A": "Source Sans Pro", "G": "Source Sans Pro", "Ar": "Source Sans Pro", "Gr": "Source Sans Pro" },
+  "--mat-sys-body-medium-line-height": { "A": "1.25rem", "G": "1.25rem", "Ar": "1.25rem", "Gr": "1.25rem" },
+  "--mat-sys-body-medium-size": { "A": "0.875rem", "G": "0.875rem", "Ar": "0.875rem", "Gr": "0.875rem" },
+  "--mat-sys-body-medium-tracking": { "A": "0.016rem", "G": "0.016rem", "Ar": "0.016rem", "Gr": "0.016rem" },
+  "--mat-sys-body-medium-weight": { "A": "400", "G": "400", "Ar": "400", "Gr": "400" },
+  "--mat-sys-body-small": {
+    "A": "400 0.75rem / 1rem Source Sans Pro",
+    "G": "400 0.75rem / 1rem Source Sans Pro",
+    "Ar": "400 0.75rem / 1rem Source Sans Pro",
+    "Gr": "400 0.75rem / 1rem Source Sans Pro"
+  },
+  "--mat-sys-body-small-font": { "A": "Source Sans Pro", "G": "Source Sans Pro", "Ar": "Source Sans Pro", "Gr": "Source Sans Pro" },
+  "--mat-sys-body-small-line-height": { "A": "1rem", "G": "1rem", "Ar": "1rem", "Gr": "1rem" },
+  "--mat-sys-body-small-size": { "A": "0.75rem", "G": "0.75rem", "Ar": "0.75rem", "Gr": "0.75rem" },
+  "--mat-sys-body-small-tracking": { "A": "0.025rem", "G": "0.025rem", "Ar": "0.025rem", "Gr": "0.025rem" },
+  "--mat-sys-body-small-weight": { "A": "400", "G": "400", "Ar": "400", "Gr": "400" },
+  "--mat-sys-display-large": {
+    "A": "400 3.562rem / 4rem Blogger Sans",
+    "G": "400 3.562rem / 4rem Blogger Sans",
+    "Ar": "400 3.562rem / 4rem Blogger Sans",
+    "Gr": "400 3.562rem / 4rem Blogger Sans"
+  },
+  "--mat-sys-display-large-font": { "A": "Blogger Sans", "G": "Blogger Sans", "Ar": "Blogger Sans", "Gr": "Blogger Sans" },
+  "--mat-sys-display-large-line-height": { "A": "4rem", "G": "4rem", "Ar": "4rem", "Gr": "4rem" },
+  "--mat-sys-display-large-size": { "A": "3.562rem", "G": "3.562rem", "Ar": "3.562rem", "Gr": "3.562rem" },
+  "--mat-sys-display-large-tracking": { "A": "-0.016rem", "G": "-0.016rem", "Ar": "-0.016rem", "Gr": "-0.016rem" },
+  "--mat-sys-display-large-weight": { "A": "400", "G": "400", "Ar": "400", "Gr": "400" },
+  "--mat-sys-display-medium": {
+    "A": "400 2.812rem / 3.25rem Blogger Sans",
+    "G": "400 2.812rem / 3.25rem Blogger Sans",
+    "Ar": "400 2.812rem / 3.25rem Blogger Sans",
+    "Gr": "400 2.812rem / 3.25rem Blogger Sans"
+  },
+  "--mat-sys-display-medium-font": { "A": "Blogger Sans", "G": "Blogger Sans", "Ar": "Blogger Sans", "Gr": "Blogger Sans" },
+  "--mat-sys-display-medium-line-height": { "A": "3.25rem", "G": "3.25rem", "Ar": "3.25rem", "Gr": "3.25rem" },
+  "--mat-sys-display-medium-size": { "A": "2.812rem", "G": "2.812rem", "Ar": "2.812rem", "Gr": "2.812rem" },
+  "--mat-sys-display-medium-tracking": { "A": "0", "G": "0", "Ar": "0", "Gr": "0" },
+  "--mat-sys-display-medium-weight": { "A": "400", "G": "400", "Ar": "400", "Gr": "400" },
+  "--mat-sys-display-small": {
+    "A": "400 2.25rem / 2.75rem Blogger Sans",
+    "G": "400 2.25rem / 2.75rem Blogger Sans",
+    "Ar": "400 2.25rem / 2.75rem Blogger Sans",
+    "Gr": "400 2.25rem / 2.75rem Blogger Sans"
+  },
+  "--mat-sys-display-small-font": { "A": "Blogger Sans", "G": "Blogger Sans", "Ar": "Blogger Sans", "Gr": "Blogger Sans" },
+  "--mat-sys-display-small-line-height": { "A": "2.75rem", "G": "2.75rem", "Ar": "2.75rem", "Gr": "2.75rem" },
+  "--mat-sys-display-small-size": { "A": "2.25rem", "G": "2.25rem", "Ar": "2.25rem", "Gr": "2.25rem" },
+  "--mat-sys-display-small-tracking": { "A": "0", "G": "0", "Ar": "0", "Gr": "0" },
+  "--mat-sys-display-small-weight": { "A": "400", "G": "400", "Ar": "400", "Gr": "400" },
+  "--mat-sys-error": { "A": "#ba1a1a", "G": "#ad000f", "Ar": "#ba1a1a", "Gr": "#ad000f" },
+  "--mat-sys-error-container": { "A": "#ffdad6", "G": "#ffdad6", "Ar": "#ffdad6", "Gr": "#ffdad6" },
+  "--mat-sys-headline-large": {
+    "A": "400 2rem / 2.5rem Blogger Sans",
+    "G": "400 2rem / 2.5rem Blogger Sans",
+    "Ar": "400 2rem / 2.5rem Blogger Sans",
+    "Gr": "400 2rem / 2.5rem Blogger Sans"
+  },
+  "--mat-sys-headline-large-font": { "A": "Blogger Sans", "G": "Blogger Sans", "Ar": "Blogger Sans", "Gr": "Blogger Sans" },
+  "--mat-sys-headline-large-line-height": { "A": "2.5rem", "G": "2.5rem", "Ar": "2.5rem", "Gr": "2.5rem" },
+  "--mat-sys-headline-large-size": { "A": "2rem", "G": "2rem", "Ar": "2rem", "Gr": "2rem" },
+  "--mat-sys-headline-large-tracking": { "A": "0", "G": "0", "Ar": "0", "Gr": "0" },
+  "--mat-sys-headline-large-weight": { "A": "400", "G": "400", "Ar": "400", "Gr": "400" },
+  "--mat-sys-headline-medium": {
+    "A": "400 1.75rem / 2.25rem Blogger Sans",
+    "G": "400 1.75rem / 2.25rem Blogger Sans",
+    "Ar": "400 1.75rem / 2.25rem Blogger Sans",
+    "Gr": "400 1.75rem / 2.25rem Blogger Sans"
+  },
+  "--mat-sys-headline-medium-font": { "A": "Blogger Sans", "G": "Blogger Sans", "Ar": "Blogger Sans", "Gr": "Blogger Sans" },
+  "--mat-sys-headline-medium-line-height": { "A": "2.25rem", "G": "2.25rem", "Ar": "2.25rem", "Gr": "2.25rem" },
+  "--mat-sys-headline-medium-size": { "A": "1.75rem", "G": "1.75rem", "Ar": "1.75rem", "Gr": "1.75rem" },
+  "--mat-sys-headline-medium-tracking": { "A": "0", "G": "0", "Ar": "0", "Gr": "0" },
+  "--mat-sys-headline-medium-weight": { "A": "400", "G": "400", "Ar": "400", "Gr": "400" },
+  "--mat-sys-headline-small": {
+    "A": "400 1.5rem / 2rem Blogger Sans",
+    "G": "400 1.5rem / 2rem Blogger Sans",
+    "Ar": "400 1.5rem / 2rem Blogger Sans",
+    "Gr": "400 1.5rem / 2rem Blogger Sans"
+  },
+  "--mat-sys-headline-small-font": { "A": "Blogger Sans", "G": "Blogger Sans", "Ar": "Blogger Sans", "Gr": "Blogger Sans" },
+  "--mat-sys-headline-small-line-height": { "A": "2rem", "G": "2rem", "Ar": "2rem", "Gr": "2rem" },
+  "--mat-sys-headline-small-size": { "A": "1.5rem", "G": "1.5rem", "Ar": "1.5rem", "Gr": "1.5rem" },
+  "--mat-sys-headline-small-tracking": { "A": "0", "G": "0", "Ar": "0", "Gr": "0" },
+  "--mat-sys-headline-small-weight": { "A": "400", "G": "400", "Ar": "400", "Gr": "400" },
+  "--mat-sys-inverse-on-surface": { "A": "#f4f0ef", "G": "#f4f0ef", "Ar": "#f4f0ef", "Gr": "#f4f0ef" },
+  "--mat-sys-inverse-primary": { "A": "#a7c8ff", "G": "#a7c8ff", "Ar": "#a7c8ff", "Gr": "#a7c8ff" },
+  "--mat-sys-inverse-surface": { "A": "#313030", "G": "#313030", "Ar": "#313030", "Gr": "#313030" },
+  "--mat-sys-label-large": {
+    "A": "500 0.875rem / 1.25rem Source Sans Pro",
+    "G": "500 0.875rem / 1.25rem Source Sans Pro",
+    "Ar": "500 0.875rem / 1.25rem Source Sans Pro",
+    "Gr": "500 0.875rem / 1.25rem Source Sans Pro"
+  },
+  "--mat-sys-label-large-font": { "A": "Source Sans Pro", "G": "Source Sans Pro", "Ar": "Source Sans Pro", "Gr": "Source Sans Pro" },
+  "--mat-sys-label-large-line-height": { "A": "1.25rem", "G": "1.25rem", "Ar": "1.25rem", "Gr": "1.25rem" },
+  "--mat-sys-label-large-size": { "A": "0.875rem", "G": "0.875rem", "Ar": "0.875rem", "Gr": "0.875rem" },
+  "--mat-sys-label-large-tracking": { "A": "0.006rem", "G": "0.006rem", "Ar": "0.006rem", "Gr": "0.006rem" },
+  "--mat-sys-label-large-weight": { "A": "500", "G": "500", "Ar": "500", "Gr": "500" },
+  "--mat-sys-label-large-weight-prominent": { "A": "700", "G": "700", "Ar": "700", "Gr": "700" },
+  "--mat-sys-label-medium": {
+    "A": "500 0.75rem / 1rem Source Sans Pro",
+    "G": "500 0.75rem / 1rem Source Sans Pro",
+    "Ar": "500 0.75rem / 1rem Source Sans Pro",
+    "Gr": "500 0.75rem / 1rem Source Sans Pro"
+  },
+  "--mat-sys-label-medium-font": { "A": "Source Sans Pro", "G": "Source Sans Pro", "Ar": "Source Sans Pro", "Gr": "Source Sans Pro" },
+  "--mat-sys-label-medium-line-height": { "A": "1rem", "G": "1rem", "Ar": "1rem", "Gr": "1rem" },
+  "--mat-sys-label-medium-size": { "A": "0.75rem", "G": "0.75rem", "Ar": "0.75rem", "Gr": "0.75rem" },
+  "--mat-sys-label-medium-tracking": { "A": "0.031rem", "G": "0.031rem", "Ar": "0.031rem", "Gr": "0.031rem" },
+  "--mat-sys-label-medium-weight": { "A": "500", "G": "500", "Ar": "500", "Gr": "500" },
+  "--mat-sys-label-medium-weight-prominent": { "A": "700", "G": "700", "Ar": "700", "Gr": "700" },
+  "--mat-sys-label-small": {
+    "A": "500 0.688rem / 1rem Source Sans Pro",
+    "G": "500 0.688rem / 1rem Source Sans Pro",
+    "Ar": "500 0.688rem / 1rem Source Sans Pro",
+    "Gr": "500 0.688rem / 1rem Source Sans Pro"
+  },
+  "--mat-sys-label-small-font": { "A": "Source Sans Pro", "G": "Source Sans Pro", "Ar": "Source Sans Pro", "Gr": "Source Sans Pro" },
+  "--mat-sys-label-small-line-height": { "A": "1rem", "G": "1rem", "Ar": "1rem", "Gr": "1rem" },
+  "--mat-sys-label-small-size": { "A": "0.688rem", "G": "0.688rem", "Ar": "0.688rem", "Gr": "0.688rem" },
+  "--mat-sys-label-small-tracking": { "A": "0.031rem", "G": "0.031rem", "Ar": "0.031rem", "Gr": "0.031rem" },
+  "--mat-sys-label-small-weight": { "A": "500", "G": "500", "Ar": "500", "Gr": "500" },
+  "--mat-sys-neutral-variant20": { "A": "#313030", "G": "#313030", "Ar": "#313030", "Gr": "#313030" },
+  "--mat-sys-neutral10": { "A": "#1c1b1b", "G": "#1c1b1b", "Ar": "#1c1b1b", "Gr": "#1c1b1b" },
+  "--mat-sys-on-background": { "A": "#1c1b1b", "G": "#1c1b1b", "Ar": "#1c1b1b", "Gr": "#1c1b1b" },
+  "--mat-sys-on-error": { "A": "#ffffff", "G": "#ffffff", "Ar": "#ffffff", "Gr": "#ffffff" },
+  "--mat-sys-on-error-container": { "A": "#93000a", "G": "#93000a", "Ar": "#93000a", "Gr": "#93000a" },
+  "--mat-sys-on-primary": { "A": "#ffffff", "G": "#ffffff", "Ar": "#ffffff", "Gr": "#ffffff" },
+  "--mat-sys-on-primary-container": { "A": "#003366", "G": "#003366", "Ar": "#003366", "Gr": "#003366" },
+  "--mat-sys-on-primary-fixed": { "A": "#001b3c", "G": "#001b3c", "Ar": "#001b3c", "Gr": "#001b3c" },
+  "--mat-sys-on-primary-fixed-variant": { "A": "#1f477b", "G": "#1f477b", "Ar": "#1f477b", "Gr": "#1f477b" },
+  "--mat-sys-on-secondary": { "A": "#001b3c", "G": "#001b3c", "Ar": "#001b3c", "Gr": "#001b3c" },
+  "--mat-sys-on-secondary-container": { "A": "#ffffff", "G": "#ffffff", "Ar": "#ffffff", "Gr": "#ffffff" },
+  "--mat-sys-on-secondary-fixed": { "A": "#151c28", "G": "#151c28", "Ar": "#151c28", "Gr": "#151c28" },
+  "--mat-sys-on-secondary-fixed-variant": { "A": "#404754", "G": "#404754", "Ar": "#404754", "Gr": "#404754" },
+  "--mat-sys-on-surface": { "A": "#1c1b1b", "G": "#1c1b1b", "Ar": "#1c1b1b", "Gr": "#1c1b1b" },
+  "--mat-sys-on-surface-variant": { "A": "#605e5e", "G": "#605e5e", "Ar": "#605e5e", "Gr": "#605e5e" },
+  "--mat-sys-on-tertiary": { "A": "#1c1b1b", "G": "#003366", "Ar": "#1c1b1b", "Gr": "#003366" },
+  "--mat-sys-on-tertiary-container": { "A": "#00531d", "G": "#00531d", "Ar": "#00531d", "Gr": "#00531d" },
+  "--mat-sys-on-tertiary-fixed": { "A": "#001b3c", "G": "#001b3c", "Ar": "#001b3c", "Gr": "#001b3c" },
+  "--mat-sys-on-tertiary-fixed-variant": { "A": "#1f477b", "G": "#1f477b", "Ar": "#1f477b", "Gr": "#1f477b" },
+  "--mat-sys-outline": { "A": "#929090", "G": "#929090", "Ar": "#929090", "Gr": "#929090" },
+  "--mat-sys-outline-variant": { "A": "#e5e2e1", "G": "#e5e2e1", "Ar": "#e5e2e1", "Gr": "#e5e2e1" },
+  "--mat-sys-primary": { "A": "#003366", "G": "#003366", "Ar": "#003366", "Gr": "#003366" },
+  "--mat-sys-primary-container": { "A": "#d5e3ff", "G": "#d5e3ff", "Ar": "#d5e3ff", "Gr": "#d5e3ff" },
+  "--mat-sys-primary-fixed": { "A": "#d5e3ff", "G": "#d5e3ff", "Ar": "#d5e3ff", "Gr": "#d5e3ff" },
+  "--mat-sys-primary-fixed-dim": { "A": "#a7c8ff", "G": "#a7c8ff", "Ar": "#a7c8ff", "Gr": "#a7c8ff" },
+  "--mat-sys-scrim": { "A": "#000000", "G": "#000000", "Ar": "#000000", "Gr": "#000000" },
+  "--mat-sys-secondary": { "A": "#d5e3ff", "G": "#d5e3ff", "Ar": "#d5e3ff", "Gr": "#d5e3ff" },
+  "--mat-sys-secondary-container": { "A": "#3a5f94", "G": "#3a5f94", "Ar": "#3a5f94", "Gr": "#3a5f94" },
+  "--mat-sys-secondary-fixed": { "A": "#dce2f3", "G": "#dce2f3", "Ar": "#dce2f3", "Gr": "#dce2f3" },
+  "--mat-sys-secondary-fixed-dim": { "A": "#c0c6d7", "G": "#c0c6d7", "Ar": "#c0c6d7", "Gr": "#c0c6d7" },
+  "--mat-sys-shadow": { "A": "#000000", "G": "#000000", "Ar": "#000000", "Gr": "#000000" },
+  "--mat-sys-surface": { "A": "#ffffff", "G": "#ffffff", "Ar": "#ffffff", "Gr": "#ffffff" },
+  "--mat-sys-surface-bright": { "A": "#fcf8f8", "G": "#fcf8f8", "Ar": "#fcf8f8", "Gr": "#fcf8f8" },
+  "--mat-sys-surface-container": { "A": "#f9f9ff", "G": "#fdfbff", "Ar": "#f9f9ff", "Gr": "#fdfbff" },
+  "--mat-sys-surface-container-high": { "A": "#ecf1ff", "G": "#f9f9ff", "Ar": "#ecf1ff", "Gr": "#f9f9ff" },
+  "--mat-sys-surface-container-highest": { "A": "#d5e3ff", "G": "#ecf1ff", "Ar": "#d5e3ff", "Gr": "#ecf1ff" },
+  "--mat-sys-surface-container-low": { "A": "#fdfbff", "Ar": "#fdfbff" },
+  "--mat-sys-surface-container-lowest": { "A": "#ffffff", "G": "#ffffff", "Ar": "#ffffff", "Gr": "#ffffff" },
+  "--mat-sys-surface-tint": { "A": "#3a5f94", "G": "#3a5f94", "Ar": "#3a5f94", "Gr": "#3a5f94" },
+  "--mat-sys-surface-variant": { "A": "#f9f9ff", "G": "#f9f9ff", "Ar": "#f9f9ff", "Gr": "#f9f9ff" },
+  "--mat-sys-tertiary": { "A": "#56bd66", "G": "#56bd66", "Ar": "#56bd66", "Gr": "#56bd66" },
+  "--mat-sys-tertiary-container": { "A": "#c6ffc5", "G": "#c6ffc5", "Ar": "#c6ffc5", "Gr": "#c6ffc5" },
+  "--mat-sys-tertiary-fixed": { "A": "#d5e3ff", "G": "#d5e3ff", "Ar": "#d5e3ff", "Gr": "#d5e3ff" },
+  "--mat-sys-tertiary-fixed-dim": { "A": "#a7c8ff", "G": "#a7c8ff", "Ar": "#a7c8ff", "Gr": "#a7c8ff" },
+  "--mat-sys-title-large": {
+    "A": "400 1.375rem / 1.75rem Blogger Sans",
+    "G": "400 1.375rem / 1.75rem Blogger Sans",
+    "Ar": "400 1.375rem / 1.75rem Blogger Sans",
+    "Gr": "400 1.375rem / 1.75rem Blogger Sans"
+  },
+  "--mat-sys-title-large-font": { "A": "Blogger Sans", "G": "Blogger Sans", "Ar": "Blogger Sans", "Gr": "Blogger Sans" },
+  "--mat-sys-title-large-line-height": { "A": "1.75rem", "G": "1.75rem", "Ar": "1.75rem", "Gr": "1.75rem" },
+  "--mat-sys-title-large-size": { "A": "1.375rem", "G": "1.375rem", "Ar": "1.375rem", "Gr": "1.375rem" },
+  "--mat-sys-title-large-tracking": { "A": "0", "G": "0", "Ar": "0", "Gr": "0" },
+  "--mat-sys-title-large-weight": { "A": "400", "G": "400", "Ar": "400", "Gr": "400" },
+  "--mat-sys-title-medium": {
+    "A": "500 1rem / 1.5rem Source Sans Pro",
+    "G": "500 1rem / 1.5rem Source Sans Pro",
+    "Ar": "500 1rem / 1.5rem Source Sans Pro",
+    "Gr": "500 1rem / 1.5rem Source Sans Pro"
+  },
+  "--mat-sys-title-medium-font": { "A": "Source Sans Pro", "G": "Source Sans Pro", "Ar": "Source Sans Pro", "Gr": "Source Sans Pro" },
+  "--mat-sys-title-medium-line-height": { "A": "1.5rem", "G": "1.5rem", "Ar": "1.5rem", "Gr": "1.5rem" },
+  "--mat-sys-title-medium-size": { "A": "1rem", "G": "1rem", "Ar": "1rem", "Gr": "1rem" },
+  "--mat-sys-title-medium-tracking": { "A": "0.009rem", "G": "0.009rem", "Ar": "0.009rem", "Gr": "0.009rem" },
+  "--mat-sys-title-medium-weight": { "A": "500", "G": "500", "Ar": "500", "Gr": "500" },
+  "--mat-sys-title-small": {
+    "A": "500 0.875rem / 1.25rem Source Sans Pro",
+    "G": "500 0.875rem / 1.25rem Source Sans Pro",
+    "Ar": "500 0.875rem / 1.25rem Source Sans Pro",
+    "Gr": "500 0.875rem / 1.25rem Source Sans Pro"
+  },
+  "--mat-sys-title-small-font": { "A": "Source Sans Pro", "G": "Source Sans Pro", "Ar": "Source Sans Pro", "Gr": "Source Sans Pro" },
+  "--mat-sys-title-small-line-height": { "A": "1.25rem", "G": "1.25rem", "Ar": "1.25rem", "Gr": "1.25rem" },
+  "--mat-sys-title-small-size": { "A": "0.875rem", "G": "0.875rem", "Ar": "0.875rem", "Gr": "0.875rem" },
+  "--mat-sys-title-small-tracking": { "A": "0.006rem", "G": "0.006rem", "Ar": "0.006rem", "Gr": "0.006rem" },
+  "--mat-sys-title-small-weight": { "A": "500", "G": "500", "Ar": "500", "Gr": "500" }
+}

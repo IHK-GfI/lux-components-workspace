@@ -2,6 +2,9 @@
 @use "variables";
 @use "variablesPreferContrast";
 @use "mat3Theme";
+// Alte Token-Namen als Aliase der neuen (generiert, @deprecated). Nach den Theme-Variablen laden.
+@use "../base-templates/tokens/deprecated-aliases";
+@use "deprecated-aliases-theme";
 
 @use "../base-templates/common/luxSvgIcons";
 @use "../base-templates/common/luxelevations";

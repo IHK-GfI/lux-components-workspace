@@ -1,0 +1,32 @@
+// =============================================================================
+// Base Tokens für die Material-Rollen (--lux-base-* -> --mat-sys-*)
+// =============================================================================
+// Übergang: Diese Base Tokens lesen vorerst die Material-Systemvariablen. Die Richtung dreht
+// das Ticket "Brücke" um (dann setzt _mat-bridge.scss die --mat-sys-* aus den Base Tokens).
+// Gleich in allen Themes, die Werte unterscheiden sich über --mat-sys-* je Theme.
+// Nicht hier: base-primary-color, base-surface-color und base-surface-container-lowest-color
+// (Zusammenführungen mit bisherigen Lux-Tokens, stehen mit deren Wert in _variables.scss).
+// =============================================================================
+
+@mixin lux-material-roles() {
+  --lux-base-border-outline-color: var(--mat-sys-outline);
+  --lux-base-border-outline-variant-color: var(--mat-sys-outline-variant);
+  --lux-base-elevation-shadow-color: var(--mat-sys-shadow);
+  --lux-base-error-color: var(--mat-sys-error);
+  --lux-base-error-container-color: var(--mat-sys-error-container);
+  --lux-base-error-container-content-color: var(--mat-sys-on-error-container);
+  --lux-base-error-content-color: var(--mat-sys-on-error);
+  --lux-base-primary-container-color: var(--mat-sys-primary-container);
+  --lux-base-primary-container-content-color: var(--mat-sys-on-primary-container);
+  --lux-base-primary-content-color: var(--mat-sys-on-primary);
+  --lux-base-secondary-container-color: var(--mat-sys-secondary-container);
+  --lux-base-surface-container-high-color: var(--mat-sys-surface-container-high);
+  --lux-base-surface-container-highest-color: var(--mat-sys-surface-container-highest);
+  --lux-base-surface-container-medium-color: var(--mat-sys-surface-container);
+  --lux-base-surface-content-color: var(--mat-sys-on-surface);
+  --lux-base-surface-variant-content-color: var(--mat-sys-on-surface-variant);
+  --lux-base-tertiary-color: var(--mat-sys-tertiary);
+  --lux-base-tertiary-container-color: var(--mat-sys-tertiary-container);
+  --lux-base-tertiary-container-content-color: var(--mat-sys-on-tertiary-container);
+  --lux-base-tertiary-content-color: var(--mat-sys-on-tertiary);
+}

@@ -1,0 +1,14 @@
+// GENERIERT von scripts/generate-tokens.mjs aus tokens/Token-Umbenennung.csv – nicht von Hand ändern.
+// Neu erzeugen: npm run generate:tokens (im Theme-Paket).
+//
+// Aliase mit einem eigenen Ziel in diesem Theme (Theme green).
+// @deprecated Die alten Namen (--lux-theme-*, --lux-z-*) sind Aliase der neuen Namen und entfallen mit Version 23.
+// Neuer Code und Überschreibungen in Anwendungen verwenden die neuen Namen (--lux-primitive-*, --lux-base-*).
+//
+// Die Datei wird nach den Theme-Variablen geladen. Ein alter Name darf deshalb nicht zusätzlich in einer
+// Media Query auf :root gesetzt werden, der Alias würde diese Überschreibung verdecken (prüft check-tokens.mjs).
+
+:root {
+  --lux-theme-radius-lg: var(--lux-primitive-radius-4-5);
+  --lux-theme-radius-xl: var(--lux-primitive-radius-5);
+}

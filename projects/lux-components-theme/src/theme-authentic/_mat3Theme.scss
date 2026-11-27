@@ -23,7 +23,7 @@ $lux-theme: mat.define-theme(
   @include mat.system-level-colors($lux-theme);
   @include mat.system-level-typography($lux-theme);
 
-  --lux-theme-primary-color: #{map.get(palettes.$lux-palette_primary, 20)};
+  // @deprecated (#394): entfallen ohne Nachfolger (--lux-theme-primary-color ist jetzt ein Alias von --lux-base-primary-color)
   --lux-theme-accent-color: #{map.get(palettes.$lux-palette_secondary, 20)};
   --lux-theme-warn-color: #{map.get(palettes.$lux-palette_warn, 20)};
 }

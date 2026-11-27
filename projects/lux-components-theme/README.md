@@ -3,6 +3,7 @@
 - [Theme](#theme)
   - [Installation](#installation)
   - [CSS-Variablen](#css-variablen)
+    - [Token-Namen ab Version 22](#token-namen-ab-version-22)
     - [Farbpaletten \& semantische Farben](#farbpaletten--semantische-farben)
     - [Design Tokens: Layout, Typografie \& Spacing](#design-tokens-layout-typografie--spacing)
     - [App-Grundlayout \& Zustände](#app-grundlayout--zustände)
@@ -40,6 +41,36 @@ npm install @ihk-gfi/lux-components-theme
 ```
 
 ## CSS-Variablen
+
+### Token-Namen ab Version 22
+
+Ab Version 22 folgen die CSS-Variablen einer neuen Namenskonvention mit drei Stufen. Der Name zeigt die Stufe: `--lux-{stufe}-{gruppe}-{name}`.
+
+| Stufe       | Inhalt                                                              | Beispiel                                         |
+| ----------- | ------------------------------------------------------------------- | ------------------------------------------------ |
+| `primitive` | Rohwerte ohne Theme-Unterschied: Paletten, Markenfarben, Skalen     | `--lux-primitive-palette-primary-20`             |
+| `base`      | Rollen und Zustände für alle Komponenten, je Theme mit eigenem Wert | `--lux-base-text-primary-color`                  |
+| `component` | Werte einer Komponente (folgt mit Issue #395)                       | `--lux-component-button-flat-primary-text-color` |
+
+- Skalen tragen einen Faktor statt einer Größenangabe: `--lux-primitive-spacing-4` = 4 × 4 px = 16 px, `--lux-primitive-spacing-1-5` = 6 px. Schriftgrößen stehen in `rem` (`--lux-primitive-font-size-4` = 1 rem).
+- Die Themes Authentic und Green stehen nie im Namen. Sie sind zwei Wertesätze für dieselben Namen.
+- Die bisherigen Namen (`--lux-theme-*`, `--lux-z-*`) bleiben als Aliase der neuen Namen erhalten. Sie sind **deprecated** und entfallen mit Version 23. Die Tabellen in den folgenden Abschnitten nennen noch die bisherigen Namen.
+- Wer Variablen in der eigenen Anwendung überschreibt, sollte die neuen Namen setzen. Eine Überschreibung des alten Namens erreicht nur Stellen, die noch den alten Namen lesen.
+
+Die Zuordnung alter zu neuer Namen steht in der Datei [`tokens/Token-Umbenennung.csv`](https://github.com/IHK-GfI/lux-components-workspace/blob/develop/projects/lux-components-theme/tokens/Token-Umbenennung.csv) (Spalten „Code alt“ und „Code neu“). Beispiele:
+
+| Bisher                          | Neu                                   |
+| ------------------------------- | ------------------------------------- |
+| `--lux-theme-primary-20`        | `--lux-primitive-palette-primary-20`  |
+| `--lux-theme-accent-70`         | `--lux-primitive-palette-tertiary-70` |
+| `--lux-theme-warn-40`           | `--lux-primitive-palette-error-40`    |
+| `--lux-theme-spacing-md`        | `--lux-primitive-spacing-4`           |
+| `--lux-theme-radius-sm`         | `--lux-primitive-radius-1`            |
+| `--lux-theme-primary-color`     | `--lux-base-primary-color`            |
+| `--lux-theme-dark-primary-text` | `--lux-base-text-primary-color`       |
+| `--lux-theme-custom-red`        | `--lux-base-extended-red-color`       |
+| `--lux-theme-app-border-color`  | `--lux-base-border-color`             |
+| `--lux-z-header`                | `--lux-base-layer-header-z-index`     |
 
 ### Farbpaletten & semantische Farben
 

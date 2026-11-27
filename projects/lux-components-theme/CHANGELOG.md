@@ -1,40 +1,52 @@
 # Changelog
 
 - [Changelog](#changelog)
-  - [Version 21.11.0](#version-21110)
+  - [Version 22.0.0](#version-2200)
     - [Issues](#issues)
-  - [Version 21.10.0](#version-21100)
+  - [Version 21.11.0](#version-21110)
     - [Issues](#issues-1)
-  - [Version 21.9.0](#version-2190)
+  - [Version 21.10.0](#version-21100)
     - [Issues](#issues-2)
-  - [Version 21.8.0](#version-2180)
+  - [Version 21.9.0](#version-2190)
     - [Issues](#issues-3)
-  - [Version 21.7.0](#version-2170)
+  - [Version 21.8.0](#version-2180)
     - [Issues](#issues-4)
-  - [Version 21.6.0](#version-2160)
+  - [Version 21.7.0](#version-2170)
     - [Issues](#issues-5)
-  - [Version 21.5.0](#version-2150)
+  - [Version 21.6.0](#version-2160)
     - [Issues](#issues-6)
-  - [Version 21.4.0](#version-2140)
+  - [Version 21.5.0](#version-2150)
     - [Issues](#issues-7)
-  - [Version 21.3.0](#version-2130)
+  - [Version 21.4.0](#version-2140)
     - [Issues](#issues-8)
-  - [Version 21.2.0](#version-2120)
+  - [Version 21.3.0](#version-2130)
     - [Issues](#issues-9)
-  - [Version 21.1.0](#version-2110)
+  - [Version 21.2.0](#version-2120)
     - [Issues](#issues-10)
-  - [Version 21.0.0](#version-2100)
+  - [Version 21.1.0](#version-2110)
     - [Issues](#issues-11)
-  - [Version 19.3.0](#version-1930)
+  - [Version 21.0.0](#version-2100)
     - [Issues](#issues-12)
-  - [Version 19.2.0](#version-1920)
+  - [Version 19.3.0](#version-1930)
     - [Issues](#issues-13)
-  - [Version 19.1.0](#version-1910)
+  - [Version 19.2.0](#version-1920)
     - [Issues](#issues-14)
-  - [Version 19.0.1](#version-1901)
+  - [Version 19.1.0](#version-1910)
     - [Issues](#issues-15)
-  - [Version 19.0.0](#version-1900)
+  - [Version 19.0.1](#version-1901)
     - [Issues](#issues-16)
+  - [Version 19.0.0](#version-1900)
+    - [Issues](#issues-17)
+
+## Version 22.0.0
+
+### Issues
+
+- Issue #394: Design-Tokens nach neuer Namenskonvention anlegen, alte Namen als Alias erhalten
+  - Neue Token-Namen für Primitive (`--lux-primitive-*`: Paletten, Markenfarben, Skalen) und Base Tokens (`--lux-base-*`: Rollen und Zustände), in beiden Themes mit den bisherigen Werten. Das Aussehen ändert sich nicht.
+  - Die bisherigen Namen (`--lux-theme-*`, `--lux-z-*`) sind Aliase der neuen Namen und **deprecated**. Sie entfallen mit Version 23. Überschreibungen in Anwendungen sollten künftig die neuen Namen setzen.
+  - Ohne Alias, weil der Wert vom neuen Namen abweicht: `--lux-focus-state-layer-color` und `--lux-theme-panel-option-selected-state-layer-color`. Ebenfalls deprecated, aber ohne Nachfolger: u. a. `--lux-theme-accent-color`, `--lux-theme-warn-color`, `--lux-theme-component-bg-*` und `--lux-theme-component-font-color-*`.
+  - Component Tokens (`--lux-component-*`) folgen mit Issue #395. Bis dahin behalten die Komponenten-Variablen ihre bisherigen Namen.
 
 ## Version 21.11.0
 
